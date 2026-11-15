@@ -13,9 +13,15 @@
     var done = s.visited.indexOf(p.id) >= 0, disabled = done || s.time === 0 ? ' disabled' : '';
     return '<button class="place" style="--place:' + p.color + '" data-place="' + p.id + '"' + disabled + '><span class="place-icon" aria-hidden="true">' + p.icon + '</span><span><b>' + esc(p.name) + '</b><small>' + esc(p.district) + ' · ' + (done ? '今日は行った' : p.intro) + '</small></span><em>' + (done ? '✓' : '行く →') + '</em></button>';
   }
+  function memoryLine(s, e) {
+    var bond = s.bonds[e.name] || 0;
+    if (bond >= 2) return e.memory.helped;
+    if (bond >= 1) return e.memory.heard;
+    return '';
+  }
   function encounter(s) {
-    var place = getPlace(s.currentPlace), e = C.encounters[place.id];
-    return '<section class="card encounter"><p class="eyebrow">' + esc(place.district) + '</p><h2>' + esc(place.name) + '</h2><p>' + esc(place.intro) + '</p><div class="person"><span>●</span><div><b>' + esc(e.name) + '</b><small>あなたの前にいる人</small></div></div><p class="ask">今のあなたは、どうする？</p><div class="choices">' + e.options.map(function (o) { return '<button data-choice="' + o.id + '" type="button">' + esc(o.label) + '<span>→</span></button>'; }).join('') + '</div></section>';
+    var place = getPlace(s.currentPlace), e = C.encounters[place.id], memory = memoryLine(s, e);
+    return '<section class="card encounter"><p class="eyebrow">' + esc(place.district) + '</p><h2>' + esc(place.name) + '</h2><p>' + esc(place.intro) + '</p><div class="person"><span>●</span><div><b>' + esc(e.name) + '</b><small>あなたの前にいる人</small></div></div>' + (memory ? '<p class="memory" style="padding:10px 12px;border-left:3px solid #4e8a68;background:#edf6ed;color:#163744">' + esc(memory) + '</p>' : '') + '<p class="ask">今のあなたは、どうする？</p><div class="choices">' + e.options.map(function (o) { return '<button data-choice="' + o.id + '" type="button">' + esc(o.label) + '<span>→</span></button>'; }).join('') + '</div></section>';
   }
   function render(s) {
     if (!s) { intro(); return; }

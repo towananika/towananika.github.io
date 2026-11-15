@@ -14,17 +14,17 @@
       { id: 'library', icon: '▤', name: '学園図書館', district: '西岸区', color: '#4fae84', intro: '開いた窓から、古い紙と雨の匂いがする。' }
     ],
     encounters: {
-      river: { name: '船頭のトワ', options: [
+      river: { name: '船頭のトワ', memory: { heard: 'トワは、前に話した渡し場のことを覚えていた。', helped: 'トワは、昨日の荷物のことにもう一度礼を言った。' }, options: [
         { id: 'listen', label: '川の話を聞く', effect: '話を聞いたことで、渡し場の混む時間を知った。', bond: 1 },
         { id: 'help', label: '荷物を運ぶ', effect: '短い手伝いでも、トワは何度も礼を言った。', bond: 2 },
         { id: 'rest', label: '水辺で休む', effect: '水の音を聞いているうちに、呼吸がゆっくりになった。', calm: 2 }
       ] },
-      market: { name: 'パン屋のセナ', options: [
+      market: { name: 'パン屋のセナ', memory: { heard: 'セナは、前に選んだパンの話を続けてくれた。', helped: 'セナは、整えてくれた店先を見て笑った。' }, options: [
         { id: 'listen', label: '今日のおすすめを聞く', effect: 'セナは、焼きたてを半分にしてくれた。', bond: 1 },
         { id: 'help', label: '店先を整える', effect: '通りすがりの人が、明るく「ありがとう」と言った。', bond: 2 },
         { id: 'rest', label: 'あたたかい飲み物を飲む', effect: '手のひらが温まり、少しだけ元気が戻った。', calm: 2 }
       ] },
-      library: { name: '記録係のミオ', options: [
+      library: { name: '記録係のミオ', memory: { heard: 'ミオは、前に見ていた水路図をそっと開いた。', helped: 'ミオは、返した本がきれいに並んでいると教えてくれた。' }, options: [
         { id: 'listen', label: '町の記録を見る', effect: '昔の水路図に、見覚えのない印を見つけた。', bond: 1 },
         { id: 'help', label: '本を返すのを手伝う', effect: 'ミオは、次に読みたい本を覚えておくと言った。', bond: 2 },
         { id: 'rest', label: '窓辺で本を読む', effect: '短い物語を読み終えるころ、雨は小降りになった。', calm: 2 }

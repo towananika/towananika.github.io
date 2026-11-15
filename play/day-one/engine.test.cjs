@@ -42,5 +42,8 @@ assert.equal(state.time, 3);
 assert.equal(state.finished, false);
 assert.equal(state.visited.length, 0);
 assert.equal(state.journal[0].title, '2日目の朝');
+assert.equal(state.bonds['船頭のトワ'], 1);
+assert.equal(state.bonds['パン屋のセナ'], 1);
+assert.equal(state.bonds['記録係のミオ'], 1);
 
 console.log('day-one engine: ok');
