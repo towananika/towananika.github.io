@@ -29,6 +29,7 @@
   function map(rank) {
     var cx = 150, cy = 120, R = 95, pts = [], dots = '', labels = '';
     var order = H.LIGHTS.map(function (l) { return rank.filter(function (x) { return x.id === l.id; })[0]; });
+    var any = order.some(function (x) { return x.m.n > 0; });
     order.forEach(function (x, i) {
       var a = -Math.PI / 2 + i * 2 * Math.PI / 9, v = 0.12 + 0.88 * x.m.score;
       var px = cx + Math.cos(a) * R * v, py = cy + Math.sin(a) * R * v;
@@ -39,19 +40,19 @@
     });
     var ring = function (k) { return H.LIGHTS.map(function (_, i) { var a = -Math.PI / 2 + i * 2 * Math.PI / 9; return (cx + Math.cos(a) * R * k).toFixed(1) + ',' + (cy + Math.sin(a) * R * k).toFixed(1); }).join(' '); };
     return '<svg viewBox="0 0 300 245" role="img" aria-label="光の地図（直近4週）"><g fill="none" stroke="rgba(243,239,228,.18)"><polygon points="' + ring(1) + '"/><polygon points="' + ring(.55) + '"/></g>' +
-      '<polygon points="' + pts.join(' ') + '" fill="rgba(243,239,228,.13)" stroke="#f3efe4" stroke-width="1.5"/>' + dots +
+      (any ? '<polygon points="' + pts.join(' ') + '" fill="rgba(243,239,228,.13)" stroke="#f3efe4" stroke-width="1.5"/>' + dots : '<text x="150" y="124" fill="rgba(243,239,228,.62)" text-anchor="middle" font-size="13">ここから</text>') +
       '<g font-size="11" fill="#f3efe4" text-anchor="middle">' + labels + '</g></svg>';
   }
 
   function draw() {
     var t = today(), day = (state.days[t] || { a: {} }).a, rank = H.ranked(state, t), tries = H.weekTries(state, t), any = rank[0].m.n > 0;
-    var h = '<section class="hero"><h1>光さがし</h1><p>今日やったことを押すだけ。たまると、自分の光が見えてくる。</p>' + map(rank) +
-      '<p class="cap">' + (any ? 'あなたの光の地図（直近4週・記録した日 ' + H.daysRecorded(state) + '日）' : 'まだ光っていません。下から1つ押してみよう') + '</p></section>';
+    var h = '<section class="hero"><h1>光さがし</h1><p>今日やったことと感じ方を残す。4週かけて、自分の光を見つけよう。</p>' + map(rank) +
+      '<p class="cap">' + (any ? 'あなたの光の地図（直近4週・記録した日 ' + H.daysRecorded(state) + '日）' : 'まだ記録はありません。上手さではなく、今日したことを1つ選ぼう') + '</p></section>';
     var u = window.TRI_USER;
     h += '<div class="acct"><span><span class="dot' + (u ? ' on' : '') + '"></span>' + esc(u ? syncNote : 'ログインすると、記録が端末をまたいでたまります') + '</span>' +
       (u ? '' : '<button type="button" id="login">ログイン</button>') + '</div>';
 
-    h += '<section><h2>今日やったこと</h2><div class="grid">' + H.LIGHTS.map(function (l) {
+    h += '<section><h2>今日やったこと</h2><p class="sub">散歩、料理、会話、調べもの。小さなことでも大丈夫。</p><div class="grid" style="margin-top:8px">' + H.LIGHTS.map(function (l) {
       var r = day[l.id];
       return '<button type="button" class="light ' + l.c + (r ? ' on' : '') + '" data-l="' + l.id + '">' + (r && r.s ? '<span class="star">★</span>' : '') + esc(l.name) + '<small>' + (r ? H.FACES[r.f] : '') + '</small></button>';
     }).join('') + '</div></section>';
@@ -65,7 +66,7 @@
     }
     if (line) h += '<p class="bubble"><b>アカリ</b>　' + esc(line) + '</p>';
 
-    h += '<section><h2>今週のためし</h2><p class="sub">5〜10分でできること。やらなくても、何も減りません。</p><div class="tries" style="margin-top:8px">' + tries.list.map(function (x) {
+    h += '<section><h2>今週のためし</h2><p class="sub">5〜10分でできる候補。やる・やらないは自分で選べて、休んでも何も減りません。</p><div class="tries" style="margin-top:8px">' + tries.list.map(function (x) {
       var c = x.kind === 'grow' ? 'var(--r)' : x.kind === 'find' ? 'var(--w)' : 'var(--g)';
       return '<button type="button" class="try' + (x.done ? ' done' : '') + '" data-t="' + x.kind + '"><span class="k" style="color:' + c + '">' + x.label + '</span><span>' + esc(x.text) + '</span><span class="ck">' + (x.done ? '✓' : '') + '</span></button>';
     }).join('') + '</div></section>';
@@ -81,7 +82,7 @@
       }).join('') + '</div><p class="sub" style="margin-top:8px">一度の記録で決めつけません。4週ためると、形が見えてきます。</p>';
     }
     h += '</section>';
-    h += '<section><p class="sub">記録はあなただけが見られます。運営も中身は見ません。</p>' +
+    h += '<section><p class="sub">これは診断や医療の代わりではありません。点数・連続日数・ほかの人との比較で決めず、今の自分に合う次の一歩を探します。</p><p class="sub" style="margin-top:8px">記録はあなただけが見られます。運営も中身は見ません。</p>' +
       (wipeAsk ? '<div class="row" style="margin-top:8px"><button type="button" class="btn" data-wipe-yes>すべて消す</button><button type="button" class="btn" data-wipe-no>やめる</button></div>'
         : '<button type="button" class="wipe" data-wipe>記録をすべて消す</button>') + '</section>';
     app.innerHTML = h;
