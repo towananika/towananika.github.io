@@ -188,3 +188,70 @@ dl.terms dd{margin:0;color:var(--ink)}
 .postcard .src a{color:var(--accent)}
 @media (max-width:720px){.groups{grid-template-columns:1fr}}
 @media (max-width:560px){.big-links{grid-template-columns:1fr}}
+
+/* ===== simple UI (2026-11-19) : fewer boxes, colors and decorations ===== */
+:root{--accent:#2b2a24;--accent-soft:transparent}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--accent:#f1ede0;--accent-soft:transparent}}
+:root[data-theme="dark"]{--accent:#f1ede0;--accent-soft:transparent}
+body.ch-x{--accent:#1f6fb2;--accent-soft:transparent}
+body.ch-ig{--accent:#c2347a;--accent-soft:transparent}
+body{font-size:16px;line-height:1.85}
+main{padding-bottom:80px}
+h1{font-size:1.6rem;font-weight:800;letter-spacing:.01em}
+h2{font-size:1.2rem;border-bottom:1px solid var(--line);margin-top:56px}
+h3{font-size:1rem}
+.meta{font-size:.85rem}
+/* lead / takeaway: text only */
+.lead{background:none;border:0;padding:0;font-size:1.05rem}
+ul.lead{padding-left:1.3em!important}
+p.take{background:none;border:0;padding:0;margin:4px 0 18px;font-weight:700}
+p.take::before{content:none}
+.order{display:none}
+.strategy{border:0;border-left:3px solid var(--accent);border-radius:0;padding:2px 0 2px 14px;background:none}
+/* cards -> plain blocks */
+.kpis{gap:0;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:6px 0}
+.kpi{background:none;border:0;border-radius:0;padding:10px 4px}
+.kpi b{font-size:1.5rem}
+.traits div{background:none;border:0;border-left:2px solid var(--line);border-radius:0;padding:4px 12px}
+figure{background:none;border:0;padding:0}
+.cell,.gcard,.scard,.postcard,.chpanel,.before,.after{background:none;box-shadow:none}
+.gcard{border:0;border-top:1px solid var(--line);border-radius:0;padding:14px 0}
+.gcard.ga,.gcard.gb,.gcard.gc{border-top-color:var(--line)}
+.gcard h3::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:8px;vertical-align:middle;background:var(--muted)}
+.gcard.ga h3::before{background:var(--good)}.gcard.gc h3::before{background:var(--bad)}.gcard.gb h3::before{background:var(--accent)}
+.groups{gap:0 24px}
+.postcard{border:0;border-top:1px solid var(--line);border-radius:0;padding:20px 0;margin:0}
+.postcard blockquote{background:none;border-left:2px solid var(--line);border-radius:0;padding:2px 0 2px 12px}
+.postcard .rw{background:none;border-left:2px solid var(--good);border-radius:0;padding:2px 0 2px 12px}
+.postcard .lbl{background:none;color:var(--muted);padding:0;font-size:.78rem;letter-spacing:.04em}
+.postcard .lbl.fix{background:none;color:var(--good)}
+.nums span{border:0;background:none;padding:0 12px 0 0}
+.chpanel{border:0;border-top:3px solid var(--chc);border-radius:0;padding:20px 0}
+.chpanel .btns a{border-radius:6px}
+.gsec.ga>h2,.gsec.gb>h2,.gsec.gc>h2{border-bottom-width:1px}
+details.ba,details.more,details.ref{background:none;border:0;border-top:1px solid var(--line);border-radius:0;padding:0}
+.big-links a{background:none;color:var(--accent);border:1px solid var(--line);border-radius:8px}
+.big-links a span{color:var(--muted);opacity:1}
+/* tables: quieter */
+table{background:none;font-size:.9rem}
+th{background:none;border:0;border-bottom:2px solid var(--line);font-size:.82rem;color:var(--muted)}
+td{border:0;border-bottom:1px solid var(--line)}
+.hi,.lo{font-weight:700}
+/* nav: show sub-items only for the current page */
+.sitenav .ch{margin-top:18px}
+.sitenav li > ul{display:none}
+.sitenav li:has(> a[aria-current="page"]) > ul{display:block}
+.sitenav a.page[aria-current="page"]{background:none;color:var(--accent)}
+.sitenav ul ul{border-left:1px solid var(--line)}
+/* ===== heading levels (2026-11-19) : h1 > h2 > h3 > h4 visibly distinct ===== */
+main h1{font-size:1.75rem;font-weight:800;line-height:1.35;margin:0 0 10px}
+main h2{font-size:1.4rem;font-weight:800;line-height:1.4;margin:64px 0 14px;padding:2px 0 8px 14px;border:0;border-left:5px solid var(--accent);border-bottom:1px solid var(--line)}
+main h3{font-size:1.12rem;font-weight:700;line-height:1.5;margin:36px 0 8px;padding:0 0 0 12px;border-left:3px solid var(--line)}
+main h4{font-size:.95rem;font-weight:700;color:var(--muted);margin:20px 0 4px;letter-spacing:.02em}
+/* keep card titles compact (they are labels, not section headings) */
+main .chpanel h2,main .scard h2{border:0;padding:0;margin:0 0 6px;font-size:1.35rem}
+main .gcard h3{border:0;padding:0;margin:0 0 4px;font-size:1.05rem}
+main .postcard h4{color:var(--muted);font-size:.9rem;margin:12px 0 4px}
+main .gsec.ga>h2,main .gsec.gb>h2,main .gsec.gc>h2{border-bottom:1px solid var(--line)}
+main .gsec.ga>h2{border-left-color:var(--good)}main .gsec.gc>h2{border-left-color:var(--bad)}
+@media (max-width:560px){main h1{font-size:1.45rem}main h2{font-size:1.2rem;margin-top:48px}main h3{font-size:1.04rem}}
