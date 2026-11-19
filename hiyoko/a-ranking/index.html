@@ -46,6 +46,13 @@
 .tk b{color:var(--ink)}
 .bar{height:8px;background:var(--line);border-radius:99px;margin:-4px 0 10px;overflow:hidden}
 .bar i{display:block;height:100%;background:var(--good);border-radius:99px}
+.lead1{color:var(--muted);margin:-6px 0 4px;font-size:.9rem}
+.tk{display:flex;flex-wrap:wrap;gap:6px;align-items:center;border:0;background:none;padding:0;margin:12px 0}
+.tk b{font-size:.8rem;color:var(--muted);margin-right:4px}
+.tk span{background:var(--card);border:1px solid var(--line);border-radius:99px;padding:3px 10px;font-size:.82rem}
+.tk em{font-style:normal;font-weight:800;color:var(--good)}
+.kpis span{font-size:.72rem}
+.kpis span b{font-size:1.25rem}
 .spb{display:inline-block;font-size:.7rem;font-weight:700;color:var(--bad);border:1px solid var(--bad);border-radius:99px;padding:0 6px;margin-bottom:2px}
 </style>
 </head>
@@ -55,13 +62,10 @@
 <main>
 <nav class="crumbs"><a href="../">HIYOKO分析トップ</a> ／ Aの投稿ランキング（全期間）</nav>
 <h1>Aの投稿ランキング（全期間）</h1>
-<div class="meta">X：2026年7月2日〜11月19日の359投稿のうちA 70件 ／ Instagram：2026年1月〜11月17日の200投稿のうちA 66件</div>
-<p class="lead">全期間の投稿から、<strong>Aグループ（届いて、反応もあった投稿）だけ</strong>を取り出して並べました。ボタンで<strong>「反応順」</strong>と<strong>「フォロー増加順」</strong>を切り替えられます。上位10件は実際の投稿を大きく表示し、11位以降は表で見られます。並べ替えの基準になっている数字は色付きです。</p>
+<p class="lead1">届いて反応もあった投稿（A）だけのランキング</p>
 
 <div class="rktabs" role="tablist"><a href="#x" id="t-x" role="tab" aria-selected="true">X（70件）</a><a href="#ig" id="t-ig" role="tab" aria-selected="false">Instagram（66件）</a></div>
 <section class="tabp" id="p-x">
-<h2 id="x">X のA（70件）</h2>
-<p class="take">反応順はエンゲージメント、フォロー増加順はプロフィール訪問で並べる。</p>
 <div class="traits"><div><b>70</b>Aの投稿数（全359件中）</div><div><b>94</b>平均の表示</div><div><b>8.0</b>平均の反応（エンゲージ）</div><div><b>1.5</b>平均のプロフ訪問</div></div>
 <div class="rk-btns" data-ch="x"><button type="button" data-mode="react" aria-pressed="true">反応順</button><button type="button" data-mode="follow" aria-pressed="false">フォロー増加順</button></div>
 <div class="tk" id="tk-x"></div>
@@ -69,12 +73,9 @@
 <details class="more"><summary>11位以降も含めて、全件を表で見る</summary>
 <div class="rk"><table><thead><tr><th class="n">順位</th><th>日付</th><th>投稿</th><th class=n>表示</th><th class=n>反応（エンゲージ）</th><th class=n>ER%</th><th class=n>いいね</th><th class=n>プロフ訪問</th><th class=n>その日のフォロー（アカウント全体）</th></tr></thead><tbody id="tb-x"></tbody></table></div>
 </details>
-<p class="note">Xは投稿ごとのフォロー数がほぼ記録されないため、フォローの手前の「プロフィール訪問」で並べています。同じ数のときは、その投稿の日のアカウント全体のフォロー数が多い順です（同じ日に出した投稿は同じ数になります）。</p>
 
 </section>
 <section class="tabp" id="p-ig" hidden>
-<h2 id="ig">Instagram のA（66件）</h2>
-<p class="take">反応順は「いいね＋コメント＋シェア＋保存」、フォロー増加順は投稿から生まれたフォローで並べる。</p>
 <div class="traits"><div><b>66</b>Aの投稿数（全200件中）</div><div><b>2,194</b>平均のリーチ（特別2本を除く）</div><div><b>160</b>平均の反応（特別2本を除く）</div><div><b>174</b>フォロー合計（特別2本を除く）</div></div>
 <div class="rk-btns" data-ch="ig"><button type="button" data-mode="react" aria-pressed="true">反応順</button><button type="button" data-mode="follow" aria-pressed="false">フォロー増加順</button></div>
 <div class="tk" id="tk-ig"></div>
@@ -82,16 +83,14 @@
 <details class="more"><summary>11位以降も含めて、全件を表で見る</summary>
 <div class="rk"><table><thead><tr><th class="n">順位</th><th>日付</th><th>種類</th><th>投稿</th><th class=n>リーチ</th><th class=n>反応（いいね＋コメント＋シェア＋保存）</th><th class=n>シェア</th><th class=n>保存</th><th class=n>フォロー</th><th class=n>フォロー/1000リーチ</th></tr></thead><tbody id="tb-ig"></tbody></table></div>
 </details>
-<p class="note">「特別」の2本（6/30・10/1のリール）は数字が桁違いのため、上の平均と合計からは外し、ランキングには印を付けて載せています。</p>
 
 </section>
-<h2 id="how">選び方</h2>
-<p>「最初のグループ分け」と同じ基準で、月ごとにAを選んでいます。</p>
+<details class="more"><summary>数字の見方</summary>
 <ul>
-<li><strong>X</strong>：その月の表示の中央値以上で、プロフィール訪問が1回以上ある投稿。<a href="../x/content/">X コンテンツ4グループ</a>のAと同じです。</li>
-<li><strong>Instagram</strong>：その月のリーチの中央値以上で、シェアかフォローが1以上ある投稿。<a href="../2026-11/">11月のABCD</a>と同じ基準を、全ての月に当てはめました。</li>
-</ul>
-<p><a href="../x/posts/">→ X 投稿とKPI（事実）</a>　<a href="../ig/posts/">→ Instagram 投稿とKPI（事実）</a></p>
+<li>A＝その月の中央値以上に届き、反応もあった投稿（X：プロフ訪問1以上／IG：シェアかフォロー1以上）。</li>
+<li>Xは投稿ごとのフォローが記録されないため、フォロー増加順はプロフ訪問で並べています。</li>
+<li>「特別」は桁違いのバズ投稿。平均からは外しています。</li>
+</ul></details>
 
 <footer>HIYOKO ／ 分析日 2026年11月19日</footer>
 </main>
@@ -107,7 +106,7 @@ function fmt(v){return typeof v==='number'?v.toLocaleString('ja-JP',{maximumFrac
 function top(rows,k){var m={};rows.forEach(function(r){if(r[k])m[r[k]]=(m[r[k]]||0)+1;});return Object.keys(m).sort(function(a,b){return m[b]-m[a];}).slice(0,2).map(function(x){return '「'+esc(x)+'」'+m[x]+'件';});}
 function take(ch,rows,mode){var t=rows.slice(0,10),th=top(t,'th'),f=top(t,ch==='x'?'fm':'ty'),all=C[ch].rows;
  var k=th[0]?th[0].replace(/^「(.*)」.*$/,'$1'):'',share=Math.round(100*all.filter(function(r){return r.th===k;}).length/all.length);
- document.getElementById('tk-'+ch).innerHTML='<b>'+(mode==='react'?'反応':'フォロー増加')+'の上位10件の共通点：</b>テーマは'+th.join('、')+'（Aの全体では'+esc(k)+'は'+share+'%）。'+(ch==='x'?'書き方':'種類')+'は'+f.join('、')+'。';}
+ document.getElementById('tk-'+ch).innerHTML='<b>上位10件に多い</b>'+th.concat(f).map(function(x){return '<span>'+x.replace(/「(.*)」(\d+)件/,'$1 <em>$2</em>')+'</span>';}).join('');}
 var LD={};
 function lib(src,cb){if(LD[src]){LD[src].push?LD[src].push(cb):cb();return;}LD[src]=[cb];var t=document.createElement('script');t.async=true;t.src=src;t.onload=function(){var q=LD[src];LD[src]=true;q.forEach(function(f){f();});};document.head.appendChild(t);}
 function embed(ch,box){
@@ -118,7 +117,7 @@ var IO='IntersectionObserver' in window?new IntersectionObserver(function(es){es
 function cards(ch,rows,hk){var c=C[ch],box=document.getElementById('cards-'+ch);
  var mx=Math.max.apply(null,rows.filter(function(r){return !r.sp;}).map(function(r){return r[hk[0]];}).concat([1]));
  box.innerHTML=rows.slice(0,10).map(function(r,i){
-  var k=c.cols.filter(function(col){return ['d','t','ty'].indexOf(col[0])<0;}).map(function(col){return '<span class="'+(hk[0]===col[0]?'key':'')+'"><b>'+fmt(r[col[0]])+'</b>'+esc(col[1].replace(/（.*）/,''))+'</span>';}).join('');
+  var k=c.cols.filter(function(col){return (ch==='x'?['imp','eng','pv']:['rc','re','fo']).indexOf(col[0])>=0;}).map(function(col){return '<span class="'+(hk[0]===col[0]?'key':'')+'"><b>'+fmt(r[col[0]])+'</b>'+esc(col[1].replace(/（.*）/,''))+'</span>';}).join('');
   var u=r.u, q;
   if(ch==='x'){q='<blockquote class="twitter-tweet" data-dnt="true" data-conversation="none">'+esc(r.t||'')+'\n<a href="'+u.replace('//x.com/','//twitter.com/')+'">Xで見る</a></blockquote>';}
   else{q='<blockquote class="instagram-media" data-instgrm-permalink="'+u+'" data-instgrm-version="14">'+esc(r.t||'（本文なし）')+'\n<a href="'+u+'" target="_blank" rel="noopener">Instagramで見る</a></blockquote>';}
