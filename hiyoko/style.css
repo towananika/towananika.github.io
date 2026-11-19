@@ -175,5 +175,16 @@ body.ch-ig{--accent:#c2347a;--accent-soft:#fbe8f2}
 details.ref{margin-top:40px;border:1px solid var(--line);border-radius:10px;padding:0 14px;background:var(--card)}
 details.ref>summary{cursor:pointer;font-weight:700;padding:12px 0}
 .sitenav .ch.x{color:#1f6fb2}.sitenav .ch.ig{color:#c2347a}
+p.take{font-weight:700;margin:-2px 0 16px;padding:8px 12px;border-left:4px solid var(--accent);background:var(--card);border-radius:6px}
+p.take::before{content:"ひとことで言うと　";color:var(--accent);font-size:.8rem}
+abbr[title]{text-decoration:underline dotted;text-underline-offset:3px;cursor:help}
+dl.terms{display:grid;grid-template-columns:max-content 1fr;gap:8px 18px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;font-size:.93rem}
+dl.terms dt{font-weight:700}
+dl.terms dd{margin:0;color:var(--ink)}
+@media (max-width:560px){dl.terms{grid-template-columns:1fr}dl.terms dd{margin-bottom:6px}}
+.postcard .lbl{display:inline-block;font-size:.75rem;font-weight:700;color:var(--paper);background:var(--muted);border-radius:4px;padding:1px 7px;margin:10px 0 6px}
+.postcard .lbl.fix{background:var(--good)}
+.postcard .src{font-size:.82rem;margin-left:8px}
+.postcard .src a{color:var(--accent)}
 @media (max-width:720px){.groups{grid-template-columns:1fr}}
 @media (max-width:560px){.big-links{grid-template-columns:1fr}}
