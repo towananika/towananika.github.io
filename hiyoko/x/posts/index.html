@@ -31,11 +31,14 @@ table.acct{min-width:880px}
 table.acct td.dt{white-space:nowrap}
 .sumt td a{color:var(--accent);text-decoration:none}
 th.n{text-align:right}
+.spb{display:inline-block;font-size:.7rem;font-weight:700;color:var(--bad);border:1px solid var(--bad);border-radius:99px;padding:0 6px;margin-bottom:2px}
+.special{border-left:3px solid var(--bad);padding:4px 0 4px 14px;margin:8px 0 16px}
+.special li{margin-bottom:6px}
 </style>
 </head>
 <body class="ch-x">
 <div class="layout">
-<details class="sitenav" open><summary>目次（ページ一覧）</summary><div><a class="brand" href="../../">HIYOKO SNS分析</a><span class="ch">トップ</span><ul><li><a class="page" href="../../">トップ（チャンネルを選ぶ）</a></li></ul><span class="ch x">X</span><ul><li><a class="page" href="../../x/">X 詳細</a><ul><li><a href="../../x/#x-summary">要点</a></li><li><a href="../../x/#x-kpi">1年間のKPI</a></li><li><a href="../../x/#x-trend">月別推移</a></li><li><a href="../../x/#x-posts">投稿ごとの分析</a></li><li><a href="../../x/#x-groups">コンテンツ4グループ</a></li><li><a href="../../x/#x-qual">投稿の中身</a></li><li><a href="../../x/#x-act">改善アクション</a></li><li><a href="../../x/#x-rewrite">書き換え例</a></li><li><a href="../../x/#x-week">週間スケジュール</a></li><li><a href="../../x/#x-target">KPI目標</a></li><li><a href="../../x/#x-data">欲しいデータ</a></li><li><a href="../../x/#x-terms">用語の説明</a></li></ul></li><li><a class="page" href="../../x/posts/" aria-current="page">X 投稿とKPI（事実）</a><ul><li><a href="#account">アカウント全体（1年）</a></li><li><a href="#video">動画</a></li><li><a href="#filter">投稿別KPI（合計）</a></li><li><a href="#summary">投稿別KPI（月別）</a></li><li><a href="#list">投稿一覧</a></li><li><a href="#terms">用語の説明</a></li></ul></li><li><a class="page" href="../../x/content/">X コンテンツ4グループ</a><ul><li><a href="../../x/content/#board">ボード（A〜D）</a></li><li><a href="../../x/content/#why">何がグループを分けるか</a></li><li><a href="../../x/content/#todo">グループごとにやること</a></li></ul></li><li><a class="page" href="../../x/plan/">X 悩み→解決の企画</a><ul><li><a href="../../x/plan/#summary">要点</a></li><li><a href="../../x/plan/#posts">効いた投稿と直すところ</a></li><li><a href="../../x/plan/#template">投稿の型</a></li><li><a href="../../x/plan/#drafts">新しい投稿案</a></li><li><a href="../../x/plan/#flow">全体の流れ</a></li><li><a href="../../x/plan/#kpi">見る数字</a></li></ul></li></ul><span class="ch ig">Instagram</span><ul><li><a class="page" href="../../ig/">Instagram 詳細</a><ul><li><a href="../../ig/#ig-summary">要点</a></li><li><a href="../../ig/#ig-kpi">KPI</a></li><li><a href="../../ig/#ig-format">形式別</a></li><li><a href="../../ig/#ig-theme">テーマ別</a></li><li><a href="../../ig/#ig-groups">コンテンツ3グループ</a></li><li><a href="../../ig/#ig-qual">投稿の中身</a></li><li><a href="../../ig/#ig-act">改善アクション</a></li><li><a href="../../ig/#ig-terms">用語の説明</a></li></ul></li><li><a class="page" href="../../ig/posts/">Instagram 投稿とKPI（事実）</a><ul><li><a href="../../ig/posts/#filter">KPI（合計）</a></li><li><a href="../../ig/posts/#summary">月別KPI</a></li><li><a href="../../ig/posts/#list">投稿一覧</a></li><li><a href="../../ig/posts/#terms">用語の説明</a></li></ul></li><li><a class="page" href="../../ig/content/">Instagram コンテンツ3グループ</a><ul><li><a href="../../ig/content/#a">A シェアされて、フォローを生む</a></li><li><a href="../../ig/content/#b">B 見られるが、フォローにならない</a></li><li><a href="../../ig/content/#c">C 届かない</a></li><li><a href="../../ig/content/#todo">グループごとにやること</a></li></ul></li></ul></div></details>
+<details class="sitenav" open><summary>目次（ページ一覧）</summary><div><a class="brand" href="../../">HIYOKO SNS分析</a><span class="ch">トップ</span><ul><li><a class="page" href="../../">トップ（チャンネルを選ぶ）</a></li></ul><span class="ch x">X</span><ul><li><a class="page" href="../../x/">X 詳細</a><ul><li><a href="../../x/#x-summary">要点</a></li><li><a href="../../x/#x-kpi">1年間のKPI</a></li><li><a href="../../x/#x-trend">月別推移</a></li><li><a href="../../x/#x-posts">投稿ごとの分析</a></li><li><a href="../../x/#x-groups">コンテンツ4グループ</a></li><li><a href="../../x/#x-qual">投稿の中身</a></li><li><a href="../../x/#x-act">改善アクション</a></li><li><a href="../../x/#x-rewrite">書き換え例</a></li><li><a href="../../x/#x-week">週間スケジュール</a></li><li><a href="../../x/#x-target">KPI目標</a></li><li><a href="../../x/#x-data">欲しいデータ</a></li><li><a href="../../x/#x-terms">用語の説明</a></li></ul></li><li><a class="page" href="../../x/posts/" aria-current="page">X 投稿とKPI（事実）</a><ul><li><a href="#account">アカウント全体（1年）</a></li><li><a href="#special">特別事項</a></li><li><a href="#video">動画</a></li><li><a href="#filter">投稿別KPI（合計）</a></li><li><a href="#summary">投稿別KPI（月別）</a></li><li><a href="#list">投稿一覧</a></li><li><a href="#terms">用語の説明</a></li></ul></li><li><a class="page" href="../../x/content/">X コンテンツ4グループ</a><ul><li><a href="../../x/content/#board">ボード（A〜D）</a></li><li><a href="../../x/content/#why">何がグループを分けるか</a></li><li><a href="../../x/content/#todo">グループごとにやること</a></li></ul></li><li><a class="page" href="../../x/plan/">X 悩み→解決の企画</a><ul><li><a href="../../x/plan/#summary">要点</a></li><li><a href="../../x/plan/#posts">効いた投稿と直すところ</a></li><li><a href="../../x/plan/#template">投稿の型</a></li><li><a href="../../x/plan/#drafts">新しい投稿案</a></li><li><a href="../../x/plan/#flow">全体の流れ</a></li><li><a href="../../x/plan/#kpi">見る数字</a></li></ul></li></ul><span class="ch ig">Instagram</span><ul><li><a class="page" href="../../ig/">Instagram 詳細</a><ul><li><a href="../../ig/#ig-summary">要点</a></li><li><a href="../../ig/#ig-kpi">KPI</a></li><li><a href="../../ig/#ig-format">形式別</a></li><li><a href="../../ig/#ig-theme">テーマ別</a></li><li><a href="../../ig/#ig-groups">コンテンツ3グループ</a></li><li><a href="../../ig/#ig-qual">投稿の中身</a></li><li><a href="../../ig/#ig-act">改善アクション</a></li><li><a href="../../ig/#ig-terms">用語の説明</a></li></ul></li><li><a class="page" href="../../ig/posts/">Instagram 投稿とKPI（事実）</a><ul><li><a href="../../ig/posts/#filter">KPI（合計）</a></li><li><a href="../../ig/posts/#summary">月別KPI</a></li><li><a href="../../ig/posts/#special">特別事項</a></li><li><a href="../../ig/posts/#list">投稿一覧</a></li><li><a href="../../ig/posts/#terms">用語の説明</a></li></ul></li><li><a class="page" href="../../ig/content/">Instagram コンテンツ3グループ</a><ul><li><a href="../../ig/content/#a">A シェアされて、フォローを生む</a></li><li><a href="../../ig/content/#b">B 見られるが、フォローにならない</a></li><li><a href="../../ig/content/#c">C 届かない</a></li><li><a href="../../ig/content/#todo">グループごとにやること</a></li></ul></li></ul></div></details>
 <main>
 <nav class="crumbs"><a href="../../">HIYOKO分析トップ</a> ／ <a href="../">X</a> ／ 投稿一覧（KPI）</nav>
 <div class="chhead"><span class="dot"></span>X</div>
@@ -52,7 +55,23 @@ th.n{text-align:right}
   <div><b>1,306</b>プロフ訪問</div>
   <div><b>7.8%</b>ER%（エンゲージ÷表示）</div>
 </div>
+<h3>1日あたりの平均（特別な4日を除く）</h3>
+<div class="traits">
+  <div><b>299</b>表示／日（含めると312）</div>
+  <div><b>1.17</b>フォロー／日（含めると1.31）</div>
+  <div><b>3.3</b>プロフ訪問／日（含めると3.6）</div>
+  <div><b>23.1</b>エンゲージ／日（含めると24.2）</div>
+</div>
+<h3>月別の合計</h3>
 <div class="tbl"><table class="acct"><tr><th>月</th><th class="n">表示</th><th class="n">いいね</th><th class="n">エンゲージ</th><th class="n">プロフ訪問</th><th class="n">フォロー</th><th class="n">フォロー解除</th><th class="n">差し引き</th><th class="n">返信</th><th class="n">リポスト</th><th class="n">保存</th><th class="n">投稿数</th></tr><tr><td class="dt">2026年11月<small>（19日分）</small></td><td class="n">5,461</td><td class="n">273</td><td class="n">352</td><td class="n">30</td><td class="n">60</td><td class="n">14</td><td class="n">+46</td><td class="n">44</td><td class="n">4</td><td class="n">1</td><td class="n">35</td></tr><tr><td class="dt">2026年10月</td><td class="n">5,605</td><td class="n">170</td><td class="n">228</td><td class="n">30</td><td class="n">45</td><td class="n">7</td><td class="n">+38</td><td class="n">27</td><td class="n">1</td><td class="n">0</td><td class="n">60</td></tr><tr><td class="dt">2026年9月</td><td class="n">6,390</td><td class="n">220</td><td class="n">292</td><td class="n">39</td><td class="n">16</td><td class="n">7</td><td class="n">+9</td><td class="n">30</td><td class="n">0</td><td class="n">2</td><td class="n">58</td></tr><tr><td class="dt">2026年8月</td><td class="n">6,400</td><td class="n">169</td><td class="n">267</td><td class="n">44</td><td class="n">10</td><td class="n">10</td><td class="n">0</td><td class="n">54</td><td class="n">0</td><td class="n">0</td><td class="n">59</td></tr><tr><td class="dt">2026年7月</td><td class="n">8,783</td><td class="n">254</td><td class="n">476</td><td class="n">88</td><td class="n">17</td><td class="n">15</td><td class="n">+2</td><td class="n">121</td><td class="n">0</td><td class="n">4</td><td class="n">60</td></tr><tr><td class="dt">2026年6月</td><td class="n">18,746</td><td class="n">728</td><td class="n">1,340</td><td class="n">235</td><td class="n">54</td><td class="n">21</td><td class="n">+33</td><td class="n">273</td><td class="n">1</td><td class="n">101</td><td class="n">71</td></tr><tr><td class="dt">2026年5月</td><td class="n">17,269</td><td class="n">721</td><td class="n">1,184</td><td class="n">181</td><td class="n">51</td><td class="n">17</td><td class="n">+34</td><td class="n">143</td><td class="n">0</td><td class="n">126</td><td class="n">66</td></tr><tr><td class="dt">2026年4月</td><td class="n">19,223</td><td class="n">734</td><td class="n">1,419</td><td class="n">307</td><td class="n">72</td><td class="n">16</td><td class="n">+56</td><td class="n">221</td><td class="n">1</td><td class="n">156</td><td class="n">58</td></tr><tr><td class="dt">2026年3月</td><td class="n">9,621</td><td class="n">876</td><td class="n">1,400</td><td class="n">144</td><td class="n">67</td><td class="n">22</td><td class="n">+45</td><td class="n">166</td><td class="n">2</td><td class="n">210</td><td class="n">50</td></tr><tr><td class="dt">2026年2月</td><td class="n">10,020</td><td class="n">907</td><td class="n">1,507</td><td class="n">153</td><td class="n">43</td><td class="n">8</td><td class="n">+35</td><td class="n">169</td><td class="n">15</td><td class="n">263</td><td class="n">52</td></tr><tr><td class="dt">2026年1月</td><td class="n">4,680</td><td class="n">232</td><td class="n">334</td><td class="n">44</td><td class="n">34</td><td class="n">5</td><td class="n">+29</td><td class="n">54</td><td class="n">0</td><td class="n">3</td><td class="n">25</td></tr><tr><td class="dt">2025年12月</td><td class="n">1,692</td><td class="n">30</td><td class="n">61</td><td class="n">10</td><td class="n">9</td><td class="n">2</td><td class="n">+7</td><td class="n">18</td><td class="n">1</td><td class="n">2</td><td class="n">7</td></tr><tr><td class="dt">2025年11月<small>（12日分）</small></td><td class="n">132</td><td class="n">0</td><td class="n">1</td><td class="n">1</td><td class="n">0</td><td class="n">0</td><td class="n">0</td><td class="n">0</td><td class="n">0</td><td class="n">0</td><td class="n">1</td></tr><tr><td><b>合計</b></td><td class="n"><b>114,022</b></td><td class="n"><b>5,314</b></td><td class="n"><b>8,861</b></td><td class="n"><b>1,306</b></td><td class="n"><b>478</b></td><td class="n"><b>144</b></td><td class="n"><b>+334</b></td><td class="n"><b>1,320</b></td><td class="n"><b>25</b></td><td class="n"><b>868</b></td><td class="n"><b>602</b></td></tr></table></div>
+<p class="note">月別の表と1年合計は、実際に起きた数字なので特別な日も含めています。平均だけ、下の特別事項の4日を除いています。</p>
+
+<h2 id="special">特別事項</h2>
+<div class="special">
+<p><strong>次の4日は数字が飛び抜けて大きいため、1日あたりの平均には含めていません。</strong>この4日だけで、1年のフォロー478件のうち55件が出ています。</p>
+<ul><li>2026年4月15日：表示2,405、フォロー27、プロフ訪問49、返信46</li><li>2026年6月15日：表示875、フォロー14、プロフ訪問32、返信38</li><li>2026年6月16日：表示1,173、フォロー5、プロフ訪問19、返信16</li><li>2026年6月17日：表示1,354、フォロー9、プロフ訪問25、返信28</li></ul>
+<p class="note">投稿別のデータは7月以降しか書き出せないため、この日にどの投稿が出ていたかはデータでは確認できていません。投稿別のKPI（7月〜11月）には、平均を大きく動かす投稿はありませんでした。</p>
+</div>
 
 <h2 id="video">動画</h2>
 <p class="note">X Analytics「動画の概要」の書き出しです。期間中にアップした動画は15本、動画ごとの再生数の合計は384回でした。</p>
@@ -68,6 +87,7 @@ th.n{text-align:right}
 <div class="tbl sumt"><table id="sum"></table></div>
 <p class="note">月をタップすると、下の一覧をその月だけにします。</p>
 
+
 <h2 id="list">投稿一覧</h2>
 <div id="cnt"></div>
 <div class="plist"><table><thead><tr id="th"><th data-k="d" data-t="s">日付</th><th data-k="t" data-t="text">投稿</th><th data-k="imp" data-t="n" class="n">表示</th><th data-k="lk" data-t="n" class="n">いいね</th><th data-k="er" data-t="n" class="n">ER%</th><th data-k="pv" data-t="n" class="n">プロフ訪問</th><th data-k="pvk" data-t="n" class="n">訪問/1000表示</th><th data-k="bm" data-t="n" class="n">保存</th><th data-k="rt" data-t="n" class="n">リポスト</th><th data-k="rp" data-t="n" class="n">返信</th><th data-k="dx" data-t="n" class="n">詳細を開く</th><th data-k="uc" data-t="n" class="n">リンククリック</th></tr></thead><tbody id="tb"></tbody></table></div>
@@ -76,7 +96,7 @@ th.n{text-align:right}
 <h2 id="terms">用語の説明</h2>
 <dl class="terms"><dt>表示</dt><dd>インプレッション。タイムラインなどで表示された回数</dd><dt>ER%</dt><dd>エンゲージメント（いいね・クリック・返信など全部）÷ 表示 ×100</dd><dt>訪問/1000表示</dt><dd>プロフィール訪問 ÷ 表示 ×1000</dd><dt>詳細を開く</dt><dd>投稿をタップして詳しく開いた回数</dd></dl>
 
-<p><a href="../">→ X 詳細</a>　<a href="../content/">→ X コンテンツ3グループ</a>　<a href="../plan/">→ X 悩み→解決の企画</a></p>
+<p><a href="../">→ X 詳細</a>　<a href="../content/">→ X コンテンツ4グループ</a>　<a href="../plan/">→ X 悩み→解決の企画</a></p>
 <footer>HIYOKO ／ 分析日 2026年11月19日</footer>
 </main>
 </div>
@@ -100,16 +120,17 @@ function filtered(){var q=st.q.toLowerCase();return R.filter(function(r){
 function lbl(k,v){return k==='g'&&C.groups[v]?C.groups[v]:v;}
 function render(){var rows=filtered();
  rows.sort(function(a,b){var x=a[st.sort],y=b[st.sort];return (x<y?-1:x>y?1:0)*st.dir;});
- document.getElementById('tiles').innerHTML=C.tiles.map(function(t){return '<div><b>'+fmt(calc(t[0],rows))+'</b>'+t[1]+'</div>'}).join('');
+ var agg=rows.filter(function(r){return !r.sp});
+ document.getElementById('tiles').innerHTML=C.tiles.map(function(t){return '<div><b>'+fmt(calc(t[0],agg))+'</b>'+t[1]+'</div>'}).join('');
  var by=document.getElementById('by').value, groups={};
- rows.forEach(function(r){(groups[r[by]]=groups[r[by]]||[]).push(r)});
+ agg.forEach(function(r){(groups[r[by]]=groups[r[by]]||[]).push(r)});
  var keys=Object.keys(groups).sort();
  document.getElementById('sum').innerHTML='<tr><th>'+document.querySelector('#by option:checked').textContent+'</th>'+C.sumcols.map(function(c){return '<th class="n">'+c[1]+'</th>'}).join('')+'</tr>'+
   keys.map(function(k){return '<tr><td><a href="#" data-k="'+by+'" data-v="'+k.replace(/"/g,'&quot;')+'">'+lbl(by,k)+'</a></td>'+C.sumcols.map(function(c){return '<td class="n">'+fmt(calc(c[0],groups[k]))+'</td>'}).join('')+'</tr>'}).join('');
  document.getElementById('cnt').textContent=rows.length+'件を表示中';
  var tb=document.getElementById('tb');
  tb.innerHTML=rows.map(function(r){return '<tr>'+C.cols.map(function(c){var v=r[c[0]];
-   if(c[2]==='text')return '<td class="tx"><a href="'+r.u+'" target="_blank" rel="noopener">'+esc(v||'（本文なし）')+'</a></td>';
+   if(c[2]==='text')return '<td class="tx">'+(r.sp?'<span class="spb">特別・平均から除外</span>':'')+'<a href="'+r.u+'" target="_blank" rel="noopener">'+esc(v||'（本文なし）')+'</a></td>';
    if(c[2]==='n')return '<td class="n">'+fmt(v)+'</td>';
    return '<td class="'+(c[0]==='d'?'dt':'')+'">'+esc(v==='-'?'—':v)+'</td>';}).join('')+'</tr>'}).join('');
  document.querySelectorAll('#th th').forEach(function(th){var k=th.getAttribute('data-k');th.setAttribute('aria-sort',k===st.sort?(st.dir>0?'ascending':'descending'):'none');});
