@@ -85,17 +85,77 @@ ol.actions li{margin-bottom:14px}
 @media (max-width:560px){.pair{grid-template-columns:1fr}}
 footer{margin-top:56px;color:var(--muted);font-size:.85rem}
 @media (max-width:560px){.grid2{grid-template-columns:1fr}h1{font-size:1.45rem}}
+.summary{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:20px 0 8px}
+.scard{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;display:flex;flex-direction:column}
+.scard h2{margin:0 0 8px;padding:0;border:0;font-size:1.15rem;display:flex;align-items:center;gap:8px}
+.scard ul{margin:0 0 12px;padding-left:1.2em;flex:1}
+.scard li{margin-bottom:6px}
+.scard .next{background:var(--accent-soft);border-radius:8px;padding:8px 10px;font-size:.92rem;margin-bottom:12px}
+.badge{display:inline-block;font-size:.75rem;font-weight:700;padding:2px 8px;border-radius:99px;background:var(--ink);color:var(--paper)}
+.go{align-self:flex-start;font-weight:700;color:var(--accent);text-decoration:none}
+.tabs{position:sticky;top:0;z-index:5;background:var(--paper);display:flex;gap:8px;padding:12px 0;margin:28px 0 0;border-bottom:2px solid var(--line)}
+.tabs a{flex:1;text-align:center;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);text-decoration:none;font-weight:700}
+.tabs a[aria-selected="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.panel>h2:first-of-type{margin-top:28px}
+.toc{display:flex;flex-wrap:wrap;gap:6px;margin:16px 0 0}
+.toc a{font-size:.85rem;padding:4px 10px;border-radius:99px;border:1px solid var(--line);color:var(--muted);text-decoration:none;background:var(--card)}
+details.ba,details.more{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:0 14px;margin:0 0 10px}
+details.ba>summary,details.more>summary{cursor:pointer;font-weight:700;padding:12px 0;list-style-position:inside}
+details.ba[open],details.more[open]{padding-bottom:14px}
+.panel-end{margin-top:40px}
+[id]{scroll-margin-top:76px}
+@media (max-width:560px){.summary{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <main>
 
 <h1>HIYOKO 公式X・Instagram 投稿分析</h1>
-<div class="meta">対象：X @HiyokoGlobal（2025年11月20日〜2026年11月19日の1年間、日別データ）と Instagram @hiyoko_global（2026年1月29日〜11月17日、200投稿）／ 投稿ごとの分析はXの仕様上7月2日以降の359投稿 ／ データ元：X Analytics・Instagramインサイトのエクスポート ／ 更新：2026年11月19日</div>
+<div class="meta">X @HiyokoGlobal：2025年11月20日〜2026年11月19日 ／ Instagram @hiyoko_global：2026年1月29日〜11月17日 ／ 更新：2026年11月19日</div>
 
-<p class="lead">Xはこの1年で<strong>新規フォロー478件（純増334件）</strong>。4〜6月にリーチのピークを迎え、7〜9月に停滞し、10〜11月はフォロー転換率が年間最高まで戻りました。ただしリーチはまだピークの約3分の1で、<strong>今の一番のレバーはリーチの回復</strong>です。投稿の中でビューとフォローを両方取れているのは、<strong>「NFT・アイテム所有」を「悩み→解決」の型で語る投稿</strong>です。Instagramではフォローの96%が2本のキャラクターのリールから来ており、XとInstagramで伸びる中身がはっきり違います。</p>
+<div class="summary">
+  <div class="scard">
+    <h2><span class="badge">X</span>要点</h2>
+    <ul>
+      <li>1年で新規フォロー<strong>478件</strong>（純増334件）</li>
+      <li>10〜11月はフォロー転換率が年間最高。ただしリーチはピークの<strong>約3分の1</strong></li>
+      <li>伸びるのは<strong>NFT・アイテム所有の「悩み→解決」</strong>。リンクだけ・一言・価格の連投は弱い</li>
+    </ul>
+    <div class="next"><strong>次の一手：</strong>1日1〜2本に絞り、悩み→解決を週3本</div>
+    <a class="go" href="#x" data-tab="x">Xの詳細を見る →</a>
+  </div>
+  <div class="scard">
+    <h2><span class="badge">Instagram</span>要点</h2>
+    <ul>
+      <li>リーチ約400万、フォロー<strong>4,234件</strong></li>
+      <li>フォローの<strong>96%</strong>はセリフなしのキャラクターのリール2本から</li>
+      <li>画像は投稿の3分の2だがフォローは<strong>2件</strong>。トークンの話は最も弱い</li>
+    </ul>
+    <div class="next"><strong>次の一手：</strong>キャラとヘルスのリールを週3本以上</div>
+    <a class="go" href="#ig" data-tab="ig">Instagramの詳細を見る →</a>
+  </div>
+</div>
 
-<h2>Xの1年間のKPI</h2>
+<h2 id="compare">XとInstagramの違い</h2>
+<div class="tbl"><table>
+<tr><th></th><th>X</th><th>Instagram</th></tr>
+<tr><td>フォローを生む投稿</td><td>テキストの「悩み→解決」（内容への関心）</td><td>シェアされる短いキャラクターのリール</td></tr>
+<tr><td>キャラ・ミーム</td><td class="lo">ビューは取れるがフォローにつながらない</td><td class="hi">フォローの主力</td></tr>
+<tr><td>トークン・NFT</td><td class="hi">平均以上（NFT・アイテム所有が最強）</td><td class="lo">最も弱い</td></tr>
+<tr><td>両方で伸びた投稿</td><td colspan="2">「hydrateeee!」（ヘルス）、「do you mind」（キャラ）</td></tr>
+</table></div>
+
+
+<nav class="tabs" role="tablist" aria-label="SNSの切り替え">
+  <a href="#x" role="tab" data-tab="x" aria-selected="true">X</a>
+  <a href="#ig" role="tab" data-tab="ig" aria-selected="false">Instagram</a>
+</nav>
+
+<section class="panel" id="x" role="tabpanel" aria-label="X">
+
+<nav class="toc" aria-label="Xの目次"><a href="#x-kpi">KPI</a><a href="#x-trend">月別推移</a><a href="#x-posts">投稿ごとの分析</a><a href="#x-qual">投稿の中身</a><a href="#x-act">改善アクション</a><a href="#x-rewrite">書き換え例</a><a href="#x-week">週間スケジュール</a><a href="#x-target">KPI目標</a><a href="#x-data">欲しいデータ</a></nav>
+
+<h2 id="x-kpi">1年間のKPI</h2>
 <div class="kpis">
   <div class="kpi"><b>601</b><span>投稿（約1.6本/日）</span></div>
   <div class="kpi"><b>11.4万</b><span>インプレッション（1投稿あたり約190）</span></div>
@@ -104,7 +164,7 @@ footer{margin-top:56px;color:var(--muted);font-size:.85rem}
   <div class="kpi"><b>1,319 / 868</b><span>返信 / ブックマーク</span></div>
 </div>
 
-<h3>月ごとの推移</h3>
+<h3 id="x-trend">月ごとの推移</h3>
 <figure>
 <svg viewBox="0 0 640 380" role="img" aria-label="月別のインプレッションと新規フォロー">
 <g font-size="13" fill="var(--muted)">
@@ -184,7 +244,8 @@ footer{margin-top:56px;color:var(--muted);font-size:.85rem}
 <p>フォローが急増した4月15日（新規フォロー27件、返信46件）と6月15〜17日は、どちらも返信が急増した日でした。日別に見ると、フォロー数と最も強く連動しているのは返信数です（相関0.60、インプレッションは0.48）。ただし実際の返信欄を見ると、返信の多くは公式自身のスレッドの続きと営業・ボット系のアカウントで、ファンの返信はほとんどありません（後述の「投稿とコメントの中身」）。返信数の多さを、そのままファンの盛り上がりと読むことはできません。</p>
 <p class="note">投稿別データの「新規フォロー」は、Xが特定の投稿に結び付けたフォローだけを数えるため、直近90日でも2件しか記録されていません（アカウント全体では121件）。そのため投稿ごとの比較では「1,000インプレッションあたりのプロフィール訪問数（PV/1k）」をフォロー兆候の指標にしています（全体平均は約6.6）。</p>
 
-<h2>Xの投稿ごとの分析（7月2日〜11月19日）</h2>
+
+<h2 id="x-posts">投稿ごとの分析（7月2日〜11月19日）</h2>
 <p>Xの投稿別エクスポートは、期間を指定しても最新の236件までしか出力されません。そのため投稿の中身まで見た分析は、7月2日以降の359投稿が対象です。</p>
 
 <h3>投稿の要素別の傾向（インプレッション中央値）</h3>
@@ -270,7 +331,7 @@ footer{margin-top:56px;color:var(--muted);font-size:.85rem}
   <div class="cell d"><h4>ビュー低 × フォロー兆候低</h4>リンクだけの投稿、中身のない一言、キャラのセリフだけの投稿。全投稿の2割強がここに入っている。</div>
 </div>
 
-<h4>月ごとの変化（投稿別データ）</h4>
+<details class="more"><summary>月ごとの投稿数とハッシュタグの変化</summary>
 <div class="tbl"><table>
 <tr><th>月</th><th>投稿数</th><th>インプレッション中央値</th><th>ハッシュタグ平均</th></tr>
 <tr><td>11月（19日まで）</td><td class="n">51</td><td class="n">92</td><td class="n">2.1</td></tr>
@@ -281,70 +342,17 @@ footer{margin-top:56px;color:var(--muted);font-size:.85rem}
 </table></div>
 <p>ハッシュタグを付け始め、投稿数を減らした時期にリーチが約4倍になっています。他の要因もあり得るので因果とまでは言えませんが、今の方向性は合っています。</p>
 
-<h2>Instagramの分析（1月29日〜11月17日、200投稿）</h2>
-<div class="kpis">
-  <div class="kpi"><b>約400万</b><span>リーチ</span></div>
-  <div class="kpi"><b>4,234</b><span>フォロー</span></div>
-  <div class="kpi"><b>32.2万</b><span>シェア</span></div>
-  <div class="kpi"><b>96%</b><span>2本のリールから来たフォローの割合</span></div>
-</div>
-<p>フォロー4,234件のうち4,059件は、セリフのない短いキャラクターのリール2本から来ています。6月30日の「you walked right into it #meme #fyp」（リーチ約326万、フォロー3,554件、シェア約28万件）と、10月1日の「hehe」（リーチ約59万、フォロー505件）です。<strong>シェアとフォローがほぼ1対1で動いており、Instagramでは「シェアされること」がフォローの入口</strong>です。</p>
+</details>
 
-<h4>形式別（バズった2本を除く）</h4>
-<div class="tbl"><table>
-<tr><th>形式</th><th>投稿数</th><th>リーチ中央値</th><th>フォロー</th><th>シェア／1,000リーチ</th></tr>
-<tr><td>リール</td><td class="n">50</td><td class="n hi">1,068</td><td class="n hi">173</td><td class="n hi">39.0</td></tr>
-<tr><td>カルーセル</td><td class="n">16</td><td class="n">289</td><td class="n lo">0</td><td class="n">3.8</td></tr>
-<tr><td>画像</td><td class="n">132</td><td class="n lo">195</td><td class="n lo">2</td><td class="n">2.1</td></tr>
-</table></div>
-<p>投稿の3分の2が画像ですが、画像からのフォローはほぼゼロです。リールは月4〜9本しか出ておらず、画像（月12〜23本）と比率が逆になっています。</p>
-
-<h4>テーマ別（バズった2本を除く）</h4>
-<div class="tbl"><table>
-<tr><th>テーマ</th><th>投稿数</th><th>リーチ中央値</th><th>フォロー／1,000リーチ</th></tr>
-<tr><td>ヘルス（Vitalis）</td><td class="n">11</td><td class="n">293</td><td class="n hi">1.48</td></tr>
-<tr><td>ゲーム（Happy Chick）</td><td class="n">15</td><td class="n">207</td><td class="n hi">1.36</td></tr>
-<tr><td>キャラ（かわいい・日常）</td><td class="n">86</td><td class="n">295</td><td class="n hi">1.35</td></tr>
-<tr><td>あるある・ユーモア</td><td class="n">13</td><td class="n">355</td><td class="n">0.93</td></tr>
-<tr><td>トークン・Web3</td><td class="n">54</td><td class="n">219</td><td class="n lo">0.31</td></tr>
-<tr><td>参加型（タグ付け・シェア・質問）</td><td class="n">19</td><td class="n">174</td><td class="n lo">0.30</td></tr>
-</table></div>
-<p class="note">参加型はシェアは最も多い（1,000リーチあたり55.8）ものの、フォローにはつながっていません。</p>
-
-<h3>XとInstagramの違い</h3>
-<div class="tbl"><table>
-<tr><th></th><th>X</th><th>Instagram</th></tr>
-<tr><td>フォローを生む投稿</td><td>テキストの「悩み→解決」（内容への関心）</td><td>シェアされる短いキャラクターのリール</td></tr>
-<tr><td>キャラ・ミーム</td><td class="lo">ビューは取れるがフォローにつながらない</td><td class="hi">フォローの主力</td></tr>
-<tr><td>トークン・NFT</td><td class="hi">平均以上（NFT・アイテム所有が最強）</td><td class="lo">最も弱い</td></tr>
-<tr><td>両方で伸びた投稿</td><td colspan="2">「hydrateeee!」（ヘルス）、「do you mind」（キャラ）</td></tr>
-</table></div>
-
-<h3>Instagramの改善アクション</h3>
-<ol class="actions">
-  <li><strong>リールを週3本以上にし、静止画を減らす。</strong>画像とリールの比率を逆にします。</li>
-  <li><strong>バズった型を再現する。</strong>数秒・セリフなしのキャラクターのギャグ、キャプションは1行、#meme #fyp。</li>
-  <li><strong>ヘルス（Vitalis）の日常リールを増やす。</strong>「hydrateeee!」のような水分補給や睡眠ネタは、XとInstagramの両方で伸びています。</li>
-  <li><strong>トークンの話はXに寄せる。</strong>Instagramでは最も弱いテーマなので、トークン設計や価格の解説はXで行います。</li>
-</ol>
-
-<h2>投稿とコメントの中身（定性調査）</h2>
-<p>数字だけでは分からない点を、ログアウト状態で実際の投稿とコメント欄を読んで確認しました。</p>
-<h4>X</h4>
+<h2 id="x-qual">投稿とコメントの中身</h2>
+<p>ログアウト状態で実際の投稿と返信欄を読んで確認しました。</p>
 <ul>
   <li><strong>返信の多くはファンではない。</strong>返信数の多くは公式自身のスレッドの続きで、他のアカウントからの返信は「一緒にプロジェクトの話をしませんか」のような営業や、毎回「GM!」だけのアカウントがほとんどでした。質問や感想を書くファンはほぼ見当たらず、公式からの返信もありません。</li>
   <li><strong>直近の投稿はトークン・価格の訴求が中心。</strong>小文字の「ゆるキャラ口調」で「psst. i'm only $0.040」「go to coinstore. search HYK/USDT」のような投稿が続き、同じ文面を11月18日と19日に連投しています。</li>
   <li>4月15日と6月15〜17日の投稿は、ログアウト状態では遡れず確認できませんでした。</li>
 </ul>
-<h4>Instagram</h4>
-<ul>
-  <li><strong>バズったリールのコメントは多国籍で、キャラへの感情反応。</strong>英語・アラビア語・ペルシャ語・トルコ語・ヒンディー語圏などから、笑いやハートの絵文字、友達のタグ付けが付いています。投稿から20週たってもコメントが続いています。</li>
-  <li><strong>「捕まえてみて」型はコメントを生む。</strong>9月17日の「you can't! Catch me if you can~」は到達約1.2万でコメント246件。「捕まえた」という返事が並んでいます。</li>
-  <li><strong>トークンの投稿と最近の静止画は反応が薄い。</strong>トークンの投稿や11月の静止画はいいね数件〜十数件にとどまり、同じ時期のリール（11月11日の水分補給ネタ、いいね75）のほうが反応があります。</li>
-  <li>公式がファンのコメントに返信している様子は見えません。多国籍のコメントに絵文字1つでも返すだけで、会話が続きやすくなります。</li>
-</ul>
 
-<h2>Xの改善アクション</h2>
+<h2 id="x-act">改善アクション</h2>
 <ol class="actions">
   <li><strong>投稿は1日1〜2本に絞る。</strong>直近90日の約2.6本/日から減らすだけで1本あたりのビューが上がる見込みです。浮いた時間を1本の質に回します。</li>
   <li><strong>NFT・アイテム所有の「悩み→解決」投稿を主軸にし、週3本ほど出す。</strong>この型の投稿をした日は新規フォローが平均1日2.8件で、全体平均（1.0件）の約3倍でした。例：「ゲームのサーバーが終わったらアイテムも消える？ → HIYOKOならチェーン上に残る → 150M+ DLのHappy Chickで今すぐ」。ゲームやヘルスも同じ型で書けます。</li>
@@ -353,11 +361,11 @@ footer{margin-top:56px;color:var(--muted);font-size:.85rem}
   <li><strong>弱い形式をやめ、書き方の基本をそろえる。</strong>リンクだけ・一言だけ・セリフだけの投稿はやめ、リンクはリプライ欄かプロフィールに置きます。価格・購入の投稿は全体の3割から1〜2割に減らし、上場や価格改定などニュースがある日に絞ります。本文は60〜200字、ハッシュタグは3個（#HIYOKO＋テーマ1個＋流行タグ1個）にそろえます。</li>
 </ol>
 
-<h2>書き換え例：実際の投稿をどう直すか</h2>
-<p>伸びなかった実際の投稿を、上のアクションに沿って書き直した例です。数字は元の投稿の実績（インプレッション / プロフィール訪問）です。</p>
 
-<div class="ba">
-  <h3>アクション1：同じ日の連投を1本にまとめる</h3>
+<h2 id="x-rewrite">書き換え例</h2>
+<p>伸びなかった実際の投稿を、上のアクションに沿って書き直した例です。数字は元の投稿の実績（インプレッション / プロフィール訪問）です。タップすると開きます。</p>
+
+<details class="ba"><summary>アクション1：同じ日の連投を1本にまとめる</summary>
   <div class="pair">
     <div class="before"><span class="tag">Before（7月28日、同じ日に連投）</span>
       <p class="post">"Still time. Get in." 👉🏻After sale at $0.016: sale.hiyoko.io</p>
@@ -368,10 +376,9 @@ footer{margin-top:56px;color:var(--muted);font-size:.85rem}
       <p class="post">day 1: "nah, I'll wait." 🐣<br>day 30: "...I should've gotten in." 😮<br>HYK powers Happy Chick (148M+ downloads) and Vitalis. play, stay healthy, earn. details in the reply 👇<br>#HIYOKO #HYK #Web3</p></div>
   </div>
   <p class="why">キャラのセリフを1本のストーリーにまとめ、数字とHIYOKOで何ができるかを足します。リンクはリプライ欄に置きます。</p>
-</div>
+</details>
 
-<div class="ba">
-  <h3>アクション2：リンク誘導を「悩み→解決」に変える</h3>
+<details class="ba"><summary>アクション2：リンク誘導を「悩み→解決」に変える</summary>
   <div class="pair">
     <div class="before"><span class="tag">Before</span>
       <p class="post">explore hiyoko NFT marketplace 👉 linktr.ee/HIYOKO_global</p>
@@ -380,10 +387,9 @@ footer{margin-top:56px;color:var(--muted);font-size:.85rem}
       <p class="post">bought a skin, quit the game, and it's just… gone? 😮<br>on hiyoko marketplace, game items are NFTs. keep them. trade them for HYK. yours for real. 🐣<br>#HIYOKO #NFT #GameFi</p></div>
   </div>
   <p class="why">1行目で読み手の「あるある」な損を出し、2行目でHIYOKOの解決を見せます。最も成果が出た11月8〜10日の投稿と同じ型です。</p>
-</div>
+</details>
 
-<div class="ba">
-  <h3>アクション3：ミームにフォローする理由を一言足す</h3>
+<details class="ba"><summary>アクション3：ミームにフォローする理由を一言足す</summary>
   <div class="pair">
     <div class="before"><span class="tag">Before</span>
       <p class="post">do you mind 🐤 #HIYOKO #meme #kawaii</p>
@@ -392,10 +398,9 @@ footer{margin-top:56px;color:var(--muted);font-size:.85rem}
       <p class="post">do you mind 🐤<br>(fun fact: every Happy Chick game earns CheePoints, and they swap for HYK 👀)<br>#HIYOKO #meme #kawaii</p></div>
   </div>
   <p class="why">画像とノリはそのままに、括弧で1行だけ「このアカウントを見ると何が分かるか」を足します。</p>
-</div>
+</details>
 
-<div class="ba">
-  <h3>アクション4：トークン設計を図解にして保存を狙う</h3>
+<details class="ba"><summary>アクション4：トークン設計を図解にして保存を狙う</summary>
   <div class="pair">
     <div class="before"><span class="tag">Before</span>
       <p class="post">"why does Lock &amp; Vesting matter?" it helps create a more gradual token release over time. 🐣</p>
@@ -404,10 +409,9 @@ footer{margin-top:56px;color:var(--muted);font-size:.85rem}
       <p class="post">ever watched a token dump on day one? 📉<br>that's what Lock &amp; Vesting is for. 🔒<br>✅ ~15% initial circulating supply<br>✅ locked HYK unlocks gradually from month 6<br>save this for later 🔖<br>#HIYOKO #HYK #Web3</p></div>
   </div>
   <p class="why">問いかけを「読み手が見たことのある失敗」に変え、要点を✅で並べた図解を付けます。最後の「save this」で保存（ブックマーク）を促します。</p>
-</div>
+</details>
 
-<div class="ba">
-  <h3>アクション5：価格の投稿は「何に使えるか」とセットにする</h3>
+<details class="ba"><summary>アクション5：価格の投稿は「何に使えるか」とセットにする</summary>
   <div class="pair">
     <div class="before"><span class="tag">Before</span>
       <p class="post">IT'S NOW!!! 👉🏻After sale at $0.016: sale.hiyoko.io</p>
@@ -416,9 +420,10 @@ footer{margin-top:56px;color:var(--muted);font-size:.85rem}
       <p class="post">HYK is now on coinstore. 🐣<br>one token across games and health: play Happy Chick → earn CheePoints → swap for HYK.<br>how to buy is in the reply 👇<br>#HIYOKO #HYK #Web3</p></div>
   </div>
   <p class="why">価格だけの告知は伸びません。上場などニュースがある日に絞り、本文60〜200字、タグ3個、リンクはリプライ欄にします。</p>
-</div>
+</details>
 
-<h2>1週間の投稿スケジュール例</h2>
+
+<h2 id="x-week">1週間の投稿スケジュール例</h2>
 <p>1日1〜2本、週10本前後の例です。「悩み→解決」を週3本、価格・購入は週1本（約1割）にしています。投稿が比較的伸びやすい土曜には保存されやすい図解を置きます。</p>
 <div class="tbl"><table>
 <tr><th>曜日</th><th>1本目</th><th>2本目</th></tr>
@@ -431,7 +436,8 @@ footer{margin-top:56px;color:var(--muted);font-size:.85rem}
 <tr><td>日</td><td>週のまとめ（リンクはリプライ欄）</td><td>なし</td></tr>
 </table></div>
 
-<h2>次に追うKPIと目標</h2>
+
+<h2 id="x-target">次に追うKPIと目標</h2>
 <p>4週間後の目安です。毎週X Analyticsのエクスポートで確認します。</p>
 <div class="tbl"><table>
 <tr><th>指標</th><th>今（基準）</th><th>4週間後の目安</th></tr>
@@ -445,16 +451,100 @@ footer{margin-top:56px;color:var(--muted);font-size:.85rem}
 <tr><td>価格・購入の投稿の割合</td><td class="n">約3割</td><td class="n">1〜2割</td></tr>
 </table></div>
 
-<h2>分析を深めるために次に欲しいデータ</h2>
+
+<h2 id="x-data">次に欲しいデータ</h2>
 <ol class="actions">
   <li><strong>4月15日と6月15〜17日の投稿内容。</strong>フォローが急増した日ですが、投稿別エクスポートはどの期間を指定しても最新236件（7月2日以降）しか出てこないため、何を投稿したか分かっていません。その日の投稿のリンクかスクリーンショットがあれば、伸びた投稿の型を特定できます。</li>
   <li><strong>動画・画像の指標（あれば動画の再生数や視聴維持率）。</strong>今のエクスポートには画像・動画の有無が入っていないため、ミームや図解の効果を正しく比べられていません。</li>
 </ol>
 
-<h2>データについて</h2>
+
+</section>
+<section class="panel" id="ig" role="tabpanel" aria-label="Instagram">
+
+<nav class="toc" aria-label="Instagramの目次"><a href="#ig-kpi">KPI</a><a href="#ig-format">形式別</a><a href="#ig-theme">テーマ別</a><a href="#ig-qual">投稿の中身</a><a href="#ig-act">改善アクション</a></nav>
+
+<h2 id="ig-kpi">KPI（1月29日〜11月17日、200投稿）</h2>
+<div class="kpis">
+  <div class="kpi"><b>約400万</b><span>リーチ</span></div>
+  <div class="kpi"><b>4,234</b><span>フォロー</span></div>
+  <div class="kpi"><b>32.2万</b><span>シェア</span></div>
+  <div class="kpi"><b>96%</b><span>2本のリールから来たフォローの割合</span></div>
+</div>
+<p>フォロー4,234件のうち4,059件は、セリフのない短いキャラクターのリール2本から来ています。6月30日の「you walked right into it #meme #fyp」（リーチ約326万、フォロー3,554件、シェア約28万件）と、10月1日の「hehe」（リーチ約59万、フォロー505件）です。<strong>シェアとフォローがほぼ1対1で動いており、Instagramでは「シェアされること」がフォローの入口</strong>です。</p>
+
+<h2 id="ig-format">形式別（バズった2本を除く）</h2>
+<div class="tbl"><table>
+<tr><th>形式</th><th>投稿数</th><th>リーチ中央値</th><th>フォロー</th><th>シェア／1,000リーチ</th></tr>
+<tr><td>リール</td><td class="n">50</td><td class="n hi">1,068</td><td class="n hi">173</td><td class="n hi">39.0</td></tr>
+<tr><td>カルーセル</td><td class="n">16</td><td class="n">289</td><td class="n lo">0</td><td class="n">3.8</td></tr>
+<tr><td>画像</td><td class="n">132</td><td class="n lo">195</td><td class="n lo">2</td><td class="n">2.1</td></tr>
+</table></div>
+<p>投稿の3分の2が画像ですが、画像からのフォローはほぼゼロです。リールは月4〜9本しか出ておらず、画像（月12〜23本）と比率が逆になっています。</p>
+
+<h2 id="ig-theme">テーマ別（バズった2本を除く）</h2>
+<div class="tbl"><table>
+<tr><th>テーマ</th><th>投稿数</th><th>リーチ中央値</th><th>フォロー／1,000リーチ</th></tr>
+<tr><td>ヘルス（Vitalis）</td><td class="n">11</td><td class="n">293</td><td class="n hi">1.48</td></tr>
+<tr><td>ゲーム（Happy Chick）</td><td class="n">15</td><td class="n">207</td><td class="n hi">1.36</td></tr>
+<tr><td>キャラ（かわいい・日常）</td><td class="n">86</td><td class="n">295</td><td class="n hi">1.35</td></tr>
+<tr><td>あるある・ユーモア</td><td class="n">13</td><td class="n">355</td><td class="n">0.93</td></tr>
+<tr><td>トークン・Web3</td><td class="n">54</td><td class="n">219</td><td class="n lo">0.31</td></tr>
+<tr><td>参加型（タグ付け・シェア・質問）</td><td class="n">19</td><td class="n">174</td><td class="n lo">0.30</td></tr>
+</table></div>
+<p class="note">参加型はシェアは最も多い（1,000リーチあたり55.8）ものの、フォローにはつながっていません。</p>
+
+
+<h2 id="ig-qual">投稿とコメントの中身</h2>
+<p>ログアウト状態で実際の投稿とコメント欄を読んで確認しました。</p>
+<ul>
+  <li><strong>バズったリールのコメントは多国籍で、キャラへの感情反応。</strong>英語・アラビア語・ペルシャ語・トルコ語・ヒンディー語圏などから、笑いやハートの絵文字、友達のタグ付けが付いています。投稿から20週たってもコメントが続いています。</li>
+  <li><strong>「捕まえてみて」型はコメントを生む。</strong>9月17日の「you can't! Catch me if you can~」は到達約1.2万でコメント246件。「捕まえた」という返事が並んでいます。</li>
+  <li><strong>トークンの投稿と最近の静止画は反応が薄い。</strong>トークンの投稿や11月の静止画はいいね数件〜十数件にとどまり、同じ時期のリール（11月11日の水分補給ネタ、いいね75）のほうが反応があります。</li>
+  <li>公式がファンのコメントに返信している様子は見えません。多国籍のコメントに絵文字1つでも返すだけで、会話が続きやすくなります。</li>
+</ul>
+
+<h2 id="ig-act">改善アクション</h2>
+<ol class="actions">
+  <li><strong>リールを週3本以上にし、静止画を減らす。</strong>画像とリールの比率を逆にします。</li>
+  <li><strong>バズった型を再現する。</strong>数秒・セリフなしのキャラクターのギャグ、キャプションは1行、#meme #fyp。</li>
+  <li><strong>ヘルス（Vitalis）の日常リールを増やす。</strong>「hydrateeee!」のような水分補給や睡眠ネタは、XとInstagramの両方で伸びています。</li>
+  <li><strong>トークンの話はXに寄せる。</strong>Instagramでは最も弱いテーマなので、トークン設計や価格の解説はXで行います。</li>
+</ol>
+
+
+</section>
+<div class="panel-end">
+<h2 id="data">データについて</h2>
 <p class="note">X Analyticsのアカウント概要エクスポート（2025年11月20日〜2026年11月19日の日別）とコンテンツエクスポート（投稿別）、Instagramインサイトの投稿別エクスポート（2026年1月29日〜11月17日）を元にしています。投稿別エクスポートは最新236件しか出力されないため、コンテンツ別分析は7月2日〜11月19日の359投稿です。エクスポートに投稿時刻や画像・動画の有無が含まれないため、それらの影響は分析していません。書き換え例の文面は提案で、実際の投稿ではありません。</p>
+</div>
 
 <footer>HIYOKO ／ 分析日 2026年11月19日</footer>
 </main>
+<script>
+(function(){
+  var panels={x:document.getElementById('x'),ig:document.getElementById('ig')};
+  var tabs=document.querySelectorAll('.tabs a');
+  function show(id,scroll){
+    if(!panels[id]) id='x';
+    for(var k in panels) panels[k].hidden=(k!==id);
+    tabs.forEach(function(t){t.setAttribute('aria-selected',t.dataset.tab===id?'true':'false');});
+    if(scroll) document.querySelector('.tabs').scrollIntoView({behavior:'smooth'});
+  }
+  function fromHash(){
+    var h=location.hash.slice(1);
+    if(!h) return show('x');
+    var el=document.getElementById(h);
+    var p=el&&el.closest('.panel');
+    show(p?p.id:'x');
+    if(el&&el!==p) setTimeout(function(){el.scrollIntoView();},0);
+  }
+  document.querySelectorAll('[data-tab]').forEach(function(a){
+    a.addEventListener('click',function(e){e.preventDefault();var id=a.dataset.tab;history.replaceState(null,'','#'+id);show(id,true);});
+  });
+  window.addEventListener('hashchange',fromHash);
+  fromHash();
+})();
+</script>
 </body>
 </html>
