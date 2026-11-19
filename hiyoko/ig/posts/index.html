@@ -41,7 +41,7 @@ th.n{text-align:right}
 <div class="chhead"><span class="dot"></span>Instagram</div>
 <h1>Instagram：投稿とKPI（事実のみ）</h1>
 <div class="meta">@hiyoko_global の投稿 200件（2026年1月〜11月17日）／ Meta のインサイト書き出しデータ</div>
-<p class="lead">分析や提案は入れず、<strong>Meta のインサイトの数字をそのまま</strong>並べたページです。月ごとの合計と、全投稿の数字を載せています。見出しをタップすると並べ替えできます。</p>
+<p class="lead">分析や提案は入れず、<strong>Meta のインサイトの数字をそのまま</strong>並べたページです。</p><details class="fold"><summary>補足</summary><p class="note">月ごとの合計と、全投稿の数字を載せています。見出しをタップすると並べ替えできます。</p></details>
 
 <h2 id="filter">KPI（合計）</h2>
 <div class="flt"><label>月<select data-f="m"><option value="">すべて</option><option value="2026-01">2026-01</option><option value="2026-02">2026-02</option><option value="2026-05">2026-05</option><option value="2026-06">2026-06</option><option value="2026-07">2026-07</option><option value="2026-08">2026-08</option><option value="2026-09">2026-09</option><option value="2026-10">2026-10</option><option value="2026-11">2026-11</option></select></label><label>種類<select data-f="f"><option value="">すべて</option><option value="カルーセル">カルーセル</option><option value="リール">リール</option><option value="画像">画像</option></select></label><label>本文を検索<input type="search" id="q" placeholder="例：items"></label><button type="button" id="reset">条件をリセット</button></div>
@@ -54,7 +54,7 @@ th.n{text-align:right}
 
 <h2 id="special">特別事項</h2>
 <div class="special">
-<p><strong>次の2本は数字が桁違いに大きいため、上の合計・中央値・月別KPIには含めていません</strong>（一覧には載せています）。含めると1投稿あたりの平均リーチが約20,000になり、ふだんの傾向（平均837、中央値約240）が見えなくなるためです。</p>
+<details class="fold"><summary>補足</summary><p><strong>次の2本は数字が桁違いに大きいため、上の合計・中央値・月別KPIには含めていません</strong>（一覧には載せています）。含めると1投稿あたりの平均リーチが約20,000になり、ふだんの傾向（平均837、中央値約240）が見えなくなるためです。</p></details>
 <ul>
 <li>2026年6月30日 リール「<a href="https://www.instagram.com/reel/DaM9oxqBTkA/" target="_blank" rel="noopener">you walked right into it</a>」：リーチ3,255,174、フォロー3,554、シェア284,722、コメント1,687</li>
 <li>2026年10月1日 リール「<a href="https://www.instagram.com/reel/Dd88MNSyBWA/" target="_blank" rel="noopener">hehe</a>」：リーチ586,854、フォロー505、シェア31,923</li>
@@ -64,12 +64,13 @@ th.n{text-align:right}
 <h2 id="list">投稿一覧</h2>
 <div id="cnt"></div>
 <div class="plist"><table><thead><tr id="th"><th data-k="d" data-t="s">日付</th><th data-k="t" data-t="text">投稿</th><th data-k="f" data-t="s">種類</th><th data-k="vw" data-t="n" class="n">再生・表示</th><th data-k="rc" data-t="n" class="n">リーチ</th><th data-k="lk" data-t="n" class="n">いいね</th><th data-k="lr" data-t="n" class="n">いいね率%</th><th data-k="sh" data-t="n" class="n">シェア</th><th data-k="sv" data-t="n" class="n">保存</th><th data-k="cm" data-t="n" class="n">コメント</th><th data-k="fo" data-t="n" class="n">フォロー</th><th data-k="fok" data-t="n" class="n">フォロー/1000リーチ</th></tr></thead><tbody id="tb"></tbody></table></div>
-<p class="note">本文をタップすると元の投稿が開きます。期間：2025年12月31日〜2026年11月17日に書き出したデータ（投稿は2026年1月29日〜11月17日の200件）。</p>
+<details class="fold"><summary>補足</summary><p class="note">本文をタップすると元の投稿が開きます。期間：2025年12月31日〜2026年11月17日に書き出したデータ（投稿は2026年1月29日〜11月17日の200件）。</p></details>
 
-<h2 id="terms">用語の説明</h2>
+<details class="fold sec" id="terms"><summary>用語の説明</summary>
 <dl class="terms"><dt>リーチ</dt><dd>その投稿を見た人の数（同じ人は1回）</dd><dt>再生・表示</dt><dd>リールは再生回数、画像は表示回数</dd><dt>いいね率%</dt><dd>いいね ÷ リーチ ×100</dd><dt>フォロー/1000リーチ</dt><dd>その投稿から生まれたフォロー ÷ リーチ ×1000</dd></dl>
 
 <p><a href="../">→ Instagram 詳細</a>　<a href="../content/">→ Instagram コンテンツ3グループ</a></p>
+</details>
 <footer>HIYOKO ／ 分析日 2026年11月19日</footer>
 </main>
 </div>
@@ -125,5 +126,6 @@ render();
 try{if(window.matchMedia('(max-width:900px)').matches)document.querySelector('.sitenav').removeAttribute('open');}catch(e){}
 document.querySelectorAll('.sitenav a').forEach(function(a){a.addEventListener('click',function(){if(window.matchMedia('(max-width:900px)').matches)document.querySelector('.sitenav').removeAttribute('open');});});
 </script>
+<script>(function(){function o(){var h=location.hash.slice(1);var d=h&&document.getElementById(h);if(d&&d.tagName==="DETAILS")d.open=true;}window.addEventListener("hashchange",o);o();})();</script>
 </body>
 </html>

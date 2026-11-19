@@ -44,9 +44,9 @@ th.n{text-align:right}
 <div class="chhead"><span class="dot"></span>X</div>
 <h1>X：投稿とKPI（事実のみ）</h1>
 <div class="meta">@HiyokoGlobal の投稿 359件（2026年7月2日〜11月19日）／ X Analytics の投稿別データ</div>
-<p class="lead">分析や提案は入れず、<strong>X Analytics の数字をそのまま</strong>並べたページです。アカウント全体の1年分の月別の数字、動画、全投稿の数字を載せています。見出しをタップすると並べ替えできます。</p>
+<p class="lead">分析や提案は入れず、<strong>X Analytics の数字をそのまま</strong>並べたページです。</p><details class="fold"><summary>補足</summary><p class="note">アカウント全体の1年分の月別の数字、動画、全投稿の数字を載せています。見出しをタップすると並べ替えできます。</p></details>
 <h2 id="account">アカウント全体（日別データ・1年分）</h2>
-<p class="note">X Analytics「アカウントの概要」の書き出し（2025年11月19日〜2026年11月19日、366日分）を月ごとに合計した数字です。投稿別の書き出しにはない、フォロー・フォロー解除の実数が入っています。</p>
+<details class="fold"><summary>補足</summary><p class="note">X Analytics「アカウントの概要」の書き出し（2025年11月19日〜2026年11月19日、366日分）を月ごとに合計した数字です。投稿別の書き出しにはない、フォロー・フォロー解除の実数が入っています。</p></details>
 <div class="traits">
   <div><b>114,022</b>表示（1年合計）</div>
   <div><b>478</b>フォロー</div>
@@ -70,11 +70,11 @@ th.n{text-align:right}
 <div class="special">
 <p><strong>次の4日は数字が飛び抜けて大きいため、1日あたりの平均には含めていません。</strong>この4日だけで、1年のフォロー478件のうち55件が出ています。</p>
 <ul><li>2026年4月15日：表示2,405、フォロー27、プロフ訪問49、返信46</li><li>2026年6月15日：表示875、フォロー14、プロフ訪問32、返信38</li><li>2026年6月16日：表示1,173、フォロー5、プロフ訪問19、返信16</li><li>2026年6月17日：表示1,354、フォロー9、プロフ訪問25、返信28</li></ul>
-<p class="note">投稿別のデータは7月以降しか書き出せないため、この日にどの投稿が出ていたかはデータでは確認できていません。投稿別のKPI（7月〜11月）には、平均を大きく動かす投稿はありませんでした。</p>
+<details class="fold"><summary>補足</summary><p class="note">投稿別のデータは7月以降しか書き出せないため、この日にどの投稿が出ていたかはデータでは確認できていません。投稿別のKPI（7月〜11月）には、平均を大きく動かす投稿はありませんでした。</p></details>
 </div>
 
 <h2 id="video">動画</h2>
-<p class="note">X Analytics「動画の概要」の書き出しです。期間中にアップした動画は15本、動画ごとの再生数の合計は384回でした。</p>
+<details class="fold"><summary>補足</summary><p class="note">X Analytics「動画の概要」の書き出しです。期間中にアップした動画は15本、動画ごとの再生数の合計は384回でした。</p></details>
 <div class="tbl"><table><tr><th>アップ日</th><th class="n">長さ</th><th class="n">再生数</th></tr><tr><td class="dt">Nov 16, 2026</td><td class="n">0:05</td><td class="n">37</td></tr><tr><td class="dt">Nov 11, 2026</td><td class="n">0:20</td><td class="n">39</td></tr><tr><td class="dt">Nov 9, 2026</td><td class="n">0:13</td><td class="n">69</td></tr><tr><td class="dt">Nov 1, 2026</td><td class="n">0:14</td><td class="n">27</td></tr><tr><td class="dt">Oct 31, 2026</td><td class="n">0:17</td><td class="n">23</td></tr><tr><td class="dt">Oct 12, 2026</td><td class="n">0:28</td><td class="n">24</td></tr><tr><td class="dt">Oct 7, 2026</td><td class="n">0:05</td><td class="n">11</td></tr><tr><td class="dt">Oct 5, 2026</td><td class="n">0:03</td><td class="n">27</td></tr><tr><td class="dt">Oct 4, 2026</td><td class="n">0:09</td><td class="n">14</td></tr><tr><td class="dt">Sep 24, 2026</td><td class="n">0:05</td><td class="n">12</td></tr><tr><td class="dt">Sep 18, 2026</td><td class="n">0:17</td><td class="n">18</td></tr><tr><td class="dt">Sep 11, 2026</td><td class="n">0:06</td><td class="n">21</td></tr><tr><td class="dt">Aug 10, 2026</td><td class="n">0:04</td><td class="n">14</td></tr><tr><td class="dt">Aug 6, 2026</td><td class="n">0:30</td><td class="n">16</td></tr><tr><td class="dt">Aug 4, 2026</td><td class="n">0:06</td><td class="n">32</td></tr></table></div>
 
 
@@ -91,12 +91,13 @@ th.n{text-align:right}
 <h2 id="list">投稿一覧</h2>
 <div id="cnt"></div>
 <div class="plist"><table><thead><tr id="th"><th data-k="d" data-t="s">日付</th><th data-k="t" data-t="text">投稿</th><th data-k="imp" data-t="n" class="n">表示</th><th data-k="lk" data-t="n" class="n">いいね</th><th data-k="er" data-t="n" class="n">ER%</th><th data-k="pv" data-t="n" class="n">プロフ訪問</th><th data-k="pvk" data-t="n" class="n">訪問/1000表示</th><th data-k="bm" data-t="n" class="n">保存</th><th data-k="rt" data-t="n" class="n">リポスト</th><th data-k="rp" data-t="n" class="n">返信</th><th data-k="dx" data-t="n" class="n">詳細を開く</th><th data-k="uc" data-t="n" class="n">リンククリック</th></tr></thead><tbody id="tb"></tbody></table></div>
-<p class="note">本文をタップすると元の投稿が開きます。期間：2026年7月2日〜11月19日。X Analytics の投稿別の書き出しは最新の約240件までのため、7月より前は含まれていません。投稿別の「新規フォロー」は、ほぼすべて0件で記録されているため載せていません。</p>
+<details class="fold"><summary>補足</summary><p class="note">本文をタップすると元の投稿が開きます。期間：2026年7月2日〜11月19日。X Analytics の投稿別の書き出しは最新の約240件までのため、7月より前は含まれていません。投稿別の「新規フォロー」は、ほぼすべて0件で記録されているため載せていません。</p></details>
 
-<h2 id="terms">用語の説明</h2>
+<details class="fold sec" id="terms"><summary>用語の説明</summary>
 <dl class="terms"><dt>表示</dt><dd>インプレッション。タイムラインなどで表示された回数</dd><dt>ER%</dt><dd>エンゲージメント（いいね・クリック・返信など全部）÷ 表示 ×100</dd><dt>訪問/1000表示</dt><dd>プロフィール訪問 ÷ 表示 ×1000</dd><dt>詳細を開く</dt><dd>投稿をタップして詳しく開いた回数</dd></dl>
 
 <p><a href="../">→ X 詳細</a>　<a href="../content/">→ X コンテンツ4グループ</a>　<a href="../plan/">→ X 悩み→解決の企画</a></p>
+</details>
 <footer>HIYOKO ／ 分析日 2026年11月19日</footer>
 </main>
 </div>
@@ -152,5 +153,6 @@ render();
 try{if(window.matchMedia('(max-width:900px)').matches)document.querySelector('.sitenav').removeAttribute('open');}catch(e){}
 document.querySelectorAll('.sitenav a').forEach(function(a){a.addEventListener('click',function(){if(window.matchMedia('(max-width:900px)').matches)document.querySelector('.sitenav').removeAttribute('open');});});
 </script>
+<script>(function(){function o(){var h=location.hash.slice(1);var d=h&&document.getElementById(h);if(d&&d.tagName==="DETAILS")d.open=true;}window.addEventListener("hashchange",o);o();})();</script>
 </body>
 </html>
