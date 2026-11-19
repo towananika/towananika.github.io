@@ -258,3 +258,55 @@ main .gsec.ga>h2{border-left-color:var(--good)}main .gsec.gc>h2{border-left-colo
 
 .groups.g4{grid-template-columns:repeat(2,minmax(0,1fr))}
 @media (max-width:720px){.groups.g4{grid-template-columns:1fr}}
+
+/* ===== readable UI (2026-11-19) : wider content, easier tables/charts/nav ===== */
+/* text */
+body{line-height:1.9;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+main p,main li{max-width:46em}
+main li{margin-bottom:6px}
+main a{text-underline-offset:3px}
+.kpi b,.traits b,td.n,.nums b{font-variant-numeric:tabular-nums}
+.kpi span{font-size:.84rem;line-height:1.55;display:block;margin-top:2px}
+.meta,.crumbs{line-height:1.7}
+/* wider reading area on desktop so tables fit */
+.layout{max-width:1240px;gap:44px}
+.layout>main{max-width:940px}
+/* tables: first column stays visible while scrolling sideways, row hover, scroll hint */
+.tbl,.plist{position:relative;-webkit-overflow-scrolling:touch;
+  background:linear-gradient(to right,var(--paper) 30%,transparent) left/40px 100% no-repeat local,
+             linear-gradient(to left,var(--paper) 30%,transparent) right/40px 100% no-repeat local,
+             radial-gradient(farthest-side at 0 50%,rgba(0,0,0,.14),transparent) left/12px 100% no-repeat scroll,
+             radial-gradient(farthest-side at 100% 50%,rgba(0,0,0,.14),transparent) right/12px 100% no-repeat scroll}
+.tbl th:first-child,.tbl td:first-child,.plist th:first-child,.plist td:first-child{position:sticky;left:0;background:var(--paper);z-index:1}
+.plist th:first-child{z-index:2}
+th,td{padding:9px 12px}
+tbody tr:hover td{background:color-mix(in srgb,var(--ink) 4%,var(--paper))}
+.chpanel td:first-child{position:static}
+/* charts: keep labels legible on phones (scroll sideways instead of shrinking) */
+@media (max-width:560px){
+  figure{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  figure svg{min-width:600px}
+}
+/* sidebar nav: clearer channel labels and current page */
+.sitenav{font-size:.9rem}
+.sitenav .ch{font-size:.8rem;display:flex;align-items:center;gap:6px;margin-top:22px}
+.sitenav .ch.x::before,.sitenav .ch.ig::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
+.sitenav a.page{font-weight:600}
+.sitenav a.page[aria-current="page"]{font-weight:800;box-shadow:inset 3px 0 0 var(--accent);border-radius:0 6px 6px 0}
+.sitenav ul ul a{padding:3px 10px}
+.sitenav ul ul a:hover{color:var(--ink)}
+/* phones/tablets: page list stays reachable at the top while scrolling */
+@media (max-width:900px){
+  .sitenav{position:sticky;top:0;z-index:20;background:var(--paper);padding:10px 0 8px;margin:0 -16px;padding-left:16px;padding-right:16px;border-bottom:1px solid var(--line)}
+  .sitenav>summary{padding:8px 14px;font-size:.92rem}
+  .sitenav[open]>div{max-height:70vh;overflow-y:auto;padding-bottom:8px}
+  [id]{scroll-margin-top:72px}
+}
+/* phones: give post cards more width */
+@media (max-width:560px){
+  .postcard,.gcard{padding-left:12px;padding-right:12px}
+  main h2{padding-left:10px}
+}
+@media print{.sitenav{display:none}.layout{display:block}}
+/* short text tables (3 columns or fewer) wrap instead of scrolling sideways */
+.tbl table:not(:has(tr > :nth-child(4))){min-width:0}
