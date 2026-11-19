@@ -320,3 +320,40 @@ details.fold[open]>summary::before{content:"－ "}
 details.fold.sec{margin:28px 0 8px;border-top:1px solid var(--line);padding-top:14px}
 details.fold.sec>summary{display:block;font-size:1.05rem;font-weight:800;color:var(--ink);border:0;background:none;padding:4px 0}
 .meta{margin-bottom:14px}
+
+/* UX pass: home dashboard */
+.dash-k{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:8px 0 18px}
+.dash-k>div{background:var(--card);border:1px solid var(--line);border-top:4px solid var(--c,#888);border-radius:12px;padding:12px 14px}
+.dash-k>div.x{--c:#1f6fb2}.dash-k>div.ig{--c:#c2347a}
+.dash-k b{display:block;font-size:1.7rem;line-height:1.15;font-weight:800}
+.dash-k span{display:block;font-size:.78rem;line-height:1.4;color:var(--muted);margin-top:2px}
+.dash-c{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:0 0 18px}
+.dc{position:relative;display:flex;flex-direction:column;gap:4px;min-height:150px;padding:18px 18px 16px;border-radius:14px;background:var(--card);border:1px solid var(--line);color:var(--ink);text-decoration:none;transition:transform .12s,box-shadow .12s;overflow:hidden}
+.dc::before{content:"";position:absolute;inset:0 auto 0 0;width:6px;background:var(--c)}
+.dc:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.08)}
+.dc.x{--c:#1f6fb2}.dc.ig{--c:#c2347a}.dc.a{--c:#2e7d4f}.dc.m{--c:#d08a00}
+.dc i{font-style:normal;font-weight:800;font-size:.75rem;color:#fff;background:var(--c);border-radius:6px;padding:2px 7px;align-self:flex-start}
+.dc strong{font-size:1.15rem;margin-top:4px}
+.dc em{font-style:normal;font-size:.85rem;color:var(--muted)}
+.dc b{margin-top:auto;font-size:2rem;font-weight:800;color:var(--c);line-height:1.1}
+.dc b small{font-size:.8rem;color:var(--muted);font-weight:700;margin-left:4px}
+.dc::after{content:"→";position:absolute;right:16px;top:16px;font-weight:800;color:var(--c)}
+.dash-l{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 24px}
+.dash-l span{font-size:.78rem;color:var(--muted);font-weight:700;margin-right:4px}
+.dash-l a{font-size:.84rem;text-decoration:none;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:99px;padding:7px 14px}
+.dash-l a:hover{border-color:var(--ink)}
+@media (max-width:720px){.dash-k{grid-template-columns:repeat(2,minmax(0,1fr))}.dash-c{grid-template-columns:1fr}.dc{min-height:120px}}
+
+/* UX pass: easier taps and consistent spacing */
+details.fold>summary,.lang-sw button,.rk-btns button,.dash-l a{min-height:36px;display:inline-flex;align-items:center}
+details.fold.sec>summary{display:flex;min-height:44px}
+.sitenav a{padding:7px 10px}
+.sitenav ul ul a{padding:5px 10px}
+main h2{scroll-margin-top:70px}
+table a,.tbl a{padding:2px 0}
+@media (max-width:900px){
+  main{padding-bottom:40px}
+  .rk-btns button{flex:1;justify-content:center;min-height:44px}
+  details.fold>summary{min-height:40px;padding:4px 14px}
+  .sitenav a{padding:10px 12px}
+}
