@@ -576,3 +576,42 @@ input,select,textarea{font-size:16px}
 .fan-foot a{color:var(--ink);font-weight:700}
 .fan-foot{margin-top:48px}
 @media (max-width:420px){.sns-row{gap:8px}.sns-row a{width:44px;height:44px}}
+/* ===== Brand icons + official mascot art (2026-11-20) ===== */
+.sns-row a.sns{color:#fff;border:0}
+.sns-row a.sns svg{width:22px;height:22px}
+.sns.x,.lk-ic.x{background:#000}.sns.ig,.lk-ic.ig{background:radial-gradient(circle at 30% 107%,#fdf497 0%,#fd5949 45%,#d6249f 60%,#285aeb 90%)}
+.sns.th,.lk-ic.th{background:#000}.sns.tt,.lk-ic.tt{background:#000}.sns.yt,.lk-ic.yt{background:#f00}
+.sns.fb,.lk-ic.fb{background:#0866ff}.sns.tg,.lk-ic.tg{background:#26a5e4}.lk-ic.lt{background:#43e55e;color:#000}.lk-ic.no{background:#000}
+.sns-row a.sns:hover{filter:brightness(1.15);background-color:inherit}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .sns.x,:root:not([data-theme="light"]) .sns.th,:root:not([data-theme="light"]) .sns.tt,:root:not([data-theme="light"]) .lk-ic.x,:root:not([data-theme="light"]) .lk-ic.th,:root:not([data-theme="light"]) .lk-ic.tt,:root:not([data-theme="light"]) .lk-ic.no{box-shadow:0 0 0 1px #555}}
+.lk-ic svg{width:22px;height:22px}
+.hero-post{max-width:340px;margin:20px auto 0}
+.igs{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;margin:8px 0 6px;align-items:start}
+.ig-cell{min-width:0}
+blockquote.ig-embed{margin:0!important;min-width:0!important;width:100%!important;max-width:540px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:0}
+blockquote.ig-embed>a{display:flex;align-items:center;justify-content:center;min-height:120px;padding:16px;color:var(--ink);font-weight:700;text-decoration:none}
+iframe.instagram-media{min-width:0!important;max-width:100%!important;border-radius:12px!important}
+.hero .credit{margin:8px 0 0}
+.credit{font-size:.8rem;color:var(--muted);margin:4px 0 20px}
+.credit a{color:var(--muted)}
+/* ===== Dev news (2026-11-20) ===== */
+.nw{list-style:none;margin:6px 0 18px;padding:0}
+.nw li{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;padding:10px 0;border-bottom:1px solid var(--line);line-height:1.6}
+.nw-d{flex:none;font-size:.8rem;color:var(--muted);font-variant-numeric:tabular-nums;min-width:8.5em}
+.nw-t{flex:1 1 240px}
+a.nw-pr{flex:none;font-size:.8rem;color:var(--muted);display:inline-flex;align-items:center;min-height:24px}
+.news-mini{margin:4px 0 20px}
+.nm-head{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.nm-head h2{margin:0;font-size:1.05rem;border:0;padding:0}
+.nm-head h2::before,.nm-head h2::after{display:none}
+.nm-head a{color:var(--ink);font-weight:700;text-decoration:none;min-height:44px;display:inline-flex;align-items:center}
+/* ===== World & purpose (2026-11-20) ===== */
+.wcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;margin:8px 0 18px}
+.wcard{display:flex;gap:12px;padding:14px;border-radius:12px;background:var(--card);border:1px solid var(--line)}
+.wcard .ti{flex:none;font-size:1.6rem;line-height:1.2}
+.wcard strong{display:block;font-size:1rem}
+.wcard p{margin:4px 0 6px;font-size:.92rem;line-height:1.65}
+.wsrcs{display:flex;flex-wrap:wrap;gap:6px}
+a.wsrc{display:inline-flex;align-items:center;min-height:28px;font-size:.78rem;color:var(--muted);border:1px solid var(--line);border-radius:99px;padding:2px 10px;text-decoration:none;background:var(--paper)}
+a.wsrc:hover{color:var(--ink)}
+@media (min-width:1000px){.tiles{grid-template-columns:repeat(4,minmax(0,1fr))}}
