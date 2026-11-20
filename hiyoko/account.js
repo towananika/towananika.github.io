@@ -55,3 +55,18 @@
     '.hy-acct-a{display:block;padding:7px 8px;border-radius:8px;color:var(--ink);text-decoration:none;font-size:.88rem}.hy-acct-a:hover{background:var(--paper)}';
   document.head.appendChild(st);
 })();
+
+/* HIYOKO：閲覧数（2026-11-20）。ページのパスだけをサーバー（hibiki-sync /hiyoko/hit）へ送る。
+   IP・端末・ログインの情報は送らない。同じタブで同じページを開き直しても1回。管理画面で「この端末は数えない」にできる。 */
+(function () {
+  'use strict';
+  try {
+    if (localStorage.getItem('hiyoko-nocount') === '1') return;
+    var path = location.pathname, k = 'hiyoko-hit:' + path;
+    if (sessionStorage.getItem(k)) return;
+    sessionStorage.setItem(k, '1');
+    var url = 'https://hibiki-sync.jaykim-can.workers.dev/hiyoko/hit', body = JSON.stringify({ path: path });
+    if (navigator.sendBeacon && navigator.sendBeacon(url, body)) return;
+    fetch(url, { method: 'POST', body: body, keepalive: true, credentials: 'omit' }).catch(function () {});
+  } catch (e) {}
+})();
