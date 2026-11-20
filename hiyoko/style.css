@@ -585,15 +585,12 @@ input,select,textarea{font-size:16px}
 .sns-row a.sns:hover{filter:brightness(1.15);background-color:inherit}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .sns.x,:root:not([data-theme="light"]) .sns.th,:root:not([data-theme="light"]) .sns.tt,:root:not([data-theme="light"]) .lk-ic.x,:root:not([data-theme="light"]) .lk-ic.th,:root:not([data-theme="light"]) .lk-ic.tt,:root:not([data-theme="light"]) .lk-ic.no{box-shadow:0 0 0 1px #555}}
 .lk-ic svg{width:22px;height:22px}
-.hero-img{display:block;width:150px;height:150px;object-fit:contain;margin:0 auto}
-.hero-chick{min-height:80px}
-.chara-img{display:block;width:120px;height:120px;object-fit:contain}
-.part-img{display:block;width:72px;height:72px;object-fit:contain;margin:0 0 6px}
-.part-img-fb{display:block;font-size:1.5rem;margin-bottom:6px}
-.poses{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin:8px 0 6px}
-.pose{margin:0;aspect-ratio:1;display:flex;align-items:center;justify-content:center;background:var(--hy-soft);border:1px solid var(--line);border-radius:12px;padding:6px}
-.pose-img{width:100%;height:100%;object-fit:contain}
-.pose-img-fb{font-size:2rem}
-@media (max-width:560px){.poses{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.hero-post{max-width:340px;margin:20px auto 0}
+.igs{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;margin:8px 0 6px;align-items:start}
+.ig-cell{min-width:0}
+blockquote.ig-embed{margin:0!important;min-width:0!important;width:100%!important;max-width:540px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:0}
+blockquote.ig-embed>a{display:flex;align-items:center;justify-content:center;min-height:120px;padding:16px;color:var(--ink);font-weight:700;text-decoration:none}
+iframe.instagram-media{min-width:0!important;max-width:100%!important;border-radius:12px!important}
+.hero .credit{margin:8px 0 0}
 .credit{font-size:.8rem;color:var(--muted);margin:4px 0 20px}
 .credit a{color:var(--muted)}
