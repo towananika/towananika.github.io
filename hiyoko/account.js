@@ -34,8 +34,12 @@
     var out = el('button', 'hy-acct-btn ghost', 'ログアウト'); out.type = 'button';
     out.addEventListener('click', function () { window.triLogout && window.triLogout(); });
     p.appendChild(out); dt.appendChild(p); box.appendChild(dt);
-    document.addEventListener('click', function (e) { if (dt.open && !dt.contains(e.target)) dt.open = false; });
   }
+  // メニューの外を押す・Esc で閉じる。片方を開いたら、もう片方（設定）は閉じる（1回だけ登録）
+  function menus() { return [].slice.call(document.querySelectorAll('.hy-set details')); }
+  document.addEventListener('click', function (e) { menus().forEach(function (d) { if (d.open && !d.contains(e.target)) d.open = false; }); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') menus().forEach(function (d) { d.open = false; }); });
+  document.addEventListener('toggle', function (e) { var t = e.target; if (t.open && t.closest && t.closest('.hy-set')) menus().forEach(function (d) { if (d !== t) d.open = false; }); }, true);
   document.addEventListener('tri-user', function (e) { show(e.detail); });
   import('/triathlon/login/auth.js?v=0.28').then(function () { if (window.TRI_USER !== undefined) show(window.TRI_USER); })
     .catch(function () { box.replaceChildren(); });
