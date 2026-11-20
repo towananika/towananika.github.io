@@ -720,3 +720,22 @@ a.wsrc:hover{color:var(--ink)}
 .hh-src{font-size:.75rem;color:var(--muted);text-align:center;line-height:1.5}
 .hh-src a{color:inherit;display:inline-block;padding:6px 0}
 @media (max-width:700px){.hh-fig{order:-1}}
+
+/* ---------- Home cleanup (2026-11-20, #30) ---------- */
+.hh{background:var(--hy-soft);padding:36px 40px}
+.hh::before,.hh::after{display:none}
+.hh-art{width:180px;height:180px;box-shadow:0 6px 20px rgba(120,90,0,.12)}
+.hh-foot{border-top:0;padding-top:0;margin-top:8px}
+@media (max-width:700px){
+  .hy-path>a:first-child,.hy-path>a:first-child+span{display:none}
+  .hh{padding:20px 16px 22px;gap:10px}
+  .hh-art{width:132px;height:132px}
+  .hh-fig{gap:2px}
+  .hh-src{font-size:.75rem}
+  .hh h1{font-size:1.9rem}
+  .hh-copy{margin:6px 0 2px}
+  .hh .sns-row{margin-top:14px}
+  .hh-foot{flex-wrap:nowrap}
+  .hh-news{flex:1 1 auto}
+  .hh-in{flex:none}
+}
