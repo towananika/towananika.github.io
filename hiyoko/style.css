@@ -412,3 +412,5 @@ a.sm-i:hover{background:var(--paper)}
 .adm-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
 .adm-row small{display:block;color:var(--muted);font-size:.8rem}
 .sitenav .ch.in{color:var(--muted)}
+.adm-add{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.adm-add input{flex:1 1 220px;min-height:40px;padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);font:inherit}

@@ -18,11 +18,12 @@
 <div id="gate" class="gate"></div>
 <div id="admin-body" hidden>
 <h2 id="members-h">関係者</h2>
-<p class="note">ここで「関係者」にした人だけが、社内資料を見られます。相手に一度このサイトでGoogleログインしてもらうと、一覧に出ます。</p>
-<p class="note" id="mcount"></p>
-<div class="tbl"><table><thead><tr><th>名前</th><th>メール</th><th>最後に来た日</th><th>関係者</th></tr></thead><tbody id="members"></tbody></table></div>
+<p class="note">ここに入れたメールのGoogleアカウントでログインした人だけが、社内資料を見られます。</p>
+<form id="madd" class="adm-add"><input id="memail" type="email" placeholder="メールアドレス" autocomplete="off" required><button type="submit" class="gate-btn">関係者にする</button></form>
+<p class="note" id="mnote"></p><p class="note" id="mcount"></p>
+<div class="tbl"><table><thead><tr><th>メール</th><th></th></tr></thead><tbody id="members"></tbody></table></div>
 <h2 id="docs-h">資料の登録</h2>
-<p class="note">資料のHTMLファイルを選ぶと、データベースに保存されます（リポジトリには置きません）。同じ資料を選び直すと上書きされます。</p>
+<p class="note">資料のHTMLファイルを選ぶと、サーバーに保存されます（リポジトリには置きません）。同じ資料を選び直すと上書きされます。</p>
 <div id="docs"></div>
 </div>
 </main>

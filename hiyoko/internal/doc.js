@@ -1,9 +1,9 @@
-/* HIYOKO 社内資料：統合ログイン（/triathlon/login/auth.js）で本人を確かめ、
-   中身は Firestore の hiyokoDocs/{id} から読む。読めるかどうかは Firebase のルールが決める
-   （画面の出しわけは見た目だけ。中身はリポジトリに置かない）。
+/* HIYOKO 社内資料：統合ログイン（/triathlon/login/auth.js）の札をサーバー（hibiki-sync の /hiyoko/doc）へ送り、
+   サーバーが本人と許可リストを確かめてから中身を返す（中身はリポジトリに置かない。サーバーは towananika/hibiki の worker/hiyoko.js）。
    使い方：<div id="gate" data-doc="strategy"></div><div id="doc-body" hidden></div> */
 (function () {
   'use strict';
+  var API = 'https://hibiki-sync.jaykim-can.workers.dev/hiyoko/';
   var gate = document.getElementById('gate'), body = document.getElementById('doc-body');
   var id = gate.getAttribute('data-doc'), shown = null;
   function say(html) { gate.innerHTML = html; gate.hidden = false; body.hidden = true; }
@@ -38,16 +38,18 @@
     if (!u) { shown = null; body.replaceChildren(); say('<p class="gate-msg">関係者だけが見られるページです。ログインしてください。</p><button type="button" class="gate-btn" data-login>Googleでログイン</button>'); loginBtn(); return; }
     if (shown === u.email) return;
     say('<p class="gate-msg">確認しています…</p>');
-    window.triDB().then(function (f) { return f.getDoc(f.doc(f.db, 'hiyokoDocs', id)); }).then(function (snap) {
+    window.triToken().then(function (tk) {
+      return fetch(API + 'doc', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + tk }, body: JSON.stringify({ id: id }) });
+    }).then(function (r) { return r.json().catch(function () { return { error: 'http' + r.status }; }); }).then(function (out) {
       shown = u.email;
-      if (!snap.exists()) { say('<p class="gate-msg">この資料はまだ登録されていません。</p>'); return; }
-      render(snap.data());
-    }).catch(function (err) {
-      var c = err && err.code || '';
-      if (c === 'permission-denied') say('<p class="gate-msg">' + esc(u.email) + ' には、この資料を見る権限がありません。管理者に関係者として追加してもらってください。</p><button type="button" class="gate-btn ghost" data-logout>別のアカウントでログイン</button>');
-      else say('<p class="gate-msg">読み込めませんでした（' + esc(c || 'エラー') + '）。</p>');
+      if (out.error === 'none') { say('<p class="gate-msg">この資料はまだ登録されていません。</p>'); return; }
+      if (out.error === 'forbidden') {
+        shown = null;
+        say('<p class="gate-msg">' + esc(u.email) + ' には、この資料を見る権限がありません。管理者に関係者として追加してもらってください。</p><button type="button" class="gate-btn ghost" data-logout>別のアカウントでログイン</button>');
+      } else if (out.error) { shown = null; say('<p class="gate-msg">読み込めませんでした（' + esc(out.error) + '）。</p>'); }
+      else { render({ html: out.html, title: out.title, at: { toDate: function () { return new Date(out.at); } } }); return; }
       var lo = gate.querySelector('[data-logout]'); if (lo) lo.addEventListener('click', function () { window.triLogout && window.triLogout(); });
-    });
+    }).catch(function () { shown = null; say('<p class="gate-msg">サーバーにつながりませんでした。少し待ってから開き直してください。</p>'); });
   }
   say('<p class="gate-msg">確認しています…</p>');
   document.addEventListener('tri-user', function (e) { on(e.detail); });
