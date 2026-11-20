@@ -560,3 +560,19 @@ input,select,textarea{font-size:16px}
 .motto{text-align:center;padding:26px 16px;border-radius:18px;background:var(--hy-soft);border:1px solid var(--line);margin:4px 0 20px}
 .motto-main{margin:0;font-size:1.35rem;font-weight:800;line-height:1.5}
 .motto-sub{margin:6px 0 0;color:var(--muted)}
+/* ===== Fan-site labels (2026-11-20): this site is unofficial ===== */
+.fan-badge{flex:none;font-size:.75rem;font-weight:700;color:var(--ink);border:1px solid var(--muted);border-radius:99px;padding:2px 8px;margin-left:4px;white-space:nowrap}
+.fan-tag{display:inline-block;margin:0 0 10px;font-size:.8rem;font-weight:800;color:var(--ink);background:var(--card);border:1px solid var(--muted);border-radius:99px;padding:3px 12px}
+.sns-cap{margin-top:16px;font-size:.8rem;color:var(--muted)}
+.sns-cap+.sns-row{margin-top:8px}
+.fan-note{font-size:.9rem;color:var(--ink);background:var(--card);border:1px dashed var(--muted);border-radius:10px;padding:10px 12px;margin:4px 0 16px}
+.fan-foot{margin:40px 0 0;padding:12px 14px;border-radius:10px;border:1px dashed var(--muted);font-size:.85rem;color:var(--ink);line-height:1.7}
+.fan-foot+footer{margin-top:16px}
+.lk-t .src{font-size:.75rem;color:var(--muted);margin-top:3px}
+.srcs{margin:6px 0 10px;padding-left:1.2em;line-height:1.9}
+.motto-cap{margin:0 0 6px;font-size:.8rem;color:var(--muted);font-weight:700}
+@media (max-width:900px){.fan-badge{font-size:12px;padding:1px 7px}}
+.srcs a{display:inline-block;padding:6px 0}
+.fan-foot a{color:var(--ink);font-weight:700}
+.fan-foot{margin-top:48px}
+@media (max-width:420px){.sns-row{gap:8px}.sns-row a{width:44px;height:44px}}
