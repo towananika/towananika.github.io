@@ -576,3 +576,24 @@ input,select,textarea{font-size:16px}
 .fan-foot a{color:var(--ink);font-weight:700}
 .fan-foot{margin-top:48px}
 @media (max-width:420px){.sns-row{gap:8px}.sns-row a{width:44px;height:44px}}
+/* ===== Brand icons + official mascot art (2026-11-20) ===== */
+.sns-row a.sns{color:#fff;border:0}
+.sns-row a.sns svg{width:22px;height:22px}
+.sns.x,.lk-ic.x{background:#000}.sns.ig,.lk-ic.ig{background:radial-gradient(circle at 30% 107%,#fdf497 0%,#fd5949 45%,#d6249f 60%,#285aeb 90%)}
+.sns.th,.lk-ic.th{background:#000}.sns.tt,.lk-ic.tt{background:#000}.sns.yt,.lk-ic.yt{background:#f00}
+.sns.fb,.lk-ic.fb{background:#0866ff}.sns.tg,.lk-ic.tg{background:#26a5e4}.lk-ic.lt{background:#43e55e;color:#000}.lk-ic.no{background:#000}
+.sns-row a.sns:hover{filter:brightness(1.15);background-color:inherit}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .sns.x,:root:not([data-theme="light"]) .sns.th,:root:not([data-theme="light"]) .sns.tt,:root:not([data-theme="light"]) .lk-ic.x,:root:not([data-theme="light"]) .lk-ic.th,:root:not([data-theme="light"]) .lk-ic.tt,:root:not([data-theme="light"]) .lk-ic.no{box-shadow:0 0 0 1px #555}}
+.lk-ic svg{width:22px;height:22px}
+.hero-img{display:block;width:150px;height:150px;object-fit:contain;margin:0 auto}
+.hero-chick{min-height:80px}
+.chara-img{display:block;width:120px;height:120px;object-fit:contain}
+.part-img{display:block;width:72px;height:72px;object-fit:contain;margin:0 0 6px}
+.part-img-fb{display:block;font-size:1.5rem;margin-bottom:6px}
+.poses{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin:8px 0 6px}
+.pose{margin:0;aspect-ratio:1;display:flex;align-items:center;justify-content:center;background:var(--hy-soft);border:1px solid var(--line);border-radius:12px;padding:6px}
+.pose-img{width:100%;height:100%;object-fit:contain}
+.pose-img-fb{font-size:2rem}
+@media (max-width:560px){.poses{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.credit{font-size:.8rem;color:var(--muted);margin:4px 0 20px}
+.credit a{color:var(--muted)}
