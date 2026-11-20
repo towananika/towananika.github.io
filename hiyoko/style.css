@@ -615,3 +615,18 @@ a.nw-pr{flex:none;font-size:.8rem;color:var(--muted);display:inline-flex;align-i
 a.wsrc{display:inline-flex;align-items:center;min-height:28px;font-size:.78rem;color:var(--muted);border:1px solid var(--line);border-radius:99px;padding:2px 10px;text-decoration:none;background:var(--paper)}
 a.wsrc:hover{color:var(--ink)}
 @media (min-width:1000px){.tiles{grid-template-columns:repeat(4,minmax(0,1fr))}}
+
+/* Admin: access counts (single series bar chart: one hue, thin bars, rounded tops, hover tooltip) */
+.st-bar{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between;margin:8px 0 12px}
+.st-range{display:flex;gap:4px}.st-range button{font:inherit;font-size:.85rem;font-weight:700;min-width:64px;min-height:44px;padding:4px 14px;border:1px solid var(--line);border-radius:99px;background:var(--card);color:var(--muted);cursor:pointer}.st-range button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.st-me{font-size:.85rem;color:var(--muted);display:inline-flex;gap:6px;align-items:center;min-height:44px}
+.st-k{grid-template-columns:repeat(4,minmax(0,1fr))}
+.st-chart{position:relative;overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px}
+.st-chart svg{display:block;width:100%;min-width:560px;height:auto}
+.st-b{fill:#1f6fb2}.st-hit{fill:transparent;cursor:pointer}.st-hit.on{fill:rgba(127,127,127,.12)}
+.st-grid{stroke:var(--line);stroke-width:1}.st-base{stroke:var(--muted);stroke-width:1}
+.st-ax{fill:var(--muted);font-size:12px}
+.st-tip{position:absolute;top:6px;padding:4px 10px;border-radius:8px;background:var(--ink);color:var(--paper);font-size:.82rem;font-weight:700;white-space:nowrap;pointer-events:none}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .st-b{fill:#7db8ec}}
+@media (max-width:560px){.st-k{grid-template-columns:repeat(2,minmax(0,1fr))}}

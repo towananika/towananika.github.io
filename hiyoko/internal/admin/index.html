@@ -18,6 +18,15 @@
 <div class="meta">管理者だけが使えます</div>
 <div id="gate" class="gate"></div>
 <div id="admin-body" hidden>
+<h2 id="stats-h">アクセス数</h2>
+<p class="note">ページを開いた回数です（同じタブで開き直した分は数えません）。だれが見たか・IPアドレスは記録していません。</p>
+<div class="st-bar"><div class="st-range" role="group" aria-label="期間"><button type="button" data-d="7">7日</button><button type="button" data-d="30" aria-pressed="true">30日</button><button type="button" data-d="90">90日</button></div>
+<label class="st-me"><input type="checkbox" id="nocount"> この端末は数えない</label></div>
+<div class="dash-k st-k"><div><b id="st-total">–</b><span>期間の閲覧数</span></div><div><b id="st-today">–</b><span>今日</span></div><div><b id="st-avg">–</b><span>1日平均</span></div><div><b id="st-pages">–</b><span>見られたページ数</span></div></div>
+<h3 id="stats-day">日別の閲覧数</h3>
+<div id="st-chart" class="st-chart"></div>
+<h3 id="stats-rank">ページ別ランキング</h3>
+<div class="tbl"><table><thead><tr><th>#</th><th>ページ</th><th class="num">閲覧数</th><th class="num">割合</th></tr></thead><tbody id="st-rank"></tbody></table></div>
 <h2 id="members-h">関係者</h2>
 <p class="note">ここに入れたメールのGoogleアカウントでログインした人だけが、社内資料を見られます。</p>
 <form id="madd" class="adm-add"><input id="memail" type="email" placeholder="メールアドレス" autocomplete="off" required><button type="submit" class="gate-btn">関係者にする</button></form>
