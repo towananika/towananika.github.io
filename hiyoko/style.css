@@ -707,8 +707,16 @@ a.wsrc:hover{color:var(--ink)}
   .hh{padding:28px 18px}
   .hh::before{width:150px;height:180px;right:-50px;top:-60px}
   .hh::after{right:auto;left:-40px;bottom:-70px}
-  .hh-art{width:120px;height:120px;font-size:4.6rem}
+  .hh-art{width:150px;height:150px;font-size:4.6rem}
   .qn .ti{width:40px;height:40px;font-size:1.3rem}
   .hh-igs{grid-template-columns:1fr}
   .hh-igs>:nth-child(n+2){display:none}
 }
+
+/* ---------- Home hero art (official IG post image, credited) ---------- */
+.hh-fig{margin:0;display:flex;flex-direction:column;align-items:center;gap:8px}
+.hh .hh-art{background:#fff;overflow:hidden;padding:0}
+.hh-art img{display:block;width:100%;height:100%;object-fit:cover}
+.hh-src{font-size:.75rem;color:var(--muted);text-align:center;line-height:1.5}
+.hh-src a{color:inherit;display:inline-block;padding:6px 0}
+@media (max-width:700px){.hh-fig{order:-1}}
