@@ -615,3 +615,40 @@ a.nw-pr{flex:none;font-size:.8rem;color:var(--muted);display:inline-flex;align-i
 a.wsrc{display:inline-flex;align-items:center;min-height:28px;font-size:.78rem;color:var(--muted);border:1px solid var(--line);border-radius:99px;padding:2px 10px;text-decoration:none;background:var(--paper)}
 a.wsrc:hover{color:var(--ink)}
 @media (min-width:1000px){.tiles{grid-template-columns:repeat(4,minmax(0,1fr))}}
+
+/* ===== Sitemap pass (2026-11-20): section tabs on top, section pages on the left, sitemap at the bottom ===== */
+.hy-tabs{background:var(--paper);border-bottom:1px solid var(--line)}
+.hy-tabs>div{display:flex;gap:2px;max-width:1380px;margin:0 auto;padding:0 max(2px,calc((100vw - 1380px)/2 + 2px));overflow-x:auto;scrollbar-width:none}
+.hy-tabs>div::-webkit-scrollbar{display:none}
+.hy-tabs a{flex:none;display:inline-flex;align-items:center;min-height:46px;padding:0 14px;color:var(--muted);text-decoration:none;font-weight:700;font-size:.92rem;border-bottom:3px solid transparent;white-space:nowrap}
+.hy-tabs a:hover{color:var(--ink)}
+.hy-tabs a[aria-current="true"]{color:var(--ink);border-bottom-color:var(--ink)}
+.sitenav[hidden]{display:none!important}
+/* pages without a section nav: centred content (+ this-page TOC on the right) */
+.layout:has(>.sitenav[hidden]){grid-template-columns:minmax(0,940px) 190px;justify-content:center}
+.layout:has(>.sitenav[hidden]):not(:has(>.pagetoc)){grid-template-columns:minmax(0,940px)}
+.layout:has(>.sitenav[hidden])>main{grid-column:1}
+.layout:has(>.sitenav[hidden])>.pagetoc{grid-column:2}
+@media (max-width:1200px){
+  .layout:has(>.sitenav[hidden]),.layout:has(>.sitenav[hidden]):not(:has(>.pagetoc)){grid-template-columns:minmax(0,940px)}
+  .layout:has(>.sitenav[hidden])>.pagetoc{grid-column:1;grid-row:1}
+  .layout:has(>.sitenav[hidden])>main{grid-column:1;grid-row:2}
+  .layout:has(>.sitenav[hidden]):not(:has(>.pagetoc))>main{grid-row:1}
+}
+
+/* footer sitemap */
+.fmap{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:16px;margin:28px 0 0;padding:20px 0 0;border-top:1px solid var(--line);font-size:.85rem}
+.fmap .fm-h{display:inline-flex;align-items:center;min-height:32px;font-weight:800;color:var(--ink);text-decoration:none}
+.fmap ul{list-style:none;margin:0;padding:0}
+.fmap li a{display:inline-flex;align-items:center;min-height:30px;color:var(--muted);text-decoration:none}
+.fmap a:hover{color:var(--ink);text-decoration:underline}
+@media (max-width:720px){.fmap{grid-template-columns:repeat(2,minmax(0,1fr))}.fmap .fm-h,.fmap li a{min-height:44px}}
+/* home: tile groups */
+.tg-h{font-size:.85rem!important;font-weight:800;color:var(--muted);letter-spacing:.04em;margin:18px 0 8px!important;padding:0!important;border:0!important}
+.tg-h::before,.tg-h::after{display:none!important}
+.tiles{grid-template-columns:repeat(3,minmax(0,1fr))!important;margin-bottom:8px}
+@media (max-width:560px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))!important}.tiles .tile:last-child:nth-child(odd){grid-column:1/-1}}
+.in-link{margin:10px 0 22px}
+.in-link a{display:inline-flex;align-items:center;min-height:44px;color:var(--muted);font-weight:700;text-decoration:none}
+.in-link a:hover{color:var(--ink)}
+@media (max-width:720px){.hy-tabs>div{-webkit-mask-image:linear-gradient(90deg,#000 82%,transparent);mask-image:linear-gradient(90deg,#000 82%,transparent);padding-right:40px}.hy-tabs a{padding:0 12px}}

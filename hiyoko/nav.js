@@ -16,3 +16,5 @@ function spy(){
 var tk=false; window.addEventListener('scroll',function(){if(!tk){tk=true;requestAnimationFrame(function(){tk=false;spy();});}},{passive:true});
 spy();
 })();
+/* section tabs: keep the current tab visible on narrow screens */
+(function(){var c=document.querySelector('.hy-tabs a[aria-current]');if(!c)return;var r=c.parentNode;r.scrollLeft=Math.max(0,c.offsetLeft-(r.clientWidth-c.offsetWidth)/2);})();
