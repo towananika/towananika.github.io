@@ -27,10 +27,12 @@
     su.appendChild(ic); su.appendChild(el('span', 'hy-acct-n', u.name || u.email || '')); dt.appendChild(su);
     var p = el('div', 'hy-set-p');
     p.appendChild(el('div', 'hy-acct-e', u.email || ''));
-    p.appendChild(el('div', 'hy-set-h', '社内資料（関係者のみ）'));
-    p.appendChild(link('internal/strategy/', '企画・目標・方向性'));
-    p.appendChild(link('internal/review/', '振り返り'));
-    p.appendChild(link('internal/admin/', '管理'));
+    var mem = el('div', 'mem-only');
+    mem.appendChild(el('div', 'hy-set-h', '社内資料（関係者のみ）'));
+    mem.appendChild(link('internal/strategy/', '企画・目標・方向性'));
+    mem.appendChild(link('internal/review/', '振り返り'));
+    mem.appendChild(link('internal/admin/', '管理'));
+    p.appendChild(mem);
     var out = el('button', 'hy-acct-btn ghost', 'ログアウト'); out.type = 'button';
     out.addEventListener('click', function () { window.triLogout && window.triLogout(); });
     p.appendChild(out); dt.appendChild(p); box.appendChild(dt);
@@ -40,8 +42,27 @@
   document.addEventListener('click', function (e) { menus().forEach(function (d) { if (d.open && !d.contains(e.target)) d.open = false; }); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') menus().forEach(function (d) { d.open = false; }); });
   document.addEventListener('toggle', function (e) { var t = e.target; if (t.open && t.closest && t.closest('.hy-set')) menus().forEach(function (d) { if (d !== t) d.open = false; }); }, true);
-  document.addEventListener('tri-user', function (e) { show(e.detail); });
-  import('/triathlon/login/auth.js?v=0.28').then(function () { if (window.TRI_USER !== undefined) show(window.TRI_USER); })
+  // 関係者かどうかはサーバー（hibiki-sync）が決める。関係者なら <html class="is-member"> にして、社内資料への入口（.mem-only）を出す。
+  // 一般の人には入口そのものを出さない（中身はもともとサーバーが本人を確かめてから返す）。
+  var API = 'https://hibiki-sync.jaykim-can.workers.dev/hiyoko/', KEY = 'hyMember', asked = null;
+  function setMem(v) { document.documentElement.classList.toggle('is-member', !!v); }
+  function ss(k, v) { try { if (v === undefined) return sessionStorage.getItem(k); if (v === null) sessionStorage.removeItem(k); else sessionStorage.setItem(k, v); } catch (e) { return null; } }
+  function member(u) {
+    if (u === undefined) return;
+    if (!u) { setMem(false); ss(KEY, null); asked = null; return; }
+    if (ss(KEY) === u.email) { setMem(true); return; }
+    if (asked === u.email || !window.triToken) return;
+    asked = u.email;
+    window.triToken().then(function (tk) {
+      return fetch(API + 'doc', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + tk }, body: JSON.stringify({ id: 'strategy' }) });
+    }).then(function (r) { return r.json(); }).then(function (o) {
+      var ok = !o.error || o.error === 'none';
+      setMem(ok); if (ok) ss(KEY, u.email);
+    }).catch(function () { asked = null; });
+  }
+  if (ss(KEY)) setMem(true);
+  document.addEventListener('tri-user', function (e) { show(e.detail); member(e.detail); });
+  import('/triathlon/login/auth.js?v=0.28').then(function () { if (window.TRI_USER !== undefined) { show(window.TRI_USER); member(window.TRI_USER); } })
     .catch(function () { box.replaceChildren(); });
   var st = document.createElement('style');
   st.textContent = '.hy-set{gap:8px;align-items:center}.hy-acct{position:relative}' +

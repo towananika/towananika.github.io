@@ -739,3 +739,8 @@ a.wsrc:hover{color:var(--ink)}
   .hh-news{flex:1 1 auto}
   .hh-in{flex:none}
 }
+
+/* ---------- Members-only entry points (2026-11-20): hidden unless account.js confirms membership ---------- */
+html:not(.is-member) .mem-only{display:none!important}
+.chara-pic{width:96px;height:96px;flex:none;border-radius:50%;overflow:hidden;background:#fff;border:3px solid var(--card);box-shadow:0 4px 14px rgba(120,90,0,.12)}
+.chara-pic img{display:block;width:100%;height:100%;object-fit:cover}
