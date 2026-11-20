@@ -72,7 +72,7 @@ function apply(lang){
 }
 function sw(){
   /* 言語の切り替えは「設定」メニューの中（右上の歯車） */
-  var w=document.createElement('div'); w.className='hy-set';
+  var w=document.querySelector('.hy-set'), fresh=!w; if(fresh){w=document.createElement('div'); w.className='hy-set';}
   var dt=document.createElement('details'), su=document.createElement('summary'), ic=document.createElement('span'), tx=document.createElement('span');
   ic.className='hy-set-ic'; ic.setAttribute('aria-hidden','true'); ic.textContent='\u2699'; tx.textContent='設定';
   su.appendChild(ic); su.appendChild(tx); dt.appendChild(su);
@@ -84,7 +84,7 @@ function sw(){
   p.appendChild(d); dt.appendChild(p); w.appendChild(dt);
   document.addEventListener('click',function(e){ if(dt.open&&!w.contains(e.target))dt.open=false; });
   document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&dt.open){dt.open=false;su.focus();} });
-  var m=document.querySelector('main')||document.body; m.insertBefore(w,m.firstChild);
+  if(fresh){var m=document.querySelector('main')||document.body; m.insertBefore(w,m.firstChild);}
   var st=document.createElement('style');
   st.textContent='.hy-set{display:flex;justify-content:flex-end;margin:0 0 8px;position:relative;z-index:30}'+
    '.hy-set summary{list-style:none;display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:4px 12px;border:1px solid var(--line);border-radius:99px;background:var(--card);color:var(--muted);font-size:.82rem;font-weight:700;cursor:pointer}'+
