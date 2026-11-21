@@ -1,0 +1,46 @@
+# （hibiki/）PCなしで YouTube 動画1本を日本語で要約・書き起こし（Google 公式 Gemini API が動画を読む）
+# 使い方: Actions → "YouTube Summary" → Run workflow に動画URL（とモード）を入れる。Claude のスレッドからも動かす。
+# 準備: リポジトリの Secrets に GEMINI_API_KEY。結果はログと Artifact（1日で削除）。リポジトリにはコミットしない。
+# 注意: 公開リポジトリなので、実行ログ（＝要約）はだれでも見られる。個人のことは入れない。
+name: YouTube Summary
+run-name: YouTube Summary
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: "YouTube動画1本のURL（公開動画）"
+        required: true
+      mode:
+        description: "sum＝要約 / full＝書き起こし"
+        required: false
+        default: sum
+        type: choice
+        options: [sum, full]
+permissions:
+  contents: read
+jobs:
+  summarize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: hibiki/tools/youtube-reader
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: 読む
+        env:
+          VIDEO_URL: ${{ inputs.url }}
+          MODE: ${{ inputs.mode }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          python hibiki/tools/youtube-reader/gemini_summary.py "$VIDEO_URL" "$MODE" > summary.md
+          echo "=====SUMMARY START====="
+          cat summary.md
+          echo "=====SUMMARY END====="
+      - uses: actions/upload-artifact@v4
+        with:
+          name: summary
+          path: summary.md
+          retention-days: 1
