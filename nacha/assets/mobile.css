@@ -1,0 +1,45 @@
+/* モバイルの使いやすさ（2026-11-13）: 押しやすさ・文字の大きさ・下タブに隠れない余白。全ページ共通で最後に読み込む */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+a,button,summary,[role=button]{-webkit-tap-highlight-color:rgba(184,56,35,.12);touch-action:manipulation}
+@media (max-width:760px){
+  /* 押しやすさ: 指で押す部品は高さ44px以上 */
+  .lang-btn,#accountLink,.ibtn,.templeBellBtn,.temple-bell-btn,.mbtn,.btn.sm,.astep-nav .btn,.pill,.chip,.mode-tab-btn,.quick-tag-btn,.daily-btn,.link-btn,.follow-cta-sub,.gallery-shelf-link,.modalPrev,.modalNext,#modalClose,.brand{min-height:44px;display:inline-flex;align-items:center;justify-content:center}
+  .ibtn,.temple-bell-btn{min-width:44px}
+  .follow-cta-sub{padding:0 14px}
+  .gallery-shelf-link{padding:0 8px}
+  .astep-nav .btn{padding-left:22px;padding-right:22px;font-size:14px}
+  .astep-bar li{min-width:56px;padding:4px 0}
+  .tabs a{min-height:48px;justify-content:center}
+  /* 文字: 本文として読む小さな字は12px以上（飾りの英字ラベルは11px） */
+  .door-desc,.unoff-notice,.unoff,.quiz-note,.crole,.cnum,.n,.tag,.dash-badge,.secret,.bar-temple-badge,.site-subtitle,.vermilion-seal,.gallery-shelf-link,.quiz-count{font-size:12px}
+  .door-badge,.stage-label-en,.eyebrow{font-size:11px}
+  /* 下タブに隠れない: 余白は「タブの高さ＋安全領域」 */
+  body{padding-bottom:calc(92px + env(safe-area-inset-bottom))}
+  /* ヘッダーの押しにくい小さなリンクを広げる */
+  .bar .brand{padding:0 4px}
+  .follow-cta-btn{min-height:50px}
+}
+@media (max-width:760px){
+  /* 神様名鑑・診断（quietの骨組み）のヘッダー */
+  .site-head a,.site-head button,.site-head .lang-btn{min-height:44px;display:inline-flex;align-items:center;padding-left:6px;padding-right:6px}
+  .site-head .wrap{gap:8px}
+  body.q{padding-bottom:calc(92px + env(safe-area-inset-bottom))}
+  .cnum,.n,.quiz-count{font-size:11px}
+  #modalPrev,#modalNext,#modalClose{min-height:44px;min-width:44px}
+}
+
+/* 公式アカウントへのリンク（全ページ共通、アイコンはSVGを埋め込み） */
+.official{margin:10px auto 12px;text-align:center}
+.official p{margin:0;display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.official a{display:inline-flex;align-items:center;gap:6px;padding:6px 12px 6px 10px;border:1px solid rgba(191,161,95,.55);border-radius:999px;background:#fff;color:#2b241e;text-decoration:none;font-size:12.5px;font-weight:600;letter-spacing:.03em;line-height:1.2}
+.official svg{width:16px;height:16px;flex:none}
+.official .o-x svg{color:#111}.official .o-ig svg{color:#d62976}.official .o-tt svg{color:#111}.official .o-yt svg{color:#ff0000}
+.official .o-hp svg,.official .o-shop svg,.official .o-trade svg{color:#b83823}
+.official-sites{margin-top:8px!important}
+.official-sites a{background:transparent;font-weight:500;font-size:12px;color:#6e6259}
+.official-big .official-sns{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));max-width:340px;margin:0 auto!important}
+.official-big .official-sns a{justify-content:center;padding:11px 14px;font-size:14px}
+.official-big .official-sns svg{width:20px;height:20px}
+.official-section{margin:28px 0 8px;text-align:center}
+.official-lead{margin:0 0 12px;font-size:13.5px;color:#6e6259;letter-spacing:.05em}
+.quiz-foot{text-align:center;font-size:11.5px;color:#6e6259;padding:24px 16px}

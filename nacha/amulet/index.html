@@ -1,0 +1,1174 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>心願お守り（蓮華護身符） — NACHA</title>
+<meta name="description" content="小さな神様ナチャの蓮華護身符。推し色を選び、推しの名前を刻んでチケット当選・神席祈願！日々の加護を受け取り、画像として保存・シェアできるデジタルお守り。">
+<meta name="theme-color" content="#C0392B">
+<meta property="og:type" content="website">
+<meta property="og:title" content="NACHA — 蓮華護身符（推し活・当選祈願＆毎日のお守り）">
+<meta property="og:description" content="推し色を選び、推しの名前を刻んでチケット当選・神席祈願！ナチャの蓮華護身符。">
+<meta property="og:image" content="https://towananika.github.io/nacha/assets/nacha-pray.webp">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%AA%B7%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=M+PLUS+Rounded+1c:wght@800&family=Noto+Serif+JP:wght@700;900&family=Shippori+Mincho:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css">
+<style>
+  :root {
+    --amulet-red: #A9261B;
+    --amulet-gold: #E5B338;
+    --amulet-gold-light: #FFF0B3;
+  }
+  .amulet-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    padding: 16px 0 10px;
+    perspective: 1000px;
+  }
+  /* お守り全体の振り子アニメーション */
+  .amulet-swing {
+    transform-origin: top center;
+    animation: gentleSway 5s ease-in-out infinite;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: transform 0.2s cubic-bezier(0.2, 1.4, 0.4, 1);
+  }
+  .amulet-swing:hover {
+    transform: scale(1.03);
+  }
+  .amulet-swing:active, .amulet-swing.touched {
+    animation: ringSway 1s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  }
+  @keyframes gentleSway {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(2deg); }
+    75% { transform: rotate(-2deg); }
+  }
+  @keyframes ringSway {
+    0% { transform: rotate(0deg) scale(0.98); }
+    20% { transform: rotate(-7deg) scale(1.04); }
+    40% { transform: rotate(6deg) scale(1.02); }
+    60% { transform: rotate(-4deg); }
+    80% { transform: rotate(2deg); }
+    100% { transform: rotate(0deg); }
+  }
+
+  .amulet-svg {
+    width: 220px;
+    height: 340px;
+    filter: drop-shadow(0 14px 28px rgba(0,0,0,0.22));
+    transition: filter 0.3s;
+  }
+  .amulet-swing.blessed .amulet-svg {
+    filter: drop-shadow(0 0 24px rgba(229, 179, 56, 0.85)) drop-shadow(0 14px 28px rgba(0,0,0,0.25));
+  }
+
+  /* モード切り替えタブ */
+  .mode-switch-wrap {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin: 8px 0 14px;
+  }
+  .mode-tab-btn {
+    padding: 9px 18px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 700;
+    border: 1px solid var(--line);
+    background: var(--card);
+    color: var(--sub);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .mode-tab-btn.active {
+    background: var(--acc);
+    color: #fff;
+    border-color: var(--acc);
+    box-shadow: 0 4px 12px rgba(192, 57, 43, 0.25);
+  }
+
+  /* 推し色カラーパレット */
+  .color-palette-box {
+    margin-top: 14px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 14px 16px;
+    text-align: center;
+  }
+  .color-palette-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .color-chips {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+  .color-chip {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.18);
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    font-size: 14px;
+    transition: transform 0.15s, box-shadow 0.15s;
+    padding: 0;
+  }
+  .color-chip:hover {
+    transform: scale(1.12);
+  }
+  .color-chip.active {
+    outline: 3px solid var(--gold);
+    outline-offset: 2px;
+    transform: scale(1.15);
+  }
+
+  /* 加護・お告げカード */
+  .blessing-card {
+    margin-top: 18px;
+    background: var(--card);
+    border: 2px solid var(--line);
+    border-radius: 20px;
+    padding: 22px 20px;
+    box-shadow: var(--shadow);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .blessing-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--gold), var(--acc));
+  }
+  .blessing-tag {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--acc);
+    background: var(--accSoft);
+    padding: 4px 12px;
+    border-radius: 999px;
+    margin-bottom: 8px;
+  }
+  .blessing-title {
+    font-family: "Noto Serif JP", "M PLUS Rounded 1c", serif;
+    font-size: 26px;
+    font-weight: 900;
+    color: var(--acc);
+    margin: 4px 0 8px;
+    letter-spacing: 0.08em;
+  }
+  .blessing-desc {
+    font-size: 14.5px;
+    color: var(--ink);
+    line-height: 1.6;
+    margin: 0 0 14px;
+  }
+  .blessing-quote {
+    font-size: 13px;
+    color: var(--sub);
+    font-style: italic;
+    background: rgba(192, 57, 43, 0.06);
+    padding: 10px 14px;
+    border-radius: 12px;
+    margin: 0;
+  }
+
+  /* 祈願フォーム */
+  .prayer-box {
+    margin-top: 18px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 18px;
+  }
+  .prayer-box h3 {
+    margin: 0 0 6px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--ink);
+  }
+  .oshi-name-row {
+    margin-bottom: 12px;
+  }
+  .oshi-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--sub);
+    margin-bottom: 4px;
+  }
+  .prayer-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .prayer-input {
+    width: 100%;
+    height: 46px;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    background: var(--bg);
+    color: var(--ink);
+    padding: 0 14px;
+    font: inherit;
+    font-size: 15px;
+  }
+  .quick-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 2px;
+  }
+  .quick-tag-btn {
+    font-size: 12px;
+    padding: 5px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: var(--bg);
+    color: var(--ink);
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .quick-tag-btn:hover {
+    border-color: var(--acc);
+    color: var(--acc);
+  }
+  .prayer-btn {
+    height: 48px;
+    border: 0;
+    background: var(--acc);
+    color: #fff;
+    font: inherit;
+    font-weight: 700;
+    border-radius: 12px;
+    padding: 0 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: transform 0.1s, background 0.15s;
+    margin-top: 4px;
+  }
+  .prayer-btn:active {
+    transform: scale(0.97);
+  }
+
+  /* キラキラ光るパーティクル */
+  .petal {
+    position: fixed;
+    pointer-events: none;
+    z-index: 99;
+    font-size: 20px;
+    animation: petalFly 1.2s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+  }
+  @keyframes petalFly {
+    0% {
+      opacity: 1;
+      transform: translate(0, 0) scale(0.8) rotate(0deg);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(var(--dx), var(--dy)) scale(1.4) rotate(var(--dr));
+    }
+  }
+
+  /* アクションボタン群 */
+  .action-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 16px;
+  }
+  .action-row .btn {
+    cursor: pointer;
+    border: 0;
+    text-align: center;
+  }
+  .btn.gold {
+    background: linear-gradient(135deg, #E5B338, #B8860B);
+    color: #1A1A1A;
+    box-shadow: 0 4px 12px rgba(184, 134, 11, 0.25);
+  }
+  .btn.x-share {
+    grid-column: 1 / -1;
+    background: #1d9bf0;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-weight: 700;
+    text-decoration: none;
+    padding: 12px;
+    border-radius: 12px;
+  }
+  .btn.x-share:active {
+    transform: scale(0.98);
+  }
+
+  /* 説明セクション */
+  .lore-card {
+    margin-top: 24px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 16px;
+    font-size: 13.5px;
+    color: var(--sub);
+    line-height: 1.7;
+  }
+  .lore-card b {
+    color: var(--ink);
+  }
+  .lore-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  .lore-item {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 10px 12px;
+  }
+  .lore-item strong {
+    display: block;
+    color: var(--acc);
+    font-size: 13px;
+    margin-bottom: 2px;
+  }
+
+/* かんたんステップ表示（2026-11-13） */
+.astep-bar{list-style:none;display:flex;justify-content:center;gap:18px;margin:6px 0 14px;padding:0}
+.astep-bar li{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;color:var(--sub);opacity:.55}
+.astep-bar li b{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--bg);border:1.5px solid var(--line);font-size:13px}
+.astep-bar li.on{opacity:1;color:var(--acc)}
+.astep-bar li.on b{background:var(--acc);border-color:var(--acc);color:#fff}
+.astep-bar li.done{opacity:.9}
+.astep-bar li.done b{border-color:var(--acc);color:var(--acc)}
+.astep[hidden]{display:none!important}
+.astep-nav{display:flex;justify-content:center;gap:10px;margin:16px 0 4px}
+
+/* ── 和紙デザインへ統一（2026-11-13 基本設定）: 色・書体・額縁をサイト共通の「デザインの決まり」に合わせる ── */
+:root,:root:not([data-theme="light"]){
+  --bg:#f5f0e6;--card:#fbf9f4;--ink:#2b241e;--sub:#6e6259;--line:rgba(191,161,95,.45);
+  --acc:#b83823;--gold:#bfa15f;--accSoft:#b8382314;--shadow:0 6px 18px rgba(43,36,30,.08);
+  --amulet-red:#A9261B;
+  color-scheme:light;
+}
+body{font-family:"Shippori Mincho","Zen Old Mincho","Noto Serif JP",serif}
+.bar{background:rgba(251,249,244,.95);border-bottom:1px solid var(--line)}
+.bar .brand,.logo{font-family:"Shippori Mincho",serif;font-weight:700;letter-spacing:.28em;color:var(--ink)}
+.bar-temple-badge{border-color:var(--gold);color:#8a6d2b;background:#fff}
+.pt{font-family:"Shippori Mincho",serif;font-weight:700;letter-spacing:.16em;color:var(--ink)}
+.ps{letter-spacing:.06em}
+.mode-tab-btn,.prayer-btn,.btn,.quick-tag-btn,.astep-bar li b{font-family:inherit}
+.mode-tab-btn.active,.prayer-btn{background:var(--acc);border-color:var(--acc)}
+.blessing-card,.prayer-box,.color-palette-box,.lore-card{
+  background:#fbf9f4;border:1px solid var(--line);border-radius:18px;box-shadow:none;position:relative}
+.blessing-card::before{display:none}
+.blessing-card::after,.prayer-box::after,.color-palette-box::after,.lore-card::after{
+  content:"";position:absolute;inset:6px;border:1px solid rgba(191,161,95,.28);border-radius:13px;pointer-events:none}
+.blessing-title{font-family:"Shippori Mincho",serif;font-weight:700;letter-spacing:.1em;color:var(--ink)}
+.blessing-tag{background:#fff;border:1px solid var(--gold);color:#8a6d2b}
+.btn.gold{background:var(--acc);color:#fff;box-shadow:none}
+.prayer-input{background:#fff;border:1px solid var(--line);border-radius:12px}
+.astep-bar li b{background:#fbf9f4}
+.tabs{background:rgba(251,249,244,.95);border-top:1px solid var(--line)}
+</style>
+<link rel="stylesheet" href="../assets/mobile.css">
+</head>
+<body>
+<a class="skip" href="#main">メインへ</a>
+
+<!-- トップバー -->
+<div class="bar">
+  <div style="display:flex;align-items:center">
+    <a class="brand" href="../">NACHA</a>
+    <span class="bar-temple-badge" data-i="temple_badge">悠遊観音堂 境内</span>
+  </div>
+  <div class="barr">
+    <button class="ibtn temple-bell-btn" id="templeBellBtn" type="button" title="参拝の鈴を鳴らす" aria-label="参拝の鈴">🔔</button>
+  </div>
+</div>
+
+<main id="main">
+  <h1 class="pt" style="text-align:center; margin-bottom:4px;">蓮華護身符</h1>
+  <p class="ps" style="text-align:center; margin-top:0;" id="pageSubtitle">ナチャが腰に提げる、聖なる加護のお守り</p>
+
+  <!-- かんたんステップ（2026-11-13 シンプル化）: 1画面1ステップで進む -->
+  <ol class="astep-bar" id="astepBar">
+    <li data-s="1"><b>1</b><span>種類</span></li>
+    <li data-s="2"><b>2</b><span>色</span></li>
+    <li data-s="3"><b>3</b><span>願い</span></li>
+    <li data-s="4"><b>4</b><span>完成</span></li>
+  </ol>
+
+  <!-- モード切替タブ -->
+  <div class="mode-switch-wrap astep" data-step="1">
+    <button class="mode-tab-btn" id="modeNormalBtn" type="button">🪷 日々の加護</button>
+    <button class="mode-tab-btn active" id="modeOshiBtn" type="button">⭐ 推し活・当選祈願</button>
+  </div>
+
+  <!-- 推し色カラーパレット -->
+  <div class="color-palette-box astep" data-step="2" id="colorPaletteBox">
+    <div class="color-palette-title">
+      <span>🎨 推し色（メンバーカラー）を選ぶ</span>
+      <b id="activeColorName" style="color:var(--acc);">【紅・赤】</b>
+    </div>
+    <div class="color-chips" id="colorChips">
+      <!-- JSで動的生成 -->
+    </div>
+  </div>
+
+  <!-- お守りグラフィック本体（SVGで精巧に描画・アニメーション連動） -->
+  <div class="amulet-container">
+    <div class="amulet-swing" id="amuletEl" title="タップしてお守りを揺らす">
+      <svg class="amulet-svg" viewBox="0 0 220 340" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <!-- お守り地のグラデーション（推し色で動的更新） -->
+          <linearGradient id="brocade" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop id="brocadeStop1" offset="0%" stop-color="#C0392B"/>
+            <stop id="brocadeStop2" offset="50%" stop-color="#9E2A1E"/>
+            <stop id="brocadeStop3" offset="100%" stop-color="#6E1A11"/>
+          </linearGradient>
+          <!-- 金の光沢 -->
+          <linearGradient id="goldGleam" x1="0%" y1="0%" x2="100%" y2="80%">
+            <stop offset="0%" stop-color="#FFF2B2"/>
+            <stop offset="40%" stop-color="#F4D03F"/>
+            <stop offset="80%" stop-color="#D4AC0D"/>
+            <stop offset="100%" stop-color="#9A7D0A"/>
+          </linearGradient>
+          <!-- 絹房の立体陰影（推し色で動的更新） -->
+          <linearGradient id="tasselGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop id="tasselStop1" offset="0%" stop-color="#801B12"/>
+            <stop id="tasselStop2" offset="35%" stop-color="#D94534"/>
+            <stop id="tasselStop3" offset="70%" stop-color="#A9261B"/>
+            <stop id="tasselStop4" offset="100%" stop-color="#5E120B"/>
+          </linearGradient>
+          <filter id="goldGlow" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="3" result="blur"/>
+            <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+          </filter>
+        </defs>
+
+        <!-- 上部の掛け紐（吊るし） -->
+        <path d="M 110,0 L 110,38" stroke="url(#goldGleam)" stroke-width="4" stroke-linecap="round"/>
+
+        <!-- 吉祥結び（チャイニーズノット・金環飾り） -->
+        <g id="knot" transform="translate(110, 42)">
+          <!-- 左右の輪 -->
+          <ellipse cx="-22" cy="0" rx="14" ry="9" fill="none" stroke="url(#goldGleam)" stroke-width="3.5"/>
+          <ellipse cx="22" cy="0" rx="14" ry="9" fill="none" stroke="url(#goldGleam)" stroke-width="3.5"/>
+          <!-- 中央の結び目輪郭 -->
+          <rect id="knotRect" x="-14" y="-12" width="28" height="24" rx="6" fill="#A9261B" stroke="url(#goldGleam)" stroke-width="3.5"/>
+          <!-- 飾り珠 -->
+          <circle cx="0" cy="0" r="5" fill="url(#goldGleam)"/>
+        </g>
+
+        <!-- お守り本体（角丸台形・錦織符） -->
+        <g id="body" transform="translate(25, 68)">
+          <!-- 外形ドロップシャドウ兼外枠金縁 -->
+          <path d="M 30,0 L 140,0 C 158,0 170,12 170,28 L 170,165 C 170,185 155,195 135,195 L 35,195 C 15,195 0,185 0,165 L 0,28 C 0,12 12,0 30,0 Z"
+                fill="url(#goldGleam)"/>
+          <!-- 内側の錦織地 -->
+          <path d="M 30,4 L 140,4 C 155,4 165,14 165,28 L 165,163 C 165,181 152,190 133,190 L 37,190 C 18,190 5,181 5,163 L 5,28 C 5,14 15,4 30,4 Z"
+                fill="url(#brocade)"/>
+
+          <!-- 伝統の波・雲紋様（金ライン） -->
+          <path d="M 15,175 Q 35,165 55,175 T 95,175 T 135,175 T 155,175"
+                fill="none" stroke="url(#goldGleam)" stroke-width="1.8" opacity="0.75"/>
+          <path d="M 15,180 Q 35,170 55,180 T 95,180 T 135,180 T 155,180"
+                fill="none" stroke="url(#goldGleam)" stroke-width="1.2" opacity="0.5"/>
+
+          <!-- 聖なる蓮花（八弁ロータス） -->
+          <g id="lotus" transform="translate(85, 52)">
+            <path d="M 0,-24 C -7,-12 -7,8 0,12 C 7,8 7,-12 0,-24 Z" fill="url(#goldGleam)"/>
+            <path d="M -2,0 C -16,-10 -22,4 -10,12 C -4,11 0,6 -2,0 Z" fill="url(#goldGleam)"/>
+            <path d="M 2,0 C 16,-10 22,4 10,12 C 4,11 0,6 2,0 Z" fill="url(#goldGleam)"/>
+            <path d="M -6,5 C -25,0 -26,16 -12,18 C -6,16 -3,11 -6,5 Z" fill="url(#goldGleam)"/>
+            <path d="M 6,5 C 25,0 26,16 12,18 C 6,16 3,11 6,5 Z" fill="url(#goldGleam)"/>
+            <path d="M -16,16 Q 0,22 16,16 Q 0,25 -16,16 Z" fill="url(#goldGleam)"/>
+          </g>
+
+          <!-- 銘板（推しの名前または那茶） -->
+          <g id="kanjiPlate" transform="translate(85, 115)">
+            <rect id="plateBg" x="-42" y="-13" width="84" height="26" rx="6" fill="#6E1A11" stroke="url(#goldGleam)" stroke-width="1.5"/>
+            <text id="plateText" x="0" y="5" font-family="'Noto Serif JP', 'Lilita One', serif" font-size="13" font-weight="900" fill="url(#goldGleam)" text-anchor="middle" letter-spacing="2">那茶</text>
+          </g>
+
+          <!-- 護身符の文字銘 -->
+          <text id="amuletSubText" x="85" y="152" font-family="'Noto Serif JP', 'M PLUS Rounded 1c', serif" font-size="12" font-weight="700" fill="#FFF2B2" text-anchor="middle" letter-spacing="2">蓮華護身符</text>
+        </g>
+
+        <!-- 下部の結び飾りとタッセル（房） -->
+        <g id="tassel" transform="translate(110, 262)">
+          <circle cx="0" cy="4" r="7" fill="url(#goldGleam)"/>
+          <circle cx="0" cy="4" r="3.5" fill="#6E1A11"/>
+          <ellipse cx="0" cy="16" rx="9" ry="7" fill="url(#tasselGrad)"/>
+          <rect x="-8" y="14" width="16" height="3" fill="url(#goldGleam)"/>
+          <path d="M -9,22 L -18,74 Q 0,78 18,74 L 9,22 Z" fill="url(#tasselGrad)"/>
+          <line x1="-3" y1="22" x2="-6" y2="75" stroke="#FFA399" stroke-width="1.2" opacity="0.6"/>
+          <line x1="2" y1="22" x2="4" y2="76" stroke="#FFA399" stroke-width="1.2" opacity="0.6"/>
+        </g>
+      </svg>
+    </div>
+    <p style="font-size:12px;color:var(--sub);margin:8px 0 0;">✨ タップすると揺れて加護が宿ります</p>
+  </div>
+
+  <!-- 今日の加護・お告げ表示カード -->
+  <div class="blessing-card astep" data-step="1" id="blessingCard">
+    <span class="blessing-tag" id="blessingTag">推し活祈願符</span>
+    <h2 class="blessing-title" id="blessingTitle">当選祈願 · 心願成就</h2>
+    <p class="blessing-desc" id="blessingDesc">推しを想う一途な心の光は、どんな倍率の壁も突破する！ナチャの火焔槍が幸運の扉を開きます。</p>
+    <blockquote class="blessing-quote" id="blessingQuote">「その愛、天まで届いてるよ！僕が神風を送って当選通知を運んであげるね。」— 那茶</blockquote>
+  </div>
+
+  <!-- 願掛け（推し活・祈願フォーム） -->
+  <div class="prayer-box astep" data-step="3" id="prayerBox">
+    <h3 id="formTitle">⭐ 推し活祈願を込める</h3>
+    <p style="font-size:13px;color:var(--sub);margin:0 0 10px;" id="formDesc">推しの名前と願いを込めると、お守りに刻まれて加護が宿ります。</p>
+    
+    <form class="prayer-form" id="prayerForm" autocomplete="off">
+      <div class="oshi-name-row" id="oshiNameRow">
+        <label class="oshi-label" for="oshiNameInput">尊い推しの名前（グループ名・キャラクター等）</label>
+        <input class="prayer-input" id="oshiNameInput" type="text" maxlength="16" placeholder="例：ナチャ、推しの名前" aria-label="推しの名前">
+      </div>
+
+      <div>
+        <label class="oshi-label" for="prayerInput">祈願内容</label>
+        <input class="prayer-input" id="prayerInput" type="text" maxlength="32" placeholder="例：ライブチケット当選！アリーナ神席祈願！" aria-label="願掛け">
+      </div>
+
+      <!-- クイック祈願タグ（推し活あるある） -->
+      <div class="quick-tags" id="quickTags">
+        <button type="button" class="quick-tag-btn" data-tag="チケット当選祈願！倍率突破！">🎫 チケット当選</button>
+        <button type="button" class="quick-tag-btn" data-tag="アリーナ最前・神席祈願！">👑 神席祈願</button>
+        <button type="button" class="quick-tag-btn" data-tag="推しが今日も元気でいてくれますように">🕊️ 推しの健康</button>
+        <button type="button" class="quick-tag-btn" data-tag="当落発表が怖くて胃が痛い…どうか当たって！">😰 当落前の胃痛</button>
+        <button type="button" class="quick-tag-btn" data-tag="遠征費が無事に集まりますように！">🚅 遠征成就</button>
+        <button type="button" class="quick-tag-btn" data-tag="ツアー・舞台の大成功祈願！">🏆 公演大成功</button>
+        <button type="button" class="quick-tag-btn" data-tag="推しにいつかちゃんと気持ちが届きますように">💌 想いが届け</button>
+      </div>
+
+      <div style="margin:10px 0 4px;">
+        <label class="oshi-label" for="eventDateInput">🗓️ イベント日（任意）— 残り日数をお守りに刻みます</label>
+        <input class="prayer-input" id="eventDateInput" type="date" aria-label="イベント日">
+      </div>
+
+      <button class="prayer-btn" id="submitPrayerBtn" type="submit">🙏 お守りに願いを込めて完成</button>
+    </form>
+    <p id="prayerMessage" style="font-size:13px;color:var(--acc);margin:10px 0 0;font-weight:700;display:none;"></p>
+  </div>
+
+  <!-- ボタン群 -->
+  <div class="action-row astep" data-step="4">
+    <button class="btn gold" id="drawBlessingBtn" type="button">🪷 ナチャのお告げを引く</button>
+    <p style="font-size:12px;line-height:1.7">Xで投稿する前に、推しの名前など投稿文の内容をご確認ください。画像は自動添付されません。</p>
+    <button class="btn" id="saveCardBtn" type="button">📥 お守り画像を保存</button>
+    <a class="btn x-share" id="xShareBtn" href="#" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/></svg>
+      推し祈願お守りをXでポスト
+    </a>
+  </div>
+
+  <!-- お守りの由来・解説 -->
+  <div class="lore-card astep" data-step="4">
+    <p><b>蓮華護身符（れんげごしんふ）とは</b><br>
+    カンボジア・プノンペンの悠遊観音堂にて暮らす小さな神様「那茶（ナチャ）」が身につけている守護符。どんなときも前を向き、困難を焼きはらい、周りに光をもたらす力が宿ると伝えられています。</p>
+    <div class="lore-grid">
+      <div class="lore-item">
+        <strong>金色の蓮花</strong>
+        泥の中から清らかな大輪を咲かせる、不屈の清浄と希望の象徴。
+      </div>
+      <div class="lore-item">
+        <strong>伝統の錦と吉祥結び</strong>
+        魔を退け、推しや大切な人との良き縁をしっかりと結びとどめる古代の加護結び。
+      </div>
+    </div>
+  </div>
+
+  <div class="astep-nav">
+    <button class="btn alt sm" type="button" id="astepBack" hidden>← 戻る</button>
+    <button class="btn sm" type="button" id="astepNext">次へ →</button>
+  </div>
+
+  <footer class="ufoot">
+    <div class="official">
+      <p class="official-sns" aria-label="公式アカウント">
+        <a class="o-x" href="https://x.com/nacha_project" target="_blank" rel="noopener" data-hit="x-amulet"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 4l6.6 8.8L4.3 20h1.9l5.3-6 4.5 6H20l-6.9-9.2L19 4h-1.9l-4.9 5.5L8.1 4z" fill="currentColor"/></svg><span>X</span></a>
+        <a class="o-ig" href="https://www.instagram.com/nacha_project/" target="_blank" rel="noopener" data-hit="ig-amulet"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3.5" y="3.5" width="17" height="17" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.2" cy="6.8" r="1.2" fill="currentColor"/></svg><span>Instagram</span></a>
+        <a class="o-tt" href="https://www.tiktok.com/@nacha_project" target="_blank" rel="noopener" data-hit="tt-amulet"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M14 3h3c.2 2 1.6 3.6 3.5 3.8v3c-1.3 0-2.5-.4-3.5-1v6.4A5.6 5.6 0 1 1 11.4 9.6v3.1a2.6 2.6 0 1 0 2.6 2.6z" fill="currentColor"/></svg><span>TikTok</span></a>
+        <a class="o-yt" href="https://www.youtube.com/channel/UCSL-AKI-8_qfWnOJYKSf26Q" target="_blank" rel="noopener" data-hit="yt-amulet"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="2.5" y="5.5" width="19" height="13" rx="4" fill="currentColor"/><path d="M10 9v6l5.2-3z" fill="#fff"/></svg><span>YouTube</span></a>
+      </p>
+      <p class="official-sites">
+        <a class="o-hp" href="https://nacha.club/" target="_blank" rel="noopener" data-hit="hp-amulet"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3.5 12h17M12 3.5c2.4 2.6 3.4 5.4 3.4 8.5s-1 5.9-3.4 8.5M12 3.5C9.6 6.1 8.6 8.9 8.6 12s1 5.9 3.4 8.5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg><span data-i="off_hp">公式サイト</span></a>
+        <a class="o-shop" href="https://sale.nacha.vip/" target="_blank" rel="noopener" data-hit="shop-amulet"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 8h14l-1.2 12H6.2z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 10V7a3 3 0 0 1 6 0v3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span data-i="off_shop">販売サイト</span></a>
+        <a class="o-trade" href="https://www.pionex.com/en/trade/NACHA_USDT/Manual" target="_blank" rel="noopener" data-hit="trade-amulet"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 4v16M17 4v16" stroke="currentColor" stroke-width="1.6"/><rect x="5" y="8" width="4" height="7" rx="1" fill="currentColor"/><rect x="15" y="6" width="4" height="9" rx="1" fill="none" stroke="currentColor" stroke-width="1.6"/></svg><span data-i="off_trade">取引所 Pionex</span></a>
+      </p>
+    </div>
+    <span>このページは非公式のファンページです</span>
+  </footer>
+</main>
+<script>
+// フォロー導線の計測（数だけ送る）
+(function(){var API='https://remitech-chores.jaykim-can.workers.dev/nacha/hit/';
+document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('[data-hit]');if(!a)return;
+try{navigator.sendBeacon(API+a.dataset.hit)}catch(_){}},true);})();
+</script>
+
+<!-- タブバー -->
+<nav class="tabs" aria-label="Main">
+  <a href="../"><span aria-hidden="true">🏮</span><b data-i="nav_home">ホーム</b></a>
+  <a href="../characters/"><span aria-hidden="true">🪷</span><b data-i="nav_chars">名鑑</b></a>
+  <a href="./" aria-current="page"><span aria-hidden="true">🧧</span><b data-i="nav_amulet">お守り</b></a>
+  <a href="../quiz/"><span aria-hidden="true">🔮</span><b data-i="nav_quiz">診断</b></a>
+</nav>
+
+<script>
+(function() {
+  'use strict';
+
+  // --- 8色の推し色カラーパレット定義 ---
+  var PALETTE = [
+    { id: 'red', name: '紅（赤）', emoji: '🔴', c1: '#C0392B', c2: '#9E2A1E', c3: '#6E1A11', tassel: ['#801B12', '#D94534', '#A9261B', '#5E120B'], bg: '#2D1111' },
+    { id: 'blue', name: '瑠璃（青）', emoji: '🔵', c1: '#2471A3', c2: '#1A5276', c3: '#11344E', tassel: ['#0E2D44', '#2E86C1', '#1B4F72', '#0A2030'], bg: '#101B2B' },
+    { id: 'purple', name: '紫苑（紫）', emoji: '🟣', c1: '#7D3C98', c2: '#5B2C6F', c3: '#3A1948', tassel: ['#2F103C', '#8E44AD', '#6C3483', '#1F0827'], bg: '#1F1128' },
+    { id: 'yellow', name: '山吹（黄）', emoji: '🟡', c1: '#D4AC0D', c2: '#B7950B', c3: '#7D6608', tassel: ['#614E05', '#F1C40F', '#D4AC0D', '#413504'], bg: '#2B240B' },
+    { id: 'pink', name: '撫子（桃）', emoji: '💖', c1: '#D81B60', c2: '#AD1457', c3: '#6A0C35', tassel: ['#560629', '#EC407A', '#C2185B', '#3A031B'], bg: '#2D101D' },
+    { id: 'green', name: '翡翠（緑）', emoji: '🟢', c1: '#229954', c2: '#196F3D', c3: '#0F4424', tassel: ['#0B341B', '#2ECC71', '#1E8449', '#061F10'], bg: '#0F2618' },
+    { id: 'orange', name: '琥珀（橙）', emoji: '🟠', c1: '#E67E22', c2: '#BA4A00', c3: '#7E3200', tassel: ['#662900', '#F39C12', '#D35400', '#441B00'], bg: '#2D190B' },
+    { id: 'black', name: '漆黒（黒）', emoji: '⚫', c1: '#34495E', c2: '#212F3D', c3: '#17202A', tassel: ['#11171D', '#5D6D7E', '#2C3E50', '#0B0F13'], bg: '#14181D' }
+  ];
+
+  var activeColor = PALETTE[0]; // 初期は赤
+  var currentMode = 'oshi';     // 'oshi' or 'normal'
+
+  // --- 加護データ ---
+  var OSHI_BLESSINGS = [
+    { tag: "推し活特吉・当選", title: "倍率突破 · 当選確実", desc: "どんな高倍率でも、推しを想うあなたの純粋な熱量は天に届く！ナチャの火焔槍が幸運の扉を突き破ります。", quote: "「大丈夫、その熱い想いは絶対届いてる！神風送るからね！」" },
+    { tag: "推し活大吉・神席", title: "神席降臨 · 視線独占", desc: "アリーナ最前、あるいは奇跡のファンサ席へ。推しとあなたの距離が奇跡のように近づく予兆！", quote: "「神席の加護、授けたり！思いっきり愛を伝えておいで！」" },
+    { tag: "推し活吉・多幸", title: "推し幸あれ · 心願成就", desc: "推しが今日も元気に笑って美味しいものを食べてぐっすり眠れますように。あなたの祈りが一番の守り神です。", quote: "「推しの笑顔が一番の栄養だよね！僕も一緒に見守るよ。」" },
+    { tag: "推し活特吉・胃痛緩和", title: "心願安寧 · 当落平穏", desc: "当落前のソワソワも胃痛も、ナチャが優しく包み込んで浄化します。信じて待てば吉報あり！", quote: "「深呼吸、深呼吸！胃薬の代わりに僕の加護をあげるよ。」" },
+    { tag: "推し活大吉・遠征無事", title: "道中安全 · 遠征成就", desc: "遠征の交通も宿泊も天候もすべて味方に。最高の思い出と現場の仲間との絆が約束されます。", quote: "「気をつけて行ってきてね！最高の現場になるよう祈ってるよ！」" },
+    { tag: "推し活特吉・良縁", title: "奇跡の巡合 · 現場歓喜", desc: "最高の現場、最高の仲間、そしてかけがえのない思い出。金の吉祥結びが強い絆を固く結びます。", quote: "「出会えたこと自体が奇跡さ。今日も思いっきり楽しんで！」" },
+    { tag: "推し活大吉・全当祈願", title: "大願成就 · 全当祈願", desc: "応募したすべての公演に良き知らせが舞い込む。迷わず信じて吉報を待ちましょう。", quote: "「僕の護身符を持っていれば百人力！絶対に大丈夫！」" }
+  ];
+
+  var NORMAL_BLESSINGS = [
+    { tag: "大吉・心願成就", title: "心願成就", desc: "まっすぐに信じた願いは、確かな力になる。迷わずその一歩を踏み出そう。", quote: "「内緒だよ、僕がちょっと風を送っておいたからさ。」" },
+    { tag: "吉・魔除招福", title: "魔除招福", desc: "心の中の不安やモヤモヤは、火焔の光が焼きはらう。あなたの周りにあたたかな福が集まります。", quote: "「大丈夫、僕の槍で黒い雲は全部追い払ったよ！」" },
+    { tag: "大吉・勇気百倍", title: "勇気百倍", desc: "小さな体でも、志は天よりも高く。恐れを乗り越えた先に、新しい景色が広がっています。", quote: "「一歩踏み出せば、もう半分勝ったようなものさ！」" },
+    { tag: "吉・平穏無事", title: "平穏無事", desc: "風が凪ぎ、水が静かに澄むように。今日という一日が、穏やかで満ち足りた時間になります。", quote: "「あわてない、あわてない。お寺の木陰でひと休みしよう。」" },
+    { tag: "特吉・福徳円満", title: "福徳円満", desc: "巡るめぐみの波に乗り、善き行いが大きな実りとなって還ってくる予兆です。", quote: "「お寺を大事にする人には、ちゃんとお福分けがあるんだよ。」" },
+    { tag: "吉・良縁吉祥", title: "良縁吉祥", desc: "金の吉祥結びが、あなたを高め合う大切な友や仲間との縁を固く結びます。", quote: "「出会えたこと自体が、もうひとつの奇跡なんだよ。」" }
+  ];
+
+  // DOM要素
+  var amulet = document.getElementById('amuletEl');
+  var card = document.getElementById('blessingCard');
+  var bTag = document.getElementById('blessingTag');
+  var bTitle = document.getElementById('blessingTitle');
+  var bDesc = document.getElementById('blessingDesc');
+  var bQuote = document.getElementById('blessingQuote');
+  var drawBtn = document.getElementById('drawBlessingBtn');
+  var saveBtn = document.getElementById('saveCardBtn');
+  var xShareBtn = document.getElementById('xShareBtn');
+  var prayerForm = document.getElementById('prayerForm');
+  var oshiNameInput = document.getElementById('oshiNameInput');
+  var prayerInput = document.getElementById('prayerInput');
+  var eventDateInput = document.getElementById('eventDateInput');
+  var pilgrimageCard = document.getElementById('pilgrimageCard');
+  var pilgrimEmaLink = document.getElementById('pilgrimEmaLink');
+  var pilgrimGomaLink = document.getElementById('pilgrimGomaLink');
+  var prayerMsg = document.getElementById('prayerMessage');
+  var colorChipsContainer = document.getElementById('colorChips');
+  var activeColorName = document.getElementById('activeColorName');
+  var plateText = document.getElementById('plateText');
+  var plateBg = document.getElementById('plateBg');
+  var amuletSubText = document.getElementById('amuletSubText');
+  var knotRect = document.getElementById('knotRect');
+
+  // SVGグラデーションStop
+  var brocadeStop1 = document.getElementById('brocadeStop1');
+  var brocadeStop2 = document.getElementById('brocadeStop2');
+  var brocadeStop3 = document.getElementById('brocadeStop3');
+  var tasselStop1 = document.getElementById('tasselStop1');
+  var tasselStop2 = document.getElementById('tasselStop2');
+  var tasselStop3 = document.getElementById('tasselStop3');
+  var tasselStop4 = document.getElementById('tasselStop4');
+
+  // --- カラーチップの生成と色変更 ---
+  function applyColor(paletteItem) {
+    activeColor = paletteItem;
+    activeColorName.textContent = '【' + paletteItem.name + '】';
+
+    // SVGグラデーションを即時更新
+    brocadeStop1.setAttribute('stop-color', paletteItem.c1);
+    brocadeStop2.setAttribute('stop-color', paletteItem.c2);
+    brocadeStop3.setAttribute('stop-color', paletteItem.c3);
+
+    tasselStop1.setAttribute('stop-color', paletteItem.tassel[0]);
+    tasselStop2.setAttribute('stop-color', paletteItem.tassel[1]);
+    tasselStop3.setAttribute('stop-color', paletteItem.tassel[2]);
+    tasselStop4.setAttribute('stop-color', paletteItem.tassel[3]);
+
+    plateBg.setAttribute('fill', paletteItem.c3);
+    knotRect.setAttribute('fill', paletteItem.c2);
+
+    // チップのアクティブ表示
+    document.querySelectorAll('.color-chip').forEach(function(chip) {
+      chip.classList.toggle('active', chip.dataset.id === paletteItem.id);
+    });
+
+    triggerAmulet();
+    updateXShareLink();
+  }
+
+  PALETTE.forEach(function(item) {
+    var chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'color-chip' + (item.id === activeColor.id ? ' active' : '');
+    chip.dataset.id = item.id;
+    chip.style.backgroundColor = item.c1;
+    chip.title = item.name;
+    chip.addEventListener('click', function() {
+      applyColor(item);
+    });
+    colorChipsContainer.appendChild(chip);
+  });
+
+  // --- モード切替 ---
+  var modeNormalBtn = document.getElementById('modeNormalBtn');
+  var modeOshiBtn = document.getElementById('modeOshiBtn');
+  var colorPaletteBox = document.getElementById('colorPaletteBox');
+  var oshiNameRow = document.getElementById('oshiNameRow');
+  var quickTags = document.getElementById('quickTags');
+  var formTitle = document.getElementById('formTitle');
+  var formDesc = document.getElementById('formDesc');
+
+  function setMode(mode) {
+    currentMode = mode;
+    modeNormalBtn.classList.toggle('active', mode === 'normal');
+    modeOshiBtn.classList.toggle('active', mode === 'oshi');
+
+    if (mode === 'oshi') {
+      colorPaletteBox.style.display = 'block';
+      oshiNameRow.style.display = 'block';
+      quickTags.style.display = 'flex';
+      formTitle.textContent = '⭐ 推し活祈願を込める';
+      formDesc.textContent = '推しの名前と願いを込めると、お守りに刻まれて加護が宿ります。';
+      amuletSubText.textContent = '当選祈願符';
+      drawBlessing(true);
+    } else {
+      colorPaletteBox.style.display = 'none';
+      oshiNameRow.style.display = 'none';
+      quickTags.style.display = 'none';
+      formTitle.textContent = '🙏 願い事を込める';
+      formDesc.textContent = '心に秘めた願いをお守りに奉納しましょう。';
+      amuletSubText.textContent = '蓮華護身符';
+      plateText.textContent = '那茶';
+      applyColor(PALETTE[0]); // 赤に戻す
+      drawBlessing(true);
+    }
+    updateXShareLink();
+  }
+
+  modeNormalBtn.addEventListener('click', function() { setMode('normal'); });
+  modeOshiBtn.addEventListener('click', function() { setMode('oshi'); });
+
+  // クイック祈願タグのクリック
+  document.querySelectorAll('.quick-tag-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      prayerInput.value = btn.dataset.tag;
+      prayerInput.focus();
+    });
+  });
+
+  // --- パーティクル演出 ---
+  function spawnSparks(x, y, count) {
+    var symbols = ['✨', '⭐', '🪷', '🌸', '🎫', '💫'];
+    for (var i = 0; i < (count || 8); i++) {
+      var s = document.createElement('span');
+      s.className = 'petal';
+      s.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+      s.style.left = x + 'px';
+      s.style.top = y + 'px';
+      var angle = Math.random() * Math.PI * 2;
+      var dist = 50 + Math.random() * 90;
+      s.style.setProperty('--dx', (Math.cos(angle) * dist) + 'px');
+      s.style.setProperty('--dy', (Math.sin(angle) * dist - 20) + 'px');
+      s.style.setProperty('--dr', (Math.random() * 360 - 180) + 'deg');
+      document.body.appendChild(s);
+      setTimeout(function() { s.remove(); }, 1200);
+    }
+  }
+
+  function triggerAmulet(e) {
+    amulet.classList.remove('touched');
+    void amulet.offsetWidth;
+    amulet.classList.add('touched');
+
+    var rect = amulet.getBoundingClientRect();
+    var x = e && e.clientX ? e.clientX : (rect.left + rect.width / 2);
+    var y = e && e.clientY ? e.clientY : (rect.top + rect.height / 2);
+    spawnSparks(x, y, 10);
+  }
+
+  amulet.addEventListener('click', triggerAmulet);
+
+  // --- 加護を引く ---
+  function drawBlessing(silent) {
+    if (!silent) triggerAmulet();
+    amulet.classList.add('blessed');
+    setTimeout(function() { amulet.classList.remove('blessed'); }, 1500);
+
+    var list = (currentMode === 'oshi') ? OSHI_BLESSINGS : NORMAL_BLESSINGS;
+    var pick = list[Math.floor(Math.random() * list.length)];
+    bTag.textContent = pick.tag;
+    bTitle.textContent = pick.title;
+    bDesc.textContent = pick.desc;
+    bQuote.textContent = pick.quote + " — 那茶";
+
+    card.style.transform = 'scale(0.98)';
+    setTimeout(function() { card.style.transform = 'none'; }, 200);
+    updateXShareLink();
+  }
+
+  drawBtn.addEventListener('click', function() { drawBlessing(false); });
+
+  // --- 願掛け・推し祈願フォーム送信 ---
+  prayerForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    var oshi = oshiNameInput.value.trim();
+    var prayer = prayerInput.value.trim();
+
+    if (currentMode === 'oshi' && !oshi && !prayer) {
+      oshiNameInput.focus();
+      return;
+    }
+    if (currentMode === 'normal' && !prayer) {
+      prayerInput.focus();
+      return;
+    }
+
+    triggerAmulet();
+    amulet.classList.add('blessed');
+    setTimeout(function() { amulet.classList.remove('blessed'); }, 2000);
+
+    if (oshi) {
+      plateText.textContent = oshi.length > 5 ? oshi.slice(0, 5) + '…' : oshi;
+    } else {
+      plateText.textContent = '那茶';
+    }
+
+    var targetName = oshi ? '「' + oshi + '」への願い' : '願い';
+    var prayTxt = prayer || 'チケット当選・心願成就';
+    var cd = calcCd();
+
+    prayerMsg.textContent = '🙏 ' + targetName + '『' + prayTxt + '』をお守りに奉納しました！' + (cd ? ' ' + cd : '');
+    prayerMsg.style.display = 'block';
+
+    bTag.textContent = currentMode === 'oshi' ? '推し活祈願奉納済' : '祈願奉納済';
+    bTitle.textContent = (oshi ? oshi + ' · ' : '') + (cd ? cd + ' ' : '') + '大願成就';
+    bDesc.textContent = '【奉納】「' + prayTxt + '」—— その純粋な熱量は天に届き、那茶の護身符が寄り添い続けます。';
+    bQuote.textContent = '「しっかり受け取ったよ！僕が神風を送って、奇跡を起こしてみせるからね！」— 那茶';
+
+    if (pilgrimageCard) {
+      pilgrimageCard.style.display = 'block';
+      var encWish = encodeURIComponent(prayTxt);
+      var encAuthor = encodeURIComponent(oshi || '名もなき信徒');
+      if (pilgrimEmaLink) pilgrimEmaLink.href = '../ema/?wish=' + encWish + '&author=' + encAuthor;
+      if (pilgrimGomaLink) pilgrimGomaLink.href = '../goma/?wish=' + encWish;
+    }
+
+    updateXShareLink(oshi, prayTxt);
+  });
+
+  // --- Xシェアリンクの動的生成 ---
+  
+  function calcCd() {
+    if (!eventDateInput || !eventDateInput.value) return "";
+    var target = new Date(eventDateInput.value + "T00:00:00");
+    var today = new Date();
+    today.setHours(0,0,0,0);
+    var diff = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
+    if (diff > 0) return "【本番まであと " + diff + " 日】";
+    if (diff === 0) return "【本日本番当日！】";
+    return "";
+  }
+function updateXShareLink(customOshi, customPray) {
+    var oshi = customOshi || oshiNameInput.value.trim() || "推し";
+    var pray = customPray || prayerInput.value.trim() || bTitle.textContent;
+    var colorTxt = activeColor.name;
+    var cd = calcCd();
+    var oshiTag = (oshi && oshi !== "推し" && !oshi.includes(" ")) ? " #" + oshi.replace(/[・\/]/g, "_") : "";
+
+    var text = "";
+    if (currentMode === "oshi") {
+      text = "那茶寺で【" + oshi + "】の推し活祈願お守りを作りました！" + cd + "🪷🎫✨\n" +
+             "祈願：" + pray + "！\n" +
+             "推し色：" + colorTxt + activeColor.emoji + "\n" +
+             "神席・当選しますように！ #推し活祈願 #当選祈願 #推し守り #蓮華護身符 #那茶" + oshiTag + "\n";
+    } else {
+      text = "那茶寺の蓮華護身符で加護を受け取りました！🪷✨\n" +
+             "【" + bTitle.textContent + "】" + bDesc.textContent.slice(0, 30) + "…\n" +
+             "#那茶 #蓮華護身符 #お守り\n";
+    }
+    // 名前は共有URLに含めない。投稿文はXの投稿画面で確認できる。
+    var shareParam = "?color=" + encodeURIComponent(activeColor.id);
+    var shareUrl = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(text) + "&url=" + encodeURIComponent("https://towananika.github.io/nacha/amulet/" + shareParam);
+    xShareBtn.href = shareUrl;
+  }
+
+  // --- 画像（1080x1350）生成・ダウンロード ---
+  saveBtn.addEventListener('click', function() {
+    var canvas = document.createElement('canvas');
+    canvas.width = 1080;
+    canvas.height = 1350;
+    var ctx = canvas.getContext('2d');
+
+    // 背景（選択された推し色の和紙調グラデーション）
+    var bgGrad = ctx.createLinearGradient(0, 0, 0, 1350);
+    bgGrad.addColorStop(0, activeColor.bg);
+    bgGrad.addColorStop(0.4, '#151113');
+    bgGrad.addColorStop(1, '#0C0A0B');
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, 1080, 1350);
+
+    // 金色の外枠装飾
+    ctx.strokeStyle = '#D4AC0D';
+    ctx.lineWidth = 8;
+    ctx.strokeRect(40, 40, 1000, 1270);
+    ctx.lineWidth = 2;
+    ctx.strokeRect(52, 52, 976, 1246);
+
+    // タイトル部
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#E5B338';
+    ctx.font = '900 62px "Noto Serif JP", serif';
+    var headerTitle = currentMode === 'oshi' ? '蓮 華 護 身 符 · 推 し 祈 願' : '蓮 華 護 身 符 · 那 茶 寺';
+    ctx.fillText(headerTitle, 540, 150);
+
+    ctx.font = '700 28px "M PLUS Rounded 1c", sans-serif';
+    ctx.fillStyle = '#F5D77F';
+    var cd = calcCd();
+    var subH = currentMode === 'oshi' 
+      ? '推し色: ' + activeColor.name + activeColor.emoji + (cd ? ' · ' + cd : ' · チケット当選＆神席加護')
+      : 'NACHA AMULET · カンボジア寺院の小さな神様';
+    ctx.fillText(subH, 540, 205);
+
+    // お守り本体の描画
+    var ax = 540, ay = 280;
+    
+    // お守り札（推し色）
+    ctx.fillStyle = activeColor.c1;
+    ctx.beginPath();
+    ctx.roundRect(ax - 200, ay, 400, 440, [26, 26, 36, 36]);
+    ctx.fill();
+    ctx.strokeStyle = '#F4D03F';
+    ctx.lineWidth = 8;
+    ctx.stroke();
+
+    // 内枠
+    ctx.lineWidth = 2.5;
+    ctx.strokeRect(ax - 180, ay + 18, 360, 404);
+
+    // 金の蓮花
+    ctx.fillStyle = '#F4D03F';
+    ctx.font = '100px sans-serif';
+    ctx.fillText('🪷', ax, ay + 150);
+
+    // 銘板（推しの名前 or 那茶）
+    var oshiTxt = plateText.textContent || '那茶';
+    ctx.fillStyle = activeColor.c3;
+    ctx.fillRect(ax - 120, ay + 215, 240, 68);
+    ctx.strokeStyle = '#F4D03F';
+    ctx.lineWidth = 4;
+    ctx.strokeRect(ax - 120, ay + 215, 240, 68);
+
+    ctx.fillStyle = '#FFF2B2';
+    ctx.font = '900 36px "Noto Serif JP", serif';
+    ctx.fillText(oshiTxt, ax, ay + 262);
+
+    // 護符の文字銘
+    ctx.font = '700 26px "Noto Serif JP", serif';
+    ctx.fillStyle = '#FFF2B2';
+    ctx.fillText(amuletSubText.textContent || '蓮華護身符', ax, ay + 360);
+
+    // 房（タッセル）
+    ctx.fillStyle = activeColor.c2;
+    ctx.beginPath();
+    ctx.moveTo(ax - 30, ay + 440);
+    ctx.lineTo(ax - 55, ay + 560);
+    ctx.quadraticCurveTo(ax, ay + 580, ax + 55, ay + 560);
+    ctx.lineTo(ax + 30, ay + 440);
+    ctx.closePath();
+    ctx.fill();
+
+    // 祈願・加護の白木札エリア
+    var py = 880;
+    ctx.fillStyle = '#261F1A';
+    ctx.strokeStyle = '#4A3C33';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.roundRect(100, py, 880, 270, 20);
+    ctx.fill();
+    ctx.stroke();
+
+    // 加護タイトル
+    ctx.fillStyle = '#E5B338';
+    ctx.font = '900 44px "Noto Serif JP", serif';
+    ctx.fillText(bTitle.textContent, 540, py + 70);
+
+    // 祈願内容または説明
+    ctx.fillStyle = '#E8E0D5';
+    ctx.font = '26px "Noto Serif JP", serif';
+    var descText = bDesc.textContent;
+    if (descText.length > 32) {
+      ctx.fillText(descText.slice(0, 32), 540, py + 130);
+      ctx.fillText(descText.slice(32, 64), 540, py + 170);
+    } else {
+      ctx.fillText(descText, 540, py + 140);
+    }
+
+    // ナチャのことば
+    ctx.fillStyle = '#F5D77F';
+    ctx.font = 'italic 23px "Noto Serif JP", serif';
+    ctx.fillText(bQuote.textContent, 540, py + 225);
+
+    // フッター
+    ctx.fillStyle = '#8C7D71';
+    ctx.font = '22px "Lilita One", sans-serif';
+    ctx.fillText('NACHA TEMPLE AMULET · towananika.github.io/nacha/amulet/', 540, 1220);
+    ctx.font = '20px "Noto Serif JP", serif';
+    ctx.fillText('那茶（ナチャ）— カンボジア悠遊観音堂の小さな神様', 540, 1260);
+
+    // モーダルで表示（スマホ長押し保存＆PCダウンロード両対応）
+    try {
+      var dataUrl = canvas.toDataURL('image/png');
+      var saveModal = document.getElementById('saveModal');
+      var savedModalImg = document.getElementById('savedModalImg');
+      var directDlBtn = document.getElementById('directDlBtn');
+      var fileName = 'nacha-amulet-' + (activeColor.id) + '-' + Date.now() + '.png';
+
+      savedModalImg.src = dataUrl;
+      directDlBtn.href = dataUrl;
+      directDlBtn.download = fileName;
+      saveModal.style.display = 'flex';
+
+      // お守り謹製功徳の授与（+5コイン）
+      if (window.NachaCoins) {
+        var r = NachaCoins.earn('amulet_create', 5, ev);
+        if (r && r.success && NachaCoins.showEarnToast) {
+          NachaCoins.showEarnToast(5, 'お守り謹製功徳');
+        }
+      }
+
+      var closeModal = function() { saveModal.style.display = 'none'; };
+      document.getElementById('closeSaveModalBtn').onclick = closeModal;
+      document.getElementById('closeSaveModalBtn2').onclick = closeModal;
+    } catch(err) {
+      alert('画像の生成に失敗しました。画面のスクリーンショットをお試しください。');
+    }
+  });
+
+  // 初期化
+  setMode('oshi');
+  try {
+    var q = new URLSearchParams(window.location.search);
+    var qName = q.get('name');
+    var qColor = q.get('color');
+    var qWish = q.get('wish');
+    if (qColor) {
+      var foundColor = PALETTE.find(function(p) { return p.id === qColor; });
+      if (foundColor) applyColor(foundColor);
+    }
+    if (qName) { oshiNameInput.value = qName; plateText.textContent = qName.length > 5 ? qName.slice(0, 5) + '…' : qName; }
+    if (qWish) { prayerInput.value = qWish; }
+  } catch(e) {}
+  updateXShareLink();
+
+})();
+</script>
+
+  <!-- 画像保存・長押し案内モーダル -->
+  <div id="saveModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9999;padding:20px;overflow-y:auto;-webkit-overflow-scrolling:touch;align-items:center;justify-content:center;backdrop-filter:blur(8px);">
+    <div style="background:var(--card,#1c121f);border:1px solid rgba(229,179,56,0.3);border-radius:20px;max-width:440px;width:100%;padding:20px;box-sizing:border-box;text-align:center;position:relative;box-shadow:0 10px 40px rgba(0,0,0,0.6);">
+      <button type="button" id="closeSaveModalBtn" style="position:absolute;top:12px;right:14px;background:none;border:none;color:#fff;font-size:24px;cursor:pointer;padding:4px;">✕</button>
+      <div style="font-size:12px;font-weight:700;color:var(--gold,#E5B338);letter-spacing:1px;margin-bottom:4px;">✨ お守りが完成しました</div>
+      <h3 style="font-size:17px;margin:0 0 10px;color:#fff;">画像を保存して持ち歩こう</h3>
+      <p style="font-size:12.5px;color:var(--sub,#bbb);margin:0 0 14px;line-height:1.5;">
+        📱 <b>スマートフォンの方:</b><br>下の画像を<b>【長押し】</b>して「写真に保存」してください。<br>
+        💻 <b>パソコンの方:</b> 下の保存ボタンからダウンロードできます。
+      </p>
+      <div style="margin:0 auto 16px;max-width:260px;border-radius:12px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.15);">
+        <img id="savedModalImg" src="" alt="完成したお守り" style="width:100%;height:auto;display:block;">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <a id="directDlBtn" href="#" download="nacha-amulet.png" class="btn gold" style="display:inline-block;padding:12px;font-size:14px;font-weight:700;text-decoration:none;border-radius:999px;">📥 画像を端末にダウンロード</a>
+        <button type="button" id="closeSaveModalBtn2" class="btn" style="padding:10px;font-size:13px;border-radius:999px;">閉じる</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+/* かんたんステップ: 1種類→2色→3願い→4完成。プレビューのお守りはいつも見える */
+(function(){
+  var cur=1,MAX=4;
+  var back=document.getElementById('astepBack'),next=document.getElementById('astepNext');
+  function show(n){
+    cur=Math.min(MAX,Math.max(1,n));
+    [].forEach.call(document.querySelectorAll('.astep'),function(e){e.hidden=(+e.dataset.step!==cur)});
+    [].forEach.call(document.querySelectorAll('#astepBar li'),function(li){
+      var s=+li.dataset.s;li.classList.toggle('on',s===cur);li.classList.toggle('done',s<cur);
+    });
+    back.hidden=cur===1;
+    next.hidden=cur===MAX;
+    next.textContent=cur===3?'書かずに完成へ →':'次へ →';
+    var bar=document.getElementById('astepBar');
+    if(booted&&bar&&bar.scrollIntoView)bar.scrollIntoView({behavior:'smooth',block:'start'});
+    booted=true;
+  }
+  var booted=false;
+  back.addEventListener('click',function(){show(cur-1)});
+  next.addEventListener('click',function(){show(cur+1)});
+  var f=document.getElementById('prayerForm');
+  if(f)f.addEventListener('submit',function(){setTimeout(function(){show(4)},400)});
+  [].forEach.call(document.querySelectorAll('#astepBar li'),function(li){
+    li.style.cursor='pointer';
+    li.addEventListener('click',function(){show(+li.dataset.s)});
+  });
+  show(1);
+})();
+</script>
+</body>
+</html>
