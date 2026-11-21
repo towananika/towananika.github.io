@@ -57,6 +57,7 @@ h1{font-size:40px;line-height:1.2;margin:0 0 8px;font-weight:700;letter-spacing:
 .main-site{grid-column:1/-1}
 .main-site .mark{width:64px;height:64px;font-size:30px}
 .main-site .name{font-size:20px}
+.group{font-size:14px;font-weight:700;color:var(--muted);letter-spacing:.08em;margin:28px 0 10px}
 
 .account{display:flex;align-items:center;gap:12px;min-width:0;font-size:13px}
 .account-name{max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -86,18 +87,26 @@ footer{border-top:1px solid var(--line);padding-top:18px;padding-bottom:28px;col
 
 <main>
   <h1>とわなにか</h1>
-  <p class="lead">暮らし、物語、道具の入口。</p>
+  <p class="lead">暮らし、ゲーム、道具の入口。</p>
   <p id="account-status" role="status"></p>
 
-  <ul class="sites" aria-label="サイトを選ぶ">
+  <ul class="sites" aria-label="ひびき">
     <li class="main-site"><a class="site" href="/hibiki/" style="--c:#4f8a6b">
       <span class="mark" aria-hidden="true">響</span>
       <span><span class="name">ひびき</span><span class="desc">健康・自由・愛。ひびきが幸せに育つための場所。</span></span>
     </a></li>
-    <li><a class="site" href="/triathlon/" style="--c:#226b87">
+  </ul>
+
+  <h2 class="group">ゲーム</h2>
+  <ul class="sites" aria-label="ゲーム">
+    <li class="main-site"><a class="site" href="/triathlon/" style="--c:#226b87">
       <span class="mark" aria-hidden="true">九</span>
-      <span><span class="name">トライアスロン</span><span class="desc">九つの光の、一生。毎週連載の物語。</span></span>
+      <span><span class="name">トライアスロン</span><span class="desc">九つの光の、一生。二水に生きる9人の一生を見守る。</span></span>
     </a></li>
+  </ul>
+
+  <h2 class="group">そのほか</h2>
+  <ul class="sites" aria-label="そのほか">
     <li><a class="site" href="/nacha/" style="--c:#b8392a">
       <span class="mark" aria-hidden="true">✦</span>
       <span><span class="name">ナチャ</span><span class="desc">小さな守護神の天空境内。</span></span>
