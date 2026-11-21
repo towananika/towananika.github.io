@@ -12,6 +12,6 @@ towananika の公開サイトはすべてこの1つのリポジトリにある�
 | `triathlon/` | /triathlon/ | ゲーム「トライアスロン」 | `triathlon/AGENTS.md` |
 
 - 作業は該当フォルダの中で。そのフォルダの CLAUDE.md / AGENTS.md の決まりに従う。コマンド（`node tools/...` など）もそのフォルダで実行する。
-- サイト全体に効くもの: `.nojekyll`（Jekyll なし。`.md` はそのまま配る）、`404.html`（全体で1枚。`nacha/404.html` はここから読む）、`.github/workflows/`（Actions はルートにしか置けない。`hibiki-youtube-reader.yml`、`tool-rates.yml`）。
+- サイト全体に効くもの: `.nojekyll`（Jekyll なし。`.md` はそのまま配る）、`404.html`（全体で1枚。`nacha/404.html` はここから読む）、`.github/workflows/`（Actions はルートにしか置けない。`hibiki-youtube-reader.yml`、`hibiki-youtube-summary.yml`（Gemini で要約、Secrets の GEMINI_API_KEY）、`tool-rates.yml`）。
 - 1つのフォルダの変更が他のフォルダに混ざらないよう、コミットとPRはフォルダごとに分ける。
 - 以前の別リポジトリ（towananika/hibiki・nacha・tool・remitech・triathlon）は履歴ごとここに取り込んだ。`git log -- hibiki/` で見られる。

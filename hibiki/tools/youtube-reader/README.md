@@ -9,3 +9,6 @@ Python 3.11以上で専用仮想環境に `pip install -r requirements.txt`。�
 外部AI APIやAPIキーは使いません。YouTubeにはリクエストを送りますが、取得結果・閲覧履歴・Cookieを保存しません。文章の保存・コピーはユーザー操作時のみ。取得字幕を公開ソースへコミットしないでください。字幕をチャットに貼る場合、送信先のAIサービスへその内容が送られます。
 
 実装は[yt-dlp公式](https://github.com/yt-dlp/yt-dlp)を利用。YouTube側の仕様や制限で取得できない場合があります。テストは `python -m unittest test_reader.py`。
+
+## PCなしで（Claude のスレッドから）
+クラウドから yt-dlp で読むとボット確認で止まるため、`gemini_summary.py` で Google 公式 Gemini API に動画URLを渡す。ワークフロー「YouTube Summary」（`.github/workflows/hibiki-youtube-summary.yml`）に URL と `sum`（要約）／`full`（書き起こし）を入れて動かすと、ログの `=====SUMMARY START=====` から `END` の間に Markdown が出る。キーはリポジトリの Secrets `GEMINI_API_KEY`。公開リポジトリなのでログはだれでも見られる。
