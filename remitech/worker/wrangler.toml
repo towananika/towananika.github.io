@@ -1,0 +1,21 @@
+name = "remitech-chores"
+main = "chores-worker.js"
+compatibility_date = "2026-09-14"
+
+# 以前の置き場（KV）。HubDO が最初に動いたときに中身を写すためだけに残す
+[[kv_namespaces]]
+binding = "CHORES"
+id = "ae0f234e8af148f693c88d4f0272c414"
+
+# すべてのデータを持つ1つの Durable Object（リアルタイムの知らせも出す）
+[[durable_objects.bindings]]
+name = "HUB"
+class_name = "HubDO"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["HubDO"]
+
+[vars]
+# Googleでログインのボタン用（公開してよい値）。Google Cloud の「OAuth クライアント ID」を入れる
+GOOGLE_CLIENT_ID = "317584786028-od8l9i288mnjrd10r7g4r7rnqsruu8fd.apps.googleusercontent.com"

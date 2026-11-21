@@ -1,0 +1,863 @@
+// REMITECH HUB — いいね作業・予約タブの印を、全員で共有する置き場（リアルタイム）
+//
+// しくみ（2026-09-14）:
+//   すべてのデータを1つの Durable Object（HubDO "main"）に置く。書き込みはここを通るので順番が乱れない。
+//   画面は /ws に WebSocket でつないでおく。誰かが書いたら、つないでいる画面ぜんぶに「変わった」を送る。
+//   画面はその知らせを受けて、いつもの GET で読み直す（読み書きの形は以前と同じ）。
+//   以前の置き場（KV: CHORES）の中身は、最初に動いたときに1回だけ写す。
+//
+// 置くもの（鍵の形は以前の KV と同じ）:
+//   d:<日付>           その日のいいね作業の済み { id: true }（消さない。全部の日を持つ）
+//   dt:<日付>          押した時刻 { id: ISO }（2026-09-21 から）
+//   bk:h:<日付>        休日 true/false
+//   bk:a:<日付>        担当者（空文字は「なし」）
+//   bk:s:<枠の鍵>      枠の状態 { scheduled, reply, replyAt, status, skip }（skip は 2026-09-21 から）
+//   bk:m:<枠の鍵>      枠のコメント（文字列）。2026-09-21: 端末の中にしか残らず、更新で消えていたため
+//   bk:w:rows       画面で足した行 [{id,channel,label,platforms,time,reply}]（みんな共通。2026-09-28）
+//   bk:v:rows       隠している行の一覧（行の鍵の配列。みんな共通。2026-09-23）
+//   bk:r:<日付|行の鍵>  返信の枠の状態 { st: "video"|"skip"|"", memo }（2026-09-21 返信にもフリップ操作）
+//   bk:n:<枠の鍵>      予約タブで作った枠
+//   bk:t:<日付>|<チャンネル>  Telegram で共有済み true/false
+//   cfg:codehash       画面で変えた編集用パスワードのハッシュ { salt, hash, at }
+//   rl:<IP>            パスワードの失敗回数 { n, exp }
+//   u:<id>             ログインする人 { id, salt, hash, iter, created, member }。PW は PBKDF2（10万回）で変えた形だけ（2026-10-08）
+//   ss:<鍵のSHA-256>   ログイン中の鍵 { id, exp }。鍵そのものは持たない
+//   rl:R:/L:/I:        登録・ログインの回数制限（IP はハッシュにして持つ）
+//   社内の文書は KV の in:<名前>（wrangler で直接入れる。リポジトリには置かない）
+//
+// 読む:  GET  /chores → { done }   GET /book → { holidays, assignees, slots, newSlots }
+// 書く:  POST /chores { date, id, on, code }   POST /book { kind, key, value, code }   POST /code { current, next }
+// 知らせ: GET /ws（WebSocket）→ {"t":"chores"} / {"t":"book"}
+
+import { DurableObject } from "cloudflare:workers";
+import { editor } from "./reel-editor.js";
+import { provisionAccount } from "./provision-account.mjs";
+
+const DAYS_KEPT = 60;
+const MAX_BODY = 1024;
+const MAX_BOOK_BODY = 4096;
+const BOOK_KINDS = { h: 1, a: 1, s: 1, n: 1, t: 1, l: 1, o: 1, m: 1, r: 1, v: 1, w: 1 };   // w = 画面で足した行（2026-09-28）   // v = 隠している行（2026-09-23）   // r = 返信の枠（2026-09-21）   // m = 枠のコメント（2026-09-21）   // o = 予約ボタンのラベル一覧（テキストと色）   // l = 予約タブの行に貼るリンク（2026-09-15）
+const ALLOWED = ["https://towananika.github.io", "http://localhost:8899", "http://127.0.0.1:8899"];
+const FAIL_LIMIT = 5;                 // 同じ IP から 1時間に 5回まちがえたら
+const FAIL_WINDOW = 60 * 60;          // 1時間、どの書き込みもできない（正しいパスワードでも）
+
+export default {
+  async fetch(request, env) {
+    const origin = request.headers.get("Origin") || "";
+    if (request.method === "OPTIONS") return new Response(null, { headers: cors(origin) });
+    const url = new URL(request.url);
+    if (!["/chores", "/book", "/code", "/ws", "/editor"].includes(url.pathname) &&
+        !/^\/(auth\/(register|login|renew|logout|logoutall|password|reset|resetcode|delete|users|member|suspend|revoke|admin|google|googlelink|google-config)|internal\/[a-z0-9_-]{1,30}|nacha\/auth\/(register|login|renew|logout|logoutall|password|reset|resetcode|delete|users|member|suspend|revoke|admin|dev|hits|devdocs|devput|devdel|google|googlelink|google-config)|nacha\/internal\/[a-z0-9_-]{1,30}|nacha\/hit\/[a-z0-9_-]{1,20}|fetchreq(\/state)?)$/.test(url.pathname)) {
+      return json({ ok: true, service: "remitech-chores" }, 200, origin);
+    }
+    const stub = env.HUB.get(env.HUB.idFromName("main"));
+    return stub.fetch(request);
+  },
+};
+
+export class HubDO extends DurableObject {
+  constructor(ctx, env) {
+    super(ctx, env);
+    this.env = env;
+    this.migrated = false;
+  }
+
+  async fetch(request) {
+    const url = new URL(request.url);
+    const origin = request.headers.get("Origin") || "";
+    await this.migrateOnce();
+    await this.seedOnce();
+
+    if (url.pathname === "/editor") return editor(this, request, origin, json);
+
+    if (url.pathname === "/ws") {
+      if (request.headers.get("Upgrade") !== "websocket") return json({ error: "websocket" }, 426, origin);
+      if (origin && !ALLOWED.includes(origin)) return json({ error: "origin" }, 403, origin);
+      const pair = new WebSocketPair();
+      this.ctx.acceptWebSocket(pair[1]);
+      return new Response(null, { status: 101, webSocket: pair[0] });
+    }
+    if (url.pathname === "/code" && request.method === "POST") return this.changeCode(request, origin);
+    if (url.pathname.startsWith("/fetchreq")) return this.fetchReq(url.pathname, request, origin);
+    // NACHA のページ: アカウントはハブと共通、権限はサイト別（REALM_NACHA）
+    if (url.pathname.startsWith("/nacha/auth/")) return this.nacha().auth(url.pathname.slice(12), request, origin);
+    if (url.pathname.startsWith("/nacha/internal/")) return this.nacha().internal(url.pathname.slice(16), request, origin);
+    if (url.pathname.startsWith("/nacha/hit/")) return this.hit("nacha", url.pathname.slice(11), request, origin);
+    if (url.pathname.startsWith("/auth/")) return this.auth(url.pathname.slice(6), request, origin);
+    if (url.pathname.startsWith("/internal/")) return this.internal(url.pathname.slice(10), request, origin);
+    if (url.pathname === "/book") {
+      if (request.method === "GET") return this.bookList(origin);
+      if (request.method === "POST") return this.bookSave(request, origin);
+      return json({ error: "method" }, 405, origin);
+    }
+    if (request.method === "GET") return this.list(origin, url);
+    if (request.method === "POST") return this.save(request, origin);
+    return json({ error: "method" }, 405, origin);
+  }
+
+  // ---- WebSocket ----
+  async webSocketMessage(ws, message) {
+    if (message === "ping") { try { ws.send("pong"); } catch (e) {} }
+  }
+  async webSocketClose(ws, code) {
+    try { ws.close(code, "bye"); } catch (e) {}
+  }
+  broadcast(t) {
+    const msg = JSON.stringify({ t });
+    for (const ws of this.ctx.getWebSockets()) { try { ws.send(msg); } catch (e) {} }
+  }
+
+  // ---- 以前の KV の中身を、1回だけ写す ----
+  // ---- 投稿確認の依頼（2026-10-15 Hibiki指定「投稿確認ボタン」）----
+  // 画面のボタン → POST /fetchreq で依頼を置く。ひびきの PC（tools/posts_poll.py、2分ごと）が GET で見て、
+  // 各 SNS を読んで push し、POST /fetchreq/state で 進行中・済み を知らせる。読むだけの依頼なので合言葉は要らない（回数は絞る）
+  //   cfg:fetchreq  { state: "pending"|"running"|"done"|"error", reqAt, startAt, doneAt, msg }
+  async fetchReq(path, request, origin) {
+    const scope = new URL(request.url).searchParams.get("scope");
+    if (scope && scope !== "kpi") return json({error:"scope"},400,origin);
+    const key = scope === "kpi" ? "cfg:kpireq" : "cfg:fetchreq";
+    const cur = (await this.ctx.storage.get(key)) || { state: "idle" };
+    if (request.method === "GET") return json(cur, 200, origin, { "Cache-Control": "no-store" });
+    if (request.method !== "POST") return json({ error: "method" }, 405, origin);
+    const now = Date.now();
+    if (path === "/fetchreq") {
+      if (origin && !ALLOWED.includes(origin)) return json({ error: "origin" }, 403, origin);
+      // 待っている・読んでいる最中なら、それをそのまま返す（何度押しても1回分）。止まったまま15分たった依頼は置き直す
+      const busy = (cur.state === "pending" || cur.state === "running") && now - Date.parse(cur.state === "running" ? cur.startAt : cur.reqAt) < 15 * 60 * 1000;
+      if (busy) return json(cur, 200, origin);
+      let options;
+      try { options = await request.json(); } catch (_) { return json({error:"bad-json"},400,origin); }
+      if (!options || typeof options !== "object" || Array.isArray(options)) return json({error:"bad-json"},400,origin);
+      if (options.scope && options.scope !== (scope === "kpi" ? "kpi" : "telegram")) return json({error:"scope"},400,origin);
+      if (options.scope === "telegram" && !/^\d{4}-\d{2}-\d{2}$/.test(options.date || "")) return json({error:"date"},400,origin);
+      const next = { state: "pending", reqAt: new Date(now).toISOString(), lastDoneAt: cur.doneAt || cur.lastDoneAt || "", msg: "" };
+      if (scope === "kpi") next.scope = "kpi";
+      if (options.scope === "telegram") { next.scope = "telegram"; next.date = options.date; }
+      await this.ctx.storage.put(key, next);
+      this.broadcast("fetchreq");
+      return json(next, 200, origin);
+    }
+    // PC からの知らせ（ブラウザからは受け付けない）
+    if (origin) return json({ error: "origin" }, 403, origin);
+    let b;
+    try { b = JSON.parse(await request.text()); } catch (e) { return json({ error: "bad-json" }, 400, origin); }
+    const st = b && b.state;
+    if (!["running", "done", "error"].includes(st)) return json({ error: "state" }, 400, origin);
+    const next = Object.assign({}, cur, { state: st, msg: typeof b.msg === "string" ? b.msg.slice(0, 300) : "" });
+    if (st === "running") next.startAt = new Date(now).toISOString();
+    else next.doneAt = new Date(now).toISOString();
+    await this.ctx.storage.put(key, next);
+    this.broadcast("fetchreq");
+    return json(next, 200, origin);
+  }
+
+  // ---- まとめて入れる（2026-10-15）----
+  // 予約タブの担当者など、表から読んだものを管理側からまとめて入れるための口。画面の合言葉は使わない。
+  // KV（CHORES）の seed:bk に { id, onlyIfEmpty, items: { "bk:a:2026-10-12": "Suha", ... } } を wrangler で置く。
+  // 同じ id は1回だけ。onlyIfEmpty なら、もう値がある鍵（人が画面で入れたもの）は書き換えない。bk:a（担当者）だけ受け付ける
+  async seedOnce() {
+    if (this.seedChecked && Date.now() - this.seedChecked < 60000) return;
+    this.seedChecked = Date.now();
+    if (!this.env.CHORES) return;
+    const s = await this.env.CHORES.get("seed:bk", "json");
+    if (!s || !s.id || !s.items || await this.ctx.storage.get("meta:seed:" + s.id)) return;
+    let n = 0;
+    for (const [k, v] of Object.entries(s.items)) {
+      if (!/^bk:a:\d{4}-\d{2}-\d{2}$/.test(k) || typeof v !== "string" || v.length > 20) continue;
+      const cur = await this.ctx.storage.get(k);
+      if (s.onlyIfEmpty && typeof cur === "string" && cur) continue;
+      await this.ctx.storage.put(k, v);
+      n++;
+    }
+    await this.ctx.storage.put("meta:seed:" + s.id, { at: new Date().toISOString(), n });
+    if (n) this.broadcast("book");
+  }
+
+  async migrateOnce() {
+    if (this.migrated) return;
+    if (await this.ctx.storage.get("meta:migrated")) { this.migrated = true; return; }
+    if (this.env.CHORES) {
+      for (const prefix of ["d:", "bk:", "cfg:"]) {
+        let cursor;
+        do {
+          const page = await this.env.CHORES.list({ prefix, cursor });
+          for (const k of page.keys) {
+            const v = await this.env.CHORES.get(k.name, "json");
+            if (v !== null && v !== undefined) await this.ctx.storage.put(k.name, v);
+          }
+          cursor = page.list_complete ? undefined : page.cursor;
+        } while (cursor);
+      }
+    }
+    await this.ctx.storage.put("meta:migrated", new Date().toISOString());
+    this.migrated = true;
+  }
+
+  // ---- いいね作業 ----
+  // 記録は消さない（全部の日を持っている）。ふだんの読み直しは直近 DAYS_KEPT 日だけ返して軽くする。
+  // 2026-09-21: 過去も見られるように ?from=YYYY-MM-DD&to=YYYY-MM-DD で期間を、?all=1 で全部を返す。
+  // at は押した時刻 { 日付: { id: ISO } }（2026-09-21 より前の分は時刻がない）
+  async list(origin, url) {
+    const all = await this.ctx.storage.list({ prefix: "d:" });
+    const times = await this.ctx.storage.list({ prefix: "dt:" });
+    const from = url && url.searchParams.get("from"), to = url && url.searchParams.get("to");
+    const everything = url && url.searchParams.get("all") === "1";
+    let names = [...all.keys()].sort();
+    if (from || to) {
+      names = names.filter((n) => (!from || n.slice(2) >= from) && (!to || n.slice(2) <= to));
+    } else if (!everything) {
+      names = names.slice(-DAYS_KEPT);
+    }
+    const out = {}, at = {};
+    for (const name of names) {
+      const v = all.get(name), d = name.slice(2);
+      if (v && Object.keys(v).length) out[d] = v;
+      const tv = times.get("dt:" + d);
+      if (tv && Object.keys(tv).length) at[d] = tv;
+    }
+    const first = [...all.keys()].sort()[0];
+    return json({ done: out, at, first: first ? first.slice(2) : "" }, 200, origin, { "Cache-Control": "no-store" });
+  }
+
+  async save(request, origin) {
+    const text = await request.text();
+    if (text.length > MAX_BODY) return json({ error: "too-large" }, 413, origin);
+    let b;
+    try { b = JSON.parse(text); } catch (e) { return json({ error: "bad-json" }, 400, origin); }
+    if (!b) return json({ error: "bad-json" }, 400, origin);
+    const denied = await this.checkCode(request, origin, b);
+    if (denied) return denied;
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(b.date || "")) return json({ error: "date" }, 400, origin);
+    if (!/^[A-Za-z0-9|_:.-]{1,40}$/.test(b.id || "")) return json({ error: "id" }, 400, origin);
+    const key = "d:" + b.date;
+    const day = (await this.ctx.storage.get(key)) || {};
+    if (b.on) day[b.id] = true; else delete day[b.id];
+    await this.ctx.storage.put(key, day);
+    // 押した時刻も残す（何時に済ませたかを、あとから見られるように）
+    const tkey = "dt:" + b.date;
+    const tday = (await this.ctx.storage.get(tkey)) || {};
+    if (b.on) { if (!tday[b.id]) tday[b.id] = new Date().toISOString(); } else delete tday[b.id];
+    if (Object.keys(tday).length) await this.ctx.storage.put(tkey, tday); else await this.ctx.storage.delete(tkey);
+    this.broadcast("chores");
+    return json({ ok: true, date: b.date, day }, 200, origin);
+  }
+
+  // ---- 予約タブ ----
+  async bookList(origin) {
+    const out = { holidays: {}, assignees: {}, slots: {}, newSlots: {}, telegram: {}, links: {}, labels: [], memos: {}, replies: {}, hideRows: [], addRows: [] };
+    const all = await this.ctx.storage.list({ prefix: "bk:" });
+    for (const [name, v] of all) {
+      const kind = name.slice(3, 4), key = name.slice(5);
+      if (kind === "h") out.holidays[key] = !!v;
+      else if (kind === "a") out.assignees[key] = typeof v === "string" ? v : "";
+      else if (kind === "s" && v) out.slots[key] = v;
+      else if (kind === "n" && v) out.newSlots[key] = v;
+      else if (kind === "t") out.telegram[key] = !!v;
+      else if (kind === "l" && v && typeof v === "object" && v.url) out.links[key] = v;
+      else if (kind === "o" && key === "labels" && Array.isArray(v)) out.labels = v;
+      else if (kind === "m" && typeof v === "string") out.memos[key] = v;
+      else if (kind === "r" && v && typeof v === "object") out.replies[key] = v;
+      else if (kind === "v" && key === "rows" && Array.isArray(v)) out.hideRows = v;
+      else if (kind === "w" && key === "rows" && Array.isArray(v)) out.addRows = v;
+    }
+    return json(out, 200, origin, { "Cache-Control": "no-store" });
+  }
+
+  async bookSave(request, origin) {
+    const text = await request.text();
+    if (text.length > MAX_BOOK_BODY) return json({ error: "too-large" }, 413, origin);
+    let b;
+    try { b = JSON.parse(text); } catch (e) { return json({ error: "bad-json" }, 400, origin); }
+    if (!b) return json({ error: "bad-json" }, 400, origin);
+    const denied = await this.checkCode(request, origin, b);
+    if (denied) return denied;
+    if (!BOOK_KINDS[b.kind]) return json({ error: "kind" }, 400, origin);
+    if (typeof b.key !== "string" || !/^[A-Za-z0-9|_:.\-]{1,80}$/.test(b.key)) return json({ error: "key" }, 400, origin);
+
+    let value = b.value;
+    if (b.kind === "h") {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(b.key)) return json({ error: "key" }, 400, origin);
+      value = !!value;
+    } else if (b.kind === "a") {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(b.key)) return json({ error: "key" }, 400, origin);
+      value = typeof value === "string" ? value.slice(0, 20) : "";
+    } else if (b.kind === "s") {
+      if (!value || typeof value !== "object") return json({ error: "value" }, 400, origin);
+      value = {
+        scheduled: !!value.scheduled, reply: !!value.reply,
+        replyAt: typeof value.replyAt === "string" ? value.replyAt.slice(0, 40) : "",
+        // 準備中、または登録したラベル（c:id）
+        // 準備中／動画投稿、または登録したラベル（c:id）
+        status: value.status === "preparing" || value.status === "video" || /^c:[a-z0-9]{1,12}$/.test(String(value.status || "")) ? value.status : "",
+      };
+      // 投稿しない（空欄）。送ってこない古い画面のときは持たない（画面側は「なし」なら元の企画のまま）
+      if (typeof b.value.skip === "boolean") value.skip = b.value.skip;
+    } else if (b.kind === "w") {
+      // 画面で足した行。100行まで。形が合わないものは捨てる
+      if (b.key !== "rows" || !Array.isArray(value)) return json({ error: "value" }, 400, origin);
+      value = value.slice(0, 100).map((r) => ({
+        id: String((r && r.id) || "").slice(0, 16),
+        channel: String((r && r.channel) || "").slice(0, 20),
+        label: String((r && r.label) || "").slice(0, 30),
+        platforms: (Array.isArray(r && r.platforms) ? r.platforms : []).map(String).filter((p) => /^[A-Z]{1,4}$/.test(p)).slice(0, 3),
+        time: String((r && r.time) || ""),
+        reply: !!(r && r.reply),
+      })).filter((r) => /^[a-z0-9]{1,16}$/.test(r.id) && /^[a-z0-9_-]{1,20}$/.test(r.channel) && r.label &&
+        r.platforms.length && /^\d{2}:\d{2}$/.test(r.time));
+    } else if (b.kind === "v") {
+      // 隠している行。行の鍵の配列（200個まで、1つ80文字まで）
+      if (b.key !== "rows" || !Array.isArray(value)) return json({ error: "value" }, 400, origin);
+      value = value.filter((x) => typeof x === "string" && x.length <= 80).slice(0, 200);
+    } else if (b.kind === "m") {
+      // 枠のコメント。空文字も「消した」として持つ（画面が元の企画のコメントに戻らないように）
+      value = typeof value === "string" ? value.slice(-2000) : "";   // 長いときは新しい側（後ろ）を残す
+    } else if (b.kind === "r") {
+      // 返信の枠。st は 動画投稿(video)・返信しない(skip)・なし。どちらも空なら消す
+      var rv = value && typeof value === "object" ? value : {};
+      var rst = rv.st === "video" || rv.st === "skip" ? rv.st : "";
+      var rmemo = typeof rv.memo === "string" ? rv.memo.slice(-2000) : "";
+      if (!rst && !rmemo) {
+        await this.ctx.storage.delete("bk:r:" + b.key);
+        this.broadcast("book");
+        return json({ ok: true }, 200, origin);
+      }
+      value = { st: rst, memo: rmemo };
+    } else if (b.kind === "t") {
+      if (!/^\d{4}-\d{2}-\d{2}\|[a-z0-9_-]{1,30}$/.test(b.key)) return json({ error: "key" }, 400, origin);
+      value = !!value;
+    } else if (b.kind === "n") {
+      if (!value || typeof value !== "object" || typeof value.date !== "string") return json({ error: "value" }, 400, origin);
+    } else if (b.kind === "l") {
+      // {url, at}。urlはhttp(s)のアドレスだけ。atは登録した日時（クライアントのISO文字列）。空なら消す
+      var lu = value && typeof value === "object" ? value.url : "";
+      lu = typeof lu === "string" ? lu.trim().slice(0, 500) : "";
+      if (lu && !/^https?:\/\/[^\s"'<>]+$/i.test(lu)) return json({ error: "value" }, 400, origin);
+      if (!lu) {
+        await this.ctx.storage.delete("bk:l:" + b.key);
+        this.broadcast("book");
+        return json({ ok: true }, 200, origin);
+      }
+      var la = value && typeof value.at === "string" ? value.at.slice(0, 40) : new Date().toISOString();
+      value = { url: lu, at: la };
+    } else if (b.kind === "o") {
+      // 予約ボタンのラベル一覧。20個まで、テキスト20文字まで、色は #rrggbb だけ
+      if (b.key !== "labels" || !Array.isArray(value)) return json({ error: "value" }, 400, origin);
+      value = value.slice(0, 20).map((l) => ({
+        id: String((l && l.id) || "").slice(0, 12),
+        text: String((l && l.text) || "").slice(0, 20),
+        color: String((l && l.color) || ""),
+      })).filter((l) => /^[a-z0-9]{1,12}$/.test(l.id) && l.text && /^#[0-9a-fA-F]{6}$/.test(l.color));
+    }
+    await this.ctx.storage.put("bk:" + b.kind + ":" + b.key, value);
+    this.broadcast("book");
+    return json({ ok: true }, 200, origin);
+  }
+
+  // ---- ログイン（2026-10-08 Hibiki指定）----
+  // 社内の文書（悠悠観音堂の企画など）は公開リポジトリに置けないので、ログインした「社内」の人にだけここから渡す。
+  //   u:<id>      { id, salt, hash, iter, created, member }   PW は PBKDF2 で変えた形だけ持つ（元に戻せない）
+  //   ss:<鍵の SHA-256>  { id, exp }   ログインは7日。画面は1日1回だけ /auth/renew で7日に延ばす
+  //   オーナーは env.ADMIN_IDS（wrangler secret。IDをカンマ区切り）だけで決まる。画面からオーナーは作れない・変えられない
+  //   管理者（2026-11-09 Hibiki指定）: オーナーが会員を管理者にできる。管理者もオーナー以外の会員を管理者にできる。
+  //     管理者を外せるのはオーナーだけ。オーナーはだれも操作できない。管理者を停止・削除・ログアウトできるのもオーナーだけ
+  //   会員登録した人は一般ユーザー（member:false）。社内（member）を付けられるのは管理者だけ
+  //   メールアドレスは登録時に任意で預かるだけ（確認メールの仕組みがないので、権限には使わない）
+  async auth(op, request, origin) {
+    // Googleでログイン（2026-11-09 Hibiki指定）: 画面のボタンに使う ID（公開してよい値）。wrangler.toml の [vars] GOOGLE_CLIENT_ID
+    if (op === "google-config") return json({ clientId: String(this.env.GOOGLE_CLIENT_ID || "") }, 200, origin);
+    if (request.method !== "POST" && !(op === "users" && request.method === "GET")) return json({ error: "method" }, 405, origin);
+    if (origin && !ALLOWED.includes(origin)) return json({ error: "origin" }, 403, origin);
+    if (this.P.provision && (op === "login" || op === "register")) await provisionAccount(this);
+    // 回数制限の鍵に IP をそのまま残さない（ハッシュの先頭だけ。1時間で消える）
+    const ip = (await sha256Hex("ip|" + clientIp(request))).slice(0, 24);
+    if (op === "register" || op === "login") {
+      const text = await request.text();
+      if (text.length > MAX_BODY) return json({ error: "too-large" }, 413, origin);
+      let b;
+      try { b = JSON.parse(text); } catch (e) { return json({ error: "bad-json" }, 400, origin); }
+      let id = typeof (b && b.id) === "string" ? b.id.trim().toLowerCase() : "";
+      const pw = typeof (b && b.pw) === "string" ? b.pw : "";
+      // メールで登録・ログイン（2026-11-09 Hibiki指定）。メールで登録するとIDは@の前から自動で作る。
+      // 確認メールはまだ送らない（あとで強化）。なのでメールは権限にも、Google とのつなぎにも使わない
+      let noEmail = false;   // 見つからないメールでも、いない ID と同じ返事・同じ時間にする
+      if (op === "login" && id.includes("@")) { const f = await this.findByEmail(id); noEmail = !f; id = f || "~nobody"; }
+      if (op === "register" && !id && typeof b.email === "string" && b.email.includes("@")) id = await this.freeId(b.email);
+      if (!noEmail && !/^[a-z0-9_.-]{3,20}$/.test(id)) return json({ error: "id" }, 400, origin);
+      if (pw.length < 8 || pw.length > 64) return json({ error: "pw" }, 400, origin);
+      if (op === "register") {
+        if (pw.toLowerCase() === id) return json({ error: "pw-id" }, 400, origin);   // ID と同じ PW は使えない
+        // 新規登録は同じ IP から1時間に5件まで、全体で300人まで
+        if (await this.limited("R:" + ip, 5, 3600)) return json({ error: "too-many" }, 429, origin);
+        if (await this.ctx.storage.get(this.P.u + id)) return json({ error: "taken" }, 409, origin);
+        const count = (await this.ctx.storage.list({ prefix: this.P.u, limit: 301 })).size;
+        if (count >= 300) return json({ error: "full" }, 409, origin);
+        await this.bump("R:" + ip, 3600);
+        const email = typeof b.email === "string" ? b.email.trim().toLowerCase() : "";
+        if (email && (email.length > 100 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))) return json({ error: "email" }, 400, origin);
+        if (email && await this.findByEmail(email)) return json({ error: "email-taken" }, 409, origin);
+        const salt = randHex(16);
+        const nu = { id, salt, iter: PW_ITER, hash: await pbkdf2Hex(pw, salt, PW_ITER), created: new Date().toISOString(), member: false };
+        if (email) nu.email = email;
+        if (this.P.site) this.setRole(nu, { joined: new Date().toISOString() });
+        await this.ctx.storage.put(this.P.u + id, nu);
+        return this.newSession(id, origin);
+      }
+      // ログイン: 同じ IP から15分に10回、同じ ID に1時間に10回まちがえたら止める
+      if (await this.limited("L:" + ip, 10, 900) || await this.limited("I:" + id, 10, 3600)) return json({ error: "too-many" }, 429, origin);
+      const u = noEmail ? null : await this.ctx.storage.get(this.P.u + id);
+      // いない ID でも同じだけ時間をかける（返事の速さで ID の有無が分からないように）
+      const h = await pbkdf2Hex(pw, u && u.salt ? u.salt : "00", u ? u.iter || PW_ITER : PW_ITER);
+      const ok = !!u && !!u.hash && !u.suspended && safeEqual(h, u.hash);
+      if (!ok) { await this.bump("L:" + ip, 900); await this.bump("I:" + id, 3600); return json({ error: "wrong" }, 403, origin); }
+      if (this.P.site && !this.role(u).joined) { this.setRole(u, { joined: new Date().toISOString() }); await this.ctx.storage.put(this.P.u + id, u); }
+      return this.newSession(id, origin);
+    }
+    if (op === "google") {
+      // Google の ID トークンを確かめて、つないだアカウントでログイン。まだなければ一般ユーザーを作る（IDはメールの@の前から）
+      const g = await this.verifyGoogle(request);
+      if (g.error) return json({ error: g.error }, g.status || 403, origin);
+      let id = await this.ctx.storage.get("g:" + g.sub);
+      let u = id ? await this.ctx.storage.get(this.P.u + id) : null;
+      if (!u) {
+        if (await this.limited("R:" + ip, 5, 3600)) return json({ error: "too-many" }, 429, origin);
+        const count = (await this.ctx.storage.list({ prefix: this.P.u, limit: 301 })).size;
+        if (count >= 300) return json({ error: "full" }, 409, origin);
+        await this.bump("R:" + ip, 3600);
+        id = await this.freeId(g.email);
+        u = { id, created: new Date().toISOString(), member: false, email: g.email, google: g.email };
+        if (OWNER_MAIL_HASHES.includes(await sha256Hex("owner|" + g.email))) u.ownerMail = true;
+        await this.ctx.storage.put("g:" + g.sub, id);
+      }
+      if (u.suspended) return json({ error: "wrong" }, 403, origin);
+      if (OWNER_MAIL_HASHES.includes(await sha256Hex("owner|" + g.email))) { u.ownerMail = true; u.google = g.email; }
+      if (this.P.site && !this.role(u).joined) this.setRole(u, { joined: new Date().toISOString() });
+      await this.ctx.storage.put(this.P.u + id, u);
+      return this.newSession(id, origin);
+    }
+    if (op === "reset") {
+      // パスワードを忘れたとき（2026-10-08）。メールがないので、管理者が出した「再設定コード」（24時間・1回だけ）で新しい PW にする。
+      // ID の有無・コードの違い・期限切れは同じ返事にする。済んだら全部の端末をログアウトさせ、自動ではログインしない（OWASP）
+      const b = await readJson(request);
+      const id = typeof (b && b.id) === "string" ? b.id.trim().toLowerCase() : "";
+      const code = typeof (b && b.code) === "string" ? b.code.trim().toUpperCase().replace(/[^A-Z0-9]/g, "") : "";
+      const pw = typeof (b && b.pw) === "string" ? b.pw : "";
+      if (pw.length < 8 || pw.length > 64) return json({ error: "pw" }, 400, origin);
+      if (pw.toLowerCase() === id) return json({ error: "pw-id" }, 400, origin);
+      if (await this.limited("L:" + ip, 10, 900) || await this.limited("C:" + id, 5, 3600)) return json({ error: "too-many" }, 429, origin);
+      const rc = /^[a-z0-9_.-]{3,20}$/.test(id) ? await this.ctx.storage.get(this.P.rc + id) : null;
+      const ch = await sha256Hex("rc|" + id + "|" + code);
+      const u = rc ? await this.ctx.storage.get(this.P.u + id) : null;
+      if (!rc || !u || rc.exp < Date.now() || !safeEqual(ch, rc.hash)) {
+        await this.bump("L:" + ip, 900); await this.bump("C:" + id, 3600);
+        return json({ error: "code" }, 403, origin);
+      }
+      await this.setPassword(u, pw);
+      await this.ctx.storage.delete(this.P.rc + id);
+      await this.endSessions(id, null);
+      return json({ ok: true }, 200, origin);
+    }
+    const s = await this.session(request);
+    if (!s) return json({ error: "login" }, 401, origin);
+    if (op === "logout") { await this.ctx.storage.delete(s.key); return json({ ok: true }, 200, origin); }
+    if (op === "renew") {
+      s.val.exp = Date.now() + SESSION_MS;
+      await this.ctx.storage.put(s.key, s.val);
+      return json({ ok: true, exp: s.val.exp, user: this.publicUser(s.user) }, 200, origin);
+    }
+    if (op === "googlelink") {
+      // ログイン中のアカウントに Google をつなぐ（次から Google ボタンで同じアカウントに入れる）
+      const g = await this.verifyGoogle(request);
+      if (g.error) return json({ error: g.error }, g.status || 403, origin);
+      const cur = await this.ctx.storage.get("g:" + g.sub);
+      if (cur && cur !== s.user.id) return json({ error: "google-used" }, 409, origin);
+      await this.ctx.storage.put("g:" + g.sub, s.user.id);
+      s.user.google = g.email;
+      if (OWNER_MAIL_HASHES.includes(await sha256Hex("owner|" + g.email))) s.user.ownerMail = true;
+      await this.ctx.storage.put(this.P.u + s.user.id, s.user);
+      return json({ ok: true, user: this.publicUser(s.user) }, 200, origin);
+    }
+    if (op === "logoutall") { await this.endSessions(s.user.id, null); return json({ ok: true }, 200, origin); }
+    if (this.P.site && ["devdocs", "devput", "devdel"].includes(op)) return this.devDocs(op, s, request, origin);
+    if (op === "password") {
+      // PW の変更は今の PW を入れ直してから（開きっぱなしの端末で勝手に変えられないように）。
+      // 変えたらほかの端末はログアウト、この端末は新しい鍵に替える
+      const b = await readJson(request);
+      const cur = typeof (b && b.current) === "string" ? b.current : "", pw = typeof (b && b.pw) === "string" ? b.pw : "";
+      if (pw.length < 8 || pw.length > 64) return json({ error: "pw" }, 400, origin);
+      if (pw.toLowerCase() === s.user.id) return json({ error: "pw-id" }, 400, origin);
+      if (await this.limited("I:" + s.user.id, 10, 3600)) return json({ error: "too-many" }, 429, origin);
+      // Google で作ったアカウントはパスワードがまだないので、今の PW なしで初めの PW を決められる
+      if (s.user.hash && !safeEqual(await pbkdf2Hex(cur, s.user.salt, s.user.iter || PW_ITER), s.user.hash)) {
+        await this.bump("I:" + s.user.id, 3600);
+        return json({ error: "wrong" }, 403, origin);
+      }
+      await this.setPassword(s.user, pw);
+      await this.endSessions(s.user.id, null);
+      return this.newSession(s.user.id, origin);
+    }
+    if (!this.isAdminUser(s.user)) return json({ error: "admin" }, 403, origin);
+    const callerOwner = this.isOwner(s.user);
+    // アカウントそのものの操作（停止・削除・再設定コード・強制ログアウト）はハブの管理者だけ。サイトの管理者は権限だけ
+    if (this.P.site && ["suspend", "revoke", "resetcode", "delete"].includes(op)) return json({ error: "op" }, 404, origin);
+    // オーナーはだれも操作できない。ほかの管理者を操作できるのはオーナーだけ
+    const protectedUser = (u) => this.isOwner(u) || (!callerOwner && this.isAdminUser(u));
+    if (op === "suspend" || op === "revoke") {
+      const b = await readJson(request);
+      const id = typeof (b && b.id) === "string" ? b.id.trim().toLowerCase() : "";
+      const u = await this.ctx.storage.get(this.P.u + id);
+      if (!u) return json({ error: "no-user" }, 404, origin);
+      if (protectedUser(u)) return json({ error: "admin-user" }, 400, origin);
+      if (op === "suspend") {
+        if (typeof b.suspended !== "boolean") return json({ error: "bad-json" }, 400, origin);
+        u.suspended = b.suspended;
+        await this.ctx.storage.put(this.P.u + id, u);
+      }
+      await this.endSessions(id, null);
+      return json({ ok: true, user: this.publicUser(u) }, 200, origin);
+    }
+    if (op === "resetcode") {
+      // 管理者が、PW を忘れた人に再設定コードを出す。コードはこの返事で1回だけ見せ、サーバーにはハッシュで持つ
+      const b = await readJson(request);
+      const id = typeof (b && b.id) === "string" ? b.id.toLowerCase() : "";
+      if (!(await this.ctx.storage.get(this.P.u + id))) return json({ error: "no-user" }, 404, origin);
+      const ABC = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";   // 見まちがえやすい I O 0 1 は使わない
+      const code = [...crypto.getRandomValues(new Uint8Array(12))].map((x) => ABC[x % 32]).join("");
+      const exp = Date.now() + 24 * 60 * 60 * 1000;
+      await this.ctx.storage.put(this.P.rc + id, { hash: await sha256Hex("rc|" + id + "|" + code), exp, by: s.user.id });
+      return json({ ok: true, id, code: code.slice(0, 4) + "-" + code.slice(4, 8) + "-" + code.slice(8), exp }, 200, origin, { "Cache-Control": "no-store" });
+    }
+    if (op === "delete") {
+      const b = await readJson(request);
+      const id = typeof (b && b.id) === "string" ? b.id.toLowerCase() : "";
+      const du = await this.ctx.storage.get(this.P.u + id);
+      if (this.isOwner(du || id) || (du && protectedUser(du))) return json({ error: "admin-user" }, 400, origin);   // オーナーは消せない。管理者を消せるのはオーナーだけ
+      await this.ctx.storage.delete(this.P.u + id);
+      await this.ctx.storage.delete(this.P.rc + id);
+      await this.endSessions(id, null);
+      return json({ ok: true }, 200, origin);
+    }
+    if (op === "users") {
+      const all = await this.ctx.storage.list({ prefix: this.P.u });
+      const users = [...all.values()].filter((u) => !this.P.site || this.isOwner(u) || Object.keys(this.role(u)).length).map((u) => this.publicUser(u)).sort((a, b) => (a.created < b.created ? -1 : 1));
+      return json({ users }, 200, origin, { "Cache-Control": "no-store" });
+    }
+    if (op === "hits") {
+      // クリック数を見る（管理者）。直近45日分
+      const site = this.P.site || "hub";
+      const all = await this.ctx.storage.list({ prefix: "hit:" + site + ":" });
+      const since = new Date(Date.now() - 45 * 24 * 3600 * 1000).toISOString().slice(0, 10);
+      const hits = {};
+      for (const [k, v] of all) {
+        const parts = k.split(":");   // hit:site:name:YYYY-MM-DD
+        const nm = parts[2], day = parts[3];
+        if (day >= since) (hits[nm] = hits[nm] || {})[day] = v;
+      }
+      return json({ hits }, 200, origin, { "Cache-Control": "no-store" });
+    }
+    if (op === "member") {
+      let b;
+      try { b = JSON.parse(await request.text()); } catch (e) { return json({ error: "bad-json" }, 400, origin); }
+      const id = typeof (b && b.id) === "string" ? b.id.toLowerCase() : "";
+      const u = await this.ctx.storage.get(this.P.u + id);
+      if (!u) return json({ error: "no-user" }, 404, origin);
+      if (this.isOwner(u) || this.isAdminUser(u)) return json({ error: "admin-user" }, 400, origin);   // 管理者は社内のまま（外すときは先に管理者を外す）
+      if (typeof b.member !== "boolean") return json({ error: "bad-json" }, 400, origin);
+      this.setRole(u, { member: b.member });
+      await this.ctx.storage.put(this.P.u + id, u);
+      return json({ ok: true, user: this.publicUser(u) }, 200, origin);
+    }
+    if (op === "dev" && this.P.site) {
+      // 開発者にする／外す（管理者・オーナー）。管理者とオーナーはいつも開発者
+      const b = await readJson(request);
+      const id = typeof (b && b.id) === "string" ? b.id.trim().toLowerCase() : "";
+      if (typeof (b && b.dev) !== "boolean") return json({ error: "bad-json" }, 400, origin);
+      const u = await this.ctx.storage.get(this.P.u + id);
+      if (!u) return json({ error: "no-user" }, 404, origin);
+      if (this.isAdminUser(u)) return json({ error: "admin-user" }, 400, origin);
+      this.setRole(u, { dev: b.dev });
+      await this.ctx.storage.put(this.P.u + id, u);
+      return json({ ok: true, user: this.publicUser(u) }, 200, origin);
+    }
+    if (op === "admin") {
+      // 管理者にする（オーナー・管理者）／外す（オーナーだけ）
+      const b = await readJson(request);
+      const id = typeof (b && b.id) === "string" ? b.id.trim().toLowerCase() : "";
+      if (typeof (b && b.admin) !== "boolean") return json({ error: "bad-json" }, 400, origin);
+      const u = await this.ctx.storage.get(this.P.u + id);
+      if (!u) return json({ error: "no-user" }, 404, origin);
+      if (this.isOwner(u)) return json({ error: "admin-user" }, 400, origin);
+      if (!b.admin && !callerOwner) return json({ error: "owner" }, 403, origin);
+      if (u.suspended && b.admin) return json({ error: "suspended" }, 400, origin);
+      this.setRole(u, b.admin ? { admin: true, member: true } : { admin: false });
+      await this.ctx.storage.put(this.P.u + id, u);
+      if (!b.admin && !this.P.site) await this.endSessions(id, null);   // サイト別の権限ではログインは切らない（ハブのログインも共通のため）   // 外したら、開いている管理画面も閉じさせる
+      return json({ ok: true, user: this.publicUser(u) }, 200, origin);
+    }
+    return json({ error: "op" }, 404, origin);
+  }
+  async setPassword(u, pw) {
+    u.salt = randHex(16); u.iter = PW_ITER; u.hash = await pbkdf2Hex(pw, u.salt, PW_ITER); u.pwAt = new Date().toISOString(); delete u.changePasswordSuggested;
+    await this.ctx.storage.put(this.P.u + u.id, u);
+  }
+  // その人のログインを全部終わらせる（keepKey だけ残す）
+  async endSessions(id, keepKey) {
+    const all = await this.ctx.storage.list({ prefix: this.P.ss });
+    for (const [k, v] of all) if (k !== keepKey && (!v || v.id === id || v.exp < Date.now())) await this.ctx.storage.delete(k);
+  }
+  // オーナー: ID（ADMIN_IDS・サイト別の owners）か、Google で確かめたメールがオーナーのもの（ownerMail）。id でも user でも渡せる
+  isOwner(x) {
+    if (x && typeof x === "object" && x.ownerMail && x.google) return true;
+    const id = String((x && typeof x === "object" ? x.id : x) || "").toLowerCase();
+    const ids = String(this.env[this.P.owners] || "") + "," + String(this.env.ADMIN_IDS || "");
+    return ids.split(",").map((y) => y.trim().toLowerCase()).filter(Boolean).includes(id);
+  }
+
+  isAdmin(id) { return this.isOwner(id); }   // 古い呼び出し用（オーナーかどうか）
+  role(u) { return this.P.site ? ((u && u.sites && u.sites[this.P.site]) || {}) : (u || {}); }
+  setRole(u, patch) {
+    if (!this.P.site) { Object.assign(u, patch); return; }
+    u.sites = Object.assign({}, u.sites);
+    u.sites[this.P.site] = Object.assign({}, u.sites[this.P.site], patch);
+  }
+  isAdminUser(u) { return !!u && (this.isOwner(u) || (!!this.role(u).admin && !u.suspended)); }
+  publicUser(u) {
+    const owner = this.isOwner(u), admin = this.isAdminUser(u);
+    const pu = { id: u.id, member: !!this.role(u).member || admin, dev: !!this.role(u).dev || admin, admin, owner, created: u.created, changePasswordSuggested: !!u.changePasswordSuggested, suspended: !!u.suspended };
+    if (u.email) pu.email = u.email;
+    if (u.google) pu.google = u.google;
+    pu.hasPassword = !!u.hash;
+    if (u.lastAt) pu.lastAt = u.lastAt;
+    if (this.P.site && this.role(u).joined) pu.joined = this.role(u).joined;
+    return pu;
+  }
+  // メールからまだ使われていないIDを作る（@の前。短ければ user を足す。重なれば 2, 3…）
+  async freeId(email) {
+    let base = String(email).split("@")[0].toLowerCase().replace(/[^a-z0-9_.-]/g, "").slice(0, 16);
+    if (base.length < 3) base = base + "user";
+    let id = base;
+    for (let n = 2; await this.ctx.storage.get(this.P.u + id); n++) id = base + n;
+    return id;
+  }
+  // パスワードを持つアカウントの中からメールで探す（会員は300人までなので全部見る）
+  async findByEmail(email) {
+    const e = String(email).trim().toLowerCase();
+    for (const [, u] of await this.ctx.storage.list({ prefix: this.P.u })) if (u && u.hash && u.email === e) return u.id;
+    return null;
+  }
+  async verifyGoogle(request) {
+    // 失敗の理由を分けて返す（画面で「考えられる原因」を出すため）
+    const aud = String(this.env.GOOGLE_CLIENT_ID || "");
+    if (!aud) return { error: "google-off", status: 503 };
+    const b = await readJson(request, 8192);   // Google のトークンは 1000 字を超えるので、ここだけ大きめ
+    if (!b) return { error: "google-invalid", status: 400 };
+    const cred = typeof b.credential === "string" ? b.credential : "";
+    if (!cred || cred.length > 4096) return { error: "google-invalid", status: 400 };
+    let t, r;
+    try { r = await fetch("https://oauth2.googleapis.com/tokeninfo?id_token=" + encodeURIComponent(cred)); }
+    catch (e) { return { error: "google-net", status: 502 }; }
+    if (!r.ok) return { error: "google-invalid" };
+    try { t = await r.json(); } catch (e) { return { error: "google-net", status: 502 }; }
+    if (!t || (t.iss !== "accounts.google.com" && t.iss !== "https://accounts.google.com") || !t.sub || !t.email) return { error: "google-invalid" };
+    if (t.aud !== aud) return { error: "google-aud" };
+    if (!(Number(t.exp) * 1000 > Date.now())) return { error: "google-expired" };
+    if (!(t.email_verified === true || t.email_verified === "true")) return { error: "google-unverified" };
+    return { sub: String(t.sub), email: String(t.email).toLowerCase() };
+  }
+  async newSession(id, origin) {
+    const token = randHex(32), exp = Date.now() + SESSION_MS;
+    await this.ctx.storage.put(this.P.ss + await sha256Hex(token), { id, exp });
+    // ついでに期限切れのログインを片づける
+    const old = await this.ctx.storage.list({ prefix: this.P.ss });
+    for (const [k, v] of old) if (!v || v.exp < Date.now()) await this.ctx.storage.delete(k);
+    const u = await this.ctx.storage.get(this.P.u + id);
+    if (u) { u.lastAt = new Date().toISOString(); await this.ctx.storage.put(this.P.u + id, u); }   // 会員管理で「最後のログイン」を見せる
+    return json({ ok: true, token, exp, user: this.publicUser(u) }, 200, origin, { "Cache-Control": "no-store" });
+  }
+  async session(request) {
+    const m = /^Bearer ([0-9a-f]{64})$/.exec(request.headers.get("Authorization") || "");
+    if (!m) return null;
+    const key = this.P.ss + await sha256Hex(m[1]);
+    const val = await this.ctx.storage.get(key);
+    if (!val || val.exp < Date.now()) { if (val) await this.ctx.storage.delete(key); return null; }
+    const user = await this.ctx.storage.get(this.P.u + val.id);
+    if (!user || user.suspended) return null;
+    return { key, val, user };
+  }
+  async limited(k, max, win) {
+    const r = await this.ctx.storage.get(this.P.rl + k);
+    if (!r) return false;
+    if (r.exp < Date.now()) { await this.ctx.storage.delete(this.P.rl + k); return false; }
+    return r.n >= max;
+  }
+  async bump(k, win) {
+    const now = Date.now(), r = await this.ctx.storage.get(this.P.rl + k);
+    const cur = r && r.exp > now ? r : { n: 0, exp: now + win * 1000 };
+    cur.n += 1;
+    await this.ctx.storage.put(this.P.rl + k, cur);
+  }
+
+  // サイト。ハブ（既定）と NACHA はアカウント共通、権限・オーナー・社内の文書はサイト別
+  get P() { return REALM_HUB; }
+  nacha() { return Object.create(this, { P: { value: REALM_NACHA } }); }
+
+  // ---- リンクのクリック数（フォロー導線の計測）----
+  // サイトの <a data-hit="x"> から sendBeacon で届く。だれでも書けるのは数だけ（上限つき）。日付は日本・韓国時間
+  async hit(site, name, request, origin) {
+    if (request.method !== "POST") return json({ error: "method" }, 405, origin);
+    if (!origin || !ALLOWED.includes(origin)) return json({ error: "origin" }, 403, origin);
+    if (!/^[a-z0-9_-]{1,20}$/.test(name)) return json({ error: "bad-name" }, 400, origin);
+    const ip = (await sha256Hex("ip|" + clientIp(request))).slice(0, 24);
+    if (!(await this.limited("H:" + ip, 60, 3600))) {   // 同じIPは1時間に60回まで数える（超えても ok を返す）
+      await this.bump("H:" + ip, 3600);
+      const day = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
+      const key = "hit:" + site + ":" + name + ":" + day;
+      const n = (await this.ctx.storage.get(key)) || 0;
+      if (n < 1e9) await this.ctx.storage.put(key, n + 1);
+    }
+    return json({ ok: true }, 200, origin);
+  }
+
+  // ---- 社内の文書 ----
+  // 中身は KV（CHORES）の in:<名前> に、wrangler で直接入れる（リポジトリには置かない）。社内の人だけ読める
+  async internal(name, request, origin) {
+    if (request.method !== "GET") return json({ error: "method" }, 405, origin);
+    const s = await this.session(request);
+    if (!s) return json({ error: "login" }, 401, origin);
+    const pu = this.publicUser(s.user);
+    if (this.P.site && isDevDoc(name)) { if (!pu.dev) return json({ error: "dev" }, 403, origin); }
+    else if (!pu.member) return json({ error: "member" }, 403, origin);
+    const doc = this.env.CHORES ? await this.env.CHORES.get(this.P.kv + name, "json") : null;
+    if (!doc) return json({ error: "none" }, 404, origin);
+    return json(doc, 200, origin, { "Cache-Control": "private, no-store" });
+  }
+
+  // ---- 開発資料（サイトの開発者だけ）----
+  // nin:nachadev（wrangler で入れた資料）と、開発ページから足した nin:dev-<名前>。中身は KV だけに置く（公開リポジトリには置かない）
+  async devDocs(op, s, request, origin) {
+    if (!this.publicUser(s.user).dev) return json({ error: "dev" }, 403, origin);
+    const kv = this.env.CHORES;
+    if (!kv) return json({ error: "none" }, 503, origin);
+    if (op === "devdocs") {
+      const docs = [];
+      const base = await kv.get(this.P.kv + "nachadev", "json");
+      if (base) docs.push({ name: "nachadev", title: base.title || "nachadev", fixed: true });
+      let cursor;
+      do {
+        const page = await kv.list({ prefix: this.P.kv + "dev-", cursor });
+        for (const k of page.keys) docs.push(Object.assign({ name: k.name.slice(this.P.kv.length) }, k.metadata || {}));
+        cursor = page.list_complete ? null : page.cursor;
+      } while (cursor);
+      return json({ docs }, 200, origin, { "Cache-Control": "private, no-store" });
+    }
+    const b = await readJson(request, 120000);
+    const name = typeof (b && b.name) === "string" ? b.name.trim().toLowerCase() : "";
+    if (!/^dev-[a-z0-9-]{1,30}$/.test(name)) return json({ error: "bad-name" }, 400, origin);
+    if (op === "devdel") { await kv.delete(this.P.kv + name); return json({ ok: true }, 200, origin); }
+    const title = typeof b.title === "string" ? b.title.trim().slice(0, 80) : "";
+    const text = typeof b.text === "string" ? b.text : "";
+    if (!title || !text.trim() || text.length > 100000) return json({ error: "bad-doc" }, 400, origin);
+    const at = new Date().toISOString(), meta = { title, by: s.user.id, at };
+    await kv.put(this.P.kv + name, JSON.stringify(Object.assign({ text }, meta)), { metadata: meta });
+    return json({ ok: true, name }, 200, origin);
+  }
+
+  // ---- パスワード ----
+  async checkCode(request, origin, b) {
+    const stored = await this.ctx.storage.get("cfg:codehash");
+    if (!stored && !this.env.TEAM_CODE) return null;          // パスワードなしで運用中
+    const ip = clientIp(request);
+    if (await this.isBlocked(ip)) return json({ error: "too-many" }, 429, origin, { "Retry-After": String(FAIL_WINDOW) });
+    if (typeof b.code === "string" && await this.codeMatches(b.code, stored)) return null;
+    const n = await this.countFail(ip);
+    if (n >= FAIL_LIMIT) return json({ error: "too-many" }, 429, origin, { "Retry-After": String(FAIL_WINDOW) });
+    return json({ error: "code" }, 403, origin);
+  }
+  async isBlocked(ip) {
+    const r = await this.ctx.storage.get("rl:" + ip);
+    if (!r) return false;
+    if (r.exp < Date.now()) { await this.ctx.storage.delete("rl:" + ip); return false; }
+    return r.n >= FAIL_LIMIT;
+  }
+  async countFail(ip) {
+    const now = Date.now();
+    const r = await this.ctx.storage.get("rl:" + ip);
+    const cur = r && r.exp > now ? r : { n: 0, exp: now + FAIL_WINDOW * 1000 };
+    cur.n += 1;
+    await this.ctx.storage.put("rl:" + ip, cur);
+    return cur.n;
+  }
+  async codeMatches(code, stored) {
+    if (stored && stored.salt && stored.hash) return safeEqual(await sha256Hex(stored.salt + code), stored.hash);
+    return !!this.env.TEAM_CODE && safeEqual(code, this.env.TEAM_CODE);
+  }
+  // 最初のパスワードはスクリプト（wrangler secret TEAM_CODE）でだけ。画面からは今のパスワードを知っている人だけが変えられる
+  async changeCode(request, origin) {
+    const text = await request.text();
+    if (text.length > MAX_BODY) return json({ error: "too-large" }, 413, origin);
+    let b;
+    try { b = JSON.parse(text); } catch (e) { return json({ error: "bad-json" }, 400, origin); }
+    if (!b || typeof b.next !== "string") return json({ error: "bad-json" }, 400, origin);
+    const stored = await this.ctx.storage.get("cfg:codehash");
+    if (!stored && !this.env.TEAM_CODE) return json({ error: "no-password" }, 409, origin);
+    const denied = await this.checkCode(request, origin, { code: b.current });
+    if (denied) return denied;
+    if (b.next.length < 8 || b.next.length > 64) return json({ error: "length" }, 400, origin);
+    const salt = [...crypto.getRandomValues(new Uint8Array(16))].map((x) => x.toString(16).padStart(2, "0")).join("");
+    await this.ctx.storage.put("cfg:codehash", { salt, hash: await sha256Hex(salt + b.next), at: new Date().toISOString() });
+    return json({ ok: true }, 200, origin);
+  }
+}
+
+// u: 会員 / ss: ログイン中の鍵 / rc: 再設定コード / rl: 回数制限 / kv: 社内の文書（KV）/ owners: オーナーのIDを入れる secret の名前
+// オーナーのメール（Google で本人確認できたものだけ）。公開リポジトリなのでメールそのものは置かず、SHA-256("owner|メール") を置く
+const OWNER_MAIL_HASHES = ["f9dbdb3e9795094a0e7db84739912b727fcd7baaf56b236d457dd01346b61f4a"];   // jaykim（2026-11-09 Hibiki指定）
+const REALM_HUB = { u: "u:", ss: "ss:", rc: "rc:", rl: "rl:", kv: "in:", owners: "ADMIN_IDS", provision: true };
+// NACHA（2026-11-09 Hibiki指定「とわないか統合ログイン」）: 会員・ログインはハブと共通（同じ ID・同じ鍵）。
+// 権限（関係者・管理者）だけサイトごとに u.sites.nacha に持つ。オーナーは NACHA_OWNER_IDS。社内の文書は KV の nin:<名前>
+const REALM_NACHA = { u: "u:", ss: "ss:", rc: "rc:", rl: "rl:", kv: "nin:", owners: "NACHA_OWNER_IDS", provision: true, site: "nacha" };
+const PW_ITER = 100000;                       // Workers の PBKDF2 の上限
+const SESSION_MS = 7 * 24 * 60 * 60 * 1000;   // ログインは7日
+function randHex(n) {
+  return [...crypto.getRandomValues(new Uint8Array(n))].map((x) => x.toString(16).padStart(2, "0")).join("");
+}
+async function pbkdf2Hex(pw, saltHex, iter) {
+  const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(pw), "PBKDF2", false, ["deriveBits"]);
+  const salt = new Uint8Array((saltHex.match(/../g) || []).map((x) => parseInt(x, 16)));
+  const bits = await crypto.subtle.deriveBits({ name: "PBKDF2", hash: "SHA-256", salt, iterations: iter }, key, 256);
+  return [...new Uint8Array(bits)].map((x) => x.toString(16).padStart(2, "0")).join("");
+}
+// 開発者だけが読む資料の名前（nachadev と dev-…）
+function isDevDoc(name) { return name === "nachadev" || name.startsWith("dev-"); }
+async function readJson(request, max) {
+  const text = await request.text();
+  if (text.length > (max || MAX_BODY)) return null;
+  try { return JSON.parse(text); } catch (e) { return null; }
+}
+function clientIp(request) {
+  return request.headers.get("CF-Connecting-IP") || request.headers.get("X-Forwarded-For") || "local";
+}
+async function sha256Hex(text) {
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+  return [...new Uint8Array(buf)].map((x) => x.toString(16).padStart(2, "0")).join("");
+}
+// パスワードの比較で、一致した文字数が時間差から漏れないようにする
+function safeEqual(a, b) {
+  if (a.length !== b.length) return false;
+  let r = 0;
+  for (let i = 0; i < a.length; i++) r |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return r === 0;
+}
+function cors(origin) {
+  return {
+    "Access-Control-Allow-Origin": ALLOWED.includes(origin) ? origin : ALLOWED[0],
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    "Vary": "Origin",
+  };
+}
+function json(obj, status, origin, extra) {
+  return new Response(JSON.stringify(obj), {
+    status,
+    headers: Object.assign({ "Content-Type": "application/json; charset=utf-8" }, cors(origin), extra || {}),
+  });
+}
