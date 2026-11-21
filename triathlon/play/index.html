@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="TRIATHLON 試作：預かった生命を、毎月のAPと暮らしの予定で育てる">
+<title>ゲームをはじめる | TRIATHLON</title>
+<style>
+/* 育成の試作。ルールだけで動く（AIの文章生成は使わない）。保存はこの端末だけ */
+:root{color-scheme:light;--ink:#163744;--sub:#4f6b75;--line:#cbdedf;--bg:#f6fafa;--teal:#007f87;--R:#d94b4b;--G:#2e9b5f;--B:#2f6fd6;--W:#8a9aa3;--warm:#c96a12}
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.7 system-ui,-apple-system,"Noto Sans JP",sans-serif}
+main{max-width:720px;margin:0 auto;padding:16px 16px 40px;display:grid;gap:14px}
+h1{margin:0;font-size:24px}h2{margin:0 0 8px;font-size:18px}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px}
+.lead{margin:0;color:var(--sub);font-size:15px}
+.btn{font:inherit;font-weight:800;font-size:16px;min-height:48px;border:0;border-radius:14px;padding:0 20px;background:var(--teal);color:#fff;cursor:pointer}
+.btn.sub{background:#fff;color:var(--ink);border:1px solid var(--line)}.btn:disabled{opacity:.45;cursor:default}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.who{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.who b{font-size:22px}.who span{color:var(--sub);font-size:14px}
+.money{font-size:16px;font-weight:800}
+.bars{display:grid;gap:10px}
+.hint{display:flex;align-items:center;gap:8px;width:100%;text-align:left;padding:10px 14px;border-radius:14px;border:2px solid #f0b429;background:#fff8e1;color:#5a3d00;font:inherit;font-weight:700;cursor:pointer}.hint::before{content:'💡';flex:none}.hint[hidden]{display:none}
+.autopick{margin-top:6px;gap:10px;align-items:center}.ap1{display:inline-flex;align-items:center;gap:4px;color:var(--c);font-weight:700}.ap1 button{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--c);background:#fff;color:var(--c);font-weight:800;cursor:pointer}.ap1 b{min-width:12px;text-align:center}
+.whorow{display:flex;align-items:center;justify-content:space-between;gap:10px}.whorow .who{flex:1;min-width:0}.clock{flex:none;width:64px;height:64px}
+.aptitude{display:flex;align-items:center;gap:12px;margin:4px 0 12px}.aptitude .dot{width:44px;height:44px;border-radius:50%;flex:none;box-shadow:inset 0 -4px 0 rgba(0,0,0,.12)}.aptitude span{display:grid}.aptitude b{font-size:17px}.aptitude small{color:var(--sub);font-size:12px}
+.miles{list-style:none;margin:8px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:6px}.miles li{padding:8px;border-radius:10px;background:#fff8e6;border:1px solid #f0d58c;font-size:13px}.miles li small{display:block;color:var(--sub);font-size:11px}.miles li.no{background:#f2f4f5;border-color:#e1e6e8;color:#9aa5aa}
+.toast{position:fixed;left:50%;bottom:84px;transform:translate(-50%,20px);opacity:0;pointer-events:none;z-index:60;background:#163744;color:#fff;padding:10px 16px;border-radius:999px;font-weight:700;box-shadow:0 6px 18px rgba(0,0,0,.25);transition:.3s;max-width:calc(100% - 32px);text-align:center}.toast.on{opacity:1;transform:translate(-50%,0)}
+.devbar{position:sticky;top:0;z-index:50;background:repeating-linear-gradient(45deg,#c27600 0 14px,#d98a12 14px 28px);color:#fff;font-weight:800;text-align:center;padding:6px 10px;font-size:14px;letter-spacing:.05em}
+body.dev{box-shadow:inset 0 0 0 4px #c27600}body.dev .hud{top:40px}
+#game.womb>*:not(.whocard):not(.logcard):not(.note):not(.row):not(.hint){display:none!important}
+.hud{position:sticky;top:8px;z-index:5;display:grid;grid-template-columns:auto minmax(0,1fr) minmax(0,1fr);gap:8px;align-items:center;padding:8px 10px;border-radius:999px;background:#163744;color:#fff;box-shadow:0 4px 14px rgba(0,0,0,.18)}
+.hud .coin{display:flex;align-items:center;gap:6px;font-weight:800;white-space:nowrap}.hud .coin i{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:linear-gradient(#ffe27a,#e0a81a);color:#7a4b00;font-style:normal;font-size:13px;box-shadow:inset 0 -2px 0 rgba(0,0,0,.2)}.hud .coin small{font-size:11px;opacity:.75}.hud .money.neg{color:#ff9b9b}
+.gauge{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:5px;align-items:center;font-size:12px}.gauge b{font-size:11px;opacity:.85}.gauge em{font-style:normal;font-weight:700;min-width:22px;text-align:right}
+.gauge .g{height:10px;border-radius:99px;background:rgba(255,255,255,.18);overflow:hidden}.gauge .g span{display:block;height:100%;border-radius:99px;transition:width .4s}
+.hpg .g span{background:linear-gradient(90deg,#46c26a,#9be15d)}.mpg .g span{background:linear-gradient(90deg,#3b82f6,#7cc4ff)}
+@media (max-width:360px){.hud{grid-template-columns:minmax(0,1fr) minmax(0,1fr);border-radius:16px}.hud .coin{grid-column:1/-1}}
+.kids{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));gap:8px;margin-bottom:14px}.kids .add{grid-column:1/-1}
+.kid{display:grid;gap:4px;text-align:left;padding:10px;border:2px solid #dbe6e8;border-radius:12px;background:#fff;cursor:pointer;font:inherit;color:inherit;min-width:0}.kid.on{border-color:var(--B,#2b6cb0);box-shadow:0 2px 8px rgba(0,0,0,.08)}.kid b{font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.kid small{color:var(--sub);font-size:12px}
+.mini{display:block;height:6px;background:#edf2f3;border-radius:99px;overflow:hidden}.mini span{display:block;height:100%;background:var(--c)}
+.bar{display:grid;grid-template-columns:28px minmax(0,1fr) 64px 72px;gap:8px;align-items:center}
+.bar .plus{display:flex;align-items:center;gap:6px;justify-content:flex-end}.bar .plus button{width:36px;height:36px;border-radius:50%;border:2px solid var(--c);background:#fff;color:var(--c);font-size:20px;font-weight:800;line-height:1;cursor:pointer}.bar .plus button:disabled{opacity:.35;cursor:default}.bar .plus em{font-style:normal;font-weight:800;color:var(--c);min-width:14px;text-align:right}
+.bar i{font-style:normal;font-weight:800;color:var(--c)}
+.bar .t{height:14px;background:#edf2f3;border-radius:99px;overflow:hidden}.bar .t span{display:block;height:100%;background:var(--c);border-radius:99px}
+.bar small{text-align:right;color:var(--sub);font-size:13px}
+.tag{display:inline-block;font-size:12px;font-weight:800;border-radius:99px;padding:0 8px;margin-right:4px;background:#eef6f6}
+.ap{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.ap div{border:1px solid var(--line);border-radius:12px;padding:8px;text-align:center}
+.ap b{display:block;color:var(--c);font-size:14px}
+.ap .n{font-size:22px;font-weight:800}
+.ap button{font:inherit;font-size:18px;width:36px;height:40px;padding:0;border-radius:10px;border:1px solid var(--line);background:#fff;cursor:pointer}
+.weeks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.weeks label{display:grid;gap:2px;font-size:12px;font-weight:800;color:var(--sub)}
+.weeks select{font:inherit;font-size:16px;min-height:44px;border:1px solid var(--line);border-radius:10px;padding:0 8px;background:#fff;color:var(--ink)}
+.log{list-style:none;margin:0;padding:0;display:grid;gap:6px;max-height:260px;overflow:auto;font-size:14px}
+.log li{border-left:3px solid var(--line);padding-left:8px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;font-size:14px}
+.stats div{background:#f4f7f8;border-radius:8px;padding:6px 8px}.stats b{display:block;font-size:18px}
+.note{font-size:13px;color:var(--sub);margin:6px 0 0}
+input[type=text]{font:inherit;font-size:16px;min-height:44px;border:1px solid var(--line);border-radius:10px;padding:0 10px;width:100%}
+</style>
+</head>
+<body>
+<script src="../site-nav.js?v=0.78"></script>
+<div role="note" style="max-width:960px;margin:12px auto;padding:12px 16px;background:#fff7e0;border:1px solid #e8cf8a;border-radius:12px;color:#5a4300;font:15px/1.7 system-ui,-apple-system,'Noto Sans JP',sans-serif"><b>ゲームの開発は終了しました。</b> TRIATHLON は、物語と世界を届けるサイトになりました。このページは記録として残しています。 <a href="../stories/" style="color:#9a5b00;font-weight:700">物語を読む →</a></div>
+<main>
+<div><h1>ゲームをはじめる（試作）</h1><p class="lead">預かった生命を、毎月のAPと暮らしの予定で育てます。生きるにはお金がかかります。働いて、遊んで、休んで、学んで、暮らしを回しましょう。子どもは3人まで同時に育てられます。</p><p class="note"><a id="devlink" href="?dev">開発版で開く（20秒で1か月）</a></p></div>
+<details class="card" id="devinfo" hidden style="border:2px dashed #c27600">
+<summary><b>開発版で変わること</b></summary>
+<ul class="lead" style="margin:6px 0 0;padding-left:1.2em">
+<li>時間：開いている間は20秒で1か月（ふつうは5分で1か月）。お腹の中も20秒で1か月。</li>
+<li>「すぐ生まれる」ボタン：お腹の中のあいだだけ出ます。</li>
+<li>上にしま模様の帯が出ます。</li>
+<li>閉じている間の進み方、APやルールは、ふつうと同じです。</li>
+<li>保存データはふつうと共通です。開発版で進めた子は、ふつうの画面でもそのまま続きます。</li>
+</ul>
+</details>
+
+<section class="card" id="start" hidden>
+<h2>生命を預かる</h2>
+<p class="lead">ボタンを押すと、ひとつの生命を預かります。まずはお母さんのお腹の中で9か月。そのあいだは何もできません。生まれると、お腹の中で育った45APがランダムに付き、名前と性別が決まります。子どもは3人まで育てられます。名前は18歳からニックネームに変えられます。</p>
+<div class="row" style="margin-top:10px"><button class="btn" id="born" type="button">生命を預かる</button></div>
+</section>
+
+<div class="row" id="kids" hidden style="margin-bottom:14px"></div>
+<div id="game" hidden style="display:grid;gap:14px">
+<div class="hud" role="group" aria-label="所持金と体力・精神力">
+<span class="coin" title="所持金（SUNA＝時間のお金）"><i aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M6 2h12v2h-1v3.5c0 1.6-1 3-2.4 4.5 1.4 1.5 2.4 2.9 2.4 4.5V20h1v2H6v-2h1v-3.5c0-1.6 1-3 2.4-4.5C8 10.5 7 9.1 7 7.5V4H6z" fill="#7a4b00"/><path d="M9 4h6v3.2c0 .9-.9 2.1-3 3.8-2.1-1.7-3-2.9-3-3.8zM9.6 19.2c.3-1.3 1.2-2.3 2.4-3.1 1.2.8 2.1 1.8 2.4 3.1z" fill="#ffe9a8"/></svg></i><span class="money" id="money"></span><small>SUNA</small></span>
+<span class="gauge hpg" title="HP（体力）"><b>HP</b><span class="g"><span id="hpbar"></span></span><em id="hp"></em></span>
+<span class="gauge mpg" title="MP（精神力）"><b>MP</b><span class="g"><span id="mpbar"></span></span><em id="mp"></em></span>
+</div>
+<button type="button" class="hint" id="hint"></button>
+<section class="card whocard">
+<div class="whorow"><div class="who"><b id="nm"></b><span id="age"></span></div><div class="clock" id="clock" role="img"></div></div>
+<p class="lead" id="env"></p>
+<div class="row" id="nickrow" hidden style="margin-top:8px"><input type="text" id="nick" maxlength="12" placeholder="ニックネーム（18歳から）" aria-label="ニックネーム" style="flex:1;min-width:0"><button class="btn sub" id="nickset" type="button">変える</button></div>
+</section>
+
+<section class="card">
+<h2>ステータス</h2>
+<div class="aptitude" id="apt"></div>
+<div class="bars" id="bars"></div>
+<div class="row apleft" style="justify-content:space-between;margin-top:10px"><span>たまったAP <b id="apleft"></b> / 120</span><span class="note" id="aplast" aria-live="polite"></span></div>
+<label class="row" style="margin-top:8px;align-items:center;gap:8px"><input type="checkbox" id="apauto"> <span>自動：毎月の5APを、下の配分でそのまま付与する</span></label>
+<div class="row autopick" id="autopick" hidden></div>
+<p class="note">生まれたときの45APは自動で付きます。その後は毎月5APがたまります（最大120。満タンのままだと増えません）。＋を押すと、たまったAPを1つ使ってすぐ付与します。思いどおりに入るかは知能しだいで、外れるとほかに入ります。</p>
+<p class="note" id="grow"></p>
+<p class="note" id="ctl"></p>
+</section>
+
+<section class="card" id="voicebox">
+<h2>声かけ</h2>
+<p class="lead">子どもはまだ行動を選べません。でも、あなたの声は届きます。選んだ遊びのほうへ、散らばるAPが少し寄りやすくなります。</p>
+<div class="row" id="voice" style="margin-top:10px"></div>
+</section>
+
+<section class="card">
+<h2>今月の予定</h2>
+<p class="lead" id="plan-lead"></p>
+<div class="weeks" id="weeks" style="margin-top:10px"></div>
+<div id="jobbox" hidden style="margin-top:12px"><label>仕事（「働く」の週に、この仕事をします）<select id="job"></select></label><p class="note" id="jobnext"></p></div>
+</section>
+
+<section class="card"><h2>記念</h2><p class="note" id="milecount"></p><ul class="miles" id="miles"></ul></section>
+
+<p class="note">ゲームの時間は自動で流れます。開いている間は5分で1か月（1年＝1時間）。お腹の中の9か月は約3分です。閉じている間はゆっくり進み、次に開いたときにまとめて反映します（0〜5歳は約1日、6〜9歳は約2日、10〜14歳は約1週間、15歳からは1日で約2か月）。予定は変えるまで同じものが続きます。10〜14歳は二次成長で得意が見えはじめるので、育てる方向を決める時期です。下のボタンは試作用の早送りです。</p>
+<div class="row"><button class="btn sub" id="birthnow" type="button">すぐ生まれる</button><button class="btn sub" id="m1" type="button">早送り：1か月</button><button class="btn sub" id="y1" type="button">早送り：1年</button><button class="btn sub" id="reset" type="button">最初から</button></div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<section class="card logcard"><h2>できごと</h2><ul class="log" id="log"></ul></section>
+</div>
+</main>
+<script>
+(function () {
+  'use strict';
+  var KEY = 'triathlon-play-v1', C3 = ['R', 'G', 'B'], NAMES = { R: '体', G: '技', B: '心' };
+  // 数字は見せず、段階の言葉で見せる（攻略に使われないように）。内部の値はそのまま
+  var STAGES = [[0, '芽'], [100, '見習い'], [300, '一人前'], [600, '名人'], [1000, '達人']], HUE = { R: '赤', G: '緑', B: '青' }, RGBC = { R: [214, 69, 65], G: [46, 158, 92], B: [52, 108, 214] };
+  function stage(v) { var i = 0; while (i + 1 < STAGES.length && v >= STAGES[i + 1][0]) i++; var lo = STAGES[i][0], hi = STAGES[i + 1] ? STAGES[i + 1][0] : lo * 2; return { i: i, name: STAGES[i][1], p: Math.min(1, (v - lo) / (hi - lo)) }; }
+  function mainK() { return C3.reduce(function (x, k) { return s.ap[k] > s.ap[x] ? k : x; }, 'R'); }
+  function stageOf(n) { return STAGES.filter(function (x) { return x[0] === n; })[0][1]; }
+  var VOICE = [['R', '外で遊ぼう'], ['G', '何か作ろう'], ['B', '絵本を読もう']];
+  var ACT = { work: '働く', play: '遊ぶ', rest: '休む', learn: '学ぶ' };
+  var LIVING = 100;          // 18歳からの1か月の生活費（SUNA）。食べ物45・住まい40・ほか15
+  var ENV = [['川辺の家', 'R'], ['工房の家', 'G'], ['学園の近くの家', 'B'], ['灯台館の近くの家', 'W']];
+  var $ = function (i) { return document.getElementById(i); };
+  function rnd(a, b) { return a + Math.random() * (b - a); }
+  function ri(a, b) { return Math.floor(rnd(a, b + 1)); }
+  function clamp(x, a, b) { return Math.max(a, Math.min(b, x)); }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+
+  // 子どもは3人まで。kids に全員、s は今見ている子
+  var MAX_KIDS = 3, kids = [], cur = 0, s = null;
+  try { var saved = JSON.parse(localStorage.getItem(KEY)); if (saved) { kids = saved.kids || [saved]; cur = saved.cur || 0; } } catch (e) {}   // v0.24.7 までの1人の保存も読む
+  kids.forEach(function (k) { if (k.hp == null) { k.hp = k.mp = k.cond || 80; delete k.cond; } ['R', 'G', 'B'].forEach(function (c) { k.ap[c] = Math.round(k.ap[c]); }); });   // v0.24 の保存（調子）から引きつぐ
+  cur = Math.min(cur, Math.max(0, kids.length - 1)); s = kids[cur] || null;
+  function save() { try { localStorage.setItem(KEY, JSON.stringify({ kids: kids, cur: cur })); } catch (e) {} }
+
+  // RGB の 45AP を 9〜27 で分ける。W（かくれ）は別に 9〜27
+  // 生まれたときの 45AP を R・G・B・W（かくれ）の4つにランダムに分ける。どれも最小6、残りの21を1ずつ配る（最大27）
+  function split45() {
+    var ap = { R: 6, G: 6, B: 6, W: 6 }, k = ['R', 'G', 'B', 'W'];
+    for (var i = 0; i < 21; i++) ap[k[ri(0, 3)]]++;
+    return ap;
+  }
+  // 名前は生まれたときにランダムで決まる（漢字圏の5か国で呼びやすい短い名前）。18歳からニックネームを付けられる
+  var FIRST = ['ハル', 'ソラ', 'リン', 'ミン', 'ジン', 'ユナ', 'ハナ', 'レン', 'セナ', 'リオ', 'ミオ', 'アン', 'ナリ', 'ユン', 'ラン', 'カイ', 'ナム', 'メイ'];
+  function born() {
+    var all = split45(), ap = { R: all.R, G: all.G, B: all.B }, good = [], aff = {}, name = FIRST[ri(0, FIRST.length - 1)];
+    var n = ri(1, 4), pool = ['R', 'G', 'B', 'W'].sort(function () { return Math.random() - .5; });
+    good = pool.slice(0, n);
+    ['R', 'G', 'B', 'W'].forEach(function (k) { aff[k] = Math.round(good.indexOf(k) >= 0 ? rnd(5, 30) : rnd(-30, 5)); });
+    var home = ENV.filter(function (e) { return good.indexOf(e[1]) >= 0; }).map(function (e) { return e[0]; })[0] || '二水の家';
+    if (kids.length >= MAX_KIDS) return;
+    s = { name: name, sex: Math.random() < .5 ? 'f' : 'm', month: 0, ap: ap, W: all.W, nick: '', aff: aff, good: good, home: home,
+      learn: 0, hp: 100, mp: 100, money: 0, plan: ['play', 'rest', 'play', 'rest'], pick: { R: 2, G: 2, B: 1 }, log: [], t0: Date.now(), womb: 9 };   // 45AP は母のお腹の9か月の象徴。生まれるまでは見せない
+    kids.push(s); cur = kids.length - 1;
+    say('生命を預かった。お母さんのお腹の中で、9か月育つ。');
+    save(); show();
+  }
+  function age() { return Math.floor(s.month / 12); }
+  // 生まれたときの予想寿命：女性84歳・男性78歳を基準に、体（R）の得意で±1歳
+  function lifeNow() { if (s.life == null) s.life = (s.sex === 'f' ? 84 : 78) + s.aff.R / 30; return s.life; }
+  // 知能：心（B）と学び、年齢で育つ（0〜100）
+  function intel() { return clamp(Math.round(s.ap.B * Math.min(1, (age() + 1) / 20) * 2 + s.learn), 0, 100); }
+  // 自我：2歳までは 0。16歳でほぼそろい、知能が高いほど思いどおり
+  // かくれの INT と W（White）は、選んだステータスに AP を入れやすくする。効果は小さめ（すぐ気づかれないように）
+  // 付与が思いどおりに入る確率：自我（2歳から育つ）× 知能しだい（W は少しだけ助ける）
+  function control() { return clamp((age() - 2) / 14, 0, 1) * clamp(0.3 + 0.6 * intel() / 100 + 0.1 * (s.W - 6) / 21, 0, 1); }
+  // 生殖能力（0〜100）。男女で育ち方と下がり方がちがう
+  function fert() {
+    var a = s.month / 12;
+    if (s.sex === 'f') return a < 10 ? 5 : a < 15 ? 5 + (a - 10) * 19 : a < 30 ? 100 : a < 45 ? 100 - (a - 30) * 4.7 : a < 55 ? 30 - (a - 45) * 2.5 : 5;
+    return a < 11 ? 5 : a < 16 ? 5 + (a - 11) * 19 : a < 35 ? 100 : a < 60 ? 100 - (a - 35) * 2 : a < 80 ? 50 - (a - 60) * 1.5 : 20;
+  }
+  // 詳細ステータス＝もとの値 ×（10＋生殖能力）/110 ×（10＋知能）/110
+  function detail() {
+    // R：HP 体力・ATK 筋力・DEF 物理防御／G：RAN 攻撃範囲・ATS 攻撃速度（手作業）・SPD 移動速度／B：MP 精神力・MAG 魔力・RES 魔法抵抗
+    var f = (10 + fert()) / 110 * (10 + intel()) / 110, R = s.ap.R, G = s.ap.G, B = s.ap.B, r = function (x) { return Math.round(x * f); };
+    return { HP: r(R * 10), ATK: r(R), DEF: r(R * 0.8), RAN: r(G * 0.5), ATS: r(G), SPD: r(G * 0.8), MP: r(B * 10), MAG: r(B), RES: r(B * 0.8) };
+  }
+  // 地域の法律（二水）：6〜14歳は義務教育、15歳から働ける（18歳までは月2週まで）。それまでは育児と教育を受ける時期で、行動は選べない
+  var LAW = { school: 6, work: 15, adult: 18, minorWork: 2 }, TEEN = 10;   // TEEN：二次成長が始まる年齢（わかりやすく男女とも10歳）
+  function allowed() {
+    var a = age();
+    if (a < LAW.work) return [];
+    return ['work', 'play', 'rest', 'learn'];
+  }
+  function autoPlan(a) {
+    if (a < LAW.school) return ['care', 'care', 'care', 'care'];      // 育児：家で育てられる
+    return ['school', 'school', 'school', 'care'];                     // 教育：学校で学び、家で休む
+  }
+  // 仕事：ステータスが育つと解放。「働く」の週の稼ぎ＝40 × 給料の倍率 × 腕前
+  var JOBS = [
+    { id: 'help', name: '家の手伝い', k: '', need: 0, pay: 1 },
+    { id: 'r1', name: '荷運び', k: 'R', need: 100, pay: 1.2 }, { id: 'r2', name: '大工', k: 'R', need: 300, pay: 1.8 }, { id: 'r3', name: '救助隊', k: 'R', need: 600, pay: 2.8 },
+    { id: 'g1', name: '工房の見習い', k: 'G', need: 100, pay: 1.2 }, { id: 'g2', name: '職人', k: 'G', need: 300, pay: 1.8 }, { id: 'g3', name: '名工', k: 'G', need: 600, pay: 2.8 },
+    { id: 'b1', name: '塾の手伝い', k: 'B', need: 100, pay: 1.2 }, { id: 'b2', name: '研究助手', k: 'B', need: 300, pay: 1.8 }, { id: 'b3', name: '学者', k: 'B', need: 600, pay: 2.8 }
+  ];
+  function canJob(j) { return !j.k || s.ap[j.k] >= j.need; }
+  function job() { var j = JOBS.filter(function (x) { return x.id === s.job; })[0]; return j && canJob(j) ? j : JOBS[0]; }
+  // 記念：達成するとお祝いが出て、リストに残る。まだのものは「？？？」
+  var MILES = [
+    ['born', '誕生', function () { return true; }], ['one', '1歳の誕生日', function () { return age() >= 1; }],
+    ['self', '自我が芽生えた', function () { return age() >= 3; }], ['school', '入学', function () { return age() >= LAW.school; }],
+    ['teen', '二次成長', function () { return age() >= TEEN; }], ['grad', '義務教育を終えた', function () { return age() >= LAW.work; }],
+    ['adult', 'ひとり立ち', function () { return age() >= LAW.adult; }], ['pay', '初めての給料', function () { return (s.paid || 0) > 0; }],
+    ['m1k', '貯金 1,000 SUNA', function () { return s.money >= 1000; }], ['m10k', '貯金 10,000 SUNA', function () { return s.money >= 10000; }],
+    ['s100', '見習いになった', function () { return Math.max(s.ap.R, s.ap.G, s.ap.B) >= 100; }], ['s300', '一人前になった', function () { return Math.max(s.ap.R, s.ap.G, s.ap.B) >= 300; }],
+    ['job1', '仕事が増えた', function () { return JOBS.some(function (j) { return j.need === 100 && canJob(j); }); }],
+    ['job2', '一人前の仕事', function () { return JOBS.some(function (j) { return j.need === 300 && canJob(j); }); }],
+    ['job3', '一流の仕事', function () { return JOBS.some(function (j) { return j.need === 600 && canJob(j); }); }]
+  ];
+  var toastQ = [];
+  function checkMiles() {
+    if (!s || s.womb) return;
+    s.miles = s.miles || {};
+    MILES.forEach(function (m) { if (!s.miles[m[0]] && m[2]()) { s.miles[m[0]] = age() + '歳' + (s.month % 12) + 'か月'; say('記念：' + m[1]); toastQ.push('✨ 記念：' + m[1]); } });
+    toastQ = toastQ.slice(-3);
+  }
+  function toastNext() { var el = $('toast'); if (!toastQ.length) { el.className = 'toast'; return; } el.textContent = toastQ.shift(); el.className = 'toast on'; setTimeout(toastNext, 2400); }
+  function say(t) { s.log.unshift('〔' + age() + '歳' + (s.month % 12) + 'か月〕' + t); s.log = s.log.slice(0, 60); }
+
+  // 付与：配分（体・技・心の割合）と使うAPの数を決めて「付与する」を1回押す。
+  // 1回で数を決めて使うので、連打やマクロで得をしない。入るかは知能しだい（外れたら声かけの方か、ランダムに散らばる）
+  var AP_MAX = 120;
+  function spend(auto, one) {
+    var n = auto ? 5 : Math.min(s.pool || 0, 1), sum = one ? 1 : s.pick.R + s.pick.G + s.pick.B, c = control(), got = { R: 0, G: 0, B: 0 }, hit = 0;
+    if (!n || !sum) return '';
+    for (var i = 0; i < n; i++) {
+      var r = Math.random() * sum, k = one || (r < s.pick.R ? 'R' : r < s.pick.R + s.pick.G ? 'G' : 'B');
+      var to = Math.random() < c ? k : (age() < LAW.work && s.voice && Math.random() < 0.5 ? s.voice : C3[ri(0, 2)]);
+      if (to === k) hit++;
+      // RGB は整数。入る量の期待値は 得意（±30%）× 体と心の調子（0.5〜1）。小数分は確率で +1
+      var e = (1 + s.aff[to] / 100) * (0.5 + (s.hp + s.mp) / 400), gain = Math.floor(e) + (Math.random() < e - Math.floor(e) ? 1 : 0);
+      s.ap[to] += gain; got[to] += gain;
+      s.yr = s.yr || { R: 0, G: 0, B: 0 }; s.yr[to] += gain;
+    }
+    if (!auto) s.pool -= n;
+    var msg = (auto ? '自動で' : '') + n + 'APを付与：' + C3.filter(function (k) { return got[k]; }).map(function (k) { return NAMES[k]; }).join('・') + 'が伸びた（思いどおり ' + hit + '/' + n + '）';
+    if (one) { checkMiles(); var to1 = C3.filter(function (k) { return got[k]; })[0]; return hit ? NAMES[one] + 'に入った' : to1 ? '外れて' + NAMES[to1] + 'に入った' : '伸びなかった'; }   // ＋1回ぶんはできごとに残さない
+    say(msg); checkMiles();
+    return msg;
+  }
+  function month() {
+    if (s.womb) {   // お腹の中：何もできない。1か月ごとに5APずつ育つ（中身は生まれるまで見えない）
+      s.womb--;
+      say(s.womb ? 'お腹の中で育っている（' + (9 - s.womb) + 'か月目）。' : '二水市の' + s.home + 'に、' + s.name + 'が生まれた。お腹の中で育った45APが付いた。');
+      checkMiles();
+      return;
+    }
+    var a = age(), autoAp = s.auto && s.pick.R + s.pick.G + s.pick.B > 0;
+    // 毎月5AP。自動ONなら配分どおりにすぐ付与。OFFならたまる（最大120、満タンだと増えない）。たまった分は手動で使う
+    var gotAp = autoAp ? 0 : Math.min(5, AP_MAX - (s.pool || 0));
+    if (autoAp) spend(true); else s.pool = (s.pool || 0) + gotAp;
+    // 予定（4週）。3歳までは寝て遊ぶだけ
+    var ok = allowed(), earned = 0, d = detail();
+    var calm = 1 - Math.min(0.2, d.RES / 200);   // RES：MP の減り方を少しだけ軽くする
+    var skill = 1 + Math.min(0.3, d.ATK / 100) / 2 + Math.min(0.3, d.ATS / 100) / 2;   // 力仕事は ATK、手作業は ATS
+    var workWeeks = 0;
+    (ok.length ? s.plan : autoPlan(a)).forEach(function (w) {
+      if (w === 'work' && a < LAW.adult && ++workWeeks > LAW.minorWork) w = 'rest';   // 18歳未満は法律で月2週まで
+      if (w === 'care') { s.hp += 20; s.mp += 15; }
+      if (w === 'school') { s.learn = Math.min(40, s.learn + 0.2); s.mp -= 3 * calm; s.hp += 5; }
+      if (w === 'work') { var e = 40 * job().pay * (a < LAW.adult ? 0.5 : 1) * skill * (s.hp < 20 ? 0.5 : 1) * (s.mp < 20 ? 0.5 : 1); earned += e; s.hp -= 25; s.mp -= 10 * calm; }
+      if (w === 'rest') { s.hp += 30; s.mp += 10; }
+      if (w === 'learn') { s.learn = Math.min(40, s.learn + 0.25); s.mp -= 15 * calm; }
+      if (w === 'play') { s.mp += 15; s.hp -= 5; }
+      s.hp = clamp(s.hp, 0, 100); s.mp = clamp(s.mp, 0, 100);
+    });
+    s.money += earned; if (earned) s.paid = (s.paid || 0) + earned;
+    var cost = a >= 18 ? LIVING : 0;
+    s.money -= cost;
+    if (s.money < 0) s.mp -= 15 * calm;
+    s.hp = clamp(Math.round(s.hp), 0, 100); s.mp = clamp(Math.round(s.mp - 5 * calm), 0, 100);
+    if (s.mp < 20) say('精神力（MP）が少ない。休んだり遊んだりしよう。');
+    // 予想寿命：暮らし方で少しずつ上下する（55〜100歳）。体も心も元気なら延び、無理や貧しさで縮む
+    var works = ok.length ? s.plan.filter(function (w) { return w === 'work'; }).length : 0, L0 = lifeNow();
+    s.life = clamp(L0 + (s.hp >= 60 && s.mp >= 60 ? 0.01 : 0) - (s.hp < 20 ? 0.04 : 0) - (s.mp < 20 ? 0.04 : 0) - (s.money < 0 ? 0.02 : 0) - (works >= 4 ? 0.02 : 0), 55, 100);
+    s.money = Math.round(s.money * 100) / 100;
+    s.month++;
+    if (s.month % 12 === 0) { s.last = s.yr; s.yr = { R: 0, G: 0, B: 0 }; (s.lifeLog = s.lifeLog || []).push(Math.round(s.life * 10) / 10); }   // 1年ごとに予想寿命も残す   // 1年の伸びを残す（10歳から見せる）
+    var msg = autoAp ? '' : gotAp ? 'AP +' + gotAp + '（たまったAP ' + s.pool + '）' : 'APが満タン（' + AP_MAX + '）。使わないと増えない';
+    if (earned) msg += '　稼ぎ +' + earned.toFixed(1);
+    if (cost) msg += '　生活費 −' + cost;
+    if (msg) say(msg.replace(/^　/, ""));
+    checkMiles();
+    if (age() === 3 && s.month % 12 === 0) say('自我が芽生えた。APが少しずつ思いどおりになっていく。');
+    if (age() === TEEN && s.month % 12 === 0) say('二次成長が始まった。この1年の伸びから、得意なものが見えはじめる。');
+    if (age() === LAW.school && s.month % 12 === 0) say('二水の法律で、義務教育が始まった。学校に通う。');
+    if (age() === LAW.work && s.month % 12 === 0) say('義務教育を終えた。二水の法律で働けるようになった（18歳までは月2週まで）。行動を自分で選べる。');
+    if (age() === 18 && s.month % 12 === 0) say('ひとり立ち。ここから毎月 ' + LIVING + ' SUNA の生活費がかかる。');
+  }
+
+  function show() {
+    $('start').hidden = !!s; $('game').hidden = !s; $('kids').hidden = !s;
+    if (!s) return;
+    // 2人以上なら全員の様子を並べて見せ、押した子を下でくわしく育てる。1人ならくわしい画面だけ
+    var multi = kids.length > 1, top = Math.max(40, Math.max.apply(null, kids.map(function (k) { return k.womb ? 0 : Math.max(k.ap.R, k.ap.G, k.ap.B); })));
+    $('kids').className = multi ? 'kids' : 'row';
+    $('kids').innerHTML = (multi ? kids.map(function (k, i) {
+      return '<button type="button" class="kid' + (i === cur ? ' on' : '') + '" data-i="' + i + '" aria-pressed="' + (i === cur) + '"><b>' + (k.womb ? 'お腹の中' : esc(k.nick || k.name)) + '</b><small>' + (k.womb ? (9 - k.womb) + 'か月目' : Math.floor(k.month / 12) + '歳' + (k.month % 12) + 'か月') + '</small>' + (k.womb ? '' :
+        C3.map(function (c) { return '<span class="mini" style="--c:var(--' + c + ')"><span style="width:' + (k.ap[c] / top * 100) + '%"></span></span>'; }).join('') +
+        '<small>HP ' + k.hp + '% / MP ' + k.mp + '%・AP ' + (k.pool || 0) + '</small>') + '</button>';
+    }).join('') : '') + (kids.length < MAX_KIDS ? '<button type="button" class="btn sub add">＋ もう1人 生命を預かる（あと' + (MAX_KIDS - kids.length) + '人）</button>' : '');
+    $('game').classList.toggle('womb', !!s.womb);
+    // つぎにすること：はじめての人が迷わないように、いま一番いいことを1つだけ出す（押すとその場所へ）
+    var ha = age(), hint = s.womb ? ['お腹の中で育っています。生まれるまで、ゆっくり待ちましょう。', ''] :
+      s.pool >= 5 && !s.auto && ha >= 2 ? ['APがたまっています。ステータスの右の＋で、伸ばしたいものに使おう。', 'bars'] :
+      ha >= LAW.work && s.hp < 30 ? ['体力が少ない。予定に「休む」を入れよう。', 'weeks'] :
+      ha >= LAW.work && s.mp < 30 ? ['心が疲れている。予定に「遊ぶ」か「休む」を入れよう。', 'weeks'] :
+      ha >= LAW.work && s.plan.indexOf('work') < 0 ? ['予定に「働く」を入れて、お金をかせごう。', 'weeks'] :
+      ha >= LAW.work && JOBS.filter(canJob).length > 1 && (s.job || 'help') === 'help' ? ['新しい仕事ができます。「仕事」を選びなおそう。', 'jobbox'] :
+      ha < LAW.work && !s.voice ? ['「声かけ」で、伸ばしたい方向を伝えよう。', 'voicebox'] :
+      ha < 2 ? ['まだ自我がありません。時計がひと回りすると1歳です。', ''] :
+      ['いい調子です。ゆっくり見守りましょう。', ''];
+    $('hint').textContent = hint[0]; $('hint').dataset.to = hint[1];
+    $('birthnow').hidden = !(DEV && s.womb);
+    if (s.womb) {
+      $('nm').textContent = 'お腹の中の子'; $('age').textContent = (9 - s.womb) + 'か月目（あと' + s.womb + 'か月）';
+      $('env').textContent = 'お腹の中で45APが育っています（' + 5 * (9 - s.womb) + ' / 45）。生まれるまでは何もできません。';
+      $('log').innerHTML = s.log.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('');
+      return;
+    }
+    var a = age(), d = detail(), max = Math.max(40, s.ap.R, s.ap.G, s.ap.B);
+    $('nm').textContent = (s.nick ? s.nick + '（' + s.name + '）' : s.name) + (s.sex === 'f' ? '・女の子' : '・男の子');
+    $('nickrow').hidden = a < 18;
+    $('age').textContent = a + '歳' + (s.month % 12) + 'か月';
+    $('env').textContent = s.home + 'で生まれた。';
+    // 予想寿命は内部だけで動かし、画面には出さない（攻略に使われないように）   // 得意はかくれステータスなので見せない
+    $('money').textContent = s.money.toFixed(2); $('money').className = 'money' + (s.money < 0 ? ' neg' : '');
+    $('hp').textContent = s.hp; $('mp').textContent = s.mp;
+    $('hpbar').style.width = s.hp + '%'; $('mpbar').style.width = s.mp + '%';
+    var left = 5 - s.pick.R - s.pick.G - s.pick.B;
+    // 主な適性：いちばん育っているものを1つだけ、その色で見せる（色の濃さ＝段階）
+    var mk = mainK(), mg = stage(s.ap[mk]), c = RGBC[mk], al = 0.35 + 0.65 * Math.min(1, (mg.i + mg.p) / 4);
+    $('apt').innerHTML = '<span class="dot" style="background:rgba(' + c.join(',') + ',' + al.toFixed(2) + ')"></span><span><small>主な適性</small><b>' + NAMES[mk] + '（' + HUE[mk] + '）の子</b><small>' + NAMES[mk] + 'は「' + mg.name + '」</small></span>';
+    $('bars').innerHTML = C3.map(function (k) {
+      var g = stage(s.ap[k]);
+      return '<div class="bar" style="--c:var(--' + k + ')"><i>' + k + '</i><div class="t" title="つぎの段階まで"><span style="width:' + (g.p * 100) + '%"></span></div><small>' + NAMES[k] + '・' + g.name + '</small><span class="plus"><button type="button" data-k="' + k + '" aria-label="' + NAMES[k] + 'にAPを1つ付与"' + (s.pool ? '' : ' disabled') + '>＋</button></span></div>';
+    }).join('');
+    $('apleft').textContent = s.pool || 0; $('apauto').checked = !!s.auto; $('autopick').hidden = !s.auto;
+    $('autopick').innerHTML = '<span class="note">配分（あと' + left + '）</span>' + C3.map(function (k) { return '<span class="ap1" style="--c:var(--' + k + ')">' + NAMES[k] + '<button type="button" data-pk="' + k + '" data-d="-1" aria-label="' + NAMES[k] + 'の配分を減らす">−</button><b>' + s.pick[k] + '</b><button type="button" data-pk="' + k + '" data-d="1" aria-label="' + NAMES[k] + 'の配分を増やす">＋</button></span>'; }).join('');
+    var L = s.last, top = L && C3.reduce(function (x, k) { return L[k] > L[x] ? k : x; }, 'R');
+    $('grow').textContent = a < TEEN || !L ? '' : 'この1年いちばん伸びたのは「' + NAMES[top] + '」';
+    $('ctl').textContent = a < 2 ? 'まだ自我がありません。付与してもAPは自由に散らばります。' : '付与が入る見込み（知能しだい）：' + Math.round(control() * 100) + '%';
+    var ok = allowed();
+    $('voicebox').hidden = a >= LAW.work;
+    $('voice').innerHTML = VOICE.map(function (v) { return '<button type="button" class="btn' + (s.voice === v[0] ? '' : ' sub') + '" data-v="' + v[0] + '" aria-pressed="' + (s.voice === v[0]) + '">' + v[1] + '</button>'; }).join('');
+    $('plan-lead').textContent = a < LAW.school ? 'いまは育児される時期です。家の人が育ててくれます。行動は選べません。' : a < LAW.work ? 'いまは義務教育の時期です（二水の法律）。学校で学び、家で休みます。行動は選べません。' : '1か月を4週に分けて、週ごとに行動を予約します。' + (a < LAW.adult ? '18歳までは家が生活費を出してくれます。働けるのは法律で月2週までです。' : '毎月 ' + LIVING + ' SUNA の生活費がかかります。');
+    $('weeks').innerHTML = !ok.length ? '' : [0, 1, 2, 3].map(function (i) {
+      return '<label>' + (i + 1) + '週目<select data-w="' + i + '">' + ok.map(function (k) { return '<option value="' + k + '"' + (s.plan[i] === k ? ' selected' : '') + '>' + ACT[k] + '</option>'; }).join('') + '</select></label>';
+    }).join('');
+    $('jobbox').hidden = !ok.length;
+    if (ok.length) {
+      var cj = job();
+      $('job').innerHTML = JOBS.filter(canJob).map(function (j) { return '<option value="' + j.id + '"' + (j.id === cj.id ? ' selected' : '') + '>' + j.name + '（給料×' + j.pay + '）</option>'; }).join('');
+      var nx = JOBS.filter(function (j) { return !canJob(j); }).sort(function (x, y) { return (x.need - s.ap[x.k]) - (y.need - s.ap[y.k]); })[0];
+      $('jobnext').textContent = nx ? 'つぎの仕事：' + nx.name + '（' + NAMES[nx.k] + 'が「' + stageOf(nx.need) + '」になると解放）' : 'すべての仕事が解放されました。';
+    }
+    s.miles = s.miles || {};
+    var got = MILES.filter(function (m) { return s.miles[m[0]]; }).length;
+    $('milecount').textContent = got + ' / ' + MILES.length + ' 達成';
+    $('miles').innerHTML = MILES.map(function (m) { var w = s.miles[m[0]]; return w ? '<li>✨ ' + m[1] + '<small>' + w + '</small></li>' : '<li class="no">？？？</li>'; }).join('');
+    $('log').innerHTML = s.log.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('');
+    if (toastQ.length && !$('toast').classList.contains('on')) toastNext();
+  }
+
+  document.addEventListener('click', function (e) {
+    var v = e.target.closest('button[data-v]');
+    if (v && s) { s.voice = v.dataset.v; save(); show(); return; }
+    var pk = e.target.closest('button[data-pk]');
+    if (pk && s) { var d = +pk.dataset.d, sum = s.pick.R + s.pick.G + s.pick.B; if (d > 0 ? sum < 5 : s.pick[pk.dataset.pk] > 0) s.pick[pk.dataset.pk] += d; save(); show(); return; }
+    var b = e.target.closest('button[data-k]'); if (!b || !s) return;
+    $('aplast').textContent = spend(false, b.dataset.k);   // ＋でたまったAPを1つ使って、すぐ付与
+    save(); show();
+  });
+  $('hint').onclick = function () { var to = $('hint').dataset.to; if (to && $(to)) $(to).scrollIntoView({ behavior: 'smooth', block: 'center' }); };
+  $('apauto').onchange = function () { if (!s) return; s.auto = $('apauto').checked; save(); show(); };
+  $('job').onchange = function () { if (!s) return; s.job = $('job').value; say('仕事を「' + job().name + '」にした。'); save(); show(); };
+  document.addEventListener('change', function (e) { if (e.target.dataset.w != null) { s.plan[+e.target.dataset.w] = e.target.value; save(); } });
+  $('born').onclick = function () { born(); tick(); };
+  $('nickset').onclick = function () { if (age() < 18) return; s.nick = $('nick').value.trim().slice(0, 12); say(s.nick ? 'ニックネームを「' + s.nick + '」にした。' : 'ニックネームを外した。'); save(); show(); };
+  $('birthnow').onclick = function () { if (!s || !s.womb) return; while (s.womb) month(); s.t0 = Date.now(); s.p = 0; save(); show(); };   // 試作・開発用
+  $('m1').onclick = function () { month(); s.t0 = Date.now(); s.p = 0; save(); show(); };
+  $('y1').onclick = function () { for (var i = 0; i < 12; i++) month(); s.t0 = Date.now(); s.p = 0; save(); show(); };
+  // ゲームの時間：開いている間は1分で1か月。閉じている間は、0〜5歳（72か月）が現実の1日、6〜9歳（48か月）が2日、10〜14歳（60か月・二次成長）が1週間、15歳からは60倍（1か月＝現実の12時間）。
+  // s.t0＝最後に時間を数えた時刻、s.p＝今の月がどこまで進んだか（0〜1）。開いたときにまとめて進める（1回に最大120か月）
+  var DAY = 24 * 3600 * 1000;
+  // 開いている間：お腹の中は20秒で1か月（9か月で3分）、生まれてからは5分で1か月（1年＝1時間）
+  // 開発版（play/?dev）：20秒で1か月。「すぐ生まれる」も出す。秘密の中身はなく、確認しやすくするだけ
+  var DEV = /[?&]dev\b/.test(location.search);
+  if (DEV) { document.body.classList.add('dev'); var bn = document.createElement('div'); bn.className = 'devbar'; bn.textContent = '開発版　20秒で1か月・すぐ生まれる'; document.body.prepend(bn); document.title = '【開発版】' + document.title;
+    $('devlink').href = './'; $('devlink').textContent = 'ふつうの速さに戻る'; $('devinfo').hidden = false; }
+  function openMs() { return s.womb || DEV ? 20 * 1000 : 5 * 60 * 1000; }
+  function monthMs() { var a = age(); return a < LAW.school ? DAY / 72 : a < TEEN ? 2 * DAY / 48 : a < LAW.work ? 7 * DAY / 60 : DAY / 2; }
+  function isOpen() { return document.visibilityState === 'visible'; }
+  function tick() {
+    if (!kids.length) return;
+    var moved = 0;
+    kids.forEach(function (k) { s = k; moved += advance(); });
+    s = kids[cur];
+    save(); if (moved) show();
+        // 時計：1年＝ひと回り。針が今月、外の輪が「次の月まで」。数字や説明は出さない
+    var yrM = s.womb ? 9 - s.womb : s.month % 12, span = s.womb ? 9 : 12, pr = s.p || 0, ang = (yrM + pr) / span * 360;
+    var arc = function (r, f) { var a1 = f * 2 * Math.PI; return f >= 0.999 ? 'M32 ' + (32 - r) + 'a' + r + ' ' + r + ' 0 1 1 -0.01 0' : 'M32 ' + (32 - r) + 'A' + r + ' ' + r + ' 0 ' + (f > 0.5 ? 1 : 0) + ' 1 ' + (32 + r * Math.sin(a1)).toFixed(2) + ' ' + (32 - r * Math.cos(a1)).toFixed(2); };
+    var ticks = ''; for (var i = 0; i < span; i++) { var ta = i / span * 2 * Math.PI; ticks += '<line x1="' + (32 + 22 * Math.sin(ta)).toFixed(1) + '" y1="' + (32 - 22 * Math.cos(ta)).toFixed(1) + '" x2="' + (32 + 25 * Math.sin(ta)).toFixed(1) + '" y2="' + (32 - 25 * Math.cos(ta)).toFixed(1) + '" stroke="' + (i <= yrM ? '#2f7f87' : '#c9d6d8') + '" stroke-width="2" stroke-linecap="round"/>'; }
+    $('clock').setAttribute('aria-label', s.womb ? 'お腹の中 ' + yrM + 'か月目' : age() + '歳' + yrM + 'か月');
+    $('clock').innerHTML = '<svg viewBox="0 0 64 64" width="64" height="64"><circle cx="32" cy="32" r="29" fill="#fff" stroke="#e1e9ea" stroke-width="4"/><path d="' + arc(29, pr) + '" fill="none" stroke="' + (s.womb ? '#e8a0b4' : '#f0b429') + '" stroke-width="4" stroke-linecap="round"/>' + ticks +
+      '<line x1="32" y1="32" x2="' + (32 + 17 * Math.sin(ang * Math.PI / 180)).toFixed(1) + '" y2="' + (32 - 17 * Math.cos(ang * Math.PI / 180)).toFixed(1) + '" stroke="#163744" stroke-width="3" stroke-linecap="round"/><circle cx="32" cy="32" r="3" fill="#163744"/></svg>';
+  }
+  function advance() {
+    var now = Date.now(), dt = Math.max(0, now - (s.t0 || now)), n = 0;
+    s.t0 = now; s.p = s.p || 0;
+    if (dt <= 15000 && isOpen()) {
+      while (n < 120 && dt >= (1 - s.p) * openMs()) { dt -= (1 - s.p) * openMs(); s.p = 0; month(); n++; }
+      if (n < 120) s.p += dt / openMs();
+    } else {
+      while (n < 120 && dt >= (1 - s.p) * monthMs()) { dt -= (1 - s.p) * monthMs(); s.p = 0; month(); n++; }
+      if (n < 120) s.p += dt / monthMs();
+    }
+    s.p = Math.min(s.p, 0.999);
+    return n;
+  }
+  setInterval(tick, 1000);
+  document.addEventListener('visibilitychange', tick);
+  $('reset').onclick = function () { if (confirm('子どもを全員なくして、最初からやり直しますか？')) { kids = []; cur = 0; s = null; try { localStorage.removeItem(KEY); } catch (e) {} show(); } };
+  $('kids').onclick = function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    if (b.dataset.i != null) { cur = +b.dataset.i; s = kids[cur]; } else { born(); }
+    window.scrollTo({ top: 0 });
+    save(); show(); tick();
+  };
+  show(); tick();
+})();
+</script>
+</body>
+</html>

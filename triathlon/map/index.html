@@ -1,0 +1,89 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>マップ | TRIATHLON</title><meta property="og:type" content="website"><meta property="og:site_name" content="TRIATHLON 九つの光の、一生"><meta property="og:title" content="マップ | TRIATHLON"><meta property="og:description" content="TRIATHLON の世界地図。拡大すると国から州まで見えてきます。"><meta property="og:url" content="https://towananika.github.io/triathlon/map/"><meta property="og:image" content="https://towananika.github.io/triathlon/assets/ogp.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="description" content="TRIATHLON の世界地図。拡大すると国から州まで見えてきます。"><style>
+body{margin:0;background:#fbf8f2;color:#2a2622;font:15px/1.7 system-ui,-apple-system,"Noto Sans JP",sans-serif}
+main{padding:8px 10px 10px}h1.mt{font-size:18px;margin:0 0 6px;line-height:1.4}h1.mt small{font-size:12px;color:#7a6f63;font-weight:400;margin-left:6px}
+.stage{position:relative;height:70vh;background:#dfeef0;border:1px solid #d7e5e6;border-radius:14px;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none}
+#world{display:block;width:100%;height:100%;cursor:grab}#world:active{cursor:grabbing}
+.mstyle{position:absolute;left:132px;bottom:34px;z-index:4;display:flex;background:#fff;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,.15);overflow:hidden}.mstyle button{border:0;background:none;padding:0 14px;height:40px;font-size:14px;font-weight:700;color:#2a2622;cursor:pointer}.mstyle button.on{background:#2a2622;color:#fff}
+.lifesel{position:absolute;left:254px;bottom:34px;z-index:4;height:40px;border:0;border-radius:10px;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.15);padding:0 10px;font-size:14px;font-weight:700;color:#2a2622;max-width:150px}
+.life .lifeline{fill:none;stroke:#e08a00;stroke-width:3;stroke-dasharray:8 5;stroke-linecap:round}.life .lifept circle{fill:#ffd36b;stroke:#e08a00;stroke-width:2.5}.life .lifept text{font-size:13px;font-weight:800;text-anchor:middle;fill:#a85f00;paint-order:stroke;stroke:#fff;stroke-width:3px}.lifel{margin:0;padding-left:18px;line-height:1.6}.lifel li{margin:4px 0}.lnote{display:block;margin-top:8px;font-size:12px;color:#6b6560}
+.civ path{display:none}.pin circle{fill:#fff!important;stroke:#3a3632!important;stroke-width:1.6!important}.col rect{width:6px;height:6px;x:-3px;y:-3px;rx:3px;fill:#6b6560!important;stroke:#fff}
+.stage.sat{background:#000}.sat .ocean{fill:#0b2a48}.sat .grat{display:none}.sat .land{fill:#5d7840;stroke:none}.sat .relief.plain path{fill:#5d7840!important}.sat .riv path,.sat .surf .river,.sat .surf .lake{stroke:#1d4f7a}.sat .rim{stroke:#4a7aa8}.sat svg text{fill:#fff!important;stroke:rgba(0,0,0,.7)!important}.sat .prov{stroke:#e8e2c8}.sat [class^=geo-]{stroke:#2a5f8f!important}.sat .geo-lake{fill:#1d4f7a!important}.sat .surf .lake{fill:#1d4f7a!important}
+.ocean{fill:#aadaff}.grat{fill:none;stroke:#8fc3ea;stroke-width:.5;opacity:.35}.land{fill:#f2efe9;stroke:#c9c3b8;stroke-width:.5}.rim{fill:none;stroke:#9cbcc2;stroke-width:1}
+.prov{fill-opacity:.03;stroke:#9a9a9a;stroke-width:.8;stroke-dasharray:4 3;cursor:pointer}.prov:hover{fill-opacity:.16}.prov.sel{fill-opacity:.2;stroke:#2a2622;stroke-width:1.4}
+.prov.n1{fill:#2f7d4a}.prov.n2{fill:#4c56a8}.prov.n3{fill:#a86412}
+.plab{font-size:12px;font-weight:700;fill:#2a2622;paint-order:stroke;stroke:#fbf8f2;stroke-width:3px;pointer-events:none;text-anchor:middle}
+.nlab{font-size:16px;font-weight:800;paint-order:stroke;stroke:#fbf8f2;stroke-width:4px;pointer-events:none;text-anchor:middle}
+.towns .town{fill:#c0392b;fill-opacity:.35;stroke:#c0392b;stroke-width:1.2;cursor:pointer}.towns .ruin{fill:#8a8478;fill-opacity:.55;stroke:#fbf8f2;stroke-width:1;cursor:pointer}.grid path{fill:#f4d35e;fill-opacity:.22;stroke:#d4a017;stroke-width:1;stroke-dasharray:3 3}
+.pin{cursor:pointer}.pin circle{fill:#c0392b;stroke:#fff;stroke-width:1.5}.pin text{font-size:16px;font-weight:700;fill:#2a2622;paint-order:stroke;stroke:#fbf8f2;stroke-width:3px}
+.civ path{fill-opacity:.18;stroke-opacity:.5;stroke-width:1;stroke-dasharray:4 3;cursor:pointer}.civ text{font-size:14px;font-weight:800;paint-order:stroke;stroke:#fbf8f2;stroke-width:4px;text-anchor:middle;cursor:pointer}
+.col{cursor:pointer}.col rect{stroke:#fff;stroke-width:1.5}.col text{font-size:13px;font-weight:700;fill:#2a2622;paint-order:stroke;stroke:#fbf8f2;stroke-width:3px}
+.relief path{stroke:none}.relief .rd{fill:#2e2618}.relief .rl{fill:#fff;fill-opacity:.22}
+.net path{fill:none;stroke-linecap:round}.net .road{stroke:#f8c967;stroke-width:2.6}.net .road.cas{stroke:#e2a73b;stroke-width:4}.net .rail.cas{stroke:#8d8d8d;stroke-width:3.4;stroke-dasharray:none}.net .rail{stroke:#fff;stroke-width:1.4;stroke-dasharray:6 6}.net .sea{stroke:#5b9fd6;stroke-width:1.4;stroke-dasharray:5 4}.net .colr{stroke-width:1.2;stroke-dasharray:2 4;opacity:.7}.net .colr.n1{stroke:#2f7d4a}.net .colr.n2{stroke:#4c56a8}.net .colr.n3{stroke:#a86412}.net .port{font-size:13px}.net path{cursor:pointer}.net .tun{stroke-dasharray:3 3;opacity:.5}.net .br.cas{stroke:#9a8a6a}.surf path{stroke:none}.surf .shade{fill-opacity:.09}.surf .river{fill:none!important;stroke:#9ccff5;stroke-linecap:round;stroke-linejoin:round}.surf .r0{stroke-width:.5}.surf .b3{stroke:#8a7a5c;stroke-opacity:.35;stroke-width:.6}.surf .k3{display:none}.surf .r1{stroke-width:.9}.surf .kind{fill-opacity:.6}.surf .gi{fill-opacity:.9}.surf .lake{stroke:#9ccff5;stroke-width:.4}.flab{font-size:12px;pointer-events:none;text-anchor:middle;font-style:italic;letter-spacing:.15em;paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-linejoin:round}.flab.w{fill:#3d7fb8}.flab.m{fill:#7a6040}.flab.i{fill:#555}.surf .r2{stroke-width:1.6}.surf .r3{stroke-width:2.6}.relief.plain path{fill:#f2efe9!important;fill-opacity:1!important}.landuse image{opacity:.85;image-rendering:auto}.riv path{fill:none;stroke:#6fb3e6;stroke-linecap:round;stroke-linejoin:round}
+.ctl-sea path{fill-opacity:.22;stroke:none}.ctl-land path{fill-opacity:.45;stroke:#fff;stroke-width:.8}.n1{fill:#2f7d4a}.n2{fill:#4c56a8}.n3{fill:#a86412}
+.lg{display:inline-block;width:18px!important;height:0!important;border-radius:0!important;border-top:3px solid}.lg.road{border-color:#f8c967}.lg.rail{border-top:3px dashed #8d8d8d}.lg.sea{border-top:2px dashed #5b9fd6}.lg.tun{border-top:3px dashed #f8c967;opacity:.6}.lg.colr{border-top:2px dotted #2f7d4a}
+.lmenu .legend{margin:0 0 4px 22px;font-size:11px;gap:2px 8px}
+.wxl text{font-size:12px;font-weight:700;fill:#2a2622;paint-order:stroke;stroke:#fff;stroke-width:3px;text-anchor:middle}
+.scale text{font-size:11px;font-weight:700;fill:#2a2622;paint-order:stroke;stroke:#fff;stroke-width:3px}
+.gbar{position:absolute;top:10px;left:10px;right:10px;z-index:6;max-width:400px}
+.gsearch{display:flex;align-items:center;gap:8px;background:#fff;border-radius:999px;padding:0 14px;height:44px;box-shadow:0 2px 10px rgba(0,0,0,.15)}.gsearch input{flex:1;border:0;outline:0;font:inherit;font-size:16px;background:none;min-width:0}.gsearch input::-webkit-search-cancel-button{display:none}.gsearch button{border:0;background:none;font-size:16px;cursor:pointer;color:#7a6f63}
+.gres{list-style:none;margin:6px 0 0;padding:6px 0;background:#fff;border-radius:14px;box-shadow:0 4px 16px rgba(0,0,0,.15);max-height:50vh;overflow:auto}.gres li button{all:unset;display:flex;gap:10px;align-items:center;width:100%;box-sizing:border-box;padding:8px 14px;cursor:pointer}.gres li button:hover,.gres li button:focus-visible{background:#f4efe6}.gres i{font-style:normal;font-size:18px;width:24px;text-align:center}.gres small{display:block;color:#7a6f63;font-size:12px}.gres .hd{font-size:12px;color:#9a7630;font-weight:700;padding:4px 14px}
+.glayer{position:absolute;left:10px;bottom:34px;z-index:5}.glayer>button{border:0;background:#fff;border-radius:12px;padding:9px 12px;font:inherit;font-size:13px;font-weight:700;box-shadow:0 2px 10px rgba(0,0,0,.15);cursor:pointer}
+.lmenu{position:absolute;left:0;bottom:46px;width:230px;max-height:60vh;overflow:auto;background:#fff;border-radius:14px;padding:10px 14px;box-shadow:0 4px 16px rgba(0,0,0,.18);display:grid;gap:2px;font-size:14px}.lmenu[hidden]{display:none}.lmenu b{font-size:12px;color:#9a7630;margin-top:4px}.lmenu p{font-size:11px;color:#7a6f63;margin:6px 0 0;line-height:1.5}
+.legend{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:12px}.legend span{display:inline-flex;align-items:center;gap:4px}.legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.zoom{position:absolute;right:10px;bottom:34px;display:flex;flex-direction:column;gap:6px;z-index:4}.zoom button{width:40px;height:40px;border:0;background:#fff;border-radius:10px;font-size:20px;font-weight:700;color:#2a2622;box-shadow:0 2px 10px rgba(0,0,0,.15);cursor:pointer}
+.gcard{position:absolute;z-index:4;left:10px;top:64px;width:340px;max-height:calc(100% - 140px);overflow:auto;background:#fff;border-radius:16px;padding:14px 16px;box-shadow:0 4px 18px rgba(0,0,0,.18);box-sizing:border-box}.gcard h3{margin:0;font-size:20px;padding-right:32px}.gcard .sub{color:#7a6f63;font-size:13px}.gcard p{margin:8px 0 0}
+.gcard .st{display:flex;gap:6px 12px;flex-wrap:wrap;margin:6px 0 0;font-size:12px;color:#5a5048}.gcard .st span{background:#f4efe6;border-radius:999px;padding:1px 8px}
+.gcard .x{position:absolute;right:10px;top:10px;border:0;background:#f4efe6;border-radius:50%;width:30px;height:30px;cursor:pointer}
+.acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.acts button{border:1px solid #d7cbb4;background:#fff;border-radius:999px;padding:7px 12px;font:inherit;font-size:13px;font-weight:700;color:#00677a;cursor:pointer}.acts button.pri{background:#00677a;color:#fff;border-color:#00677a}
+.route{margin-top:10px;background:#f4efe6;border-radius:12px;padding:8px 12px;font-size:14px}.route select{font:inherit;max-width:100%}.route ul{margin:6px 0 0;padding-left:18px}
+.toast{position:absolute;left:50%;bottom:84px;transform:translateX(-50%);background:#2a2622;color:#fff;border-radius:999px;padding:8px 16px;font-size:13px;z-index:9;white-space:nowrap}
+@media (max-width:760px){main{padding:6px 6px 6px}h1.mt small{display:none}.gcard{left:8px;right:8px;width:auto;top:auto;bottom:8px;max-height:48%;border-radius:16px 16px 12px 12px}.glayer{bottom:auto;top:62px}.lmenu{bottom:auto;top:46px}.zoom{top:62px;bottom:auto}}
+.region-nav{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.region-nav button{font:inherit;font-size:13px;padding:8px 10px;border:1px solid #b4d9dc;border-radius:6px;background:#f2fbfb;color:#164b55;cursor:pointer;min-height:40px}.region-nav button:focus-visible{outline:2px solid #126ba0;outline-offset:2px}.map-status{font-size:12px;line-height:1.6;margin:6px 0;color:#43595f}.map-status a{color:#125d80}
+</style></head><body>
+<script src="../site-nav.js?v=0.78"></script>
+<main>
+<h1 class="mt">マップ <small>回す・拡大する・押すと説明</small></h1>
+<nav aria-label="舞台地域" class="region-nav"><button type="button" data-region="R">R · 朝鮮半島・遼東</button><button type="button" data-region="G">G · ラプラタ流域</button><button type="button" data-region="B">B · マラウイ湖周辺</button></nav>
+<p class="map-status">国・都市・年表は旧シミュレーションを含む仮配置です。<a href="world-audit.json">地理・歴史の確認記録</a></p>
+<div class="stage" id="stage">
+ <svg id="world" role="img" aria-label="TRIATHLON の世界地図"></svg>
+ <div class="gbar"><div class="gsearch"><span aria-hidden="true">🔍</span><input id="q" type="search" placeholder="国・州・開拓地をさがす" autocomplete="off" aria-label="さがす"><button type="button" id="q-x" aria-label="消す" hidden>✕</button></div><ul class="gres" id="gres" hidden></ul></div>
+ <div class="glayer"><button type="button" id="b-layer" aria-expanded="false">🗂️ レイヤー</button><div class="lmenu" id="lmenu" hidden>
+  <label><input type="checkbox" id="ly-hydro" checked> 主要河川・自然湖</label>
+  <label><input type="checkbox" id="ly-labels"> 地名を多く表示</label>
+  <p>自然地理：<a href="https://www.naturalearthdata.com/downloads/110m-physical-vectors/" target="_blank" rel="noopener">Natural Earth</a>。2026年10月30日取得。広域概略で、工事用の精度ではありません。<a href="geography-sources.json">データの範囲</a></p>
+  <b>地図</b><label><input type="checkbox" id="ly-land" checked> 🌾 土地のようす（畑・森・高地・荒れ地・町）</label><div class="legend"><span><i style="background:#e5e0b0"></i>畑</span><span><i style="background:#92b676"></i>森</span><span><i style="background:#cdc4aa"></i>高地</span><span><i style="background:#c0b398"></i>荒れ地</span><span><i style="background:#dea89c"></i>町</span></div><label><input type="checkbox" id="ly-relief"> ⛰️ 地形（本物の高さ）</label><div class="legend rleg"><span><i style="background:#dfe6c8"></i>〜200m</span><span><i style="background:#e6dfbd"></i>〜500m</span><span><i style="background:#d8c99f"></i>〜1000m</span><span><i style="background:#c4ad83"></i>〜1500m</span><span><i style="background:#ae9572"></i>〜2000m</span><span><i style="background:#98806a"></i>2000m〜</span></div>
+  
+  <label><input type="checkbox" id="ly-ctl"> 🏳️ 実効支配の範囲（陸と海）</label>
+  <label><input type="checkbox" id="ly-use"> 🏭 土地の使い道（おもな仕事）</label><div class="legend"><span><i style="background:#8bc34a"></i>農業</span><span><i style="background:#29b6f6"></i>漁業</span><span><i style="background:#2e7d32"></i>林業</span><span><i style="background:#8d6e63"></i>採掘</span><span><i style="background:#5c6bc0"></i>工業</span><span><i style="background:#ff8a65"></i>商業</span></div>
+  <b>546年の町</b><label><input type="checkbox" id="ly-town" checked> 🔴 町の大きさ（人口）</label><label><input type="checkbox" id="ly-ruin" checked> ▪️ 昔の町の跡</label><label><input type="checkbox" id="ly-far" checked> 🌍 遠い大陸の国や民</label><label><input type="checkbox" id="ly-grid"> ⚡ 電気の網（灯石が使える範囲）</label>
+  <b>重ねる</b><label><input type="checkbox" id="ly-prov" checked> 州の境界</label><label><input type="checkbox" id="ly-wx"> 今日の天気</label><label><input type="checkbox" id="ly-mood"> 暮らしの満足</label>
+  <p>地形は現代の標高データ（Terrain Tiles：SRTM・ETOPO1 など）。戦後の破壊・汚染・復興を計算した地形ではありません。国・州・町・開拓地は旧シミュレーションの仮配置で、R・G・Bの配置への移行は未完了です。現代文明への復旧年も未確定です。</p></div></div>
+ <select id="life-sel" class="lifesel" aria-label="一生をたどる"><option value="">👣 一生をたどる</option></select>
+ <div class="mstyle" role="group" aria-label="地図の見た目"><button type="button" id="st-map" class="on">地図</button><button type="button" id="st-sat">衛星</button></div>
+ <div class="zoom"><button type="button" id="z-in" aria-label="大きく">＋</button><button type="button" id="z-out" aria-label="小さく">−</button></div>
+ <div class="gcard" id="card" hidden></div>
+</div>
+</main>
+<script src="../vendor/d3-7.9.0.min.js"></script>
+<script src="../vendor/topojson-client-3.1.0.min.js"></script>
+<script src="../assets/data/land-110m.js"></script>
+<script src="../assets/data/world/w0.js?v=0.55"></script>
+<script src="../assets/data/world/w1/index.js?v=0.55"></script>
+<script src="../assets/data/world/w2/index.js?v=0.55"></script>
+<script src="../assets/data/world/w3/index.js?v=0.55"></script>
+<script src="../assets/data/relief/base.js?v=0.55"></script>
+<script src="../assets/data/routes.js?v=0.55"></script>
+<script src="../assets/data/geography.js?v=20261030"></script>
+<script src="../sim/development.js?v=0.55"></script>
+<script src="../sim/checkpoint.js?v=0.55"></script>
+<script src="../sim/world-sim.js?v=0.55"></script>
+<script src="../sim/pop.js?v=0.55"></script>
+<script src="../assets/data/world/ruins.js?v=0.55"></script>
+<script src="../assets/data/world/civ546.js?v=0.55.1"></script>
+<script src="../assets/data/world/borders.js?v=0.57"></script>
+<script src="../assets/data/world/rivers.js?v=0.57"></script>
+<script src="../assets/data/world/land.js?v=0.57.1"></script>
+<script src="../life/lives.js?v=0.59"></script>
+<script src="map.js?v=0.59"></script>
+</body></html>

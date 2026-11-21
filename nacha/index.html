@@ -1,0 +1,843 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>小さな守護神 ナチャ — NACHA</title>
+<meta name="description" content="やさしさと祈りが、そっと寄り添う場所。小さな守護神ナチャの天空境内。">
+<meta name="theme-color" content="#b83b26">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://towananika.github.io/nacha/">
+<meta property="og:title" content="小さな守護神 ナチャ — NACHA · YUYU KANNONDO">
+<meta property="og:description" content="やさしさと祈りが、そっと寄り添う場所。小さな守護神ナチャの天空境内。">
+<meta property="og:image" content="https://towananika.github.io/nacha/assets/poster.jpg">
+<meta property="og:locale" content="ja_JP">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="https://towananika.github.io/nacha/">
+<meta name="twitter:title" content="小さな守護神 ナチャ — NACHA · YUYU KANNONDO">
+<meta name="twitter:description" content="やさしさと祈りが、そっと寄り添う場所。小さな守護神ナチャの天空境内。">
+<meta name="twitter:image" content="https://towananika.github.io/nacha/assets/poster.jpg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;700;800&family=Zen+Old+Mincho:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+
+<style>
+/* ═══════════════════════════════════════════════════
+   NACHA RE-DESIGN OFFICIAL
+   和紙のぬくもり・多言語切り替え・上品なクラフト美学
+═══════════════════════════════════════════════════ */
+:root {
+  --washi-base: #f5f0e6;
+  --washi-sheet: #fbf9f4;
+  --washi-subtle: #f0ebe0;
+  --ink: #2b241e;
+  --ink-light: #73675a;
+  --vermilion: #b83823;
+  --vermilion-light: rgba(184, 56, 35, 0.08);
+  --gold: #bfa15f;
+  --gold-soft: rgba(191, 161, 95, 0.15);
+  --line-gold: #e2d7c5;
+  --line-fine: #ebe3d5;
+  --font-serif: "Shippori Mincho", "Zen Old Mincho", "Hiragino Mincho ProN", serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--washi-base);
+  color: var(--ink);
+  font-family: var(--font-serif);
+  line-height: 1.7;
+  padding: 12px 10px 100px;
+  background-image: 
+    radial-gradient(circle at 50% 0%, #fffbf2 0%, var(--washi-base) 90%),
+    repeating-linear-gradient(45deg, rgba(191, 161, 95, 0.015) 0px, rgba(191, 161, 95, 0.015) 2px, transparent 2px, transparent 8px);
+}
+
+/* 額縁キャンバス */
+.sheet-canvas {
+  max-width: 680px;
+  margin: 0 auto;
+  background: var(--washi-sheet);
+  border: 1px solid var(--line-gold);
+  border-radius: 20px;
+  padding: 24px 20px 36px;
+  box-shadow: 
+    0 12px 36px rgba(43, 36, 30, 0.06),
+    inset 0 0 40px rgba(191, 161, 95, 0.04);
+  position: relative;
+  overflow: hidden;
+}
+
+/* 額縁の内枠 */
+.sheet-canvas::after {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border: 1px solid var(--line-gold);
+  border-radius: 15px;
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+/* ── 最上部：言語切り替えバー ── */
+.top-action-bar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+  position: relative;
+  z-index: 10;
+}
+.lang-btn {
+  background: var(--washi-base);
+  border: 1px solid var(--line-gold);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-family: sans-serif;
+  color: var(--ink);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.lang-btn:hover {
+  border-color: var(--gold);
+}
+.lmenu {
+  position: absolute;
+  right: 0;
+  top: 36px;
+  background: var(--washi-sheet);
+  border: 1px solid var(--line-gold);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(43,36,30,0.12);
+  list-style: none;
+  padding: 6px;
+  min-width: 130px;
+  z-index: 100;
+}
+.lmenu button {
+  width: 100%;
+  text-align: left;
+  border: 0;
+  background: transparent;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: sans-serif;
+  cursor: pointer;
+  color: var(--ink);
+}
+.lmenu button:hover, .lmenu button[aria-current="true"] {
+  background: var(--vermilion-light);
+  color: var(--vermilion);
+  font-weight: 700;
+}
+
+/* ── 表題部 ── */
+.header-emblem {
+  text-align: center;
+  margin-bottom: 2px;
+}
+.header-emblem svg {
+  width: 34px;
+  height: 34px;
+  fill: var(--gold);
+}
+.site-title {
+  text-align: center;
+  font-size: clamp(22px, 7.2vw, 30px);   /* スマホ幅で「ナチャ」が折り返さないように */
+  font-weight: 800;
+  letter-spacing: .18em;
+  color: var(--ink);
+  text-indent: .22em;
+  margin-bottom: 2px;
+}
+html:not([lang="ja"]) .site-subtitle { display: none; }
+.site-subtitle {
+  text-align: center;
+  font-size: 11px;
+  letter-spacing: .32em;
+  color: var(--gold);
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.mizuhiki-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 0 auto 14px;
+  max-width: 240px;
+}
+.mizuhiki-line::before, .mizuhiki-line::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--line-gold);
+}
+.mizuhiki-icon {
+  width: 18px;
+  height: 18px;
+  fill: var(--gold);
+}
+.tagline-ribbon {
+  text-align: center;
+  font-size: 13px;
+  letter-spacing: .16em;
+  color: var(--ink-light);
+  margin-bottom: 24px;
+}
+
+/* ── セクション1：短冊 ＆ ナチャ ＆ 背景 ── */
+.shrine-hero-grid {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 16px;
+  margin-bottom: 26px;
+  align-items: stretch;
+}
+@media (max-width: 440px) {
+  .shrine-hero-grid {
+    grid-template-columns: 86px 1fr;
+    gap: 10px;
+  }
+}
+
+/* 祈りの短冊 */
+.tanzaku-frame {
+  background: #fff;
+  border: 1px solid var(--line-gold);
+  border-radius: 12px;
+  padding: 18px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 12px rgba(43, 36, 30, 0.03);
+}
+.tanzaku-content {
+  writing-mode: vertical-rl;
+  font-size: 13px;
+  letter-spacing: .24em;
+  line-height: 2.1;
+  color: var(--ink);
+  font-weight: 500;
+  margin: 6px 0;
+}
+html[lang="en"] .tanzaku-content,
+html[lang="ko"] .tanzaku-content,
+html[lang="th"] .tanzaku-content,
+html[lang="km"] .tanzaku-content,
+html[lang="id"] .tanzaku-content {
+  writing-mode: horizontal-tb;
+  font-size: 12px;
+  text-align: center;
+  letter-spacing: .05em;
+  line-height: 1.5;
+}
+.vermilion-seal {
+  width: 28px;
+  height: 28px;
+  border: 1.5px solid var(--vermilion);
+  color: var(--vermilion);
+  border-radius: 4px;
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+@media (max-width: 440px) {
+  .shrine-hero-grid { grid-template-columns: 1fr; }
+  .tanzaku-frame { flex-direction: row; padding: 10px 14px; gap: 10px; }
+  .tanzaku-content { writing-mode: horizontal-tb; letter-spacing: .06em; line-height: 1.5; font-size: 13px; margin: 0; flex: 1; text-align: left; }
+}
+
+.pray-top { margin-bottom: 14px; }
+.pray-top .daily-card { display: grid; grid-template-columns: 1fr auto; column-gap: 12px; align-items: center; padding: 12px 16px; }
+.pray-top .door-badge, .pray-top .door-title { grid-column: 1; margin: 0; }
+.pray-top .door-desc { display: none; }
+.pray-top .daily-btn { min-height: 44px; grid-column: 2; grid-row: 1 / span 2; margin: 0; }
+.pray-top .daily-status { grid-column: 1 / -1; margin: 0; }
+/* 主役ナチャと天空背景カード */
+.nacha-stage-frame {
+  background: #fff;
+  border: 1px solid var(--line-gold);
+  border-radius: 16px;
+  padding: 18px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 4px 12px rgba(43, 36, 30, 0.03);
+}
+.nacha-stage-bg {
+  position: absolute;
+  right: -10px;
+  bottom: -20px;
+  width: 200px;
+  opacity: 0.18;
+  pointer-events: none;
+  filter: sepia(0.6);
+}
+.stage-label-en {
+  font-size: 10px;
+  letter-spacing: .18em;
+  color: var(--gold);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.stage-main-visual {
+  text-align: center;
+  margin: 8px 0;
+  position: relative;
+  z-index: 2;
+}
+.stage-main-visual img {
+  width: 135px;
+  height: auto;
+  filter: drop-shadow(0 10px 18px rgba(43,36,30,0.14));
+  transition: transform .3s ease;
+}
+.stage-main-visual img:hover {
+  transform: scale(1.05);
+}
+.stage-words {
+  position: relative;
+  z-index: 2;
+  background: rgba(245, 240, 230, 0.85);
+  border-left: 2px solid var(--vermilion);
+  padding: 8px 12px;
+  border-radius: 0 8px 8px 0;
+  font-size: 12px;
+  color: var(--ink);
+  line-height: 1.6;
+}
+
+/* ── セクション見出し ── */
+.fine-heading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-size: 14px;
+  letter-spacing: .2em;
+  color: var(--ink);
+  font-weight: 700;
+  margin: 30px 0 16px;
+  text-indent: .2em;
+}
+.fine-heading::before, .fine-heading::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--line-gold);
+}
+
+/* ── 境内のご案内（体験カード） ── */
+.shrine-doors-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 26px;
+}
+@media (max-width: 480px) {
+  .shrine-doors-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}
+.shrine-door-card {
+  background: #fff;
+  border: 1px solid var(--line-gold);
+  border-radius: 14px;
+  padding: 16px 14px;
+  text-decoration: none;
+  color: var(--ink);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 3px 10px rgba(43,36,30,0.02);
+  transition: all .25s ease;
+}
+.shrine-door-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--gold);
+  box-shadow: 0 8px 24px rgba(43,36,30,0.07);
+}
+.door-badge {
+  font-size: 10px;
+  letter-spacing: .12em;
+  color: var(--gold);
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.door-title {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.door-desc {
+  font-size: 11px;
+  color: var(--ink-light);
+  line-height: 1.6;
+}
+
+/* ── NACHA ギャラリー小窓 ── */
+.gallery-shelf {
+  background: #fff;
+  border: 1px solid var(--line-gold);
+  border-radius: 16px;
+  padding: 18px 16px;
+  margin-bottom: 26px;
+}
+.gallery-shelf-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.gallery-shelf-title {
+  font-size: 12px;
+  letter-spacing: .16em;
+  color: var(--ink);
+  font-weight: 700;
+}
+.gallery-shelf-link {
+  font-size: 11px;
+  color: var(--vermilion);
+  text-decoration: none;
+  letter-spacing: .08em;
+}
+.gallery-quad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+@media (max-width: 480px) {
+  .gallery-quad { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 10px; padding-bottom: 6px; }
+  .gallery-quad-box { flex: 0 0 80%; scroll-snap-align: center; }
+}
+.gallery-quad-box {
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--line-fine);
+  aspect-ratio: 1;
+  background: var(--washi-subtle);
+}
+.gallery-quad-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 6px;
+  box-sizing: border-box;
+  transition: transform .3s ease;
+}
+.gallery-quad-box:hover img {
+  transform: scale(1.08);
+}
+
+/* ── 由緒と公式案内 ── */
+.shrine-footer {
+  text-align: center;
+  border-top: 1px solid var(--line-gold);
+  padding-top: 24px;
+}
+.temple-record-note {
+  font-size: 12px;
+  letter-spacing: .08em;
+  color: var(--ink-light);
+  line-height: 1.9;
+  margin-bottom: 16px;
+  white-space: pre-line;
+}
+.sns-row {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+.sns-row a {
+  font-size: 12px;
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--gold);
+  padding-bottom: 1px;
+}
+.unoff-notice {
+  font-size: 11px;
+  color: var(--ink-light);
+  opacity: .8;
+}
+
+/* ── 5大タブバー ── */
+.tabs {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  z-index: 99;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 12px calc(8px + env(safe-area-inset-bottom));
+  background: rgba(251, 249, 244, 0.94);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid var(--line-gold);
+  box-shadow: 0 -4px 16px rgba(43,36,30,0.04);
+}
+.tabs a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 4px 12px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: var(--ink-light);
+  font-size: 11px;
+  font-weight: 700;
+  transition: all .2s ease;
+}
+.tabs a[aria-current="page"] {
+  color: var(--vermilion);
+  background: var(--vermilion-light);
+}
+.tabs a span { font-size: 18px; }
+
+/* 日々のならわし（2026-11-13 和紙調に戻した際に移植） */
+.daily-row{display:grid;gap:12px;margin:18px 0 0}
+.daily-card{background:#fbf9f4;border:1px solid var(--line-gold,#bfa15f66);border-radius:16px;padding:16px 18px;text-align:left}
+.daily-card .door-title{margin:4px 0 4px}
+.daily-btn{margin-top:8px;font:inherit;font-size:13px;font-weight:700;color:#fff;background:var(--vermilion,#b83823);border:0;border-radius:999px;padding:9px 18px;cursor:pointer}
+.daily-btn.alt{background:#fff;color:var(--ink,#2b241e);border:1px solid var(--line-gold,#bfa15f66)}
+.daily-btn:active{transform:scale(.97)}
+.daily-status{margin:8px 0 0;font-size:12.5px;color:var(--vermilion,#b83823)}
+.daily-quote{margin:6px 0 2px;font-size:14px;line-height:1.9;color:var(--ink,#2b241e)}
+.daily-mem{margin-top:10px;font-size:12px;color:var(--ink-light,#6e6259);line-height:1.8}
+#prayCard.is-lit .door-badge{color:var(--vermilion,#b83823)}
+
+/* 季節の演出ボタン（2026-11-13）: 押すと紅葉や雪が舞う。描画は絵文字だけ */
+.season-btn{position:fixed;right:14px;bottom:calc(84px + env(safe-area-inset-bottom));z-index:60;width:46px;height:46px;border-radius:50%;border:1px solid var(--line-gold,#bfa15f66);background:#fbf9f4;font-size:22px;cursor:pointer;box-shadow:0 4px 12px rgba(43,36,30,.12)}
+.season-btn:active{transform:scale(.92)}
+.season-p{position:fixed;top:-5vh;z-index:59;pointer-events:none;animation:season-fall linear forwards}
+@keyframes season-fall{
+  0%{transform:translate(0,0) rotate(0deg);opacity:0}
+  8%{opacity:1}
+  100%{transform:translate(var(--sx),108vh) rotate(var(--sr));opacity:.9}
+}
+@media (prefers-reduced-motion: reduce){.season-p{display:none}}
+.site-links{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 16px;margin:0 0 14px;font-size:12.5px}
+.site-links a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line-gold,#bfa15f66);padding-bottom:2px}
+ .quiz-entry{text-align:center;margin:20px auto 28px;padding:20px;border:1px solid #e5d2b8;border-radius:14px;background:#fffaf1}.quiz-entry p{margin:0 0 10px;font-size:14px}.quiz-entry a{display:inline-block;background:#a73327;color:white;padding:12px 24px;border-radius:30px;font-weight:bold;text-decoration:none}.quiz-entry small{display:block;margin-top:8px;color:#685b52}
+</style>
+<link rel="stylesheet" href="assets/mobile.css">
+</head>
+<body>
+
+<div class="sheet-canvas">
+
+  <!-- 🌐 言語切り替えセレクター -->
+  <div class="top-action-bar">
+    <a class="lang-btn" id="accountLink" href="team/" style="text-decoration:none"><span id="accountLinkText" data-i="acct_short">ログイン</span></a>
+    <div style="position:relative">
+      <button class="lang-btn" id="langBtn" type="button" aria-label="Language" aria-haspopup="true" aria-expanded="false">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 010 20M12 2a15 15 0 000 20"/></svg>
+        <span id="currentLangLabel">日本語</span>
+      </button>
+      <ul class="lmenu" id="langMenu" hidden>
+        <li><button data-l="ja">日本語</button></li>
+        <li><button data-l="en">English</button></li>
+        <li><button data-l="ko">한국어</button></li>
+        <li><button data-l="zh">繁體中文</button></li>
+        <li><button data-l="zhs">简体中文</button></li>
+        <li><button data-l="th">ภาษาไทย</button></li>
+        <li><button data-l="km">ភាសាខ្មែរ</button></li>
+        <li><button data-l="id">Bahasa Indonesia</button></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ⛩️ 表題部 -->
+  <header>
+    <div class="header-emblem">
+      <svg viewBox="0 0 24 24">
+        <path d="M12 2C12 2 8 7 8 12C8 15 10 17 12 17C14 17 16 15 16 12C16 7 12 2 12 2Z" opacity="0.9"/>
+        <path d="M12 17C9 17 5 13 4 11C4 11 4 14 6 16C8 18 10 18.5 12 18.5C14 18.5 16 18 18 16C20 14 20 11 20 11C19 13 15 17 12 17Z" opacity="0.6"/>
+        <circle cx="12" cy="20.5" r="1.5"/>
+      </svg>
+    </div>
+    <h1 class="site-title" data-i="shrine_title">小さな守護神 ナチャ</h1>
+    <div class="site-subtitle" data-i="shrine_sub">NACHA</div>
+    <div class="mizuhiki-line">
+      <svg class="mizuhiki-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><circle cx="6" cy="12" r="2"/><circle cx="18" cy="12" r="2"/></svg>
+    </div>
+    <p class="tagline-ribbon" data-i="shrine_tagline">やさしさと祈りが、そっと寄り添う場所。</p>
+  </header>
+
+
+  <section class="quiz-entry" aria-label="今日の守護神診断"><p>ナチャと仲間たちが、今日のあなたにひとこと。</p><a href="quiz/">今日の守護神を見つける <span aria-hidden="true">→</span></a><small>3つの質問・約1分</small></section>
+  <section class="pray-top">
+    <div class="daily-card" id="prayCard">
+      <div class="door-badge" data-i="pray_eyebrow">日々のならわし</div>
+      <h3 class="door-title" data-i="pray_title">今日の一礼</h3>
+      <p class="door-desc" data-i="pray_lead">灯明をともして、今日の無事に手を合わせる。</p>
+      <button class="daily-btn" id="prayBtn" type="button" data-i="pray_btn">手を合わせる</button>
+      <p class="daily-status" id="prayStatus" role="status" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <!-- ⛩️ セクション1：短冊 ＆ ナチャ ＆ 背景 -->
+  <section class="shrine-hero-grid">
+    
+    <!-- 祈りの短冊（左） -->
+    <div class="tanzaku-frame">
+      <div style="font-size:11px;color:var(--vermilion)">✦</div>
+      <div class="tanzaku-content" data-i="tanzaku_prayer">
+        今日も、あなたの幸せを祈っています。
+      </div>
+      <div class="vermilion-seal" data-i="nacha_seal">那茶</div>
+    </div>
+
+    <!-- 主役ナチャと天空背景カード（右） -->
+    <div class="nacha-stage-frame">
+      <img class="nacha-stage-bg" src="assets/community.jpg" alt="" aria-hidden="true" loading="lazy">
+      <div class="stage-label-en" data-i="about_nacha_tag">ABOUT NACHA</div>
+      <div class="stage-main-visual">
+        <img src="assets/nacha-wink.webp" alt="小さな神様ナチャ" width="712" height="1072" loading="lazy">
+      </div>
+      <div class="stage-words" data-i="nacha_quote">
+        「内緒だよ、僕がやったって。君が今日笑ってくれたら、それで満点！」
+      </div>
+    </div>
+
+  </section>
+
+
+  <!-- ⛩️ 境内のご案内（体験カード） -->
+  <div class="fine-heading" data-i="sec_guidance">境内のご案内</div>
+  <div class="shrine-doors-grid">
+
+    <!-- ① 神様名鑑 -->
+    <a href="characters/" class="shrine-door-card">
+      <div>
+        <div class="door-badge" data-i="door1_badge">壱 · 名鑑</div>
+        <h3 class="door-title" data-i="door1_title">神様名鑑</h3>
+        <p class="door-desc" data-i="door1_desc">小さな守護神ナチャと三柱の仲間たち（白衣観音・不動明王・南極老人）の由来と物語。</p>
+      </div>
+    </a>
+
+    <!-- ③ 心願お守り -->
+    <a href="amulet/" class="shrine-door-card">
+      <div>
+        <div class="door-badge" data-i="door2_badge">弐 · 祈願</div>
+        <h3 class="door-title" data-i="door2_title">心願お守り</h3>
+        <p class="door-desc" data-i="door2_desc">あなたの願いと推し色を選び、世界でひとつだけの護符を謹製。</p>
+      </div>
+    </a>
+
+    <!-- ③ 今日の守護神診断 -->
+    <a href="quiz/" class="shrine-door-card">
+      <div>
+        <div class="door-badge" data-i="quiz_badge">参 · 診断</div>
+        <h3 class="door-title" data-i="quiz_title">今日の守護神診断</h3>
+        <p class="door-desc" data-i="entry_quiz_desc">三つの質問に答えて、ナチャたちからのひとことを。</p>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- ⛩️ 日々のならわし（今日の一礼・今日のナチャ） -->
+  <section class="daily-row">
+    <div class="daily-card">
+      <div class="door-badge" data-i="mem_eyebrow">今日のナチャ</div>
+      <p class="daily-quote" id="dailyMessage"></p>
+      <button class="daily-btn alt" id="saveMemory" type="button" data-i="mem_save">この言葉を思い出に残す</button>
+      <div class="daily-mem" id="memoryList"></div>
+    </div>
+  </section>
+
+  <!-- ⛩️ NACHA ギャラリー小窓 -->
+  <section class="gallery-shelf">
+    <div class="gallery-shelf-head">
+      <span class="gallery-shelf-title" data-i="gallery_title">✦ NACHA 姿絵（ギャラリー）</span>
+      <a href="characters/" class="gallery-shelf-link" data-i="gallery_link">神様名鑑へ ↗</a>
+    </div>
+    <div class="gallery-quad">
+      <div class="gallery-quad-box" title="祈り">
+        <img src="assets/nacha-pray.webp" alt="祈るナチャ" loading="lazy">
+      </div>
+      <div class="gallery-quad-box" title="火焔槍">
+        <img src="assets/nacha-spear.webp" alt="火焔槍を持つナチャ" loading="lazy">
+      </div>
+      <div class="gallery-quad-box" title="風火輪">
+        <img src="assets/nacha-wheels.webp" alt="風火輪に乗るナチャ" loading="lazy">
+      </div>
+    </div>
+  </section>
+
+  <!-- ⛩️ 公式アカウント -->
+  <section class="official-section">
+    <p class="official-lead" data-i="off_lead">ナチャの毎日は、公式アカウントで。</p>
+    <div class="official official-big">
+      <p class="official-sns" aria-label="公式アカウント">
+        <a class="o-x" href="https://x.com/nacha_project" target="_blank" rel="noopener" data-hit="x-home"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 4l6.6 8.8L4.3 20h1.9l5.3-6 4.5 6H20l-6.9-9.2L19 4h-1.9l-4.9 5.5L8.1 4z" fill="currentColor"/></svg><span>X</span></a>
+        <a class="o-ig" href="https://www.instagram.com/nacha_project/" target="_blank" rel="noopener" data-hit="ig-home"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3.5" y="3.5" width="17" height="17" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.2" cy="6.8" r="1.2" fill="currentColor"/></svg><span>Instagram</span></a>
+        <a class="o-tt" href="https://www.tiktok.com/@nacha_project" target="_blank" rel="noopener" data-hit="tt-home"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M14 3h3c.2 2 1.6 3.6 3.5 3.8v3c-1.3 0-2.5-.4-3.5-1v6.4A5.6 5.6 0 1 1 11.4 9.6v3.1a2.6 2.6 0 1 0 2.6 2.6z" fill="currentColor"/></svg><span>TikTok</span></a>
+        <a class="o-yt" href="https://www.youtube.com/channel/UCSL-AKI-8_qfWnOJYKSf26Q" target="_blank" rel="noopener" data-hit="yt-home"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="2.5" y="5.5" width="19" height="13" rx="4" fill="currentColor"/><path d="M10 9v6l5.2-3z" fill="#fff"/></svg><span>YouTube</span></a>
+      </p>
+      <p class="official-sites">
+        <a class="o-hp" href="https://nacha.club/" target="_blank" rel="noopener" data-hit="hp-home"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3.5 12h17M12 3.5c2.4 2.6 3.4 5.4 3.4 8.5s-1 5.9-3.4 8.5M12 3.5C9.6 6.1 8.6 8.9 8.6 12s1 5.9 3.4 8.5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg><span data-i="off_hp">公式サイト</span></a>
+        <a class="o-shop" href="https://sale.nacha.vip/" target="_blank" rel="noopener" data-hit="shop-home"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 8h14l-1.2 12H6.2z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 10V7a3 3 0 0 1 6 0v3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span data-i="off_shop">販売サイト</span></a>
+        <a class="o-trade" href="https://www.pionex.com/en/trade/NACHA_USDT/Manual" target="_blank" rel="noopener" data-hit="trade-home"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 4v16M17 4v16" stroke="currentColor" stroke-width="1.6"/><rect x="5" y="8" width="4" height="7" rx="1" fill="currentColor"/><rect x="15" y="6" width="4" height="9" rx="1" fill="none" stroke="currentColor" stroke-width="1.6"/></svg><span data-i="off_trade">取引所 Pionex</span></a>
+      </p>
+    </div>
+  </section>
+
+  <!-- ⛩️ 由緒と公式案内（FOOTER） -->
+  <footer class="shrine-footer">
+    <p class="temple-record-note" data-i="temple_origin">
+      カンボジア・プノンペン 実在寺院「悠遊観音堂」より
+      祈りをデジタルに刻み、リアルのお寺へ届けるTemple 2.0
+    </p>
+    <nav class="site-links" aria-label="Site">
+      <a href="characters/" data-i="door1_title">神様名鑑</a>
+      <a href="amulet/" data-i="door2_title">心願お守り</a>
+      <a href="quiz/" data-i="quiz_title">今日の守護神診断</a>
+      <a href="roadmap/" data-i="nav_road">ロードマップ</a>
+    </nav>
+    <div class="unoff-notice" data-i="unoff_simple">
+      このサイトは非公式のファンページです。プロジェクトの正式な情報は上記の公式サイトをご確認ください。
+    </div>
+  </footer>
+
+</div>
+
+<!-- 5大ナビゲーションバー -->
+<nav class="tabs" aria-label="Main">
+  <a href="./" aria-current="page"><span aria-hidden="true">🏮</span><b data-i="nav_home">ホーム</b></a>
+  <a href="characters/"><span aria-hidden="true">🪷</span><b data-i="nav_chars">名鑑</b></a>
+  <a href="amulet/"><span aria-hidden="true">🧧</span><b data-i="nav_amulet">お守り</b></a>
+  <a href="quiz/"><span aria-hidden="true">🔮</span><b data-i="nav_quiz">診断</b></a>
+</nav>
+
+<script src="assets/i18n.js"></script>
+<script src="assets/i18n-nacha.js"></script>
+<script src="assets/site.js"></script>
+
+<script>
+// 言語選択ラベルの動的更新
+document.addEventListener('nacha-lang', function(e) {
+  var labels = {
+    ja: '日本語', en: 'English', ko: '한국어',
+    zh: '繁體中文', zhs: '简体中文', th: 'ภาษาไทย',
+    km: 'ភាសាខ្មែរ', id: 'Bahasa Indonesia'
+  };
+  var span = document.getElementById('currentLangLabel');
+  if (span && labels[e.detail]) {
+    span.textContent = labels[e.detail];
+  }
+});
+</script>
+
+
+<script>
+/* 今日の言葉と思い出（quiet版から移植） */
+(function(){
+  var T=function(k){return window.nachaT?window.nachaT(k):''};
+  var today=new Date().toDateString();
+  var msgEl=document.getElementById('dailyMessage');
+  var idx=(Math.abs(today.split('').reduce(function(a,c){return a+c.charCodeAt(0)},0))%7)+1;
+  function renderMessage(){if(msgEl)msgEl.textContent=T('mem_'+idx)}
+  renderMessage();document.addEventListener('nacha-lang',renderMessage);
+  var key='nacha-memories';
+  function load(){try{return JSON.parse(localStorage.getItem(key)||'[]')}catch(e){return[]}}
+  function save(list){try{localStorage.setItem(key,JSON.stringify(list.slice(0,10)))}catch(e){}}
+  function render(){
+    var list=load(),el=document.getElementById('memoryList');
+    if(!el)return;el.textContent='';if(!list.length)return;
+    var head=document.createElement('strong');head.textContent=T('mem_list');el.appendChild(head);el.appendChild(document.createElement('br'));
+    list.forEach(function(m){el.appendChild(document.createTextNode('・'+m));el.appendChild(document.createElement('br'))});
+  }
+  var btn=document.getElementById('saveMemory');
+  if(btn)btn.addEventListener('click',function(){
+    var list=load(),text=(msgEl?msgEl.textContent:'')+'（'+new Date().toLocaleDateString(document.documentElement.lang||'ja')+'）';
+    if(list.indexOf(text)<0)list.unshift(text);
+    save(list);render();btn.textContent=T('mem_saved');
+    setTimeout(function(){btn.textContent=T('mem_save')},1500);
+  });
+  render();document.addEventListener('nacha-lang',render);
+})();
+</script>
+<script>
+/* 今日の一礼：1日1回だけ灯明をともす。連続記録や損失は作らない。 */
+(function(){
+  var card=document.getElementById('prayCard'),btn=document.getElementById('prayBtn'),status=document.getElementById('prayStatus');
+  if(!card||!btn)return;
+  var T=function(k){return window.nachaT?window.nachaT(k):''},KEY='nacha-last-prayer',lastKey='';
+  function todayKey(){var d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()}
+  function stored(){try{return localStorage.getItem(KEY)}catch(e){return null}}
+  function paint(){status.textContent=lastKey?T(lastKey):''}
+  if(stored()===todayKey())card.classList.add('is-lit');
+  btn.addEventListener('click',function(){
+    if(stored()===todayKey()){card.classList.add('is-lit');lastKey='pray_again';paint();return}
+    try{localStorage.setItem(KEY,todayKey())}catch(e){}
+    card.classList.add('is-lit');lastKey='pray_done';paint();
+  });
+  document.addEventListener('nacha-lang',paint);
+})();
+</script>
+<script>
+/* ログイン中ならヘッダーを「マイページ」に */
+(function(){
+  var label=document.getElementById('accountLinkText');if(!label)return;
+  var loggedIn=false;
+  try{var a=JSON.parse(localStorage.getItem('nacha-auth')||'null');loggedIn=!!(a&&a.token&&a.exp>Date.now()&&a.user&&a.user.id)}catch(e){}
+  function paint(){if(loggedIn)label.textContent=window.nachaT?window.nachaT('my_title'):'マイページ'}
+  paint();document.addEventListener('nacha-lang',paint);
+})();
+</script>
+
+<script>
+/* 季節の演出: いまの月で 桜/紅葉/雪 を選び、押すたびにひとしきり舞う */
+(function(){
+  var m=new Date().getMonth()+1;
+  var set=m>=9&&m<=11?['🍁','🍂']:(m===12||m<=2?['❄️','❄️','✦']:(m>=3&&m<=4?['🌸','🌸','🪷']:['🍃','✨']));
+  var btn=document.createElement('button');
+  btn.type='button';btn.className='season-btn';btn.textContent=set[0];
+  btn.setAttribute('aria-label','季節の演出');
+  document.body.appendChild(btn);
+  var busy=false;
+  btn.addEventListener('click',function(){
+    if(busy)return;busy=true;setTimeout(function(){busy=false},900);
+    for(var i=0;i<26;i++){
+      var e=document.createElement('span');e.className='season-p';
+      e.textContent=set[i%set.length];
+      var size=12+Math.random()*14;
+      e.style.left=(Math.random()*100)+'vw';
+      e.style.fontSize=size+'px';
+      e.style.setProperty('--sx',(Math.random()*120-60)+'px');
+      e.style.setProperty('--sr',(Math.random()*360-180)+'deg');
+      e.style.animationDuration=(4+Math.random()*4)+'s';
+      e.style.animationDelay=(Math.random()*1.2)+'s';
+      e.addEventListener('animationend',function(ev){ev.target.remove()});
+      document.body.appendChild(e);
+    }
+  });
+})();
+</script>
+</body>
+</html>

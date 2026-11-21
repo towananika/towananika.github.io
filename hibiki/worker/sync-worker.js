@@ -1,0 +1,276 @@
+// とわなにか — 端末どうしの記録をそろえる置き場（2026-10-09）
+//
+// しくみ:
+//   画面は合言葉を SHA-256 にした id（64桁）だけを送る。合言葉そのものはここに来ない。
+//   id ごとに1つの Durable Object（SyncBox）に { 鍵: { v: 文字列, t: 更新時刻ms } } を置く。
+//   鍵ごとに新しいほうが勝つ（端末AとBで別のページを触っても両方残る）。
+//
+// 読む: GET  /pull?id=<id>          → { keys }
+// 書く: POST /push { id, keys }     → { keys }（まぜた後の全部）
+// 消す: POST /wipe { id }           → { ok }
+// 鍵:   GET  /owner                 → { pub }（個人ページを暗号にするための公開鍵。秘密ではない）
+//       POST /owner { id, pub }     → 空のときか、同じ id のときだけ置ける（2026-10-09）
+// 守り: 同じ IP から、中身のない id を1時間に10回読んだら（合言葉の当てずっぽう）、1時間すべて止める。
+//       IP は SHA-256 にしてから持つ（2026-10-09 ひびき：ボットの連続試しをブロック）
+// 光さがし: /hikari/sync /hikari/wipe（トライアスロンのログインの人ごと。くわしくは hikari.js、2026-11-16）
+// AI用の確認番号: /ai/issue /ai/read /ai/status /ai/revoke /ai/unlink /ai/forget（くわしくは ai-code.js、2026-11-13）
+//   GET /ai/read?code=1234&ai=名前 は URL を開くだけの AI 用（2026-11-17）
+// HIYOKO 社内資料: /hiyoko/doc /hiyoko/list /hiyoko/member /hiyoko/put（ログイン＋許可リスト。くわしくは hiyoko.js、2026-11-20）
+
+import { DurableObject } from "cloudflare:workers";
+import { aiHandle, isOwnerToken, tokenClaims, OWNER } from "./ai-code.js";
+import { hikariHandle } from "./hikari.js";
+import { hiyokoHandle } from "./hiyoko.js";
+
+const ALLOWED = ["https://towananika.github.io", "http://localhost:8899", "http://127.0.0.1:8899"];
+const MAX_BODY = 512 * 1024;
+const MAX_KEYS = 60;
+const ID = /^[0-9a-f]{64}$/;
+const KEY = /^hibiki-[a-z0-9-]{1,40}$/;
+const MISS_LIMIT = 10;
+const WINDOW = 60 * 60 * 1000;
+
+export default {
+  async fetch(request, env) {
+    const origin = request.headers.get("Origin") || "";
+    if (request.method === "OPTIONS") return new Response(null, { headers: cors(origin) });
+    const url = new URL(request.url);
+    let id = "", body = null;
+    if (url.pathname === "/owner") {
+      const box = env.BOX.get(env.BOX.idFromName("owner"));
+      if (request.method === "GET") return json(await box.owner(null), 200, origin);
+      if (request.method === "POST") {
+        const guard = env.BOX.get(env.BOX.idFromName("guard"));
+        const who = await sha(request.headers.get("CF-Connecting-IP") || "none");
+        if (await guard.blocked(who)) return json({ error: "blocked" }, 429, origin);
+        const text = await request.text();
+        if (text.length > 4096) return json({ error: "too_big" }, 413, origin);
+        let b; try { b = JSON.parse(text); } catch (e) { return json({ error: "bad_json" }, 400, origin); }
+        if (!b || !ID.test(b.id || "") || !b.pub || typeof b.pub !== "object") return json({ error: "bad" }, 400, origin);
+        const out = await box.owner(b);
+        if (out.error) await guard.miss(who);
+        return json(out, out.error ? 403 : 200, origin);
+      }
+    }
+    if (url.pathname.startsWith("/hiyoko/") && request.method === "POST") return hiyoko(url.pathname.slice(8), request, env, origin);
+    if (url.pathname.startsWith("/hikari/") && request.method === "POST") return hikari(url.pathname.slice(8), request, env, origin);
+    if (url.pathname === "/ai/read" && request.method === "GET") return aiReadGet(url, request, env);
+    if (url.pathname.startsWith("/ai/") && request.method === "POST") return ai(url.pathname.slice(4), request, env, origin);
+    if (url.pathname === "/price" && request.method === "GET") return json(await prices(url.searchParams.get("s") || ""), 200, origin);
+    if (url.pathname === "/search" && request.method === "GET") return json(await search(url.searchParams.get("q") || ""), 200, origin);
+    if (url.pathname === "/pull" && request.method === "GET") {
+      id = url.searchParams.get("id") || "";
+    } else if ((url.pathname === "/push" || url.pathname === "/wipe") && request.method === "POST") {
+      const text = await request.text();
+      if (text.length > MAX_BODY) return json({ error: "too_big" }, 413, origin);
+      try { body = JSON.parse(text); } catch (e) { return json({ error: "bad_json" }, 400, origin); }
+      id = (body && body.id) || "";
+    } else {
+      return json({ ok: true, service: "hibiki-sync" }, 200, origin);
+    }
+    const guard = env.BOX.get(env.BOX.idFromName("guard"));
+    const who = await sha(request.headers.get("CF-Connecting-IP") || "none");
+    if (await guard.blocked(who)) return json({ error: "blocked" }, 429, origin);
+    if (!ID.test(id)) { await guard.miss(who); return json({ error: "bad_id" }, 400, origin); }
+    const box = env.BOX.get(env.BOX.idFromName(id));
+    const out = await box.handle(url.pathname, body);
+    if (url.pathname === "/pull" && out.keys && !Object.keys(out.keys).length) await guard.miss(who);
+    return json(out, out.error ? 400 : 200, origin);
+  },
+};
+
+// AI用の確認番号。発行・状態・取消は本人の Google ログインだけ。読むのは番号だけ（ヘッダー）
+async function ai(action, request, env, origin) {
+  const guard = env.BOX.get(env.BOX.idFromName("guard"));
+  const who = await sha(request.headers.get("CF-Connecting-IP") || "none");
+  if (await guard.blocked(who)) return json({ error: "blocked" }, 429, origin);
+  const box = env.BOX.get(env.BOX.idFromName("ai"));
+  if (action === "read") {
+    const h = request.headers;
+    const out = await box.ai("read", { code: h.get("X-Hibiki-Code") || "", pass: h.get("X-Hibiki-Pass") || "", ai: h.get("X-Hibiki-AI") || "" });
+    if (out.error && out.error !== "none") await guard.miss(who);
+    return json(out, out.error ? (out.error === "none" ? 404 : 403) : 200, origin);
+  }
+  if (!["issue", "status", "revoke", "unlink", "forget"].includes(action)) return json({ error: "bad" }, 400, origin);
+  if (!ALLOWED.includes(origin)) return json({ error: "origin" }, 403, origin);
+  const token = (request.headers.get("Authorization") || "").replace(/^Bearer /, "");
+  if (!(await isOwnerToken(token))) { await guard.miss(who); return json({ error: "login" }, 401, origin); }
+  const text = await request.text();
+  if (text.length > MAX_BODY) return json({ error: "too_big" }, 413, origin);
+  let b = {}; try { b = text ? JSON.parse(text) : {}; } catch (e) { return json({ error: "bad_json" }, 400, origin); }
+  const out = await box.ai(action, b || {});
+  return json(out, out.error ? 400 : 200, origin);
+}
+
+// URL を開くだけの AI 用。番号（か許可証）は1回で役目を終えるので、URL に入れてよい。
+// 答えは文字（Markdown）。どこにも保存されないよう no-store、検索にものせない
+async function aiReadGet(url, request, env) {
+  const guard = env.BOX.get(env.BOX.idFromName("guard"));
+  const who = await sha(request.headers.get("CF-Connecting-IP") || "none");
+  if (await guard.blocked(who)) return text("試しすぎのため、1時間止めています。", 429);
+  const q = url.searchParams;
+  const input = { code: q.get("code") || "", pass: q.get("pass") || "", ai: q.get("ai") || "" };
+  if (!input.code && !input.pass) return text(AI_HOWTO, 200);
+  const out = await env.BOX.get(env.BOX.idFromName("ai")).ai("read", input);
+  if (out.error && out.error !== "none") await guard.miss(who);
+  if (out.error) return text(AI_ERR[out.error] || "読めませんでした。", out.error === "none" ? 404 : 403);
+  let foot = "";
+  if (out.pass) {
+    const again = url.origin + "/ai/read?pass=" + out.pass;
+    foot = "\n\n---\n読み直すとき（" + new Date(out.passExp).toISOString() + " まで。本人が取り消すとその時点で終わり）: " + again +
+      "\nこの許可証は、この会話の中だけで使ってください。";
+  }
+  return text(out.text + foot, 200);
+}
+const AI_HOWTO = "ひびきの説明書（私について）を読むには、本人から4けたの番号をもらい、\n" +
+  "https://hibiki-sync.jaykim-can.workers.dev/ai/read?code=番号&ai=あなたの名前 を開いてください。番号は5分・1回だけ有効です。";
+const AI_ERR = {
+  none: "いま有効な番号がありません（時間切れか、もう使われました）。本人に新しい番号をもらってください。",
+  wrong: "番号がちがいます。本人に確かめてください（3回まちがえると番号が消えます）。",
+  locked: "3回まちがえたので番号は消えました。本人に新しい番号をもらってください。",
+  pass: "この許可証は使えません（期限切れか、本人が取り消しました）。",
+};
+function text(body, status) {
+  return new Response(body, { status, headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store", "X-Robots-Tag": "noindex, nofollow", "Referrer-Policy": "no-referrer" } });
+}
+
+// 光さがし。ログインした人の uid ごとの箱にだけ読み書きする（ほかの人の箱は開けない）
+async function hikari(action, request, env, origin) {
+  if (!["sync", "wipe"].includes(action)) return json({ error: "bad" }, 400, origin);
+  if (!ALLOWED.includes(origin)) return json({ error: "origin" }, 403, origin);
+  const guard = env.BOX.get(env.BOX.idFromName("guard"));
+  const who = await sha(request.headers.get("CF-Connecting-IP") || "none");
+  if (await guard.blocked(who)) return json({ error: "blocked" }, 429, origin);
+  const claims = await tokenClaims((request.headers.get("Authorization") || "").replace(/^Bearer /, ""));
+  if (!claims) { await guard.miss(who); return json({ error: "login" }, 401, origin); }
+  const text = await request.text();
+  if (text.length > MAX_BODY) return json({ error: "too_big" }, 413, origin);
+  let b = {}; try { b = text ? JSON.parse(text) : {}; } catch (e) { return json({ error: "bad_json" }, 400, origin); }
+  const box = env.BOX.get(env.BOX.idFromName("hikari:" + claims.sub));
+  const out = await box.hikari(action, b || {});
+  return json(out, out.error ? 400 : 200, origin);
+}
+
+// HIYOKO 社内資料。札で本人を確かめ、関係者（メール）かオーナーにだけ渡す。判定は hiyoko.js
+async function hiyoko(action, request, env, origin) {
+  if (!["doc", "list", "member", "put"].includes(action)) return json({ error: "bad" }, 400, origin);
+  if (!ALLOWED.includes(origin)) return json({ error: "origin" }, 403, origin);
+  const guard = env.BOX.get(env.BOX.idFromName("guard"));
+  const who = await sha(request.headers.get("CF-Connecting-IP") || "none");
+  if (await guard.blocked(who)) return json({ error: "blocked" }, 429, origin);
+  const claims = await tokenClaims((request.headers.get("Authorization") || "").replace(/^Bearer /, ""));
+  if (!claims) { await guard.miss(who); return json({ error: "login" }, 401, origin); }
+  const text = await request.text();
+  if (text.length > 1024 * 1024) return json({ error: "too_big" }, 413, origin);
+  let b = {}; try { b = text ? JSON.parse(text) : {}; } catch (e) { return json({ error: "bad_json" }, 400, origin); }
+  const verified = claims.email_verified === true;
+  const user = { owner: verified && claims.sub === OWNER.uid, email: verified ? String(claims.email || "").toLowerCase() : "" };
+  const out = await env.BOX.get(env.BOX.idFromName("hiyoko")).hiyoko(action, b || {}, user);
+  const status = out.error === "forbidden" ? 403 : out.error === "none" ? 404 : out.error ? 400 : 200;
+  const res = json(out, status, origin);
+  res.headers.set("Cache-Control", "no-store");
+  return res;
+}
+
+export class SyncBox extends DurableObject {
+  // "hiyoko" の箱だけが使う
+  async hiyoko(action, input, who) { return hiyokoHandle(this.ctx.storage, action, input, who); }
+
+  // "hikari:<uid>" の箱だけが使う
+  async hikari(action, input) { return hikariHandle(this.ctx.storage, action, input); }
+
+  // "ai" の箱だけが使う
+  async ai(action, input) { return aiHandle(this.ctx.storage, action, input); }
+
+  // "guard" の箱だけが使う：まちがいの回数（IP のハッシュごと）
+  async blocked(who) {
+    const r = await this.ctx.storage.get("g:" + who);
+    return !!(r && r.until && r.until > Date.now());
+  }
+  async miss(who) {
+    const now = Date.now(), k = "g:" + who;
+    let r = (await this.ctx.storage.get(k)) || { n: 0, start: now };
+    if (now - r.start > WINDOW) r = { n: 0, start: now };
+    r.n++;
+    if (r.n >= MISS_LIMIT) r.until = now + WINDOW;
+    await this.ctx.storage.put(k, r);
+    if (Math.random() < 0.05) this.sweep();
+  }
+  async sweep() {
+    const all = await this.ctx.storage.list({ prefix: "g:" }), now = Date.now(), old = [];
+    for (const [k, r] of all) if (now - r.start > 2 * WINDOW && !(r.until > now)) old.push(k);
+    if (old.length) await this.ctx.storage.delete(old.slice(0, 128));
+  }
+
+  async owner(b) {
+    const cur = await this.ctx.storage.get("owner");
+    if (!b) return { pub: cur ? cur.pub : null };
+    if (cur && cur.id !== b.id) return { error: "taken" };
+    const pub = { kty: "EC", crv: "P-256", x: String(b.pub.x || ""), y: String(b.pub.y || "") };
+    await this.ctx.storage.put("owner", { id: b.id, pub, at: Date.now() });
+    return { pub };
+  }
+  async handle(path, body) {
+    const keys = (await this.ctx.storage.get("keys")) || {};
+    if (path === "/pull") return { keys };
+    if (path === "/wipe") { await this.ctx.storage.deleteAll(); return { ok: true }; }
+    const inc = body && body.keys;
+    if (!inc || typeof inc !== "object") return { error: "bad_keys" };
+    const now = Date.now() + 60 * 1000;
+    for (const k of Object.keys(inc)) {
+      const e = inc[k];
+      if (!KEY.test(k) || !e || typeof e.v !== "string" || typeof e.t !== "number" || e.t > now) continue;
+      if (!keys[k] || e.t > keys[k].t) keys[k] = { v: e.v, t: e.t };
+    }
+    if (Object.keys(keys).length > MAX_KEYS) return { error: "too_many" };
+    await this.ctx.storage.put("keys", keys);
+    return { keys };
+  }
+}
+
+async function sha(s) {
+  const h = await crypto.subtle.digest("SHA-256", new TextEncoder().encode("hibiki-ip:" + s));
+  return [...new Uint8Array(h)].map((x) => x.toString(16).padStart(2, "0")).join("").slice(0, 32);
+}
+
+// 株価（公開の値段だけ。記録とは無関係）。コードは最大20個、10分まとめて覚える（2026-10-15）
+const SYM = /^[A-Za-z0-9.^=\-]{1,16}$/;
+async function prices(list) {
+  const syms = [...new Set(list.split(",").map((x) => x.trim()).filter((x) => SYM.test(x)))].slice(0, 20);
+  const out = {};
+  await Promise.all(syms.map(async (sym) => {
+    try {
+      const r = await fetch("https://query1.finance.yahoo.com/v8/finance/chart/" + encodeURIComponent(sym) + "?range=1d&interval=1d", {
+        headers: { "User-Agent": "Mozilla/5.0" }, cf: { cacheTtl: 600, cacheEverything: true },
+      });
+      const m = ((await r.json()).chart.result || [])[0].meta;
+      if (m && m.regularMarketPrice) out[sym] = { price: m.regularMarketPrice, cur: m.currency, t: m.regularMarketTime };
+    } catch (e) {}
+  }));
+  return out;
+}
+
+// 会社名 → 株のコード（公開の検索だけ。1時間ためる）
+async function search(q) {
+  q = q.trim().slice(0, 40);
+  if (q.length < 2) return [];
+  try {
+    const r = await fetch("https://query1.finance.yahoo.com/v1/finance/search?quotesCount=8&newsCount=0&lang=ja-JP&q=" + encodeURIComponent(q), {
+      headers: { "User-Agent": "Mozilla/5.0" }, cf: { cacheTtl: 3600, cacheEverything: true },
+    });
+    const d = await r.json();
+    return (d.quotes || []).filter((x) => x.symbol && SYM.test(x.symbol)).map((x) => ({ sym: x.symbol, name: x.longname || x.shortname || x.symbol, ex: x.exchDisp || "" })).slice(0, 8);
+  } catch (e) { return []; }
+}
+
+function cors(origin) {
+  return {
+    "Access-Control-Allow-Origin": ALLOWED.includes(origin) ? origin : ALLOWED[0],
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Hibiki-Code, X-Hibiki-Pass, X-Hibiki-AI",
+    "Vary": "Origin",
+  };
+}
+function json(obj, status, origin) {
+  return new Response(JSON.stringify(obj), { status, headers: { "Content-Type": "application/json", ...cors(origin) } });
+}

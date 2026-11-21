@@ -1,0 +1,487 @@
+{
+  "note": "Source of truth. Write here first, then post to each channel.",
+  "channels": [
+    {
+      "id": "hiyoko",
+      "name": "HIYOKO",
+      "tagline": "Tiny Chick, Big Adventure. On a journey to find the Egglings.",
+      "links": [
+        {
+          "kind": "X",
+          "handle": "@HiyokoGlobal",
+          "url": "https://x.com/HiyokoGlobal"
+        },
+        {
+          "kind": "Instagram",
+          "handle": "@hiyoko_global",
+          "url": "https://www.instagram.com/hiyoko_global/"
+        },
+        {
+          "kind": "Facebook",
+          "handle": "HIYOKO",
+          "url": "https://www.facebook.com/profile.php?id=100090532489960"
+        },
+        {
+          "kind": "TikTok",
+          "handle": "@hiyoko_global",
+          "url": "https://www.tiktok.com/@hiyoko_global"
+        },
+        {
+          "kind": "YouTube",
+          "handle": "HIYOKO",
+          "url": "https://www.youtube.com/channel/UCMTymzTL7XkoBMIiEypc_1g/"
+        }
+      ],
+      "postTimes": [
+        {
+          "time": "09:30",
+          "platform": "X",
+          "label": "朝"
+        },
+        {
+          "time": "17:00",
+          "platform": "X",
+          "label": "スレッド"
+        },
+        {
+          "time": "17:00",
+          "platform": "IG",
+          "label": "フィード"
+        },
+        {
+          "time": "17:00",
+          "platform": "FB",
+          "label": "フィード"
+        }
+      ],
+      "color": "#d3a72a",
+      "short": "HY",
+      "docs": [
+        {
+          "name": "X企画",
+          "url": "https://docs.google.com/document/d/1Mo6t-x3_D93bPt2vrUP1ZoVlAfuTOIVaglsm4TPyCok/edit?tab=t.naenwgffxfpa"
+        },
+        {
+          "name": "IG企画",
+          "url": "https://docs.google.com/document/d/1Mo6t-x3_D93bPt2vrUP1ZoVlAfuTOIVaglsm4TPyCok/edit?tab=t.tlrj72hepsur"
+        },
+        {
+          "name": "月間企画",
+          "url": "https://docs.google.com/spreadsheets/d/1E3VfBsss5XeP-BKa5URn22QFUv4tnXPlmzcV_0hXgB8/edit?gid=482697083#gid=482697083"
+        }
+      ],
+      "docTitle": "HIYOKO詳細企画",
+      "sites": [
+        { "name": { "en": "Official site", "ko": "공식 홈페이지", "ja": "公式HP" }, "url": "https://hiyokotoken.com/" },
+        { "name": { "en": "Season 1", "ko": "시즌1", "ja": "シーズン1" }, "status": "now", "url": "https://season.hiyoko.vip/" },
+        { "name": { "en": "Aftersale", "ko": "애프터세일", "ja": "アフターセール" }, "status": "ended", "url": "https://sale.hiyoko.io/" }
+      ],
+      "telegramAt": {
+        "days": 0,
+        "time": "17:00"
+      }
+    },
+    {
+      "shareDayOffset": -1,
+      "id": "nacha",
+      "name": "NACHA",
+      "tagline": "",
+      "links": [
+        {
+          "kind": "X",
+          "handle": "@nacha_project",
+          "url": "https://x.com/nacha_project"
+        },
+        {
+          "kind": "Instagram",
+          "handle": "@nacha_project",
+          "url": "https://www.instagram.com/nacha_project/"
+        },
+        {
+          "kind": "TikTok",
+          "handle": "@nacha_project",
+          "url": "https://www.tiktok.com/@nacha_project"
+        },
+        {
+          "kind": "YouTube",
+          "handle": "NACHA",
+          "url": "https://www.youtube.com/channel/UCSL-AKI-8_qfWnOJYKSf26Q"
+        }
+      ],
+      "sites": [
+        { "name": { "en": "Official site", "ko": "공식 홈페이지", "ja": "公式HP" }, "url": "https://nacha.club/" },
+        { "name": { "en": "Aftersale", "ko": "애프터세일", "ja": "アフターセール" }, "status": "now", "url": "https://sale.nacha.vip/" }
+      ],
+      "postTimes": [
+        {
+          "time": "10:30",
+          "platform": "X",
+          "label": "長文"
+        },
+        {
+          "time": "14:00",
+          "platform": "X",
+          "label": "ことば"
+        },
+        {
+          "time": "20:00",
+          "platform": "X",
+          "label": "スレッド"
+        },
+        {
+          "time": "20:00",
+          "platform": "IG",
+          "label": "フィード"
+        },
+        {
+          "time": "20:05",
+          "platform": "IG",
+          "label": "ストーリー"
+        },
+        {
+          "time": "20:10",
+          "platform": "IG",
+          "label": "動画"
+        }
+      ],
+      "color": "#c0503f",
+      "snippets": [
+        {
+          "title": "🔁 X 自分の投稿に自分でリプライ",
+          "note": "押すとコピーできます",
+          "weight": 5,
+          "max": 60,
+          "groups": [
+            { "name": "💭 意見を聞く", "count": 6 },
+            { "name": "🌱 気軽に参加", "count": 5 },
+            { "name": "🙏 感謝・歓迎", "count": 2 }
+          ],
+          "items": [
+            "What do you think? Tell us below.",
+            "Share your thoughts below. 🪷",
+            "Your turn: what's your view?",
+            "Tell us what you'd add.",
+            "Any thoughts? We're listening. 🙏",
+            "Curious how this lands for you.",
+            "Questions? Ask us here.",
+            "Drop your take below 👇",
+            "Join the conversation below.",
+            "Reply and let us know. 🏮",
+            "All views are welcome here. 🌏",
+            "Thanks for reading. 🙏",
+            "We'd love to hear from you."
+          ]
+        },
+        {
+          "title": "👋 X 他のユーザーの投稿へ一言リプライ",
+          "note": "押すとコピーできます",
+          "weight": 5,
+          "max": 60,
+          "groups": [
+            { "name": "👍 共感・ほめる", "count": 10 },
+            { "name": "🌍 違う視点も歓迎（オープン）", "count": 5 },
+            { "name": "❓ 質問（興味を示す）", "count": 10 },
+            { "name": "🌟 感想・応援", "count": 10 }
+          ],
+          "items": [
+            "Well said.",
+            "Couldn't agree more.",
+            "This is a good one.",
+            "Solid take.",
+            "Great point, thanks for sharing.",
+            "Love this perspective.",
+            "Nicely put.",
+            "This resonates.",
+            "Really true.",
+            "Needed to read this today.",
+            "Interesting perspective. Thanks for sharing.",
+            "Good to see a different angle.",
+            "Fair point. Always learning here. 🌱",
+            "Appreciate you putting this out there.",
+            "Thanks for the fresh take.",
+            "What got you started on this?",
+            "How long have you been into this?",
+            "What's the next step for you?",
+            "Any tips for someone new?",
+            "What surprised you most?",
+            "What's been your biggest lesson?",
+            "Curious, what do you think is next?",
+            "How did you find this?",
+            "What would you add to this?",
+            "Which part matters most to you?",
+            "Thanks for sharing this. 🙏",
+            "Nice one. Keep it going.",
+            "Appreciate the update.",
+            "Enjoyed reading this.",
+            "Good to see this. 🪷",
+            "Following along with interest.",
+            "This made my day better.",
+            "Thanks for the good energy.",
+            "Great share. Have a good day!",
+            "Keep building. 🌱"
+          ]
+        },
+        {
+          "title": "💬 X 自分の投稿へのリプライに返事（リプライにまたリプライ）",
+          "note": "押すとコピーできます",
+          "weight": 5,
+          "max": 60,
+          "groups": [
+            { "name": "🙏 感謝", "count": 7 },
+            { "name": "🌸 歓迎・うれしい", "count": 7 },
+            { "name": "🤝 意見を受け止める（オープン）", "count": 9 }
+          ],
+          "items": [
+            "Thank you for stopping by. 🙏",
+            "Thanks for the kind words. 🪷",
+            "Thank you, that means a lot.",
+            "Really appreciate your support. 🙏",
+            "Thank you for the support.",
+            "Appreciate you reading this.",
+            "That's kind of you to say.",
+            "Glad this reached you.",
+            "Happy to have you with us.",
+            "Nice to hear from you. 🪷",
+            "Thank you. We're glad you're here.",
+            "Glad it resonated with you.",
+            "Thank you for being here.",
+            "Thanks, see you around. 🙏",
+            "Good point. Thanks for sharing it.",
+            "Thanks for joining the conversation.",
+            "Thanks for the thoughtful reply.",
+            "Well said. Thank you.",
+            "Thanks for sharing your view.",
+            "Appreciate you taking the time.",
+            "Every view is welcome here. 🙏",
+            "Interesting perspective. Thank you.",
+            "Open to hearing more from you."
+          ]
+        },
+        {
+          "title": "IG ストーリー リンクボタン（Linktree）",
+          "note": "押すとコピーできます",
+          "max": 25,
+          "url": "https://linktr.ee/Nacha_Project",
+          "items": [
+            "All NACHA links here 🏮",
+            "Find NACHA everywhere",
+            "Explore NACHA's world ✨",
+            "Meet NACHA 🏮",
+            "Tap for all NACHA links",
+            "Everything NACHA, here",
+            "Join the NACHA family",
+            "Step into the temple",
+            "Say hi to NACHA 👋",
+            "Follow NACHA's journey",
+            "Your link to NACHA",
+            "Find your lucky charm",
+            "Discover NACHA today",
+            "Leave a wish today",
+            "NACHA, all in one place",
+            "Where faith meets fun"
+          ]
+        },
+        {
+          "hidden": true,
+          "title": "nacha.club",
+          "note": "押すとコピーできます",
+          "max": 25,
+          "url": "https://nacha.club/",
+          "items": [
+            "Meet NACHA 🏮",
+            "Step into the temple",
+            "Leave a wish today",
+            "A small deity awaits",
+            "Dreams, hope, courage",
+            "Pray with NACHA",
+            "Enter Temple 2.0",
+            "Say hi to NACHA 👋",
+            "Find your lucky charm",
+            "Where faith meets fun",
+            "Join the NACHA family",
+            "Light a prayer today",
+            "Good luck starts here",
+            "Your wish, our temple",
+            "Open the temple gate",
+            "See NACHA's world ✨",
+            "Read NACHA's story",
+            "Visit nacha.club"
+          ]
+        },
+        {
+          "hidden": true,
+          "title": "IG ストーリー リンクボタン（アフターセール）",
+          "note": "押すとコピーできます",
+          "max": 25,
+          "url": "https://sale.nacha.vip/",
+          "items": [
+            "Aftersale is live!",
+            "Aftersale is now live!",
+            "The aftersale is open!",
+            "Aftersale is ongoing!",
+            "Aftersale is underway!",
+            "Join the aftersale now!",
+            "Aftersale has started!",
+            "Aftersale happening now!",
+            "Aftersale now open!",
+            "Don't miss the aftersale!"
+          ]
+        }
+      ],
+      "short": "NC",
+      "telegramAt": {
+        "days": 0,
+        "time": "09:00"
+      }
+    },
+    {
+      "id": "yuyu",
+      "name": "Yuyu Kannondo",
+      "tagline": "",
+      "links": [
+        {
+          "kind": "X",
+          "handle": "@yuyukannondo",
+          "url": "https://x.com/yuyukannondo"
+        },
+        {
+          "kind": "Instagram",
+          "handle": "@yuyu.kannondo",
+          "url": "https://www.instagram.com/yuyu.kannondo/"
+        }
+      ],
+      "postTimes": [],
+      "color": "#8a6a4a",
+      "role": "measure",
+      "short": "YU"
+    },
+    {
+      "shareFixed": ["IG Stories (https://www.instagram.com/stories/reelofficialch/)"],
+      "id": "reel",
+      "name": "REEL",
+      "tagline": "",
+      "links": [
+        {
+          "kind": "X",
+          "handle": "@REEL_Experience",
+          "url": "https://x.com/REEL_Experience"
+        },
+        {
+          "kind": "Instagram",
+          "handle": "@reelofficialch",
+          "url": "https://www.instagram.com/reelofficialch/"
+        }
+      ],
+      "postTimes": [],
+      "color": "#4a72a8",
+      "snippets": [
+        {
+          "title": "IG ストーリー リンクボタン（Xへ）",
+          "note": "押すとコピーできます",
+          "max": 25,
+          "url": "https://x.com/REEL_Experience",
+          "items": [
+            "Full thread on X →",
+            "Read the rest on X",
+            "Today's post is on X",
+            "Tap to read on X",
+            "Continue the thread →",
+            "Join the talk on X",
+            "More from REEL on X",
+            "Tap for today's topic",
+            "Today's question ↗",
+            "See what players say",
+            "What would you rate it?",
+            "Played it? Say it 🎮",
+            "Your review, your voice",
+            "Your take matters here",
+            "Reviews from real play",
+            "Real players, real notes",
+            "Read before you play",
+            "Can you trust a review?",
+            "How do you spot fakes? 🤔",
+            "One honest take inside",
+            "Agree or disagree? 👀",
+            "A gamer's thought ✍️",
+            "From playtime to review",
+            "Play. Review. Reward."
+          ]
+        }
+      ],
+      "short": "RL",
+      "docs": [
+        {
+          "name": "X企画",
+          "url": "https://docs.google.com/document/d/1eKZVAvLEYiOlMNOxVIK1PZbAMVQI0SY_2F07yL5jwUo/edit?tab=t.bxco0h2zy079"
+        },
+        {
+          "name": "IG企画",
+          "url": "https://docs.google.com/document/d/1eKZVAvLEYiOlMNOxVIK1PZbAMVQI0SY_2F07yL5jwUo/edit?tab=t.eziwrivkz4z5"
+        }
+      ],
+      "telegramAt": {
+        "days": 0,
+        "time": "17:00"
+      }
+    },
+    {
+      "id": "ret",
+      "name": "RET",
+      "tagline": "",
+      "links": [
+        {
+          "kind": "X",
+          "handle": "@RET_OfficialCH",
+          "url": "https://x.com/RET_OfficialCH"
+        },
+        {
+          "kind": "Instagram",
+          "handle": "@ret_global",
+          "url": "https://www.instagram.com/ret_global/"
+        }
+      ],
+      "postTimes": [],
+      "color": "#7625bd",
+      "short": "RT"
+    }
+  ],
+  "posts": [
+    {
+      "id": "2026-09-08-license",
+      "date": "2026-09-08",
+      "status": "draft",
+      "channels": [
+        "reel"
+      ],
+      "title": "MITのコードは売っていい。音は加工しても使えない",
+      "lead": "同じ「他人が作ったもの」でも、扱いが正反対になる。読めば分かるが、読まないと逆に見える。",
+      "tags": [
+        "ライセンス",
+        "著作権",
+        "間合い"
+      ],
+      "pages": [
+        {
+          "head": "無料公開のものを売るのは不正か",
+          "body": "GitHubで公開されているソフトが高額で売られている、という告発をよく見る。だが MIT・Apache 2.0・BSD は、売ることを許しているライセンスだ。「無料で配れ」とは書いていない。"
+        },
+        {
+          "head": "条件はひとつだけ",
+          "body": "著作権表示を残すこと。それさえ守れば、名前を変えて売ってもいい。つまり多くの告発は、合法なことを不正のように見せている。"
+        },
+        {
+          "head": "では音はどうか",
+          "body": "私はカウンターの音を作るとき、他サイトの音を参考にした。調べたら合成ではなく録音だった。録音には著作隣接権があり、加工しても二次的著作物にしかならない。だから使わずに捨てた。"
+        },
+        {
+          "head": "分かれ目は「許諾があるか」",
+          "body": "MITは作者が先に許可を出している。録音は出していない。ものの種類ではなく、許諾の有無で決まる。"
+        },
+        {
+          "head": "ただし事実は測ってよい",
+          "body": "周波数も時間間隔も事実であって著作物ではない。だから測って、そこから自分で作り直した。木魚の音はそうやって組み上げた。"
+        }
+      ]
+    }
+  ]
+}

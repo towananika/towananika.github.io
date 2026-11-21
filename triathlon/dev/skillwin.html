@@ -1,0 +1,152 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex"><title>スキルウィンドウ | TRIATHLON</title>
+<style>
+/* 開発用：クラスごとのスキルウィンドウ（試作）。データは skilltree.js */
+:root{--bg:#F3F6F5;--card:#FBFCFC;--fg:#26323A;--mut:#5E6B72;--line:#DCE5E4;--deep:#173A63;--gold:#B08F33;--track:#E6ECEB;--r:#D9707A;--g:#4FAE84;--b:#5B8FD6;--win:#F4EFE4;--wfg:#2E3A40;--wline:#DCD3C2;--wcard:#FAF6EE;--ex:#A06F12}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#131B20;--card:#1B262C;--fg:#E3EBEA;--mut:#9FB0B4;--line:#2A3A42;--deep:#9CC3EC;--track:#26343B;--gold:#D9BC64;--win:#1B262C;--wfg:#E3EBEA;--wline:#34454E;--wcard:#22313A;--ex:#F0C674;color-scheme:dark}}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.7 "Hiragino Sans","Noto Sans JP",system-ui,sans-serif}
+.wrap{max-width:860px;margin:0 auto;padding:28px max(16px,env(safe-area-inset-left,0px)) 64px;display:grid;gap:22px}
+p{margin:0}h1{font-size:28px;color:var(--deep);margin:4px 0}
+.kick{font-size:12px;letter-spacing:.14em;color:var(--gold);font-weight:700}
+nav.dv{font-size:13px}nav.dv a{color:var(--deep)}
+.one{font-size:16px;border-left:3px solid var(--gold);padding:4px 0 4px 14px}
+.tabs{display:grid;gap:8px}
+.tabs div{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.tabs b{width:1.6em;height:1.6em;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:12px}
+.tabs .lvl{font-size:11px;color:var(--mut);min-width:5.5em}
+.tabs button{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:999px;padding:4px 12px;cursor:pointer}
+.tabs button[aria-pressed=true]{background:var(--k);border-color:var(--k);color:#fff;font-weight:700}
+.win{background:var(--win);color:var(--wfg);border-radius:14px;border:2px solid var(--k);box-shadow:0 4px 18px rgba(23,58,99,.08);overflow:hidden}
+.bar{display:flex;align-items:center;gap:10px;padding:10px 14px;background:linear-gradient(90deg,color-mix(in srgb,var(--k) 30%,transparent),transparent 85%);font-size:14px}
+.bar h2{margin:0;font-size:17px;flex:1;min-width:0}
+.bar small{opacity:.8;font-weight:400;margin-left:6px}
+.sp{font-variant-numeric:tabular-nums;background:var(--wcard);border:1px solid var(--wline);border-radius:8px;padding:2px 10px;white-space:nowrap}
+.bar button{font:inherit;font-size:12px;background:transparent;color:var(--wfg);border:1px solid var(--wline);border-radius:6px;padding:2px 8px;cursor:pointer}
+.bar{position:relative}.tip{cursor:help}
+.tip:hover::after,.tip:focus::after{content:attr(data-tip);position:absolute;left:12px;right:12px;top:100%;z-index:5;margin-top:4px;background:var(--fg);color:var(--bg);font-size:12px;font-weight:400;line-height:1.6;border-radius:8px;padding:8px 10px;box-shadow:0 4px 14px rgba(0,0,0,.15)}
+.board{position:relative;padding:14px 12px 16px}
+.board svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.board path{fill:none;stroke:var(--wline);stroke-width:2}
+.board path.on{stroke:var(--k)}
+.tier{position:relative;display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-bottom:22px}
+.tier:last-child{margin-bottom:0}
+.tl{flex-basis:100%;font-size:10px;opacity:.5;letter-spacing:.1em}
+.nd{box-sizing:border-box;width:150px;background:var(--wcard);border:1px solid var(--wline);border-radius:10px;padding:8px 9px;display:grid;gap:4px;font-size:12px;position:relative}
+.nd.lock>*{opacity:.45}
+.nd.lv{border-color:var(--k);box-shadow:0 0 0 1px var(--k) inset;background:color-mix(in srgb,var(--k) 8%,var(--wcard))}
+.nd .gp{font-size:10px;opacity:.6;letter-spacing:.06em}
+.nd b{font-size:13px;line-height:1.35}
+.nd .ja{opacity:.75}
+.st{display:inline-block;font-size:10px;border-radius:4px;padding:0 5px;background:var(--sk,#555);color:#fff;font-weight:700}
+.st.no{background:transparent;border:1px dashed var(--wline);color:var(--wfg);opacity:.7;font-weight:400}
+.dots{display:flex;gap:3px}.dots i{width:12px;height:5px;border-radius:2px;background:var(--wline)}.dots i.f{background:var(--k)}
+.ctl{display:flex;justify-content:space-between;align-items:center}
+.ctl button{width:26px;height:22px;font:inherit;font-size:14px;line-height:1;background:transparent;color:var(--wfg);border:1px solid var(--wline);border-radius:5px;cursor:pointer}
+.ctl button:disabled{opacity:.3;cursor:default}
+.ex{font-size:10px;color:var(--ex)}
+.gs{font-size:10px;opacity:.6}
+.sum{display:flex;flex-wrap:wrap;gap:6px;padding:10px 14px;border-top:1px solid var(--wline);font-size:12px}
+.sum .fight{order:2;margin-left:auto;color:var(--deep);font-weight:700;text-decoration:none}
+.sum span{background:var(--wcard);border-radius:6px;padding:1px 8px;font-variant-numeric:tabular-nums}
+.mut{color:var(--mut);font-size:13px}
+.how{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.how li{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px;font-size:14px;display:flex;gap:8px;align-items:center}
+.how b{flex:none;width:1.7em;height:1.7em;border-radius:50%;background:var(--gold);color:#fff;display:grid;place-items:center;font-size:13px}
+@media(max-width:520px){.how{grid-template-columns:1fr}}
+.hd{display:flex;gap:7px;align-items:center}
+.ic{flex:none;width:26px;height:26px;border-radius:50%;background:var(--sk);color:#fff;display:grid;place-items:center;font-size:13px;font-weight:700}
+.dsc{opacity:.85}.need{font-size:11px;opacity:.75}
+.nd.nx{border-color:var(--gold);box-shadow:0 0 0 2px color-mix(in srgb,var(--gold) 35%,transparent)}
+.here{position:absolute;top:-9px;right:8px;background:var(--gold);color:#fff;font-size:10px;font-weight:700;border-radius:999px;padding:0 8px}
+.ctl .dots{display:flex;gap:3px}
+.lang{font-size:13px;display:flex;gap:6px;align-items:center}.lang button{font:inherit;font-size:12px;border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:6px;padding:2px 10px;cursor:pointer}.lang button[aria-pressed=true]{background:var(--deep);color:var(--bg);border-color:var(--deep)}
+@media(max-width:520px){.nd{width:calc(50% - 5px)}.tier{gap:8px}}
+</style><script src="return.js?v=20261101" defer></script></head><body><div class="wrap">
+<header><p class="kick">TRIATHLON · 開発 · スキル（仮名世界）</p><h1>スキルウィンドウ</h1>
+<nav class="dv"><a href="./">← 開発トップ</a> · <a href="skillwin.html">スキルウィンドウ</a> · <a href="squad.html">分隊戦</a> · <a href="battle.html">1対1</a> · <a href="skilltree.html">スキル一覧</a> · <a href="skill.html">継承スキル</a> · <a href="skill-sim.html">継承シミュレーター</a> · <a href="stat.html">ステータス</a> · <a href="char.html">キャラ開発</a></nav></header>
+<ol class="how"><li><b>1</b>クラスを選ぶ</li><li><b>2</b>金色の枠の技に ＋</li><li><b>3</b>線の先の技が開く</li></ol>
+<div class="lang" id="lang">表示名：<button data-l="ja">日本語</button><button data-l="en">English</button></div>
+<div class="tabs" id="tabs"></div>
+<div class="win" id="win"></div>
+<p class="mut">試作。SPは仮に20、1つの技の最大Lvは R・G＝4、B＝5（仮）。（推定）＝前提がまだ決まっていない技。（案）＝上がるステータスはClaudeの案。ステータスが2つの技は半分ずつ上がる。点線＝Lv2から必要な技。RAN（射程）は武器のタイプごとに分かれる（RAN・剣、RAN・銃など）。<span class="ex">他クラス</span>＝別のクラスの技が前提。データは<a href="skilltree.html">スキル一覧</a>と同じ。</p>
+</div>
+<script src="skilltree.js?v=0.94"></script>
+<script>
+(function(){
+var T=window.TRI_TREE,COL={R:'var(--r)',G:'var(--g)',B:'var(--b)'};
+var ICON={ATK:'力',DEF:'守',HP:'命',RAN:'射',ATS:'技',SPD:'速',MAG:'魔',RES:'心',MP:'気'},WORD={ATK:'攻撃力',DEF:'守り',HP:'体力',RAN:'届く距離',ATS:'技の速さ',SPD:'素早さ',MAG:'魔力',RES:'心の強さ',MP:'気力'};
+var SC={ATK:'var(--r)',DEF:'var(--r)',HP:'var(--r)',RAN:'var(--g)',ATS:'var(--g)',SPD:'var(--g)',MAG:'var(--b)',RES:'var(--b)',MP:'var(--b)'};
+var SP=20,MAXC={R:4,G:4,B:5},MAX=5,cur=null,lv={};
+function flat(items,gp,out){items.forEach(function(x){if(x.items)flat(x.items,x.g.replace(/（.*/,''),out);else out.push(Object.assign({gp:gp},x));});return out}
+// クラス一覧：R/G は General+Option+クラス、B は General+学校
+var CL=[];
+['R','G','B'].forEach(function(c){var gs=T[c].groups,base=gs.filter(function(g){return g.g==='General'||g.g==='Option'});
+ gs.forEach(function(g){if(g.g==='General'||g.g==='Option')return;
+  var nodes=[];base.forEach(function(b){flat(b.items,b.g,nodes)});flat(g.items,g.g.replace(/（.*/,''),nodes);
+  CL.push({c:c,name:g.g.replace(/（.*/,''),sub:(g.g.match(/（(.*)）/)||[])[1]||'',nodes:nodes});});});
+var JA={Fighter:'ファイター',Warrior:'ウォリアー',Knight:'ナイト',Ranger:'レンジャー',Assassin:'アサシン',Scout:'スカウト','Elementary Academy':'初等アカデミー','Mage Academy':'魔導アカデミー','Cleris Missionary School':'クレリス宣教学校','Nacsha Missionary School':'ナクシャ宣教学校'};
+// 表示名の言語：保存した設定 → ブラウザの言語（日本語以外は英語）
+var LANG='';try{LANG=localStorage.getItem('tri-lang')||''}catch(e){}if(LANG!=='ja'&&LANG!=='en')LANG=/^ja/i.test(navigator.language||'')?'ja':'en';
+function nm(x){return LANG==='ja'&&x.ja?x.ja:x.en}function cn(k){return LANG==='ja'&&JA[k]?JA[k]:k}
+// 全色の技（他クラスの技名を出すため）
+var ALL={};['R','G','B'].forEach(function(c){T[c].groups.forEach(function(g){flat(g.items,'',[]).forEach(function(x){ALL[x.id]=x})})});
+function rn(r){return cur.ids[r]?nm(cur.ids[r]):ALL[r]?nm(ALL[r]):r}
+var GPJ={General:'共通',Option:'選択'};
+// クラスの戦い方（2026-11-01 ひびき）
+var ABOUT={Fighter:'武器を使わず、筋力（ATK）で戦う近接クラス。ATKを大きく上げられ、武器がなくても拳で戦える。',Warrior:'武器で戦う近接クラス。筋力が少なくても武器の攻撃力で補える。武器の長さで少しだけ遠くまで届く。重い武器や長い武器は次の攻撃まで時間がかかる（ATSが下がる）ので、剣術理論と剣術実習で補う。',Knight:'重い武装で守る近接クラス。重い鎧で素早さ（SPD）が下がるので、移動戦術を学んで補う。武器術で、剣だけでなくすべての武器を学ぶ。'};
+var tabs=document.getElementById('tabs'),win=document.getElementById('win');
+['R','G','B'].forEach(function(c){var d=document.createElement('div');d.style.setProperty('--k',COL[c]);
+ d.innerHTML='<b style="background:'+COL[c]+'">'+c+'</b><span class="lvl">'+{R:'やさしい',G:'ふつう',B:'長い道のり'}[c]+'</span>';
+ CL.forEach(function(k,i){if(k.c!==c)return;var bt=document.createElement('button');bt.textContent=cn(k.name);if(ABOUT[k.name])bt.title=ABOUT[k.name];bt.dataset.i=i;bt.onclick=function(){open(i)};d.appendChild(bt)});
+ tabs.appendChild(d);});
+// 組んだスキルはクラスごとに保存し、戦闘シミュレーターで使う（表示の好みと同じく、この端末だけ）
+function loadB(){try{return JSON.parse(localStorage.getItem('tri-skillbuild')||'{}')}catch(e){return {}}}
+function saveB(){var b=loadB();b[cur.name]=lv;try{localStorage.setItem('tri-skillbuild',JSON.stringify(b))}catch(e){}}
+function open(i){cur=CL[i];lv=loadB()[CL[i].name]||{};tabs.querySelectorAll('button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.i==i)});
+ win.style.setProperty('--k',COL[cur.c]);MAX=MAXC[cur.c];
+ var ids={};cur.nodes.forEach(function(n){ids[n.id]=n});var dep={};
+ function d(n){if(dep[n.id]!=null)return dep[n.id];dep[n.id]=0;var m=-1;(n.req||[]).forEach(function(r){if(ids[r])m=Math.max(m,d(ids[r]))});return dep[n.id]=m+1}
+ cur.nodes.forEach(d);cur.ids=ids;cur.dep=dep;cur.lab=null;
+ if(cur.name==='Elementary Academy'){var ord=[];cur.nodes.forEach(function(x){if(ord.indexOf(x.gp)<0)ord.push(x.gp)});cur.nodes.forEach(function(x){dep[x.id]=ord.indexOf(x.gp)});cur.lab=ord.map(function(g){return g.replace(/^Class 4〜1st.*/,'4〜1級').replace(/^Class (\d+).*/,'$1級')})}
+ render();}
+function used(){var s=0;for(var k in lv)s+=lv[k];return s}
+function ok(n){return (n.req||[]).every(function(r){return !cur.ids[r]||(lv[r]||0)>0})}
+// Lv2 以上：req2 の技が今の Lv 以上あること
+function cap(n){var c=MAX;if(!ok(n))return 0;(n.req2||[]).forEach(function(r){if(cur.ids[r])c=Math.min(c,Math.max(1,(lv[r]||0)+1))});return c}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function render(){if(cur)saveB();var n=cur.nodes,max=0;n.forEach(function(x){max=Math.max(max,cur.dep[x.id])});
+ var h='<div class="bar"><h2'+(ABOUT[cur.name]?' class="tip" tabindex="0" data-tip="'+esc(ABOUT[cur.name])+'"':'')+'>'+esc(cn(cur.name))+(cur.sub?'<small>'+esc(cur.sub)+'</small>':'')+'</h2><span class="sp">SP '+(SP-used())+' / '+SP+'</span><button id="rs">リセット</button></div><div class="board"><svg></svg>';
+ for(var t=0;t<=max;t++){h+='<div class="tier"><span class="tl">'+(cur.lab?(LANG==='ja'&&GPJ[cur.lab[t]]||cur.lab[t]):(t+1)+'段')+'</span>';
+  n.forEach(function(x){if(cur.dep[x.id]!==t)return;var L=lv[x.id]||0,o=ok(x);
+   var ext=(x.req||[]).concat(x.req2||[]).filter(function(r,i,a){return !cur.ids[r]&&a.indexOf(r)===i});
+   var sts=x.st?x.st.split('/'):[],k0=sts[0],miss=(x.req||[]).filter(function(r){return cur.ids[r]&&!lv[r]}).map(function(r){return nm(cur.ids[r])});
+   var nx=o&&!L&&used()<SP;
+   h+='<div class="nd'+(o?'':' lock')+(L?' lv':'')+(nx?' nx':'')+'" data-id="'+esc(x.id)+'">'+
+    '<b>'+esc(nm(x))+'</b>'+
+    '<span>'+(sts.length?sts.map(function(k){return '<span class="st" style="--sk:'+SC[k]+'">'+k+((k==='RAN'||k==='ATS')&&x.w?'・'+x.w:'')+' ＋'+(sts.length>1?'½':'1')+'</span>'}).join(' '):'<span class="st no">未定</span>')+(x.stg?' <i class="gs">（案）</i>':'')+'</span>'+
+    
+    (x.req2?'<span class="gs">Lv2からは '+esc(x.req2.map(rn).join('・'))+' も必要</span>':'')+
+    (ext.length?'<span class="ex">他クラスの技：'+esc(ext.map(rn).join('・'))+'</span>':'')+
+    '<div class="ctl"><button data-a="-1"'+(L?'':' disabled')+' aria-label="下げる">−</button><span class="dots">'+Array.from({length:MAX},function(_,i){return '<i'+(i<L?' class="f"':'')+'></i>'}).join('')+'</span><button data-a="1"'+(L<cap(x)&&used()<SP?'':' disabled')+' aria-label="上げる">＋</button></div></div>';});
+  h+='</div>';}
+ var tot={};n.forEach(function(x){if(!x.st||!lv[x.id])return;var ks=x.st.split('/');ks.forEach(function(k){if((k==='RAN'||k==='ATS')&&x.w)k=k+'・'+x.w;tot[k]=(tot[k]||0)+lv[x.id]/ks.length})});
+ h+='</div><div class="sum"><a class="fight" href="battle.html?a='+encodeURIComponent(cur.name)+'">このスキルで戦う →</a>上がるステータス：'+(Object.keys(tot).length?Object.keys(tot).map(function(k){return '<span>'+k+' +'+(+tot[k].toFixed(1))+'</span>'}).join(''):'<span>まだなし</span>')+'</div>';
+ win.innerHTML=h;
+ document.getElementById('rs').onclick=function(){lv={};render()};
+ win.querySelectorAll('.ctl button').forEach(function(b){b.onclick=function(){var id=b.closest('.nd').dataset.id;lv[id]=(lv[id]||0)+(+b.dataset.a);
+  if(!lv[id])delete lv[id];var ch=true;while(ch){ch=false;cur.nodes.forEach(function(x){var L=lv[x.id]||0,c=cap(x);if(L>c){if(c)lv[x.id]=c;else delete lv[x.id];ch=true}})}render()}});
+ lines();}
+function lines(){var bd=win.querySelector('.board');if(!bd)return;var sv=bd.querySelector('svg'),R=bd.getBoundingClientRect(),p='';
+ sv.setAttribute('viewBox','0 0 '+R.width+' '+R.height);
+ cur.nodes.forEach(function(x){(x.req||[]).concat((x.req2||[]).filter(function(r){return (x.req||[]).indexOf(r)<0}).map(function(r){return '~'+r})).forEach(function(r){var dsh=r[0]==='~';r=r.replace('~','');if(!cur.ids[r])return;
+  var a=bd.querySelector('[data-id="'+CSS.escape(r)+'"]').getBoundingClientRect(),b=bd.querySelector('[data-id="'+CSS.escape(x.id)+'"]').getBoundingClientRect();
+  var x1=a.left+a.width/2-R.left,y1=a.bottom-R.top,x2=b.left+b.width/2-R.left,y2=b.top-R.top,m=(y1+y2)/2;
+  p+='<path'+(lv[r]?' class="on"':'')+(dsh?' stroke-dasharray="4 4"':'')+' d="M'+x1+' '+y1+' C'+x1+' '+m+' '+x2+' '+m+' '+x2+' '+y2+'"/>';});});
+ sv.innerHTML=p;}
+addEventListener('resize',function(){if(cur)lines()});
+function setLang(l){LANG=l;try{localStorage.setItem('tri-lang',l)}catch(e){}
+ document.querySelectorAll('#lang button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.l===l)});
+ tabs.querySelectorAll('button').forEach(function(b){b.textContent=cn(CL[b.dataset.i].name)});if(cur)render();}
+document.querySelectorAll('#lang button').forEach(function(b){b.onclick=function(){setLang(b.dataset.l)}});
+open(0);setLang(LANG);
+})();
+</script></body></html>

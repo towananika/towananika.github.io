@@ -1,0 +1,70 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>ひみつのメモ | TRIATHLON</title><meta property="og:type" content="website"><meta property="og:site_name" content="TRIATHLON 九つの光の、一生"><meta property="og:title" content="ひみつのメモ | TRIATHLON"><meta property="og:description" content="話のあとにひらく、キャラのひみつのメモ。"><meta property="og:url" content="https://towananika.github.io/triathlon/notes/"><meta property="og:image" content="https://towananika.github.io/triathlon/assets/ogp.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="description" content="話のあとにひらく、キャラのひみつのメモ。">
+<style>
+:root{--bg:#F3F6F5;--card:#FBFCFC;--fg:#26323A;--mute:#5f6f78;--line:#d9e3e2;--tq:#22AAA6;--blue:#2F6FB8;--deep:#173A63;--mist:#DCF1EF;--gold:#C9A646;--r:#D9707A;--g:#4FAE84;--b:#5B8FD6}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#131B20;--card:#1B262C;--fg:#E3EBEA;--mute:#9fb0b4;--line:#2b3a42;--blue:#7fb0e8;--deep:#cfe0f2;--mist:#1f3a3c;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#131B20;--card:#1B262C;--fg:#E3EBEA;--mute:#9fb0b4;--line:#2b3a42;--blue:#7fb0e8;--deep:#cfe0f2;--mist:#1f3a3c;color-scheme:dark}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.85 system-ui,-apple-system,"Noto Sans JP",sans-serif}
+main{max-width:640px;margin:0 auto;padding:24px max(16px,env(safe-area-inset-right,0px)) 56px max(16px,env(safe-area-inset-left,0px))}
+h1{font-size:24px;margin:0 0 4px;color:var(--blue);line-height:1.4}.kick{font-size:12px;letter-spacing:.1em;color:var(--mute);margin:0}
+.lead{color:var(--mute);margin:0 0 18px}
+.list{list-style:none;margin:0;padding:0;display:grid;gap:12px}.list a{display:block;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;color:var(--fg);text-decoration:none}.list b{display:block;font-size:18px}.list small{color:var(--mute)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px}
+.card p{margin:0 0 .9em}.card ul{margin:0 0 .6em;padding-left:1.3em}.card h3{font-size:15px;color:var(--deep);margin:14px 0 6px}
+.parent{background:var(--mist);border-radius:18px;padding:16px 18px;margin-top:14px}.parent h2{font-size:16px;margin:0 0 6px;color:var(--deep)}.parent p{margin:0 0 .6em}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 16px}.meta span{font-size:12px;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:1px 10px;color:var(--mute)}
+.me{margin:20px 0 0;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
+.me button{border:0;background:var(--tq);color:#FBFCFC;font:inherit;font-weight:700;border-radius:999px;padding:12px 26px;cursor:pointer}.me button[aria-pressed="true"]{background:var(--card);color:var(--tq);box-shadow:inset 0 0 0 2px var(--tq)}
+.me button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}.me small{color:var(--mute);font-size:13px}
+.src{font-size:12px;color:var(--mute);margin-top:14px}.go a{color:var(--blue);font-weight:700}
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:26px}.nav a{flex:1;text-align:center;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:10px;color:var(--fg);text-decoration:none;font-weight:700}.nav a.off{visibility:hidden}
+.memo{background:#FBF7EA;border-color:#eadfb8;font-size:17px}.memo .sign{text-align:right;color:var(--mute);margin:0}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .memo{background:#2a2a22;border-color:#4a4532}}:root[data-theme="dark"] .memo{background:#2a2a22;border-color:#4a4532}
+.door{margin:22px 0 0;font-size:14px;color:var(--mute)}.door a{color:var(--blue)}.more{border-top:1px dashed var(--line);padding-top:12px}
+.story{background:var(--card,#FBFCFC);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:0 0 16px}.story h2{font-size:13px;color:var(--mute);margin:0 0 8px;font-weight:600}.story p{margin:0 0 .6em;font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;font-size:16px;line-height:2}
+</style></head><body>
+<script src="../site-nav.js?v=0.78"></script>
+<main id="m"><p>読みこみ中…</p></main>
+<script src="notes.js?v=0.66"></script>
+<script>
+(function(){
+  var N=window.TRI_NOTES||[],m=document.getElementById('m'),id=new URLSearchParams(location.search).get('id');
+  // 物語とのつながり（サイトにある話だけリンクする）
+  var STORY={'02':['第2話「言えないことは、光る」','../stories/v.html?id=2'],'03':['第5話「近いって」','../stories/v.html?id=5']};
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+  // 空行で段落を分け、行の折り返しは1つの段落にまとめる
+  function md(t){var h='',ul=false,pa='';function fp(){if(pa){h+='<p>'+esc(pa)+'</p>';pa=''}}
+    t.split('\n').forEach(function(l){
+    if(/^- /.test(l)){fp();if(!ul){h+='<ul>';ul=true}h+='<li>'+esc(l.slice(2))+'</li>';return}
+    if(ul){h+='</ul>';ul=false}
+    var b=l.match(/^\*\*(.+)\*\*$/);if(b){fp();h+='<h3>'+esc(b[1])+'</h3>';return}
+    if(l.trim())pa+=l.trim();else fp()});fp();return h+(ul?'</ul>':'')}
+  var M=window.TRI_MEMO||{},door=new URLSearchParams(location.search).get('door')==='1';
+  var HERE='';
+  var DOOR='<p class="door"><a href="?door=1">まなびやの扉（からだと心のノートをまとめて読む）→</a></p>';
+  var i=N.findIndex(function(n){return n.id===id});
+  if(i<0&&door){document.title='まなびやの扉 | TRIATHLON';
+    m.innerHTML=HERE+'<h1>まなびやの扉</h1><p class="lead">ひみつのメモのもとになった「からだと心のノート」を、年ごろの順に読めます。ここでは、正しい知識と「親として」の欄も、そのまま載せています。</p><ol class="list">'+N.map(function(n){return '<li><a href="?id='+n.id+'&door=1"><small>ノート '+n.id+'・'+esc(n.age)+'</small><b>'+esc(n.title)+'</b></a></li>'}).join('')+'</ol><p class="door"><a href="./">← ひみつのメモへ</a></p>';return}
+  if(i<0){
+    m.innerHTML=HERE+'<h1>ひみつのメモ</h1><p class="lead">話のあとに、キャラがこっそり書いたメモ。</p><ol class="list">'+N.filter(function(n){return M[n.id]}).map(function(n){var t=M[n.id];return '<li><a href="?id='+n.id+'"><small>'+esc(t.who)+'のメモ</small><b>'+esc(t.title)+'</b></a></li>'}).join('')+'</ol>'+DOOR;return}
+  var n=N[i],t=M[n.id],key='tri-me-'+n.id,on=false;try{on=localStorage.getItem(key)==='1'}catch(e){}
+  var st=STORY[n.id],full=door||!t;
+  var nv=function(k,l){return k>=0&&k<N.length?'<a href="?id='+N[k].id+(full?'&door=1':'')+'">'+l+'</a>':'<a class="off">'+l+'</a>'};
+  var go='<p class="go">'+(st?'つながる話：<a href="'+st[1]+'">'+esc(st[0])+' →</a>':'つながる話：これから書かれます')+'</p>';
+  var me='<div class="me"><button type="button" id="me" aria-pressed="'+on+'">'+(on?'わたしもそうだった ✓':'わたしもそうだった')+'</button><small id="me-t">'+(on?'押しました。この記録はこの端末にだけ残ります。':'名前は出ません。押したことは、この端末にだけ残ります。')+'</small></div>';
+  if(full){
+    document.title=n.title+' | まなびやの扉';
+    m.innerHTML=HERE+'<p class="kick">まなびやの扉・ノート '+n.id+'</p><h1>'+esc(n.title)+'</h1><div class="meta"><span>'+esc(n.age)+'</span><span>心の光：'+esc(n.light)+'</span></div>'+
+      (n.story?'<div class="story"><h2>'+esc(n.link)+'</h2>'+n.story.split('\n').map(function(l){return '<p>'+esc(l)+'</p>'}).join('')+'</div>':'')+'<div class="card">'+md(n.body)+'</div><div class="parent"><h2>親として</h2>'+md(n.parent)+'</div>'+me+go+
+      '<p class="src">もとにした考え方：'+esc(n.src)+'</p>'+(t?'<p class="door"><a href="?id='+n.id+'">'+esc(t.who)+'のメモにもどる</a></p>':'')+
+      '<div class="nav">'+nv(i-1,'← 前')+'<a href="?door=1">扉</a>'+nv(i+1,'次 →')+'</div>';
+  }else{
+    document.title=t.title+' | '+t.who+'のひみつのメモ';
+    m.innerHTML=HERE+'<p class="kick">'+esc(t.who)+'のひみつのメモ</p><h1>'+esc(t.title)+'</h1><div class="card memo">'+md(t.text)+'<p class="sign">― '+esc(t.who)+'</p></div>'+me+go+
+      '<p class="door more">もっと知りたい人へ：<a href="?id='+n.id+'&door=1">まなびやの扉 →</a></p>'+
+      '<div class="nav">'+nv(i-1,'← 前')+'<a href="./">メモ一覧</a>'+nv(i+1,'次 →')+'</div>';
+  }
+  document.getElementById('me').onclick=function(){on=!on;try{on?localStorage.setItem(key,'1'):localStorage.removeItem(key)}catch(e){}
+    this.setAttribute('aria-pressed',on);this.textContent=on?'わたしもそうだった ✓':'わたしもそうだった';
+    document.getElementById('me-t').textContent=on?'押しました。この記録はこの端末にだけ残ります。':'名前は出ません。押したことは、この端末にだけ残ります。'};
+})();
+</script></body></html>

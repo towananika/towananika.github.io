@@ -1,0 +1,8 @@
+name = "maai-feedback"
+main = "feedback-worker.js"
+compatibility_date = "2026-09-07"
+
+# npx wrangler kv namespace create FEEDBACK で作成（2026-09-07）
+[[kv_namespaces]]
+binding = "FEEDBACK"
+id = "e2dcb7a5f3e845e9998dbd9975325bcb"
