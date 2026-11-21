@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>自分を知る — とわなにか</title>
+<meta name="description" content="好き・苦手・得意・大切なことと、6つの型の適性を集めて、自分の地図にする。">
+<script src="../sync.js"></script>
+<style>
+  :root { --bg:#f5f1e9; --surface:#fbf9f4; --border:#e2dac8; --text:#2b2924; --muted:#8a8271; --wood:#93704b; --wood-soft:#ece1d0; --sage:#74886d; --sage-soft:#e2e8dd; --red:#a8553f; --red-soft:#f0dcd5; --blue:#5b7c99; --blue-soft:#dde6ee; --shadow:0 1px 2px rgba(43,41,36,.05),0 16px 40px rgba(43,41,36,.08); }
+  @media (prefers-color-scheme: dark) { :root { --bg:#1c1a16; --surface:#242119; --border:#38332a; --text:#ede8dd; --muted:#a89e8a; --wood:#c99f74; --wood-soft:#382d20; --sage:#9db394; --sage-soft:#26301f; --red:#d98a72; --red-soft:#3a2620; --blue:#8fb0cc; --blue-soft:#222d37; --shadow:none; } }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",sans-serif; line-height:1.6; font-size:16px; }
+  main { max-width:480px; margin:0 auto; padding:24px 16px 64px; }
+  a { color:var(--blue); }
+  a.back { color:var(--wood); font-size:14px; text-decoration:none; }
+  h1 { font-size:24px; margin:6px 0 4px; } h2 { font-size:17px; margin:0 0 8px; }
+  .lead { color:var(--muted); font-size:14px; margin:0 0 12px; }
+  .jump { display:flex; flex-wrap:wrap; gap:6px; margin:0 0 16px; }
+  .jump a { font-size:13px; text-decoration:none; color:var(--wood); background:var(--wood-soft); border-radius:999px; padding:2px 10px; }
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:16px; margin-bottom:16px; box-shadow:var(--shadow); }
+  .note { color:var(--muted); font-size:12px; margin:6px 0 0; }
+  .meter { height:8px; border-radius:6px; background:var(--wood-soft); overflow:hidden; margin:4px 0; }
+  .meter i { display:block; height:100%; background:var(--sage); transition:width .3s; }
+  .row { display:flex; justify-content:space-between; align-items:baseline; font-size:13px; color:var(--muted); }
+  .row b { color:var(--text); font-size:15px; }
+  svg.radar { display:block; width:100%; max-width:300px; margin:4px auto 0; }
+  .legend { display:flex; gap:14px; justify-content:center; font-size:12px; color:var(--muted); }
+  .legend i { display:inline-block; width:14px; height:3px; vertical-align:middle; margin-right:4px; }
+  .top2 { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px; }
+  .top2 div { border-radius:12px; padding:8px 10px; background:var(--sage-soft); font-size:12px; }
+  .top2 b { display:block; font-size:15px; }
+  button { font:inherit; cursor:pointer; border-radius:999px; border:1px solid var(--border); background:var(--surface); color:var(--text); padding:6px 14px; font-size:14px; }
+  button.main { background:var(--wood); color:#fff; border-color:var(--wood); }
+  .q { border-top:1px solid var(--border); padding:10px 0; }
+  .q:first-of-type { border-top:0; }
+  .q p { margin:0 0 6px; font-size:15px; }
+  .q small { color:var(--muted); font-size:11px; }
+  .seg { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; }
+  .seg.two { grid-template-columns:1fr 1fr; }
+  .seg button { padding:6px 4px; font-size:13px; border-radius:10px; }
+  .seg button.on { background:var(--sage-soft); border-color:var(--sage); font-weight:600; }
+  .chips { display:flex; flex-wrap:wrap; gap:6px; }
+  .chip { font-size:13px; padding:4px 12px; border-radius:999px; }
+  .chip.on { background:var(--wood); color:#fff; border-color:var(--wood); }
+  .tabs { display:flex; gap:6px; margin-bottom:10px; }
+  .tabs button[aria-pressed="true"] { background:var(--wood); color:#fff; border-color:var(--wood); }
+  .add { display:flex; gap:8px; margin:8px 0; }
+  input, textarea { font:inherit; color:var(--text); background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:8px 12px; width:100%; min-width:0; }
+  textarea { resize:vertical; min-height:72px; }
+  .add button { flex:none; }
+  ul.items { list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; gap:6px; }
+  ul.items li { background:var(--blue-soft); border-radius:999px; padding:3px 4px 3px 12px; font-size:14px; display:flex; align-items:center; gap:2px; }
+  ul.items li button { border:0; background:none; padding:0 8px; color:var(--muted); }
+  .clue { display:flex; gap:8px; align-items:center; border-top:1px solid var(--border); padding:8px 0; font-size:14px; }
+  .clue:first-child { border-top:0; }
+  .clue span { flex:1; }
+  .clue small.ev { color:var(--muted); font-size:11px; }
+  .clue em { font-style:normal; font-size:11px; color:var(--wood); background:var(--wood-soft); border-radius:999px; padding:0 8px; margin-right:6px; white-space:nowrap; }
+  .clue button { padding:2px 10px; font-size:13px; }
+  .clue button.yes.on { background:var(--sage-soft); border-color:var(--sage); }
+  .clue button.no.on { background:var(--red-soft); border-color:var(--red); }
+  .clue.no span { color:var(--muted); text-decoration:line-through; }
+  .grp { font-size:12px; color:var(--muted); font-weight:600; margin:10px 0 0; }
+  .energy { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); word-break:break-word; gap:8px; margin-top:10px; }
+  .energy div { border-radius:12px; padding:8px 10px; font-size:13px; }
+  .energy .p { background:var(--sage-soft); } .energy .m { background:var(--red-soft); }
+  .energy b { display:block; font-size:12px; color:var(--muted); }
+  .energy ol { margin:4px 0 0; padding-left:18px; }
+  .ask { font-size:16px; font-weight:600; background:var(--wood-soft); border-radius:12px; padding:10px 12px; margin:0 0 8px; }
+  .acts { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:8px; }
+  .msg { min-height:18px; font-size:13px; color:var(--sage); margin:6px 0 0; }
+  details summary { cursor:pointer; font-size:13px; color:var(--muted); margin-top:8px; }
+  .past { font-size:13px; border-top:1px solid var(--border); padding:6px 0; white-space:pre-wrap; word-break:break-word; }
+  .past b { display:block; font-size:12px; color:var(--muted); font-weight:400; }
+  .game { display:grid; grid-template-columns:auto 1fr; gap:4px 12px; align-items:center; }
+  .lv { width:56px; height:56px; border-radius:50%; background:var(--wood); color:#fff; display:flex; flex-direction:column; align-items:center; justify-content:center; line-height:1.1; grid-row:span 2; }
+  .lv small { font-size:10px; } .lv b { font-size:20px; }
+  .streak { font-size:13px; color:var(--muted); } .streak b { color:var(--red); font-size:16px; }
+  .quest { margin-top:10px; border-radius:12px; padding:8px 12px; background:var(--blue-soft); font-size:14px; display:flex; justify-content:space-between; gap:8px; align-items:center; }
+  .quest.done { background:var(--sage-soft); }
+  .quest small { color:var(--muted); font-size:11px; white-space:nowrap; }
+  .badges { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+  .badges span { font-size:11px; border-radius:999px; padding:1px 8px; border:1px dashed var(--border); color:var(--muted); }
+  .badges span.on { border:1px solid var(--wood); background:var(--wood-soft); color:var(--wood); }
+  .gap { margin-top:10px; border-radius:12px; padding:8px 12px; background:var(--blue-soft); font-size:14px; }
+  .gap b { display:block; font-size:12px; color:var(--blue); }
+  .ktype { display:flex; flex-wrap:wrap; gap:4px; margin:0 0 8px; }
+  .ktype button { font-size:12px; padding:2px 10px; }
+  .ktype button.on { background:var(--blue); color:#fff; border-color:var(--blue); }
+  .diff { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-top:8px; font-size:12px; }
+  .diff div { border-radius:10px; background:var(--wood-soft); padding:4px 8px; }
+  .diff b { font-size:14px; }
+  .up { color:var(--sage); } .down { color:var(--red); }
+  blockquote { margin:8px 0 0; padding:6px 10px; border-left:3px solid var(--border); color:var(--muted); font-size:12px; }
+</style>
+</head>
+<body>
+<main>
+  <a class="back" href="../">← とわなにか</a>
+  <h1>自分を知る</h1>
+  <p class="lead">好き・苦手・得意・大切なことを集めて、自分の地図にする。</p>
+  <nav class="jump"><a href="#map">地図</a><a href="#quiz">答える</a><a href="#energy">元気</a><a href="#today">今日の問い</a></nav>
+
+  <section class="card" id="game">
+    <div class="game"><div class="lv"><small>レベル</small><b id="lv"></b></div>
+      <div class="row"><span class="streak">連続 <b id="streak"></b> 日</span><span id="xpn"></span></div>
+      <div class="meter" style="margin:0"><i id="xpbar"></i></div></div>
+    <div class="quest" id="quest"></div>
+    <div class="badges" id="badges"></div>
+  </section>
+
+  <section class="card" id="map">
+    <h2>わたしの地図</h2>
+    <div class="row"><span>うまり具合</span><b id="fill"></b></div>
+    <div class="meter"><i id="fillbar"></i></div>
+    <svg class="radar" id="radar" viewBox="0 0 300 260" role="img" aria-label="6つの型の適性グラフ"></svg>
+    <div class="legend"><span><i style="background:var(--sage)"></i>自分のチェック</span><span><i style="background:var(--wood)"></i>AIの見立て</span><span><i style="background:var(--blue)"></i>やってみた自分</span></div>
+    <div class="top2" id="top2"></div>
+    <div class="gap" id="gap"></div>
+    <details><summary>AIの見立ての根拠（2026-11-21・推測）</summary>
+      <p class="note" style="margin:6px 0 0">まとめると「方向を決めて、仕組みを作らせ、使いながら直す人」。</p>
+      <ul class="note" style="padding-left:18px;margin:4px 0 0">
+        <li>まきこむ（強）：理由と方向を伝えて任せる、企画、発信、仕組みで回る場が理想</li>
+        <li>しらべる（強）：経済学、概念をつきつめる質問、数字で確かめる</li>
+        <li>あらわす（中強）：ゲームの設計、見た目へのこだわり</li>
+        <li>ととのえる（中）：記録・家計・計画・同期など、整える仕組みを多く作る</li>
+        <li>ささえる（中）：分かりやすい教材づくり。人を直接ケアする話は少ない</li>
+        <li>つくる（弱め）：手作業やPCでの手順は避けたい</li>
+      </ul>
+      <blockquote>補足：6つの型は、ホランドの「職業の興味」の考え方をもとにした簡易版。検査ではなく、自分で確かめる手がかり。</blockquote>
+    </details>
+  </section>
+
+  <section class="card" id="quiz">
+    <div class="row"><h2 style="margin:0">1問ずつ答える</h2><b id="qleft"></b></div>
+    <div class="meter"><i id="qbar"></i></div>
+    <div id="qbody"></div>
+  </section>
+
+  <section class="card" id="energy">
+    <h2>元気メーター</h2>
+    <p class="note" style="margin:0 0 6px">やったあと元気が出たことは ＋、すり減ったことは −。近い型を1つ選ぶと、地図に「やってみた自分」が出る。</p>
+    <form class="add" id="enform"><input id="enin" maxlength="60" placeholder="例：ゲームの仕組みを考えた"></form>
+    <div class="ktype" id="ktype"></div>
+    <div class="seg two"><button type="button" id="enp">＋ 元気が出た</button><button type="button" id="enm">− すり減った</button></div>
+    <div class="energy"><div class="p"><b>元気が出ること</b><ol id="enplus"></ol></div><div class="m"><b>すり減ること</b><ol id="enminus"></ol></div></div>
+  </section>
+
+  <section class="card" id="today">
+    <h2>今日の問い</h2>
+    <p class="ask" id="ask"></p>
+    <textarea id="ans" maxlength="600" placeholder="ひとことでOK"></textarea>
+    <div class="acts"><button class="main" id="ansave">残す</button><button id="nextq">ほかの問い</button></div>
+    <p class="msg" id="ansmsg" role="status"></p>
+    <details><summary>これまでの答え（<span id="pastn">0</span>）</summary><div id="past"></div></details>
+  </section>
+
+  <section class="card">
+    <details id="more"><summary style="font-size:15px;color:var(--text);font-weight:600;margin:0">大切なこと・リスト・見直し</summary>
+      <p class="grp">大切なこと（5つまで）</p>
+      <div class="chips" id="valchips"></div>
+      <p class="note" id="valnote"></p>
+      <p class="grp">わたしのリスト</p>
+      <div class="tabs" id="tabs"></div>
+      <form class="add" id="addform"><input id="addin" maxlength="60" placeholder="例：雨の日の散歩"><button class="main">足す</button></form>
+      <ul class="items" id="items"></ul>
+      <p class="grp">4週ごとの見直し</p>
+      <div id="revisit"></div>
+    </details>
+  </section>
+
+  <section class="card">
+    <h2>AIと深める</h2>
+    <p class="note" style="margin:0 0 8px">ここまでのまとめを質問つきでコピー。AIに貼ると、向いていそうなことを一緒に考えられる。</p>
+    <div class="acts"><button class="main" id="copy">まとめをコピー</button><a href="../ask/">質問ノートへ</a><a href="../grow/#growth">性格・心理の記録へ</a></div>
+    <p class="msg" id="copymsg" role="status"></p>
+  </section>
+  <p class="note">保存先：この端末と、ログインした端末（端末どうしでそろいます）。公開のページには書き込みません。</p>
+</main>
+<script>
+(function () {
+  var KEY = "hibiki-me-v1";
+  // 6つの型（ホランドの六角形の順）
+  var TYPES = [
+    { k: "R", n: "つくる・動かす", ai: .15, ex: "料理・修理・ものづくり・植物・体を使う仕事",
+      q: ["手を動かして何かを作るのが好き", "機械や道具をいじるのが楽しい", "体を動かして働くと気持ちいい"] },
+    { k: "I", n: "しらべる・考える", ai: .8, ex: "研究・データ分析・プログラミング・調べて書く",
+      q: ["「なぜ？」を調べ始めると止まらない", "数字やデータから答えを見つけるのが好き", "ひとりでじっくり考える時間が好き"] },
+    { k: "A", n: "あらわす・創る", ai: .7, ex: "ゲーム・デザイン・文章・写真や動画・音楽",
+      q: ["絵・音・文章などで表現したい", "決まりがないほうが力が出る", "おもしろいもの、きれいなものを作りたい"] },
+    { k: "S", n: "ささえる・教える", ai: .55, ex: "教材づくり・教える・相談にのる・ケア・人と人をつなぐ",
+      q: ["人の話を聞いて力になりたい", "教えたり説明したりするのが好き", "誰かが喜ぶと自分もうれしい"] },
+    { k: "E", n: "まきこむ・導く", ai: .85, ex: "プロダクトの企画・発信・仕組みで回る事業・任せて動かす",
+      q: ["人を誘って何かを始めるのが好き", "目標を決めて人を動かすのが得意", "売る・交渉する・発表するのが苦にならない"] },
+    { k: "C", n: "ととのえる・続ける", ai: .6, ex: "家計・経理・計画づくり・記録・品質を守る",
+      q: ["整理や記録をつけるのが好き", "決まった手順をきちんとこなせる", "お金や予定の管理が得意"] }
+  ];
+  var ANS = ["ちがう", "ややそう", "そう"];
+  // 説明書（公開版）から拾った手がかり。（推測）をふくむ
+  var CLUES = [
+    ["like", "c1", "交通・ミリタリー・ファンタジー・現実の恋愛"],
+    ["like", "c2", "絵・BGM・操作感のいいゲーム"],
+    ["like", "c3", "図・メーター・カードで1画面で分かるもの"],
+    ["like", "c4", "ゲームのように知らないうちに学ぶ"],
+    ["like", "c5", "長く使えて愛着が持てるもの（MUJI）"],
+    ["like", "c6", "散歩"],
+    ["dislike", "c7", "専門用語が多い・長い文字だけの説明"],
+    ["dislike", "c8", "夜の音、狭くて物の多い部屋"],
+    ["dislike", "c9", "決めつけられること"],
+    ["good", "c10", "総費用で考える"],
+    ["good", "c11", "アイデアが次々に出る"],
+    ["good", "c12", "相手の気持ちを受け止める（推測）"],
+    ["good", "c13", "余白をお金で買う判断ができる"],
+    ["good", "c14", "おかしいと思ったら、はっきり確かめる"],
+    ["good", "c15", "理由と方向を伝えて、AIや人に任せる", "「理由と方向を教えてから、AIをうまく扱えるはず」"],
+    ["good", "c16", "使いながら直して良くしていく", "「やりながら修正したい」など1日に3回"],
+    ["good", "c17", "自分の例えで理解する", "「100作れるのに90、もったいない状態」→ノートに採用"],
+    ["good", "c18", "少ない手間のやり方を選ぶ", "「工数が低い方法が良い」"],
+    ["like", "c19", "経済や社会の大きな流れ", "経済学科6科目、シュカワールド、AGI観測所"],
+    ["like", "c20", "道具や仕組みを作ること", "ページ約30、動画リーダー、同期と暗号"],
+    ["like", "c21", "学び方そのものを工夫する", "学習画面・評価方法・ゲーミフィケーション"],
+    ["dislike", "c22", "複雑なままの説明", "「理解しづらい」「まだ複雑である」"],
+    ["dislike", "c23", "場所や手作業に縛られること", "「PC使わなくてもできるようにして」"]
+  ];
+  var LISTS = [["like", "好き"], ["dislike", "苦手"], ["good", "得意"]];
+  var PAIRS = [["朝型", "夜型"], ["ひとり", "みんなと"], ["計画して", "その場で"], ["話す", "書く"], ["体を動かす", "じっくり考える"], ["新しいこと", "なれたこと"], ["広く浅く", "狭く深く"], ["静かな場所", "にぎやかな場所"], ["作る側", "使う・楽しむ側"], ["先に全体", "まず手を動かす"]];
+  var VALUES = ["健康", "自由", "愛", "安心", "成長", "楽しさ", "誠実", "創造", "家族", "冒険", "貢献", "美しさ", "学び", "お金のゆとり", "信仰", "静けさ", "時間", "挑戦"];
+  var QS = ["時間を忘れて夢中になるのは、どんなとき？", "子どものころ、何をしているときがいちばん楽しかった？", "人からよく頼まれること・ほめられることは？", "お金をもらわなくてもやりたいことは？", "最近「もうやりたくない」と思ったことは？なぜ？", "1日だけ自由なら、朝から夜まで何をする？", "尊敬する人の、どこが好き？", "ついお金を使ってしまうものは？", "疲れていても、これならできることは？", "やっていて「自分らしい」と感じた瞬間は？", "苦手なのに続けていることはある？", "10年後の自分に、何をしていてほしい？", "人に教えられるくらい知っていることは？", "最近うれしかったこと、その理由は？", "どんな人といると、自分が好きになれる？"];
+
+  function $(id) { return document.getElementById(id); }
+  function el(t, c, x) { var e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = x; return e; }
+  function load() { try { var s = JSON.parse(localStorage.getItem(KEY)); if (s && typeof s === "object") return s; } catch (e) {} return {}; }
+  var S = load();
+  S.apt = S.apt || {}; S.clue = S.clue || {}; S.pick = S.pick || {}; S.vals = S.vals || []; S.lists = S.lists || {}; S.energy = S.energy || []; S.qa = S.qa || []; S.xp = S.xp || 0; S.did = S.did || {}; S.snaps = S.snaps || [];
+  LISTS.forEach(function (l) { S.lists[l[0]] = S.lists[l[0]] || []; });
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+  function today() { var d = new Date(); return d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2); }
+
+  // 地図：レーダーと上位2つ
+  function score(i) { if (!Object.keys(S.apt).length && S.snaps.length) { var l = S.snaps[S.snaps.length - 1].s[i]; return l == null ? null : l / 100; } var s = 0, n = 0; for (var j = 0; j < 3; j++) { var v = S.apt[TYPES[i].k + j]; if (v != null) { s += v; n++; } } return n ? s / 6 : null; }
+  function drawMap() {
+    var cx = 150, cy = 132, R = 92, svg = "";
+    function pt(i, r) { var a = -Math.PI / 2 + i * Math.PI / 3; return [cx + Math.cos(a) * R * r, cy + Math.sin(a) * R * r]; }
+    function poly(f) { return TYPES.map(function (t, i) { return pt(i, f(i)).map(function (v) { return v.toFixed(1); }).join(","); }).join(" "); }
+    [1, .66, .33].forEach(function (r) { svg += '<polygon points="' + poly(function () { return r; }) + '" fill="none" stroke="var(--border)"/>'; });
+    TYPES.forEach(function (t, i) {
+      var p = pt(i, 1), l = pt(i, 1.2);
+      svg += '<line x1="' + cx + '" y1="' + cy + '" x2="' + p[0] + '" y2="' + p[1] + '" stroke="var(--border)"/>';
+      svg += '<text x="' + l[0] + '" y="' + (l[1] + 4) + '" font-size="12" text-anchor="middle" fill="var(--text)">' + t.n.split("・")[0] + '</text>';
+    });
+    svg += '<polygon points="' + poly(function (i) { return Math.max(.04, TYPES[i].ai); }) + '" fill="none" stroke="var(--wood)" stroke-width="2" stroke-dasharray="5 4"/>';
+    var mine = TYPES.map(function (t, i) { return score(i); });
+    if (mine.some(function (v) { return v != null; })) svg += '<polygon points="' + poly(function (i) { return Math.max(.04, mine[i] || 0); }) + '" fill="var(--sage)" fill-opacity=".25" stroke="var(--sage)" stroke-width="2"/>';
+    var bh = behave();
+    if (bh) svg += '<polygon points="' + poly(function (i) { return Math.max(.04, bh[i]); }) + '" fill="var(--blue)" fill-opacity=".12" stroke="var(--blue)" stroke-width="2"/>';
+    $("radar").innerHTML = svg;
+    drawGap(mine, bh);
+    var answered = mine.filter(function (v) { return v != null; }).length;
+    var rank = TYPES.map(function (t, i) { return { t: t, v: answered ? (mine[i] || 0) : t.ai }; }).sort(function (a, b) { return b.v - a.v; }).slice(0, 2);
+    $("top2").innerHTML = "";
+    rank.forEach(function (r) { var d = el("div"); d.appendChild(el("b", null, r.t.n)); d.appendChild(document.createTextNode(r.t.ex)); $("top2").appendChild(d); });
+    // うまり具合：5つの場所
+    var parts = [Object.keys(S.apt).length / 18, Object.keys(S.clue).length / CLUES.length, Object.keys(S.pick).length / PAIRS.length, Math.min(1, S.vals.length / 3), Math.min(1, S.qa.length / 5)];
+    var f = Math.round(parts.reduce(function (a, b) { return a + Math.min(1, b); }, 0) / parts.length * 100);
+    $("fill").textContent = f + "%"; $("fillbar").style.width = f + "%";
+  }
+
+  // やってみた自分：元気メーターの型（＋は1、−は−0.5）。型つきが3つ以上で出す
+  function behave() {
+    var c = TYPES.map(function () { return 0; }), n = 0;
+    S.energy.forEach(function (e) { var i = TYPES.map(function (t) { return t.k; }).indexOf(e.k); if (i < 0) return; c[i] += e.s === 1 ? 1 : -.5; n++; });
+    if (n < 3) return null;
+    var mx = Math.max.apply(null, c.concat([1]));
+    return c.map(function (v) { return Math.max(0, v) / mx; });
+  }
+  function drawGap(mine, bh) {
+    var g = $("gap"), has = mine.filter(function (v) { return v != null; }).length >= 6, txt;
+    if (!bh) txt = ["ズレを見る", "元気メーターに型をつけて3つ残すと、「思う自分」と「やってみた自分」をくらべられます。"];
+    else {
+      var self = has ? mine : TYPES.map(function (t) { return t.ai; }), who = has ? "自分のチェック" : "AIの見立て";
+      var top = function (a) { return a.map(function (v, i) { return [v, i]; }).sort(function (x, y) { return y[0] - x[0]; }); };
+      var bt = top(bh)[0][1], st = top(self).slice(0, 2).map(function (x) { return x[1]; });
+      var minus = TYPES.map(function (t) { return S.energy.filter(function (e) { return e.k === t.k && e.s === -1; }).length - S.energy.filter(function (e) { return e.k === t.k && e.s === 1; }).length; });
+      var worn = st.filter(function (i) { return minus[i] > 0; })[0];
+      if (worn != null) txt = ["ズレのサイン", who + "では「" + TYPES[worn].n + "」が上位。でも実際は、すり減ることのほうが多いみたい。"];
+      else if (st.indexOf(bt) < 0) txt = ["ズレのサイン", "思っていたより「" + TYPES[bt].n + "」で元気が出ています。チェックを見直してもいいかも。"];
+      else txt = ["ズレは小さめ", "思う自分とやってみた自分は近いです（いちばんは「" + TYPES[bt].n + "」）。"];
+    }
+    if (txt[0] === "ズレのサイン" && !S.gapSeen) { S.gapSeen = 1; save(); }
+    g.innerHTML = ""; g.appendChild(el("b", null, txt[0])); g.appendChild(document.createTextNode(txt[1]));
+  }
+
+  // ゲーム：XP・連続日数・今日のクエスト・バッジ
+  var QUESTS = [["e", "元気メーターに1つ残す"], ["q", "今日の問いに答える"], ["c", "手がかりかリストを1つ見直す"], ["p", "どっち派か大切なことを1つ見直す"], ["e", "元気メーターに型をつけて残す"]];
+  function quest() { return QUESTS[Math.floor(Date.now() / 864e5) % QUESTS.length]; }
+  function did(kind) {
+    var d = today(), t = S.did[d] = S.did[d] || {};
+    if (!t[kind]) { t[kind] = 1; S.xp += 2; }
+    var q = quest();
+    if (q[0] === kind && !t.quest) { t.quest = 1; S.xp += 5; }
+    var ks = Object.keys(S.did).sort(); while (ks.length > 120) delete S.did[ks.shift()];
+    save(); drawGame();
+  }
+  function streak() {
+    var n = 0, d = new Date();
+    if (!S.did[today()]) d.setDate(d.getDate() - 1);
+    for (;;) { var k = d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2); if (!S.did[k]) break; n++; d.setDate(d.getDate() - 1); }
+    return n;
+  }
+  function drawGame() {
+    var lv = Math.floor(S.xp / 20) + 1, r = S.xp % 20, st = streak(), q = quest(), qd = (S.did[today()] || {}).quest;
+    $("lv").textContent = lv; $("xpn").textContent = "次のレベルまで " + (20 - r); $("xpbar").style.width = (r / 20 * 100) + "%";
+    $("streak").textContent = st;
+    var qe = $("quest"); qe.className = "quest" + (qd ? " done" : "");
+    qe.innerHTML = ""; qe.appendChild(el("span", null, (qd ? "✓ " : "今日のクエスト：") + q[1])); qe.appendChild(el("small", null, qd ? "クリア" : "+5"));
+    var plus = S.energy.filter(function (e) { return e.s === 1; }).length, days = Object.keys(S.did).length;
+    var B = [["はじめの一歩", days >= 1], ["3日つづいた", st >= 3], ["7日つづいた", st >= 7], ["元気を10こ", plus >= 10], ["問いに5回", S.qa.length >= 5], ["見直し1回", S.snaps.length >= 2], ["ズレに気づいた", !!S.gapSeen]];
+    $("badges").innerHTML = B.map(function (b) { return '<span class="' + (b[1] ? "on" : "") + '">' + (b[1] ? "★ " : "") + b[0] + '</span>'; }).join("");
+  }
+
+  // 4週ごとの見直し：18問そろったら記録し、前回とくらべる
+  function cur() { return TYPES.map(function (t, i) { var v = score(i); return v == null ? null : Math.round(v * 100); }); }
+  function drawRevisit() {
+    var box = $("revisit"), n = Object.keys(S.apt).length; box.textContent = "";
+    if (n === 18 && !S.snaps.length) { snap(); save(); }
+    if (!S.snaps.length) { box.appendChild(el("p", "note", "18問に答えると、ここで前回とくらべられます。")); return; }
+    var last = S.snaps[S.snaps.length - 1], age = Math.floor((new Date(today()) - new Date(last.d)) / 864e5), prev = S.snaps.length > 1 ? S.snaps[S.snaps.length - 2] : null;
+    var p = el("p", "note", age >= 28 ? "前の記録から" + age + "日。見直しの時期です。" : "次の見直しはあと" + (28 - age) + "日（4週ごと）。気づいたらいつでも答え直せます。");
+    box.appendChild(p);
+    var b = el("button", age >= 28 ? "main" : "", "18問を答え直す"); b.type = "button"; b.style.marginTop = "6px";
+    b.onclick = function () { S.apt = {}; save(); did("p"); drawRevisit(); drawQuiz(); location.hash = "#quiz"; };
+    box.appendChild(b);
+    if (prev) {
+      box.appendChild(el("p", "note", prev.d + " → " + last.d + " の変化"));
+      var g = el("div", "diff");
+      TYPES.forEach(function (t, i) { var dv = (last.s[i] || 0) - (prev.s[i] || 0), d = el("div"); d.appendChild(document.createTextNode(t.n.split("・")[0] + " ")); d.appendChild(el("b", dv > 0 ? "up" : dv < 0 ? "down" : "", (dv > 0 ? "↑" : dv < 0 ? "↓" : "→") + Math.abs(dv))); g.appendChild(d); });
+      box.appendChild(g);
+    }
+  }
+
+  // 1問ずつ：答えたものは出さない（手がかり → 適性 → どっち派）
+  var skipped = {};
+  function queue() {
+    var q = [];
+    CLUES.forEach(function (c) { if (S.clue[c[1]] == null) q.push({ t: "c", c: c }); });
+    for (var j = 0; j < 3; j++) TYPES.forEach(function (t) { if (S.apt[t.k + j] == null) q.push({ t: "a", id: t.k + j, text: t.q[j] }); });
+    PAIRS.forEach(function (p, i) { if (S.pick[i] == null) q.push({ t: "p", i: i, p: p }); });
+    return q;
+  }
+  var TOTAL = CLUES.length + 18 + PAIRS.length;
+  function drawQuiz() {
+    var all = queue(), q = all.filter(function (x) { return !skipped[key(x)]; }), body = $("qbody");
+    if (!q.length && all.length) { skipped = {}; q = all; }
+    $("qleft").textContent = all.length ? "のこり " + all.length : "";
+    $("qbar").style.width = ((TOTAL - all.length) / TOTAL * 100) + "%";
+    body.textContent = "";
+    if (!all.length) { body.appendChild(el("p", "note", "ぜんぶ答えました。結果は上の地図に出ています。")); return; }
+    var x = q[0], kind = { c: "AIが拾った手がかり・合ってる？", a: "適性チェック・あてはまる？", p: "どっち派？" }[x.t];
+    body.appendChild(el("p", "grp", kind));
+    var main = el("p", "ask", x.t === "c" ? x.c[2] : x.t === "a" ? x.text : x.p[0] + "　か　" + x.p[1]);
+    if (x.t === "c" && x.c[3]) { main.appendChild(document.createElement("br")); main.appendChild(el("small", "ev", x.c[3])); }
+    body.appendChild(main);
+    var opts = x.t === "c" ? [["✓ 合ってる", 1], ["✗ ちがう", -1]] : x.t === "a" ? ANS.map(function (a, v) { return [a, v]; }) : x.p.map(function (a, v) { return [a, v]; });
+    var seg = el("div", "seg" + (opts.length === 2 ? " two" : ""));
+    opts.forEach(function (o) { var b = el("button", null, o[0]); b.type = "button"; b.onclick = function () { answer(x, o[1]); }; seg.appendChild(b); });
+    body.appendChild(seg);
+    var sk = el("button", null, "あとで"); sk.type = "button"; sk.style.marginTop = "8px"; sk.style.fontSize = "13px";
+    sk.onclick = function () { skipped[key(x)] = 1; drawQuiz(); }; body.appendChild(sk);
+  }
+  function key(x) { return x.t + (x.c ? x.c[1] : x.id != null ? x.id : x.i); }
+  function answer(x, v) {
+    if (x.t === "c") { S.clue[x.c[1]] = v; if (v === 1 && S.lists[x.c[0]].indexOf(x.c[2]) < 0) S.lists[x.c[0]].push(x.c[2]); save(); drawList(); did("c"); }
+    else if (x.t === "a") { S.apt[x.id] = v; if (Object.keys(S.apt).length === 18) snap(); save(); drawRevisit(); }
+    else { S.pick[x.i] = v; save(); did("p"); }
+    drawMap(); drawQuiz();
+  }
+  function snap() { var c = cur(), last = S.snaps[S.snaps.length - 1]; if (last && last.d === today()) S.snaps[S.snaps.length - 1] = { d: today(), s: c }; else S.snaps.push({ d: today(), s: c }); }
+
+  // 大切なこと
+  function drawVals() {
+    var box = $("valchips"); box.textContent = "";
+    VALUES.forEach(function (v) {
+      var on = S.vals.indexOf(v) >= 0, b = el("button", "chip" + (on ? " on" : ""), v); b.type = "button";
+      b.setAttribute("aria-pressed", on ? "true" : "false");
+      b.onclick = function () {
+        var i = S.vals.indexOf(v);
+        if (i >= 0) S.vals.splice(i, 1); else if (S.vals.length < 5) S.vals.push(v); else { $("valnote").textContent = "5つまで。どれかを外してから選んでください。"; return; }
+        save(); drawVals(); drawMap(); did("p");
+      };
+      box.appendChild(b);
+    });
+    $("valnote").textContent = S.vals.length ? "選んだ順：" + S.vals.join(" → ") : "ピンとくるものを押す。";
+  }
+
+  // リスト
+  var tab = "like";
+  function drawList() {
+    var t = $("tabs"); t.textContent = "";
+    LISTS.forEach(function (l) {
+      var b = el("button", null, l[1] + "（" + S.lists[l[0]].length + "）"); b.type = "button";
+      b.setAttribute("aria-pressed", tab === l[0] ? "true" : "false");
+      b.onclick = function () { tab = l[0]; drawList(); }; t.appendChild(b);
+    });
+    var ul = $("items"); ul.textContent = "";
+    S.lists[tab].forEach(function (x, i) {
+      var li = el("li", null, x), b = el("button", null, "×"); b.type = "button"; b.setAttribute("aria-label", x + " を消す");
+      b.onclick = function () { S.lists[tab].splice(i, 1); CLUES.forEach(function (c) { if (c[2] === x) delete S.clue[c[1]]; }); save(); drawList(); drawQuiz(); drawMap(); };
+      li.appendChild(b); ul.appendChild(li);
+    });
+    if (!S.lists[tab].length) ul.appendChild(el("li", null, "まだありません")).style.background = "none";
+  }
+  $("addform").onsubmit = function (e) {
+    e.preventDefault(); var v = $("addin").value.trim(); if (!v) return;
+    if (S.lists[tab].indexOf(v) < 0) S.lists[tab].push(v);
+    $("addin").value = ""; save(); drawList(); did("c");
+  };
+
+  // 元気メーター：同じ言葉は数をまとめる。型は任意
+  var enType = null;
+  function drawKtype() {
+    var box = $("ktype"); box.textContent = "";
+    TYPES.forEach(function (t) { var b = el("button", enType === t.k ? "on" : "", t.n.split("・")[0]); b.type = "button"; b.onclick = function () { enType = enType === t.k ? null : t.k; drawKtype(); }; box.appendChild(b); });
+  }
+  function drawEnergy() {
+    drawKtype();
+    [["enplus", 1], ["enminus", -1]].forEach(function (x) {
+      var c = {}; S.energy.forEach(function (e) { if (e.s === x[1]) c[e.t] = (c[e.t] || 0) + 1; });
+      var ol = $(x[0]); ol.textContent = "";
+      Object.keys(c).sort(function (a, b) { return c[b] - c[a]; }).slice(0, 5).forEach(function (k) { ol.appendChild(el("li", null, k + (c[k] > 1 ? "（" + c[k] + "）" : ""))); });
+      if (!ol.children.length) ol.appendChild(el("li", null, "—"));
+    });
+  }
+  function addEnergy(s) { var v = $("enin").value.trim(); if (!v) { $("enin").focus(); return; } var e = { t: v, s: s, d: today() }; if (enType) e.k = enType; S.energy.push(e); if (S.energy.length > 300) S.energy.shift(); $("enin").value = ""; enType = null; save(); drawEnergy(); drawMap(); did("e"); }
+  $("enp").onclick = function () { addEnergy(1); }; $("enm").onclick = function () { addEnergy(-1); };
+  $("enform").onsubmit = function (e) { e.preventDefault(); addEnergy(1); };
+
+  // 今日の問い：日ごとに変わる
+  var qi = Math.floor(Date.now() / 864e5) % QS.length;
+  function drawQ() {
+    $("ask").textContent = QS[qi];
+    var mine = S.qa.filter(function (x) { return x.q === QS[qi]; }).pop();
+    $("ans").value = mine && mine.d === today() ? mine.a : "";
+    var p = $("past"); p.textContent = "";
+    S.qa.slice().reverse().forEach(function (x) { var d = el("div", "past"); d.appendChild(el("b", null, x.d + "　" + x.q)); d.appendChild(document.createTextNode(x.a)); p.appendChild(d); });
+    $("pastn").textContent = S.qa.length;
+  }
+  $("ansave").onclick = function () {
+    var a = $("ans").value.trim(); if (!a) return;
+    S.qa = S.qa.filter(function (x) { return !(x.q === QS[qi] && x.d === today()); });
+    S.qa.push({ d: today(), q: QS[qi], a: a }); save(); drawQ(); drawMap(); did("q");
+    $("ansmsg").textContent = "残しました。";
+  };
+  $("nextq").onclick = function () { qi = (qi + 1) % QS.length; $("ansmsg").textContent = ""; drawQ(); };
+
+  // AIに渡すまとめ
+  $("copy").onclick = function () {
+    var L = ["私（ひびき）の好みと適性の記録です。これをもとに、私に向いていそうなこと（仕事・副業・学び・休日の過ごし方）を、理由つきで3つずつ考えてください。決めつけず、確かめるための問いも2つください。", ""];
+    var mine = TYPES.map(function (t, i) { return [t.n, score(i)]; }).filter(function (x) { return x[1] != null; });
+    if (mine.length) L.push("■ 6つの型（自己チェック, 0〜100）", mine.map(function (x) { return x[0] + " " + Math.round(x[1] * 100); }).join("／"), "");
+    LISTS.forEach(function (l) { if (S.lists[l[0]].length) L.push("■ " + l[1], S.lists[l[0]].join("、"), ""); });
+    var pk = PAIRS.map(function (p, i) { return S.pick[i] != null ? p[S.pick[i]] : null; }).filter(Boolean);
+    if (pk.length) L.push("■ どっち派", pk.join("、"), "");
+    if (S.vals.length) L.push("■ 大切なこと", S.vals.join("、"), "");
+    var ep = S.energy.filter(function (e) { return e.s === 1; }).slice(-10).map(function (e) { return e.t; }), em = S.energy.filter(function (e) { return e.s === -1; }).slice(-10).map(function (e) { return e.t; });
+    if (ep.length) L.push("■ 元気が出ること", ep.join("、"), "");
+    if (em.length) L.push("■ すり減ること", em.join("、"), "");
+    if (S.qa.length) L.push("■ 問いと答え", S.qa.slice(-8).map(function (x) { return "Q " + x.q + "\nA " + x.a; }).join("\n"), "");
+    var t = L.join("\n").trim(), m = $("copymsg");
+    function done() { m.textContent = "コピーしました（" + t.length + "文字）。"; }
+    if (navigator.clipboard) navigator.clipboard.writeText(t).then(done, function () { m.textContent = "コピーできませんでした。"; }); else m.textContent = "コピーできませんでした。";
+  };
+
+  function all() { drawRevisit(); drawMap(); drawGame(); drawQuiz(); drawVals(); drawList(); drawEnergy(); drawQ(); }
+  all();
+  // ほかの端末で変わったら描き直す
+  window.addEventListener("storage", function (e) { if (e.key === KEY) { S = load(); S.apt = S.apt || {}; S.clue = S.clue || {}; S.pick = S.pick || {}; S.vals = S.vals || []; S.lists = S.lists || {}; LISTS.forEach(function (l) { S.lists[l[0]] = S.lists[l[0]] || []; }); S.energy = S.energy || []; S.qa = S.qa || []; S.xp = S.xp || 0; S.did = S.did || {}; S.snaps = S.snaps || []; all(); } });
+})();
+</script>
+</body>
+</html>

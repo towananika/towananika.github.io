@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>アカリと育つ — とわなにか</title>
+<meta name="description" content="今日したことを1つ押すと、アカリがその日を一緒に過ごし、少しずつ育つ。自己理解・習慣のふり返りと自分の説明書も。">
+<link rel="apple-touch-icon" href="../icon-180.png">
+<link rel="icon" href="../icon.svg" type="image/svg+xml">
+<script src="../sync.js"></script>
+<meta name="theme-color" content="#74886d">
+<style>
+  :root { --bg:#f5f1e9; --surface:#fbf9f4; --border:#e2dac8; --text:#2b2924; --muted:#8a8271;
+          --wood:#93704b; --sage:#74886d; --sage-soft:#e2e8dd; --blue:#5b7a99; --red:#b5583f;
+          --sky:#dfe7ea; --ground:#d9dfc9; --skin:#f1d3b8; --hair:#2f2a26; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#1c1a16; --surface:#242119; --border:#38332a; --text:#ede8dd; --muted:#a89e8a;
+            --wood:#c99f74; --sage:#9db394; --sage-soft:#26301f; --blue:#8fb0cf; --red:#e08b70;
+            --sky:#26303a; --ground:#2a3324; --skin:#e3c2a6; --hair:#141210; }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--text);
+         font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",sans-serif; }
+  main { max-width:480px; margin:0 auto; padding:28px 16px 32px; }
+  .top { display:flex; justify-content:space-between; align-items:baseline; }
+  .brand { color:var(--sage); font-size:14px; letter-spacing:.1em; font-weight:600; text-decoration:none; }
+  .date { color:var(--muted); font-size:13px; }
+  h1 { font-size:26px; margin:14px 0 0; }
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:16px; margin-top:14px; }
+  .label { color:var(--muted); font-size:13px; margin:0 0 10px; display:flex; justify-content:space-between; }
+  .label b { color:var(--sage); }
+
+  .scene { border-radius:16px; overflow:hidden; display:block; width:100%; height:auto; }
+  .say { margin:12px 2px 0; font-size:16px; line-height:1.6; min-height:1.6em; }
+  .say::before { content:"「"; color:var(--red); } .say::after { content:"」"; color:var(--red); }
+  .stage { display:flex; justify-content:space-between; align-items:baseline; margin-top:6px; font-size:13px; color:var(--muted); }
+  .stage b { color:var(--text); font-size:15px; }
+
+  .acts { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+  .a { border:0; font:inherit; color:var(--text); background:var(--bg); border-radius:14px; padding:12px 4px 10px;
+       display:flex; flex-direction:column; align-items:center; gap:4px; cursor:pointer; }
+  .a svg { width:26px; height:26px; fill:none; stroke:var(--muted); stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+  .a b { font-size:13px; font-weight:600; }
+  .a.on { background:var(--sage-soft); } .a.on svg { stroke:var(--c); }
+
+  .bar { height:10px; border-radius:99px; background:var(--bg); overflow:hidden; }
+  .bar i { display:block; height:100%; background:var(--sage); border-radius:99px; transition:width .4s; }
+  .album { display:grid; grid-template-columns:repeat(7,1fr); gap:6px; }
+  .d { aspect-ratio:1; border-radius:8px; background:var(--bg); position:relative; overflow:hidden; }
+  .d.today { outline:2px solid var(--sage); outline-offset:1px; }
+  .d span { position:absolute; inset:0; display:flex; flex-wrap:wrap; }
+  .d span i { flex:1 1 50%; }
+  .note { color:var(--muted); font-size:12px; margin:10px 0 0; line-height:1.6; }
+  .keys { display:flex; flex-wrap:wrap; gap:4px 10px; margin-top:10px; font-size:12px; color:var(--muted); }
+  .keys i { display:inline-block; width:9px; height:9px; border-radius:3px; margin-right:4px; }
+
+  /* 自分を育てる（旧 growth/ をこのページに統合） */
+  .gw { --card:#fbf9f4; --ink:#2b2924; --gmuted:#776f62; --line:#ded5c6; --accent:#93704b; --soft:#e9dfd1;
+        font-size:15px; line-height:1.65; color:var(--ink); }
+  @media (prefers-color-scheme: dark) {
+    .gw { --card:#242119; --ink:#ede8dd; --gmuted:#b2a89a; --line:#453e33; --accent:#c99f74; --soft:#3b3025; }
+  }
+  .jump { margin:6px 0 0; font-size:13px; } .jump a { color:var(--sage); }
+  .gw-head { margin:36px 0 0; padding-top:20px; border-top:1px solid var(--border); }
+  .gw-head h2 { font-size:22px; margin:0; }
+  .gw a { color:var(--accent); }
+  .gw h3 { font-size:18px; margin:0 0 10px; }
+  .gw p { margin:6px 0 12px; }
+  .gw .muted, .gw small { color:var(--gmuted); }
+  .gw .card { background:var(--card); border:1px solid var(--line); border-radius:18px; padding:18px; margin:14px 0 0; }
+  .gw .grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+  .gw .metric { background:var(--soft); padding:12px; border-radius:12px; }
+  .gw .metric b { font-size:24px; display:block; }
+  .gw label { display:block; font-weight:600; margin:12px 0 5px; }
+  .gw input, .gw textarea, .gw select { width:100%; padding:11px; border-radius:10px; border:1px solid var(--line); background:var(--bg); color:var(--ink); font:inherit; }
+  .gw textarea { min-height:72px; resize:vertical; }
+  .gw .scale { display:flex; gap:6px; }
+  .gw .scale button { flex:1; padding:10px 0; border:1px solid var(--line); background:var(--bg); color:var(--ink); border-radius:9px; font:inherit; }
+  .gw .scale button[aria-pressed=true] { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .gw button.action { padding:12px 15px; background:var(--accent); border:0; border-radius:10px; color:#fff; font:inherit; font-weight:600; cursor:pointer; }
+  .gw .secondary { background:transparent !important; border:1px solid var(--line) !important; color:var(--ink) !important; }
+  .gw .actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; }
+  .gw .history { padding:0; list-style:none; }
+  .gw .history li { padding:10px 0; border-bottom:1px solid var(--line); }
+  .gw .nav { display:flex; flex-wrap:wrap; gap:12px; }
+  .gw .note { font-size:13px; margin:6px 0 12px; color:var(--gmuted); }
+  .gw .status { min-height:24px; color:var(--accent); }
+  @media (max-width:360px) { .gw .grid { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<main>
+  <div class="top"><a class="brand" href="../">とわなにか</a><span class="date" id="date"></span></div>
+  <h1>アカリと育つ</h1>
+  <p class="jump"><a href="#growth">ふり返り・自分の説明書へ ↓</a></p>
+
+  <div class="card">
+    <svg class="scene" id="scene" viewBox="0 0 320 200" role="img" aria-label="アカリ"></svg>
+    <p class="say" id="say"></p>
+    <div class="stage"><b id="stName"></b><span id="stAge"></span></div>
+  </div>
+
+  <div class="card">
+    <p class="label"><span>今日したこと（1つでいい）</span><b id="cnt"></b></p>
+    <div class="acts" id="acts"></div>
+  </div>
+
+  <div class="card">
+    <p class="label"><span>いっしょに過ごした日</span><b id="days"></b></p>
+    <div class="bar"><i id="bar"></i></div>
+    <p class="note" id="next"></p>
+  </div>
+
+  <div class="card">
+    <p class="label"><span>アルバム（4週間）</span></p>
+    <div class="album" id="album"></div>
+    <div class="keys" id="keys"></div>
+    <p class="note">休んだ日があっても、何も減りません。</p>
+  </div>
+
+  <section class="gw" id="growth" aria-labelledby="gw-title">
+  <div class="gw-head"><h2 id="gw-title">自分を育てる</h2><p class="muted">自己理解・習慣・健康・お金・人間関係を、毎日の小さな記録でつなぐ。</p></div>
+<section class="card"><h3>今日のチェックイン</h3><p class="muted" id="today"></p><div class="grid" id="scores"></div>
+<label for="good">今日、よかったこと</label><textarea id="good" maxlength="500" placeholder="小さなことでOK"></textarea>
+<label for="hard">今日、気になったこと</label><textarea id="hard" maxlength="500" placeholder="書かなくてもOK"></textarea>
+<label for="step">明日の小さな一歩</label><input id="step" maxlength="150" placeholder="例：10分だけ散歩する">
+<div class="actions"><button class="action" id="save">今日の記録を保存</button></div><p class="status" id="status" role="status" aria-live="polite"></p></section>
+<section class="card"><h3>この7日間</h3><div class="grid"><div class="metric"><small>記録した日</small><b id="gw-days">0 / 7</b></div><div class="metric"><small>平均の調子</small><b id="average">—</b></div></div><p id="reflection" class="muted">記録を始めると、ここに振り返りが表示されます。</p><h3>最近の記録</h3><ul class="history" id="history"></ul></section>
+<section class="card"><h3>今あるページとつなぐ</h3><div class="nav"><a href="../health/">健康と散歩</a><a href="../relations/">人間関係</a><a href="../money/">お金と自由</a><a href="../about/">自分の説明書</a><a href="../me/">自分を知る（好みと適性）</a><a href="../productivity/">今日の一歩</a></div><p class="muted note">各ページの既存データは自動で読み取っていません。今はここで5分野をまとめて振り返る仕組みです。</p></section>
+<section class="card"><h3>性格・心理の記録</h3><p class="muted">自分の特徴や価値観を、あとで見直せる「自分の説明書」。検査の結果と日々の気づきは区別して保存します。</p>
+<label for="person-values">大切にしたい価値観</label><textarea id="person-values" maxlength="1200" placeholder="例：安心、自由、楽しさ。自分の言葉で"></textarea>
+<label for="person-strengths">自分の強み・得意なこと</label><textarea id="person-strengths" maxlength="1200" placeholder="気づいたことを追加"></textarea>
+<label for="person-patterns">気持ちや行動の傾向</label><textarea id="person-patterns" maxlength="1200" placeholder="どんなときに元気になる？不安になる？"></textarea>
+<label for="person-needs">人間関係で大切なこと</label><textarea id="person-needs" maxlength="1200" placeholder="自分が安心できる距離感など"></textarea>
+<label for="person-next">これから試したいこと</label><textarea id="person-next" maxlength="1200" placeholder="小さな実験や習慣"></textarea>
+<h3 style="margin-top:22px">TCIの結果（任意）</h3><p class="muted note">正式な検査結果がある場合のみ入力。簡易チェックの結果は正式なTCIと混同しないよう種類を選んでください。</p>
+<label for="tci-kind">結果の種類</label><select id="tci-kind"><option value="">未登録</option><option value="formal">正式なTCI検査</option><option value="informal">簡易チェック（参考）</option></select>
+<div class="grid" id="tci-fields"></div><label for="tci-note">検査日・得点の単位・補足</label><textarea id="tci-note" maxlength="1200" placeholder="例：検査日、T得点／百分位／素点など。種類が分からない場合は数値を入力しない"></textarea>
+<div class="actions"><button class="action" id="save-profile">性格・心理の記録を保存</button></div><p class="status" id="profile-status" role="status" aria-live="polite"></p><p class="muted note">心理情報は公開リポジトリに書き込まず、このブラウザ内にだけ保存します。端末間の同期はありません。</p></section>
+<section class="card"><h3>記録の管理</h3><p class="muted note">入力はこのブラウザのローカルストレージに保存されます。サーバーへの送信やAI分析は行いません。端末・ブラウザを変えると自動同期されません。</p><div class="actions"><button class="action secondary" id="export">JSONでバックアップ</button><button class="action secondary" id="clear">記録をすべて削除</button></div></section>
+  </section>
+</main>
+<script>
+var KEY = "hibiki-grow-v1";
+var ACTS = [
+  { k:"walk",  n:"散歩",     c:"var(--sage)", ic:'<circle cx="13" cy="4" r="2"/><path d="M10 21l2-6-2-3 1-4 3 2 3 1M12 15l3 6M9 10l-2 3"/>',
+    say:["風、気持ちよかったね。あたしも朝練のあと、よく川まで歩くんだ","歩くと、頭の中が静かになるよね","いい景色、見つけた？"] },
+  { k:"meal",  n:"朝ごはん", c:"var(--wood)", ic:'<path d="M4 11h16a8 8 0 0 1-16 0zM12 3v4M8 5v2M16 5v2"/>',
+    say:["朝ごはん、えらい！ あたしは焼きそばパン","おなかが元気だと、一日が長く持つよ","食べられた日は、それだけで勝ちだね"] },
+  { k:"sleep", n:"早く寝た", c:"var(--blue)", ic:'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>',
+    say:["よく眠れた？ あたしは寝るの、得意なんだ","夜にちゃんと休めたね","早く寝た次の朝って、汽笛がきれいに聞こえる"] },
+  { k:"food",  n:"おいしいもの", c:"var(--red)", ic:'<path d="M5 13h14l-2 7H7zM8 13c0-3 2-5 4-5s4 2 4 5M12 8V5"/>',
+    say:["おいしかった？ 今度あたしにも教えてよ","ごはんもの、いいなあ","おいしいって思えるの、大事なことだよ"] },
+  { k:"like",  n:"好きなこと", c:"#a8853a", ic:'<path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/>',
+    say:["好きなこと、できたんだね。顔が明るいよ","それ、あたしも見てみたい","好きって気持ちは、ちゃんと力になる"] },
+  { k:"rest",  n:"休んだ",   c:"var(--muted)", ic:'<path d="M3 18h18M5 18v-5a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v5M7 10V7"/>',
+    say:["休むのも、ちゃんとした一日だよ","あたし、待つの苦手だったけど……いまは待てる。ゆっくりでいい","今日はとなりに座ってるね"] }
+];
+// アカリの一生（triathlon/lives/akari.html）。過ごした日数で進む。減らない。
+var STAGES = [
+  { d:0,   age:6,  n:"ツバサと会う",     h:.62, say:"あたし、アカリ。今日からよろしくね" },
+  { d:5,   age:12, n:"からだが変わる",   h:.78, say:"背がのびてきた。ちょっとこわいけど、うれしい" },
+  { d:14,  age:15, n:"川守隊の見習い",   h:.9,  say:"見回り、はじめたんだ。一発いこ！" },
+  { d:30,  age:17, n:"泣いた日",         h:.95, say:"負けた日もあった。でも、となりにいてくれる人がいた" },
+  { d:50,  age:22, n:"タクミが生まれる", h:1,   say:"強さって、勝つことじゃなくて、そばにいることかも" },
+  { d:80,  age:38, n:"待つことを覚える", h:1,   say:"渡し場で待つの、前より上手になったよ" },
+  { d:120, age:45, n:"川守隊の隊長",     h:1,   say:"あせらなくていい。いっしょに行こう" },
+  { d:200, age:62, n:"拳を置く",         h:.97, say:"朝練は、散歩になった。焼きそばパンは半分こ" },
+  { d:300, age:83, n:"汽笛の朝に",       h:.94, say:"いい一生だった。ずっと、いっしょに過ごしてくれてありがとう" }
+];
+
+function load() { try { return JSON.parse(localStorage.getItem(KEY)) || { days:{} }; } catch (e) { return { days:{} }; } }
+function save(s) { try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) {} }
+function ds(t) { var d = new Date(t); return d.getFullYear() + "-" + ("0"+(d.getMonth()+1)).slice(-2) + "-" + ("0"+d.getDate()).slice(-2); }
+var TODAY = ds(Date.now()), S = load(), lastTap = null;
+
+function total() { return Object.keys(S.days).filter(function (k) { return S.days[k].length; }).length; }
+function stageOf(n) { var s = STAGES[0]; STAGES.forEach(function (x) { if (n >= x.d) s = x; }); return s; }
+function act(k) { return ACTS.filter(function (a) { return a.k === k; })[0]; }
+function seed(str) { var h = 0; for (var i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) | 0; return Math.abs(h); }
+
+function scene(st, today) {
+  var col = today.length ? act(today[today.length-1]).c : "var(--sage)";
+  var old = st.age >= 62, h = st.h, cx = 160, base = 168, H = 120 * h, top = base - H;
+  var hair = old ? "#b9b2a6" : "var(--hair)", hr = 17 + 4 * h;
+  var hy = top + hr;
+  var sun = st.age >= 62 ? 'var(--wood)' : 'var(--red)';
+  return '<rect width="320" height="200" fill="var(--sky)"/>' +
+    '<circle cx="262" cy="46" r="18" fill="' + sun + '" opacity=".35"/>' +
+    '<path d="M0 150 Q80 128 160 146 T320 140 V200 H0z" fill="var(--ground)"/>' +
+    '<path d="M0 176 Q120 164 320 178 V200 H0z" fill="' + col + '" opacity=".25"/>' +
+    '<path d="M36 160 l14-34 14 34z M58 162 l10-24 10 24z" fill="var(--sage)" opacity=".55"/>' +
+    '<path d="M250 164 l12-28 12 28z" fill="var(--sage)" opacity=".5"/>' +
+    // からだ
+    '<rect x="' + (cx-14*h) + '" y="' + (hy+hr-2) + '" width="' + 28*h + '" height="' + (base-hy-hr-10*h) + '" rx="' + 10*h + '" fill="' + col + '"/>' +
+    '<rect x="' + (cx-9*h) + '" y="' + (base-12*h) + '" width="' + 7*h + '" height="' + 12*h + '" rx="3" fill="var(--text)" opacity=".7"/>' +
+    '<rect x="' + (cx+2*h) + '" y="' + (base-12*h) + '" width="' + 7*h + '" height="' + 12*h + '" rx="3" fill="var(--text)" opacity=".7"/>' +
+    // あたま
+    '<circle cx="' + cx + '" cy="' + hy + '" r="' + hr + '" fill="var(--skin)"/>' +
+    '<path d="M' + (cx-hr) + ' ' + (hy+2) + ' A' + hr + ' ' + hr + ' 0 0 1 ' + (cx+hr) + ' ' + (hy+2) + ' L' + (cx+hr) + ' ' + (hy+6) + ' Q' + cx + ' ' + (hy-hr*.55) + ' ' + (cx-hr) + ' ' + (hy+6) + 'z" fill="' + hair + '"/>' +
+    '<rect x="' + (cx+hr*.35) + '" y="' + (hy-hr*.75) + '" width="' + hr*.5 + '" height="' + hr*.22 + '" rx="2" fill="var(--red)"/>' +
+    '<circle cx="' + (cx-hr*.35) + '" cy="' + (hy+hr*.2) + '" r="1.8" fill="var(--hair)"/><circle cx="' + (cx+hr*.35) + '" cy="' + (hy+hr*.2) + '" r="1.8" fill="var(--hair)"/>' +
+    '<path d="M' + (cx-4) + ' ' + (hy+hr*.5) + ' q4 3 8 0" stroke="var(--hair)" stroke-width="1.6" fill="none" stroke-linecap="round"/>' +
+    (old ? '<path d="M' + (cx+26) + ' ' + (hy+hr) + ' v' + (base-hy-hr) + '" stroke="var(--wood)" stroke-width="3" stroke-linecap="round"/>' : '');
+}
+
+function render() {
+  var today = S.days[TODAY] || [], n = total(), st = stageOf(n);
+  var nxt = STAGES.filter(function (x) { return x.d > n; })[0];
+  document.getElementById("date").textContent = TODAY.slice(5).replace("-", "/");
+  document.getElementById("scene").innerHTML = scene(st, today);
+  var line = st.say;
+  if (lastTap) { var L = act(lastTap).say; line = L[seed(TODAY + lastTap) % L.length]; }
+  else if (today.length) { var a = act(today[today.length-1]).say; line = a[seed(TODAY) % a.length]; }
+  document.getElementById("say").textContent = line;
+  document.getElementById("stName").textContent = st.n;
+  document.getElementById("stAge").textContent = "アカリ " + st.age + "歳";
+  document.getElementById("cnt").textContent = today.length ? today.length + "こ" : "";
+  document.getElementById("acts").innerHTML = ACTS.map(function (a) {
+    return '<button class="a' + (today.indexOf(a.k) >= 0 ? ' on' : '') + '" style="--c:' + a.c + '" data-k="' + a.k + '"><svg viewBox="0 0 24 24">' + a.ic + '</svg><b>' + a.n + '</b></button>';
+  }).join("");
+  document.getElementById("days").textContent = n + "日";
+  var prev = st.d, goal = nxt ? nxt.d : st.d;
+  document.getElementById("bar").style.width = (nxt ? Math.round((n - prev) / (goal - prev) * 100) : 100) + "%";
+  document.getElementById("next").textContent = nxt ? "あと" + (nxt.d - n) + "日で、アカリは" + nxt.age + "歳に。" : "アカリの一生を、さいごまで一緒に過ごしました。";
+  var cells = "", t = Date.now();
+  var dow = (new Date(t).getDay() + 6) % 7; // 月曜はじまり
+  for (var i = 27 - (6 - dow); i >= -(6 - dow); i--) {
+    var k = ds(t - i * 864e5), v = i < 0 ? [] : (S.days[k] || []);
+    cells += '<div class="d' + (k === TODAY ? ' today' : '') + '" title="' + k + '"' + (i < 0 ? ' style="opacity:.35"' : '') + '><span>' +
+      v.map(function (x) { return '<i style="background:' + act(x).c + '"></i>'; }).join("") + '</span></div>';
+  }
+  document.getElementById("album").innerHTML = cells;
+  document.getElementById("keys").innerHTML = ACTS.map(function (a) { return '<span><i style="background:' + a.c + '"></i>' + a.n + '</span>'; }).join("");
+}
+
+document.getElementById("acts").addEventListener("click", function (e) {
+  var b = e.target.closest(".a"); if (!b) return;
+  var k = b.dataset.k, t = S.days[TODAY] || [], i = t.indexOf(k);
+  if (i >= 0) { t.splice(i, 1); lastTap = null; } else { t.push(k); lastTap = k; }
+  if (t.length) S.days[TODAY] = t; else delete S.days[TODAY];
+  save(S); render();
+});
+render();
+</script>
+<script>
+(function(){'use strict';var key='hibiki-growth-v1',fields=[['mind','自己理解'],['habit','習慣'],['health','健康'],['money','お金'],['relations','人間関係']],scores={},records={};function iso(d){return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')}var date=iso(new Date());document.getElementById('today').textContent=date;try{var stored=JSON.parse(localStorage.getItem(key)||'{}');if(stored&&typeof stored==='object'&&!Array.isArray(stored))records=stored}catch(e){}var wrap=document.getElementById('scores');fields.forEach(function(f){var item=document.createElement('div'),lab=document.createElement('label');lab.textContent=f[1]+'（1〜5）';item.append(lab);var row=document.createElement('div');row.className='scale';for(var n=1;n<=5;n++){(function(num){var b=document.createElement('button');b.type='button';b.textContent=num;b.setAttribute('aria-label',f[1]+' '+num+'点');b.addEventListener('click',function(){scores[f[0]]=num;Array.from(row.children).forEach(function(x){x.setAttribute('aria-pressed',String(x===b))})});b.setAttribute('aria-pressed','false');row.append(b)})(n)}item.append(row);wrap.append(item)});function fill(){var r=records[date]||{};scores=Object.assign({},r.scores||{});Array.from(wrap.children).forEach(function(item,i){Array.from(item.querySelectorAll('button')).forEach(function(b){b.setAttribute('aria-pressed',String(Number(b.textContent)===scores[fields[i][0]]))})});['good','hard','step'].forEach(function(k){document.getElementById(k).value=r[k]||''})}function render(){var days=[];for(var i=6;i>=0;i--){var d=new Date();d.setHours(12,0,0,0);d.setDate(d.getDate()-i);days.push(iso(d))}var recent=days.map(function(k){return records[k]}).filter(Boolean);document.getElementById('gw-days').textContent=recent.length+' / 7';var vals=recent.flatMap(function(r){return Object.values(r.scores||{}).filter(function(v){return Number.isInteger(v)&&v>=1&&v<=5})});document.getElementById('average').textContent=vals.length?(vals.reduce(function(a,b){return a+b},0)/vals.length).toFixed(1)+' / 5':'—';var summary=document.getElementById('reflection');if(recent.length<3)summary.textContent='3日以上記録すると、分野別の傾向を表示します。';else{var ranked=fields.map(function(f){var v=recent.map(function(r){return r.scores&&r.scores[f[0]]}).filter(function(v){return Number.isInteger(v)&&v>=1&&v<=5});return {name:f[1],avg:v.length?v.reduce(function(a,b){return a+b},0)/v.length:null}}).filter(function(x){return x.avg!==null}).sort(function(a,b){return a.avg-b.avg});summary.textContent=ranked.length?'今週、最も低く記録した分野は「'+ranked[0].name+'」（平均'+ranked[0].avg.toFixed(1)+'）。無理に改善せず、まず理由を振り返ってみよう。':'記録が増えると傾向を表示します。'}var list=document.getElementById('history');list.replaceChildren();Object.keys(records).sort().reverse().slice(0,7).forEach(function(k){var li=document.createElement('li'),r=records[k];li.textContent=k+' — '+(r.good||r.step||'記録あり');list.append(li)})}fill();render();document.getElementById('save').addEventListener('click',function(){if(Object.keys(scores).length===0){document.getElementById('status').textContent='まず1つ以上の分野を選んでください。';return}var r={scores:{},good:document.getElementById('good').value.trim(),hard:document.getElementById('hard').value.trim(),step:document.getElementById('step').value.trim()};fields.forEach(function(f){if(Number.isInteger(scores[f[0]]))r.scores[f[0]]=scores[f[0]]});records[date]=r;try{localStorage.setItem(key,JSON.stringify(records));document.getElementById('status').textContent='今日の記録を保存しました。';render()}catch(e){document.getElementById('status').textContent='保存できませんでした。ブラウザの保存設定を確認してください。'}});document.getElementById('export').addEventListener('click',function(){var blob=new Blob([JSON.stringify({version:1,records:records},null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='hibiki-growth-'+date+'.json';a.click();setTimeout(function(){URL.revokeObjectURL(url)},1000)});document.getElementById('clear').addEventListener('click',function(){if(!confirm('自己成長の記録をすべて削除しますか？この操作は元に戻せません。'))return;try{localStorage.removeItem(key);records={};scores={};fill();render();document.getElementById('status').textContent='記録を削除しました。'}catch(e){document.getElementById('status').textContent='削除できませんでした。'}})})();
+</script>
+<script>
+(function(){'use strict';var key='hibiki-personality-v1',ids=['person-values','person-strengths','person-patterns','person-needs','person-next','tci-kind','tci-note'],names=[['NS','新奇性追求'],['HA','損害回避'],['RD','報酬依存'],['PS','固執'],['SD','自己志向'],['CO','協調性'],['ST','自己超越']];var wrap=document.getElementById('tci-fields');names.forEach(function(n){var cell=document.createElement('div'),lab=document.createElement('label'),input=document.createElement('input');lab.htmlFor='tci-'+n[0];lab.textContent=n[1]+' ('+n[0]+')';input.id='tci-'+n[0];input.type='text';input.maxLength=40;input.placeholder='結果の数値';cell.append(lab,input);wrap.append(cell);ids.push(input.id)});try{var data=JSON.parse(localStorage.getItem(key)||'{}');ids.forEach(function(id){if(typeof data[id]==='string')document.getElementById(id).value=data[id]})}catch(e){}document.getElementById('save-profile').addEventListener('click',function(){var data={updatedAt:new Date().toISOString()};ids.forEach(function(id){data[id]=document.getElementById(id).value.trim()});try{localStorage.setItem(key,JSON.stringify(data));document.getElementById('profile-status').textContent='このブラウザに保存しました。'}catch(e){document.getElementById('profile-status').textContent='保存に失敗しました。'}});var exportButton=document.getElementById('export');exportButton.addEventListener('click',function(){var raw=localStorage.getItem(key);if(!raw)return;var blob=new Blob([raw],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='hibiki-personality-'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(function(){URL.revokeObjectURL(url)},1000)});var clearButton=document.getElementById('clear');clearButton.addEventListener('click',function(){if(localStorage.getItem('hibiki-growth-v1')===null){try{localStorage.removeItem(key);ids.forEach(function(id){document.getElementById(id).value=''});document.getElementById('profile-status').textContent='性格・心理の記録も削除しました。'}catch(e){}}else{document.getElementById('profile-status').textContent='性格・心理の記録は別に保存されています。削除したい場合は入力を消して保存してください。'}})})();
+</script>
+</body>
+</html>

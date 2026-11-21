@@ -1,0 +1,113 @@
+(function(){
+'use strict';
+var cities={yeongdeungpo:[37.526,126.896,'永登浦区','Asia/Seoul'],yeouido:[37.5251,126.9258,'汝矣島','Asia/Seoul'],seoul:[37.5665,126.978,'ソウル','Asia/Seoul'],busan:[35.1796,129.0756,'釜山','Asia/Seoul'],tokyo:[35.6762,139.6503,'東京','Asia/Tokyo'],osaka:[34.6937,135.5023,'大阪','Asia/Tokyo']};
+function ok(n){return typeof n==='number'&&Number.isFinite(n)}
+function deg(n){return ok(n)?Math.round(n)+'℃':'—'}
+var NAMES={0:'晴れ',1:'晴れ',2:'晴れ時々くもり',3:'くもり',45:'霧',48:'霧',51:'霧雨',53:'霧雨',55:'霧雨',56:'冷たい霧雨',57:'冷たい霧雨',61:'小雨',63:'雨',65:'大雨',66:'冷たい雨',67:'冷たい雨',71:'小雪',73:'雪',75:'大雪',77:'小雪',80:'にわか雨',81:'にわか雨',82:'強いにわか雨',85:'にわか雪',86:'強いにわか雪',95:'雷雨',96:'雷雨',99:'雷雨'};
+function label(code){return ok(code)&&NAMES[code]?NAMES[code]:'未確認'}
+function cat(code){if(!ok(code)||!NAMES[code])return '未確認';if(code<=1)return '晴れ';if(code===2)return '晴れ時々くもり';if(code===3)return 'くもり';if(code<50)return '霧';if(code>=95)return '雷雨';if((code>=71&&code<=77)||code===85||code===86)return '雪';return '雨'}
+function icon(code){if(!ok(code))return '—';var l=cat(code);return l==='晴れ'?'☀':l==='晴れ時々くもり'?'☀︎':l==='雨'?'☂':l==='雪'?'❄':l==='雷雨'?'⚡':l==='霧'?'≋':'☁'}
+function nowIn(tz){try{return new Date().toLocaleString('sv-SE',{timeZone:tz}).replace(' ','T').slice(0,16)}catch(e){return ''}}
+function dayDiff(a,b){return Math.round((Date.parse(a.slice(0,10)+'T00:00Z')-Date.parse(b.slice(0,10)+'T00:00Z'))/864e5)}
+function windLabel(speed){return !ok(speed)||speed<0?'未確認':speed<2?'穏やか':speed<5?'風を感じる':speed<10?'強めの風':speed<15?'歩きにくい強さ':'転倒に注意する強さ';}
+function periodIcon(code,period){var span=el('span','wx-period wx-code-'+cat(code));span.setAttribute('aria-label',period+' '+label(code));span.title=period+' '+label(code);var symbol=el('span','wx-period-symbol',icon(code));symbol.setAttribute('aria-hidden','true');span.append(symbol);return span;}
+function advice(c,p){var f=c.apparent_temperature,w=c.wind_speed_10m,r=c.precipitation,code=c.weather_code;
+if(cat(code)==='雷雨'||cat(code)==='雪'||(ok(w)&&w>=10)||(ok(r)&&r>=4))return ['今日は屋内運動が安心','雷・雪・強風・強い雨の可能性。外出前に警報と路面を確認。'];
+if((ok(f)&&f<=5)||(ok(w)&&w>=7)||(ok(p)&&p>=65))return ['短時間か屋内がおすすめ','寒さ・風・雨の可能性が高め。屋内15分や短い散歩を。'];
+if((ok(f)&&f<=12)||(ok(w)&&w>=4)||(ok(p)&&p>=35))return ['防寒して短めの散歩','上着と雨具を確認。10〜20分から始めて、寒ければ戻ろう。'];
+if(ok(f)&&f>=29)return ['暑さに注意','涼しい時間に短く歩き、水分補給を。'];
+return ['散歩しやすそう','20〜30分の散歩を検討。体調と実際の空模様を優先。'];
+}
+function el(tag,cls,text){var e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e}
+function tile(name,value,detail){var t=el('div','wx-tile');t.append(el('span','wx-label',name),el('strong','wx-value',value));if(detail)t.append(el('small','',detail));return t}
+function weekChart(days){
+var chart=el('div','wx-week-chart');chart.setAttribute('role','img');chart.setAttribute('aria-label','7日間の気温と雨量。左の縦軸は気温です。');chart.append(el('p','wx-week-chart-key','● 最高・最低気温　▮ 雨量（mm）'));
+var valid=days.filter(function(day){return ok(day.low)&&ok(day.high)});if(!valid.length)return chart;
+var min=Math.floor(Math.min.apply(null,valid.map(function(day){return day.low}))/5)*5-5,max=Math.ceil(Math.max.apply(null,valid.map(function(day){return day.high}))/5)*5+5,span=Math.max(5,max-min),rainMax=Math.max.apply(null,days.map(function(day){return ok(day.rain)?day.rain:0}).concat([1]));
+var w=680,h=252,left=42,right=14,top=18,tempBottom=162,rainTop=188,bottom=28,usable=w-left-right,step=usable/Math.max(1,days.length-1),svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 '+w+' '+h);svg.setAttribute('aria-hidden','true');
+function node(tag,attrs,text){var n=document.createElementNS('http://www.w3.org/2000/svg',tag);Object.keys(attrs||{}).forEach(function(key){n.setAttribute(key,attrs[key])});if(text!==undefined)n.textContent=text;svg.append(n);return n}function y(value){return tempBottom-(value-min)/span*(tempBottom-top)}
+for(var g=0;g<=4;g++){var value=min+span*g/4,gy=y(value);node('line',{x1:left,y1:gy,x2:w-right,y2:gy,stroke:'var(--border)','stroke-width':1});node('text',{x:left-7,y:gy+4,'text-anchor':'end',fill:'var(--muted)','font-size':11},Math.round(value)+'°')}
+days.forEach(function(day,index){var x=left+index*step,barHeight=(ok(day.rain)?day.rain:0)/rainMax*35;if(ok(day.low)&&ok(day.high)){node('line',{x1:x,y1:y(day.high),x2:x,y2:y(day.low),stroke:'var(--sage)','stroke-width':4,'stroke-linecap':'round'});node('circle',{cx:x,cy:y(day.high),r:4,fill:'var(--sage)'});node('circle',{cx:x,cy:y(day.low),r:4,fill:'var(--surface)',stroke:'var(--sage)','stroke-width':2});node('text',{x:x,y:Math.max(12,y(day.high)-8),'text-anchor':'middle',fill:'var(--text)','font-size':11},Math.round(day.high)+'°')}if(ok(day.rain)&&day.rain>0){node('rect',{x:x-9,y:rainTop+35-barHeight,width:18,height:barHeight,rx:3,fill:'var(--wx-rain)',opacity:.78});node('text',{x:x,y:rainTop+51,'text-anchor':'middle',fill:'var(--wx-rain)','font-size':10},day.rain.toFixed(day.rain%1?1:0)+'mm')}node('text',{x:x,y:h-bottom,'text-anchor':'middle',fill:'var(--muted)','font-size':11},day.label)});
+node('line',{x1:left,y1:rainTop+36,x2:w-right,y2:rainTop+36,stroke:'var(--border)','stroke-width':1});node('text',{x:left,y:rainTop-4,fill:'var(--muted)','font-size':11},'雨量');chart.append(svg);return chart;
+}
+document.querySelectorAll('[data-weather]').forEach(function(root){
+var top=el('div','weather-top'),title=el('strong','','外出前の天気'),sel=el('select');sel.setAttribute('aria-label','予報の地域');
+Object.keys(cities).forEach(function(k){var o=el('option','',cities[k][2]);o.value=k;sel.append(o)});
+try{var saved=localStorage.getItem('hibiki-weather-city-v1');sel.value=cities[saved]?saved:'yeongdeungpo'}catch(e){sel.value='yeongdeungpo'}
+top.append(title,sel);var content=el('div','weather-content');content.setAttribute('aria-live','polite');var bottom=el('div','weather-bottom'),source=el('p','weather-source','Open-Meteo · 地域の代表地点'),refresh=el('button','','更新');refresh.type='button';bottom.append(source,refresh);root.append(top,content,bottom);
+var compact=root.classList.contains('weather-compact'),toggle;
+if(compact){toggle=el('button','wx-toggle','週間予報を見る');toggle.type='button';toggle.setAttribute('aria-expanded','false');root.append(toggle);
+function expand(){var open=root.classList.toggle('wx-expanded');toggle.setAttribute('aria-expanded',String(open));toggle.textContent=open?'閉じる':'週間予報を見る';}
+toggle.addEventListener('click',expand);root.addEventListener('click',function(event){if(!root.classList.contains('wx-expanded')&&!event.target.closest('button,select,a,input,summary,details'))expand();});}
+var counter=0,ctrl,loadedAt=0,loadedDay='';
+function load(){
+var id=++counter,c=cities[sel.value];if(ctrl)ctrl.abort();ctrl=new AbortController();var own=ctrl;var timeout=setTimeout(function(){own.abort()},12000);refresh.disabled=true;content.textContent='最新の予報を読み込んでいます…';
+try{localStorage.setItem('hibiki-weather-city-v1',sel.value)}catch(e){}
+var url='https://api.open-meteo.com/v1/forecast?latitude='+c[0]+'&longitude='+c[1]+'&current=temperature_2m,apparent_temperature,relative_humidity_2m,precipitation,weather_code,wind_speed_10m,wind_gusts_10m,wind_direction_10m&hourly=temperature_2m,precipitation_probability,wind_speed_10m,apparent_temperature,weather_code&daily=temperature_2m_max,temperature_2m_min,weather_code,sunrise,sunset,precipitation_probability_max,precipitation_sum,wind_speed_10m_max&wind_speed_unit=ms&timezone='+encodeURIComponent(c[3])+'&past_days=1&forecast_days=7';
+fetch(url+'&_='+Date.now(),{signal:own.signal,cache:'no-store'}).then(function(r){if(!r.ok)throw Error('network');return r.json()}).then(function(d){
+if(id!==counter)return;if(!d.current||!d.hourly||!d.daily||!d.current.time)throw Error('missing');
+var n=d.current,h=d.hourly,local=nowIn(c[3]),lag=local?dayDiff(local,n.time):0;
+if(Math.abs(lag)>=1)throw Error('stale');
+var day=(d.daily.time||[]).indexOf(n.time.slice(0,10));if(day<0)throw Error('stale');
+loadedAt=Date.now();loadedDay=n.time.slice(0,10);
+var nowIndex=(h.time||[]).findIndex(function(t){return t.slice(0,13)===n.time.slice(0,13)});if(nowIndex<0)nowIndex=0;
+var next=h.precipitation_probability.slice(nowIndex,nowIndex+6).filter(ok),rain=next.length?Math.max.apply(null,next):null;
+var a=advice(n,rain);content.replaceChildren();
+var hero=el('div','wx-hero');var main=el('div','wx-main');main.append(el('span','wx-symbol',icon(n.weather_code)),el('b','wx-temp',deg(n.temperature_2m)));var desc=el('div','wx-desc');desc.append(el('strong','',label(n.weather_code)),el('span','', '体感 '+deg(n.apparent_temperature)),el('span','wx-desc-range',deg(d.daily.temperature_2m_min[day])+' / '+deg(d.daily.temperature_2m_max[day])+(rain===null?'':' · この先の雨 '+rain+'%')));hero.append(main,desc);content.append(hero);
+var grid=el('div','wx-grid');
+grid.append(tile('現在の風',windLabel(n.wind_speed_10m),(ok(n.wind_speed_10m)?n.wind_speed_10m.toFixed(1)+' m/s':'—')+(ok(n.wind_gusts_10m)?' · 突風 '+n.wind_gusts_10m.toFixed(1)+' m/s':'')),
+tile('雨の可能性',rain===null?'—':rain+'%','これから6時間の最大値'),
+tile('今日の気温',deg(d.daily.temperature_2m_min[day])+'〜'+deg(d.daily.temperature_2m_max[day]),'最低〜最高'),
+tile('湿度',ok(n.relative_humidity_2m)?Math.round(n.relative_humidity_2m)+'%':'—','現在'));
+content.append(grid);
+var verdict=el('div','wx-verdict');verdict.append(el('strong','',a[0]),el('p','',a[1]));content.append(verdict);
+var forecast=el('div','wx-hours');forecast.append(el('h3','','今日〜明日の気温の変化'));var strip=el('div','wx-hour-list');
+
+var lastTomorrow=n.time.slice(0,10), tomorrowDate=(d.daily.time||[])[day+1],end=nowIndex;
+while(end<h.time.length&&(h.time[end].slice(0,10)===lastTomorrow||h.time[end].slice(0,10)===tomorrowDate))end++;
+var hourlyPoints=[];
+for(var i=nowIndex;i<end;i++){if(ok(h.temperature_2m[i]))hourlyPoints.push({i:i,t:h.temperature_2m[i]})}
+if(hourlyPoints.length>1){
+var min=Math.min.apply(null,hourlyPoints.map(function(p){return p.t}))-1,max=Math.max.apply(null,hourlyPoints.map(function(p){return p.t}))+1;
+var w=660,ht=175,pad=25,span=Math.max(1,max-min),points=hourlyPoints.map(function(p,j){return [pad+j*(w-2*pad)/(hourlyPoints.length-1),ht-pad-(p.t-min)/span*(ht-2*pad)]});
+var svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 '+w+' '+ht);svg.setAttribute('role','img');svg.setAttribute('aria-label','今日から明日の気温推移を示す折れ線グラフ');svg.classList.add('wx-line');
+function path(d,stroke,width){var x=document.createElementNS('http://www.w3.org/2000/svg','path');x.setAttribute('d',d);x.setAttribute('fill','none');x.setAttribute('stroke',stroke);x.setAttribute('stroke-width',width);x.setAttribute('stroke-linecap','round');x.setAttribute('stroke-linejoin','round');svg.append(x)}
+for(var g=0;g<3;g++){var gy=pad+g*(ht-2*pad)/2;path('M'+pad+' '+gy+'H'+(w-pad),'var(--border)','1')}
+path(points.map(function(pt,j){return(j?'L':'M')+pt[0].toFixed(1)+' '+pt[1].toFixed(1)}).join(' '),'var(--sage)','4');
+hourlyPoints.forEach(function(p,j){if(j%4!==0&&j!==hourlyPoints.length-1)return;var pt=points[j],circle=document.createElementNS('http://www.w3.org/2000/svg','circle');circle.setAttribute('cx',pt[0]);circle.setAttribute('cy',pt[1]);circle.setAttribute('r','4');circle.setAttribute('fill','var(--sage)');svg.append(circle);var txt=document.createElementNS('http://www.w3.org/2000/svg','text');txt.setAttribute('x',pt[0]);txt.setAttribute('y',Math.max(14,pt[1]-10));txt.setAttribute('text-anchor','middle');txt.setAttribute('fill','var(--text)');txt.setAttribute('font-size','13');txt.textContent=Math.round(p.t)+'°';svg.append(txt)});
+forecast.append(svg);
+var change=0,rapid=0;
+for(var j=1;j<hourlyPoints.length;j++){var delta=hourlyPoints[j].t-hourlyPoints[j-1].t;change+=delta;if(Math.abs(delta)>Math.abs(rapid))rapid=delta}
+var changeText=Math.abs(rapid)>=3?'1時間で最大 '+Math.abs(rapid).toFixed(1)+'℃ '+(rapid>0?'上昇':'下降')+'する時間があります。':Math.abs(rapid)>=1.5?'やや大きな気温変化があります。':'気温の変化は比較的ゆるやかです。';
+forecast.append(el('p','wx-trend',changeText+' 今日から明日にかけて '+(change>=0?'+':'')+change.toFixed(1)+'℃ の変化。'));
+}
+for(var i=nowIndex;i<end;i++){var item=el('div','wx-hour');var dateLabel=h.time[i].slice(0,10)===lastTomorrow?'今日':'明日';item.append(el('small','',dateLabel+' '+h.time[i].slice(11,16)),el('b','',deg(h.temperature_2m[i])),el('small','',ok(h.precipitation_probability[i])?'雨 '+h.precipitation_probability[i]+'%':'雨 —'),el('small','',ok(h.wind_speed_10m[i])?'風 '+h.wind_speed_10m[i].toFixed(1):'風 —'));strip.append(item)}
+forecast.append(strip);content.append(forecast);
+var weekly=el('div','wx-week');weekly.append(el('h3','','7日間の気温と雨量'));var chartDays=(d.daily.time||[]).slice(day,day+7).map(function(date){var i=d.daily.time.indexOf(date);return {label:date===n.time.slice(0,10)?'今日':date.slice(5).replace('-','/'),low:d.daily.temperature_2m_min[i],high:d.daily.temperature_2m_max[i],rain:(d.daily.precipitation_sum||[])[i]};});weekly.append(weekChart(chartDays));var weekHead=el('div','wx-week-head');['日付','午前','午後','雨','最低 / 最高'].forEach(function(value){weekHead.append(el('span','',value));});weekly.append(weekHead);
+var hourIndices={};(h.time||[]).forEach(function(time,index){hourIndices[time]=index;});
+(d.daily.time||[]).slice(day,day+7).forEach(function(date){var i=d.daily.time.indexOf(date);
+var row=el('div','wx-day'),weekday=['日','月','火','水','木','金','土'][new Date(date+'T12:00:00').getDay()];
+var am=hourIndices[date+'T09:00'],pm=hourIndices[date+'T15:00'];
+row.append(el('span','wx-day-date',date===n.time.slice(0,10)?'今日 ('+weekday+')':date.slice(5).replace('-','/')+' ('+weekday+')'),periodIcon(am===undefined?null:(h.weather_code||[])[am],'午前9時'),periodIcon(pm===undefined?null:(h.weather_code||[])[pm],'午後3時'));
+var rainMax=(d.daily.precipitation_probability_max||[])[i],windMax=(d.daily.wind_speed_10m_max||[])[i];row.append(el('span','wx-day-rain'+(ok(rainMax)&&rainMax>=50?' wx-wet':''),ok(rainMax)?rainMax+'%':'—'));
+var range=el('span','wx-day-range');range.append(el('span','wx-low',deg(d.daily.temperature_2m_min[i])),document.createTextNode(' / '),el('span','wx-high',deg(d.daily.temperature_2m_max[i])));row.append(range);
+if(weekday==='土'||weekday==='日'){row.classList.add('wx-weekend');row.setAttribute('aria-label',date+' 週末');}
+if(ok(windMax)&&windMax>=5)row.append(el('small','wx-day-extra','風 '+windLabel(windMax)+'（最大 '+windMax.toFixed(1)+' m/s）'));weekly.append(row)
+});content.append(weekly);
+var times=el('p','weather-detail','日の入り '+(d.daily.sunset[day]||'').slice(11,16)+' · 予報時刻 '+n.time.replace('T',' ')+' · '+c[2]);content.append(times);
+weekly.append(el('p','wx-period-note','午前は9時、午後は15時の予報。雨はその日の最大の確率。風は強い日だけ表示。'));
+var today=el('details','wx-today-details');today.append(el('summary','','今日・明日の詳細'),hero,grid,verdict,forecast,times);
+var guide=el('details','wx-wind-guide');guide.append(el('summary','','風の強さの目安'));
+guide.append(el('p','','2m/s未満：穏やか。2〜5m/s未満：風を感じる。5〜10m/s未満：強めの風。10m/s以上：歩きにくくなることがある。15m/s以上：転倒に注意。低風速の区分は日常表示用の目安です。寒さは気温・服装・体調でも変わります。'));
+var windSource=el('a','','気象庁：風の強さと吹き方');windSource.href='https://www.jma.go.jp/jma/kishou/know/yougo_hp/kazehyo.html';windSource.target='_blank';windSource.rel='noopener';guide.append(windSource);today.append(guide);
+content.replaceChildren(weekly,today);if(compact){var preview=el('div','wx-preview');preview.append(hero.cloneNode(true),verdict.cloneNode(true));content.prepend(preview);}
+source.textContent='Open-Meteo · '+c[2]+'付近 · '+n.time.slice(5,10).replace('-','/')+' '+n.time.slice(11,16)+' 時点の予報';
+}).catch(function(err){if(id!==counter)return;loadedAt=0;content.textContent=err&&err.message==='stale'?'届いた予報の日付が今日とずれています。少し待って「更新」を押してください。':'予報を取得できません。通信状態を確認して「更新」を押してください。'}).finally(function(){clearTimeout(timeout);if(id===counter)refresh.disabled=false});
+}
+sel.addEventListener('change',load);refresh.addEventListener('click',load);load();
+// 開いたままの画面でも古い予報を残さない：30分たつか日付が変わったら読み直す
+function stale(){var c=cities[sel.value];return !loadedAt||Date.now()-loadedAt>18e5||nowIn(c[3]).slice(0,10)!==loadedDay}
+function check(){if(document.visibilityState==='visible'&&!refresh.disabled&&stale())load()}
+document.addEventListener('visibilitychange',check);window.addEventListener('pageshow',check);window.addEventListener('focus',check);setInterval(check,6e5);
+});
+})();

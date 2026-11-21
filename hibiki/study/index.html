@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>勉強 — とわなにか</title>
+<meta name="description" content="受けている科目をえらんで、1つずつ勉強する。">
+<link rel="apple-touch-icon" href="../icon-180.png">
+<link rel="icon" href="../icon.svg" type="image/svg+xml">
+<script src="../sync.js"></script>
+<meta name="theme-color" content="#74886d">
+<style>
+  :root { --bg:#f5f1e9; --surface:#fbf9f4; --border:#e2dac8; --text:#2b2924; --muted:#8a8271; --wood:#93704b; --sage:#74886d; --sage-soft:#e2e8dd; --blue:#5b7a99; --blue-soft:#dde6ee; --red:#a8553f; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#1c1a16; --surface:#242119; --border:#38332a; --text:#ede8dd; --muted:#a89e8a; --wood:#c99f74; --sage:#9db394; --sage-soft:#26301f; --blue:#8fb0cf; --blue-soft:#222d37; --red:#d98a72; } }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",sans-serif; }
+  main { max-width:480px; margin:0 auto; padding:28px 16px 32px; }
+  .brand { color:var(--sage); font-size:14px; letter-spacing:.1em; font-weight:600; text-decoration:none; }
+  h1 { font-size:26px; margin:16px 0 2px; }
+  .sub { color:var(--muted); font-size:13px; margin:0 0 6px; }
+  .sj { display:flex; gap:14px; align-items:center; margin-top:14px; padding:16px; text-decoration:none; color:inherit; background:var(--surface); border:1px solid var(--border); border-radius:20px; }
+  .ic { flex:none; width:48px; height:48px; border-radius:14px; display:grid; place-items:center; color:#fbf8f2; font-size:22px; font-weight:700; }
+  .t { flex:1; min-width:0; } .t b { display:block; font-size:17px; } .t small { color:var(--muted); font-size:12px; display:block; }
+  .chev { color:var(--muted); font-size:20px; }
+  .due { margin-top:12px; padding:12px 14px; border-radius:16px; background:var(--sage-soft); font-size:14px; line-height:1.6; }
+  .due b { font-size:20px; }
+  .ev { display:inline-block; margin-top:6px; font-size:12px; color:var(--blue); background:var(--blue-soft); border-radius:999px; padding:0 10px; cursor:pointer; border:0; font-family:inherit; }
+
+  .plan h3 { font-size:15px; margin:0 0 8px; }
+  .plan-note { font-size:13px; color:var(--muted); line-height:1.7; }
+  .plan button, .plan select, .plan input { font:inherit; }
+  .plan button { border:1px solid var(--blue); border-radius:10px; background:var(--blue-soft); color:var(--blue); padding:9px 11px; cursor:pointer; min-height:44px; }
+  .plan button:focus-visible, .plan input:focus-visible, .plan select:focus-visible, .plan a:focus-visible { outline:3px solid var(--blue); outline-offset:3px; }
+  .plan-course { border-top:1px solid var(--border); padding:12px 0; }
+  .plan-lessons { display:flex; flex-wrap:wrap; gap:8px; }
+  .plan-lesson { display:flex; align-items:center; flex-wrap:wrap; gap:8px; padding:2px 10px; border:1px solid var(--border); border-radius:10px; }
+  .plan-lesson label { display:flex; align-items:center; gap:6px; min-height:44px; cursor:pointer; }
+  .plan input[type=checkbox] { width:20px; height:20px; accent-color:var(--sage); }
+  .plan-lesson:has(input:checked) { background:var(--sage-soft); }
+  .plan-lesson a { color:var(--blue); padding:12px 0; font-size:13px; }
+  .plan-lesson small { color:var(--muted); font-size:11px; }
+  .course-link { display:flex; align-items:center; gap:8px; color:inherit; text-decoration:none; min-height:32px; }
+  .course-link b { flex:1; min-width:0; }
+  .subject-card .chev { font-size:18px; }
+  .course-graph { display:block; width:100%; border:0; background:none; color:var(--muted); padding:7px 0 0; text-align:left; font:inherit; cursor:pointer; min-height:44px; }
+  .course-graph:focus-visible, .course-link:focus-visible { outline:3px solid var(--blue); outline-offset:3px; border-radius:4px; }
+  .chart-track { display:flex; gap:3px; height:6px; }
+  .chart-segment { flex:1; min-width:0; background:var(--border); border-radius:2px; }
+  .chart-segment.is-done { background:var(--sage); }
+  .chart-segment.is-goal { background:var(--blue); }
+  .chart-segment.is-goal.is-done { background:var(--sage); outline:1px solid var(--blue); outline-offset:1px; }
+  .chart-caption .week-tag { display:inline-block; color:var(--blue); }
+  .chart-caption .done-tag { display:inline-block; margin-left:6px; padding:2px 7px; border-radius:999px; background:var(--sage-soft); color:var(--sage); font-weight:700; }
+  .chart-segment.is-goal.is-done { outline-width:2px; }
+  .material-summary { color:var(--muted); font-size:11px; line-height:1.6; margin:3px 0 0; }
+  .material-state { display:inline-block; margin-left:6px; padding:1px 5px; border:1px solid var(--border); border-radius:5px; color:var(--muted); font-size:11px; }
+  .material-state.is-ready { color:var(--blue); border-color:var(--blue); }
+  .plan-lesson .material-ready { font-weight:600; }
+  .chart-caption { display:block; font-size:11px; text-align:right; margin-top:6px; color:var(--blue); }
+  .study-legend { display:flex; justify-content:flex-end; gap:12px; margin:12px 0 0; color:var(--muted); font-size:11px; }
+  .study-legend span { display:inline-flex; align-items:center; gap:4px; }
+  .study-legend i { width:8px; height:6px; border-radius:2px; }
+  .legend-done { background:var(--sage); } .legend-goal { background:var(--blue); }
+  .study-records > summary { min-height:44px; display:flex; align-items:center; justify-content:space-between; font-size:12px; color:var(--muted); cursor:pointer; list-style:none; }
+  .study-records > summary::-webkit-details-marker { display:none; }
+  .study-records > summary::after { content:'＋'; font-size:16px; }
+  .study-records[open] > summary::after { content:'−'; }
+  #eval-list { display:grid; gap:8px; padding-bottom:12px; }
+  #eval-list .ev { margin:0; padding:10px; text-align:left; min-height:44px; }
+  #progress-dialog { width:calc(100% - 32px); max-width:480px; max-height:85dvh; overflow:auto; border:1px solid var(--border); border-radius:18px; padding:20px; background:var(--surface); color:var(--text); }
+  #progress-dialog::backdrop { background:rgba(0,0,0,.4); }
+  #progress-title { font-size:20px; margin:0; }
+  #progress-list h3 { display:none; }
+  .progress-heading { display:flex; align-items:center; gap:12px; position:sticky; top:-20px; background:var(--surface); padding:8px 0; }
+  #progress-title { flex:1; }
+  #progress-close { flex-shrink:0; }
+  #plan-status { color:var(--red); font-size:13px; }
+  #plan-status:empty { display:none; }
+  footer { color:var(--muted); font-size:12px; margin-top:18px; text-align:center; line-height:1.7; }
+  .lec-grid { display:grid; grid-template-columns:repeat(8,1fr); gap:4px; margin-top:8px; }
+  .lec-tile { display:flex; align-items:center; justify-content:center; height:30px; border-radius:8px; font-size:13px; font-weight:700; text-decoration:none; background:var(--bg); color:var(--muted); border:1px dashed var(--border); }
+  .lec-tile.has-page { background:var(--surface); color:var(--text); border:1px solid var(--border); }
+  .lec-tile.has-page.is-done { background:var(--sage); color:#fbf8f2; border-color:var(--sage); }
+  .lec-tile.is-unavailable { background:#e8e8e8; color:#686868; border:1px solid #d0d0d0; }
+  .plan-lesson.is-unavailable { background:#e8e8e8; color:#686868; border-color:#d0d0d0; }
+  .plan-lesson.is-unavailable small { color:inherit; }
+  @media (prefers-color-scheme: dark) { .lec-tile.is-unavailable, .plan-lesson.is-unavailable { background:#333; color:#aaa; border-color:#555; } }
+  .lec-tile:focus-visible { outline:3px solid var(--blue); outline-offset:2px; }
+  .lec-tile.is-now { outline:2px solid var(--blue); outline-offset:1px; }
+  .course-graph .week-tag { color:var(--blue); font-size:12px; }
+  .course-graph .rec { float:right; font-size:12px; color:var(--muted); }
+  .course-graph .done-tag { margin-left:6px; padding:2px 7px; border-radius:999px; background:var(--sage-soft); color:var(--sage); font-weight:700; font-size:12px; }
+  .lg { display:inline-block; width:12px; height:12px; border-radius:3px; vertical-align:-1px; margin-right:3px; border:1px dashed var(--border); }
+  .lg-note { background:var(--surface); border:1px solid var(--border); } .lg-missing { background:#e8e8e8; border:1px solid #d0d0d0; } .lg-done { background:var(--sage); border:1px solid var(--sage); } .lg-now { outline:2px solid var(--blue); border:1px solid var(--border); }
+  /* 一画面に収める（2026-10-31） */
+  main { padding:12px 12px 8px; }
+  h1 { font-size:20px; margin:4px 0 0; display:inline-block; margin-left:10px; }
+  .sub, footer, .sj small { display:none; }
+  .due { margin-top:6px; padding:5px 10px; border-radius:10px; font-size:12px; line-height:1.4; }
+  .due b { font-size:14px; }
+  .study-legend { margin:4px 0 0; gap:8px; }
+  .sj { margin-top:6px; padding:7px 10px; gap:8px; border-radius:12px; align-items:flex-start; }
+  .ic { width:26px; height:26px; border-radius:7px; font-size:13px; margin-top:1px; }
+  .t b { font-size:14px; }
+  .course-link { min-height:26px; }
+  .lec-grid { grid-template-columns:repeat(15,1fr); gap:2px; margin-top:2px; }
+  .lec-tile { height:22px; border-radius:5px; font-size:11px; }
+  .course-graph { min-height:0; padding:3px 0 0; }
+  .course-graph .week-tag, .course-graph .rec { font-size:11px; }
+  .course-graph .done-tag { font-size:10px; padding:0 5px; }
+  .study-records > summary { min-height:28px; }
+  .course-graph { display:flex; align-items:center; gap:6px; } .course-graph .rec { float:none; margin-left:auto; }
+  /* 見分けやすく（2026-10-31）：科目ごとの色を、面・ふち・タイルにうすく使う */
+  :root { --bg:#efe9dd; --c-dig:#6f8a66; --c-trad:#4f6f91; --c-money:#a5533c; --c-macro:#8f6a3f; --c-rel:#7d5f8c; --c-open:#3f7f7a; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#16140f; --c-dig:#9db394; --c-trad:#8fb0cf; --c-money:#d98a72; --c-macro:#c99f74; --c-rel:#b99ac7; --c-open:#7fc0b9; } }
+  .subject-card { background:color-mix(in srgb, var(--c) 7%, var(--surface)); border-color:color-mix(in srgb, var(--c) 22%, var(--border)); border-left:4px solid var(--c); }
+  .subject-card .course-link b { color:var(--text); }
+  .subject-card .chev { color:var(--c); }
+  .subject-card .lec-tile.has-page { background:color-mix(in srgb, var(--c) 16%, var(--surface)); color:var(--c); border:1px solid color-mix(in srgb, var(--c) 35%, transparent); }
+  .subject-card .lec-tile.is-unavailable { background:transparent; color:color-mix(in srgb, var(--muted) 70%, transparent); border:1px dashed color-mix(in srgb, var(--muted) 40%, transparent); }
+  .subject-card .lec-tile.is-done { background:var(--c); color:#fbf8f2; border-color:var(--c); }
+  .subject-card .lec-tile.is-now { outline:2px solid var(--text); outline-offset:1px; }
+  .subject-card .course-graph .week-tag { color:var(--c); font-weight:600; }
+  .lg-note { background:color-mix(in srgb, var(--muted) 30%, var(--surface)); border:1px solid color-mix(in srgb, var(--muted) 50%, transparent); }
+  .lg-done { background:var(--text); border-color:var(--text); }
+  .lg-now { outline-color:var(--text); }
+  .lg-missing { background:transparent; border:1px dashed var(--muted); }
+  /* ゆとり（2026-10-31）：今週・記録を外した分を余白に */
+  main { padding:20px 16px 12px; }
+  h1 { margin-top:6px; }
+  .due { margin-top:10px; padding:8px 12px; }
+  .study-legend { margin:10px 0 2px; }
+  .sj { margin-top:10px; padding:12px 14px; gap:12px; border-radius:14px; }
+  .ic { width:30px; height:30px; font-size:14px; }
+  .lec-grid { gap:3px; margin-top:8px; }
+  .lec-tile { height:26px; font-size:12px; }
+  /* 目にやさしく（2026-10-31）：純白・純黒をさけ、まぶしさをおさえ、行間をひろく */
+  :root { --bg:#ece6da; --surface:#f5f0e6; --border:#d9cfbc; --text:#36322b; --muted:#766e5f; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#1d1b17; --surface:#25221d; --border:#3a352c; --text:#d8d1c3; --muted:#9a917e; } }
+  body { -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
+  @media (prefers-color-scheme: dark) { .subject-card .lec-tile.is-done, .ic { color:var(--bg); } }
+  /* 小さくならないように（2026-10-31）：縮めるのをやめ、科目を2列（PCは3列）にならべ、1〜15講を5×3のマスにして大きく見せる */
+  main { padding:16px 14px 10px; }
+  .due { margin-top:8px; }
+  .study-legend { margin:8px 0 0; font-size:12px; }
+  #subjects { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px; }
+  #subjects .subject-card { margin:0; display:grid; grid-template-columns:auto 1fr; gap:8px 8px; align-items:center; padding:10px; }
+  #subjects .subject-card .t { display:contents; }
+  #subjects .subject-card .ic { margin:0; width:28px; height:28px; font-size:14px; }
+  #subjects .subject-card .course-link { min-height:34px; font-size:14px; line-height:1.25; }
+  #subjects .subject-card .course-link b { font-size:14px; }
+  #subjects .subject-card [data-subject-graph] { grid-column:1 / -1; }
+  #subjects .lec-grid { grid-template-columns:repeat(5,1fr); gap:4px; margin-top:0; }
+  #subjects .lec-tile { height:30px; font-size:14px; border-radius:7px; }
+  main > a.sj { margin-top:10px; padding:10px 14px; }
+  @media (min-width:700px) {
+    main { max-width:760px; }
+    #subjects { grid-template-columns:repeat(3,1fr); }
+  }
+</style>
+</head>
+<body>
+<main>
+  <a class="brand" href="../">とわなにか</a>
+  <h1>勉強</h1>
+  <p class="sub">受けている科目を、1つずつ</p>
+
+  <a class="sj" href="growth.html">
+    <span class="ic" style="background:var(--blue)" aria-hidden="true">育</span>
+    <span class="t"><b>ひびきのカリキュラム</b><small>今日の小さな学びと、これからの成長</small></span>
+    <span class="chev" aria-hidden="true">›</span>
+  </a>
+
+  <div class="due" id="due"></div>
+  <p class="study-legend"><span><i class="lg lg-note"></i>学習ページあり</span><span><i class="lg lg-done"></i>学習済み</span><span><i class="lg lg-missing"></i>準備中</span></p>
+  <div id="subjects"></div>
+  <div class="plan" id="study-progress"></div>
+  <details class="study-records" hidden><summary>形成評価の記録</summary><div id="eval-list"></div></details>
+
+  <a class="sj" href="https://vimeo.com/1230808434" target="_blank" rel="noopener noreferrer" aria-label="泉から流れる川：9月28日午前の動画を開く（別タブ・パスワードが必要）">
+    <span class="ic" style="background:var(--blue)" aria-hidden="true">映</span>
+    <span class="t"><b>泉から流れる川</b><span style="display:block;color:var(--muted);font-size:12px;margin-top:3px">9月28日 午前 · 動画 · パスワードが必要</span></span>
+    <span class="chev" aria-hidden="true">›</span>
+  </a>
+
+  <a class="sj" href="words.html">
+    <span class="ic" style="background:var(--wood)">言</span>
+    <span class="t"><b>あとで聞く言葉</b><small>知らない言葉を選んで、あとで答えを見る</small><small id="nW"></small></span>
+    <span class="chev">›</span>
+  </a>
+
+  <a class="sj" href="language/">
+    <span class="ic" style="background:var(--sage)" aria-hidden="true">語</span>
+    <span class="t"><b>一文、四つの言葉</b><small>英・独・日・中の練習帳（旧 language ページ）</small></span>
+    <span class="chev" aria-hidden="true">›</span>
+  </a>
+
+  <footer>科目が増えたら、ここに並びます。<br>講義ノートをもとに、自分の言葉で短くまとめたものです。</footer>
+</main>
+<script>
+(function () {
+  // 受けている科目（2026年2学期・韓国の放送大学）。教材ができたら href を入れる
+  var SUBJECTS = [
+    { k: "dig", name: "デジタル経済の理解", href: "digital.html", c: "var(--c-dig)", ch: "経" },
+    { k: "trad", name: "伝統社会と生活文化", href: "view.html?n=tradition15", c: "var(--c-trad)", ch: "食" },
+    { k: "money", name: "貨幣金融論", href: "view.html?n=money14", c: "var(--c-money)", ch: "貨" },
+    { k: "macro", name: "上級マクロ経済論", href: "view.html?n=macro8", c: "var(--c-macro)", ch: "マ" },
+    { k: "rel", name: "世界の宗教", href: "view.html?n=religion5", c: "var(--c-rel)", ch: "宗" },
+    { k: "open", name: "開かれた社会と21世紀", href: "view.html?n=open15", c: "var(--c-open)", ch: "社" }
+  ];
+  function jget(k, d) { try { return JSON.parse(localStorage.getItem(k)) || d; } catch (e) { return d; } }
+  function esc(s) { var d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+  function render() {
+    var EV = jget("hibiki-study-eval-v1", {});
+    document.getElementById("subjects").innerHTML = SUBJECTS.map(function (x) {
+      var tag = x.href ? "a" : "div", h = x.href ? ' href="' + x.href + '"' : "";
+      return '<article class="sj subject-card" data-subject="' + x.k + '" style="--c:' + x.c + '">' +
+        '<span class="ic" style="background:' + x.c + '">' + x.ch + '</span>' +
+        '<div class="t"><' + tag + ' class="course-link"' + h + '><b>' + esc(x.name) + '</b>' +
+        (x.href ? '<span class="chev" aria-hidden="true">›</span>' : '') + '</' + tag + '>' +
+        '<div data-subject-graph="' + x.k + '"></div></div></article>';
+    }).join("");
+    document.getElementById("eval-list").innerHTML = SUBJECTS.map(function (x) {
+      var ev = EV[x.k];
+      return '<button class="ev" data-k="' + x.k + '">' + esc(x.name) + '：' + (ev == null ? "未記録" : ev + "%") + '（直す）</button>';
+    }).join("");
+    [].forEach.call(document.querySelectorAll(".ev"), function (b) {
+      b.onclick = function (e) {
+        e.preventDefault(); e.stopPropagation();
+        var k = b.getAttribute("data-k"), v = prompt("形成評価の進み具合（％）を入れてください", EV[k] == null ? "" : EV[k]);
+        if (v === null) return;
+        var num = parseFloat(v), M = jget("hibiki-study-eval-v1", {});
+        if (isNaN(num)) delete M[k]; else M[k] = Math.max(0, Math.min(100, Math.round(num * 100) / 100));
+        try { localStorage.setItem("hibiki-study-eval-v1", JSON.stringify(M)); } catch (e2) {}
+        render();
+      };
+    });
+    var w = jget("hibiki-words-v1", []);
+    document.getElementById("nW").textContent = w.length ? w.length + " 個たまっています" : "";
+    var end = new Date("2026-12-13T23:59:59+09:00"), left = Math.ceil((end - new Date()) / 864e5);
+    document.getElementById("due").innerHTML = left >= 0
+      ? '形成評価の期限 <b>12月13日</b>まで、あと <b>' + left + '</b> 日' : '形成評価の期間は終わりました';
+    window.dispatchEvent(new Event("studycardsrendered"));
+  }
+  window.addEventListener("studyprogress", render);
+  window.addEventListener("storage", function (e) { if (e.key === "hibiki-study-digital-v1") render(); });
+  window.addEventListener("pageshow", render);
+  render();
+})();
+</script>
+<script src="plan.js"></script>
+<script src="materials.js"></script>
+<script src="plan-ui.js?v=20261031-availability"></script>
+<script>
+// 一画面に収める：はみ出すときだけ、ほんの少し（最大8%）小さくする。それでも入らなければスクロール
+(function () {
+  function fit() {
+    var b = document.body; b.style.zoom = "";
+    var z = parseFloat(getComputedStyle(b).zoom) || 1, h = document.documentElement.scrollHeight, vh = window.innerHeight;
+    if (h > vh) b.style.zoom = Math.max(z * 0.92, z * vh / h * 0.98);
+  }
+  window.addEventListener("load", fit); window.addEventListener("resize", fit); window.addEventListener("studycardsrendered", function () { setTimeout(fit, 0); });
+})();
+</script>
+</body>
+</html>

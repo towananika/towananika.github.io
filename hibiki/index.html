@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="index, follow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>とわなにか</title>
+<script>window.HB_PUBLIC = true;</script>
+<script src="sync.js"></script>
+<script src="priority/pri.js"></script>
+<style>html:not(.hb-owner) body > :not(#owner-gate):not(#hb-load) { visibility: hidden !important; } html.hb-owner #owner-gate { display:none; } html:not(.hb-auth-done) #owner-gate { visibility:hidden; } #owner-gate { padding:32px 20px; font:16px/1.7 system-ui,sans-serif; text-align:center; } #owner-gate a { color:inherit; }</style>
+<script type="module" src="security/owner-gate.mjs"></script>
+<meta name="description" content="ひびきが幸せに成長し、よい人生を送るために。健康・自由・愛の3つを、AIのみんなと育てる場所。">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<meta name="apple-mobile-web-app-title" content="とわなにか">
+<meta name="theme-color" content="#93704b">
+<style>
+  :root { --bg:#f5f1e9; --surface:#fbf9f4; --border:#e2dac8; --text:#2b2924; --muted:#746c5e;
+          --wood:#93704b; --wood-soft:#ece1d0; --sage:#74886d; --sage-soft:#e2e8dd; --red:#b5583f; --red-soft:#f3e2db; --blue:#5b7a99; --blue-soft:#e0e7ee; --on-wood:#fff; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#1c1a16; --surface:#242119; --border:#38332a; --text:#ede8dd; --muted:#a89e8a;
+            --wood:#c99f74; --wood-soft:#382d20; --sage:#9db394; --sage-soft:#26301f; --red:#e08b70; --red-soft:#3a2520; --blue:#8fb0cf; --blue-soft:#1f2a35; --on-wood:#1c1a16; }
+  }
+  * { box-sizing:border-box; }
+  [hidden] { display:none !important; }
+  body { margin:0; background:var(--bg); color:var(--text); line-height:1.6;
+         font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",sans-serif; }
+  main { max-width:480px; margin:0 auto; padding:24px 16px 56px; }
+  a:focus-visible, button:focus-visible, input:focus-visible { outline:2px solid var(--blue); outline-offset:2px; }
+  h2 { font-size:15px; margin:28px 2px 10px; }
+
+  /* 1. だれの・何のページか */
+  .top { display:flex; align-items:center; gap:14px; }
+  .top img { display:block; width:56px; height:56px; object-fit:contain; border-radius:14px; background:var(--wood-soft); }
+  .top h1 { font-size:26px; margin:0; line-height:1.3; }
+  .lead { margin:2px 0 0; font-size:13px; color:var(--muted); }
+  .pillars { display:flex; gap:6px; margin:14px 0 0; padding:0; list-style:none; }
+  .pillars li { flex:1; text-align:center; font-size:12px; font-weight:600; padding:6px 0; border-radius:999px; }
+  .pillars .p1 { background:var(--sage-soft); color:var(--sage); } .pillars .p2 { background:var(--wood-soft); color:var(--wood); } .pillars .p3 { background:var(--red-soft); color:var(--red); }
+
+  /* 2. 検索 */
+  .site-search { margin-top:16px; }
+  .site-search label { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+  .search-field { display:flex; gap:4px; align-items:center; padding:2px 4px 2px 12px; border:1px solid var(--border); border-radius:999px; background:var(--surface); }
+  .search-field::before { content:"🔍"; font-size:13px; opacity:.6; }
+  .search-field:focus-within { outline:2px solid var(--blue); outline-offset:2px; }
+  .search-field input { flex:1; min-width:0; min-height:40px; font:inherit; font-size:16px; border:0; outline:0; color:var(--text); background:transparent; }
+  .search-field input::-webkit-search-cancel-button { display:none; }
+  .search-field button { flex-shrink:0; min-height:34px; border:0; border-radius:999px; padding:0 12px; font:inherit; font-size:13px; cursor:pointer; color:var(--blue); background:var(--blue-soft); }
+  #search-status { font-size:13px; color:var(--muted); margin:10px 2px; }
+  #search-status:empty { display:none; }
+  .search-result { display:block; padding:14px; margin-top:8px; border:1px solid var(--border); border-radius:14px; background:var(--surface); color:var(--text); text-decoration:none; overflow-wrap:anywhere; }
+  .search-result strong { display:block; font-size:16px; }
+  .search-result span { display:block; margin-top:4px; font-size:13px; color:var(--muted); }
+
+  /* 3. 今日 */
+  .today { display:flex; align-items:center; gap:14px; margin-top:20px; padding:16px 18px; border-radius:18px; background:var(--wood); color:var(--on-wood); text-decoration:none; }
+  .today small { display:block; font-size:12px; opacity:.85; }
+  .today b { display:block; font-size:19px; }
+  .today span.d { display:block; font-size:13px; opacity:.95; }
+  .today .go { margin-left:auto; font-size:26px; }
+  .review { display:flex; align-items:center; gap:10px; margin-top:8px; padding:12px 16px; border-radius:14px; background:var(--blue-soft); color:var(--text); text-decoration:none; font-size:14px; }
+  .review b { color:var(--blue); white-space:nowrap; }
+  .review .go { margin-left:auto; color:var(--blue); font-size:20px; }
+
+  /* 4. よく使う（アイコンのタイル） */
+  .tiles { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; }
+  .tile { display:flex; flex-direction:column; align-items:center; gap:6px; padding:12px 2px 10px; border-radius:14px; background:var(--surface); border:1px solid var(--border); color:var(--text); text-decoration:none; font-size:12px; font-weight:600; text-align:center; line-height:1.3; }
+  .tile .ic { width:40px; height:40px; border-radius:12px; }
+
+  /* 5. すべてのページ */
+  .jump { display:flex; gap:6px; overflow-x:auto; margin:0 -16px; padding:2px 16px 4px; scrollbar-width:none; }
+  .jump a { flex:none; padding:7px 14px; border-radius:999px; border:1px solid var(--border); background:var(--surface); color:var(--text); font-size:13px; text-decoration:none; }
+  .grp { color:var(--muted); font-size:13px; font-weight:600; margin:20px 4px 8px; scroll-margin-top:12px; }
+  .menu { background:var(--surface); border:1px solid var(--border); border-radius:18px; overflow:hidden; }
+  .item { display:flex; align-items:center; gap:14px; padding:12px 16px; min-height:64px; text-decoration:none; color:var(--text); }
+  .item + .item { border-top:1px solid var(--border); }
+  .item .t { flex:1; min-width:0; }
+  .item b { font-size:16px; }
+  .item .t > span { display:block; font-size:12px; color:var(--muted); margin-top:1px; }
+  .chev { color:var(--muted); font-size:20px; }
+  .ic { flex:none; width:42px; height:42px; border-radius:13px; display:grid; place-items:center; }
+  .ic svg { width:22px; height:22px; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+  .money .ic { background:var(--wood-soft); } .money svg { stroke:var(--wood); }
+  .health .ic { background:var(--sage-soft); } .health svg { stroke:var(--sage); }
+  .people .ic { background:var(--red-soft); } .people svg { stroke:var(--red); }
+  .more .ic { background:var(--blue-soft); } .more svg { stroke:var(--blue); }
+  .new { font-style:normal; font-size:10px; font-weight:700; color:#fff; background:var(--red); border-radius:999px; padding:2px 7px; margin-left:6px; vertical-align:2px; }
+  .simple-weather { margin:20px 0 0; }
+  footer { color:var(--muted); font-size:12px; margin-top:28px; text-align:center; }
+  footer a { color:inherit; display:inline-block; padding:10px; }
+  @media (max-width:350px) { .tiles { grid-template-columns:repeat(3,minmax(0,1fr)); } }
+</style>
+<link rel="stylesheet" href="weather/weather.css">
+</head>
+<body>
+<div id="owner-gate" role="status"><p>本人のGoogleアカウントでログインしてください。</p><a href="sync/google.html">Googleログインを確認</a></div>
+<main>
+  <header class="top">
+    <a href="about/" aria-label="ひびきのプロフィール"><img src="about/profile-mandarin.jpg" alt="" width="56" height="56"></a>
+    <div><h1>とわなにか</h1><p class="lead">ひびきが幸せに育つための場所</p></div>
+  </header>
+  <ul class="pillars" aria-label="大切にしている3つ"><li class="p1">健康</li><li class="p2">自由</li><li class="p3">愛</li></ul>
+
+  <form id="site-search" class="site-search" role="search">
+    <label for="site-query">ページ・教材を探す</label>
+    <div class="search-field"><input id="site-query" type="search" placeholder="探す（例：睡眠、仏教）" autocomplete="off" aria-controls="search-results"><button id="search-clear" type="button" hidden>消す</button><button type="submit">検索</button></div>
+  </form>
+  <p id="search-status" role="status" aria-live="polite" aria-atomic="true"></p>
+  <div id="search-results" aria-label="検索結果" hidden></div>
+
+  <div id="menu">
+    <a class="today" href="productivity/"><span><small>今日</small><b>今日の一歩</b><span class="d">必須は散歩10分だけ。ほかはボーナス</span></span><span class="go" aria-hidden="true">›</span></a>
+    <a id="review-note" class="review" href="plan/" hidden><b>4週の見直し</b><span id="review-when"></span><span class="go" aria-hidden="true">›</span></a>
+    <section class="simple-weather weather-compact" data-weather id="home-weather" aria-label="天気予報"></section>
+
+    <h2 id="fav-title">よく使う</h2>
+    <nav id="tiles" class="tiles" aria-labelledby="fav-title"></nav>
+
+    <h2 id="all-title">すべてのページ</h2>
+    <nav id="jump" class="jump" aria-label="グループへ移動"></nav>
+    <div id="groups"></div>
+  </div>
+  <footer><a href="sync/" id="login">ログイン</a></footer>
+</main>
+<script>
+
+// ▼ ページを足すときはここに1行足す。new: 足した日（7日間「NEW」が出る）
+// fav: 番号を付けると「よく使う」のタイルに出る（番号の順・8つまで）。short: タイル用の短い名前
+var GROUPS = [
+  { n: "毎日", pages: [
+    { key: "health", name: "今日の一歩", note: "必須は散歩10分だけ・あとはボーナス", href: "productivity/", icon: '<path d="M5 13l4 4L19 7"/>' },
+    { key: "more", name: "計画", fav: 6, note: "3年計画・今週やること・いま、これを", href: "plan/", new: "2026-10-26", icon: '<path d="M4 20h16M6 16l4-5 3 3 5-7"/><circle cx="18" cy="7" r="1.5"/>' },
+    { key: "health", name: "健康", fav: 2, note: "毎日4つをタップ", href: "health/", icon: '<path d="M3 12h4l2-5 4 10 2-5h6"/>' },
+    { key: "health", name: "睡眠メモ", fav: 3, short: "睡眠", note: "寝る・起きたを1タップ", href: "sleep/", new: "2026-10-17", icon: '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>' },
+    { key: "people", name: "愛と関係", fav: 4, short: "大切な人", note: "連絡・ありがとう・大切な人", href: "relations/", icon: '<path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/>' } ]},
+  { n: "お金と暮らし", pages: [
+    { key: "money", name: "お金と自由", fav: 5, short: "お金", note: "金利・配分・レポート・疑似投資", href: "money/", icon: '<circle cx="12" cy="12" r="9"/><path d="M9 9l3 4 3-4M9 13h6M9 16h6M12 13v5"/>' },
+    { key: "money", name: "家計", note: "所得と費用・自分で調整", href: "money/budget.html", new: "2026-10-11", icon: '<rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h4"/>' },
+    { key: "money", name: "預金と投資", note: "持っているお金を入れる", href: "money/assets.html", new: "2026-10-15", icon: '<ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/>' },
+    { key: "money", name: "住まい", note: "チョンセ・住まい代", href: "home/", icon: '<path d="M3 11l9-7 9 7v9H3z"/><path d="M9 20v-6h6v6"/>' } ]},
+  { n: "自分", pages: [
+    { key: "more", name: "アカリと育つ", fav: 8, short: "アカリ", note: "今日したことを1つ押す・ふり返りと自分の説明書", href: "grow/", new: "2026-11-15", icon: '<circle cx="12" cy="7" r="4"/><path d="M6 21v-5a6 6 0 0 1 12 0v5"/>' },
+    { key: "more", name: "聖書を読む", note: "日常につなげて読む", href: "bible/", icon: '<path d="M4 5h7v15H4zM11 5h9v15h-9M15 8v6M13 10h4"/>' },
+    { key: "more", name: "メモ帳", fav: 9, short: "メモ", note: "考えを残してAIに相談", href: "notes/", new: "2026-10-27", icon: '<path d="M4 4h16v16H4zM8 8h8M8 12h8M8 16h5"/>' },
+    { key: "more", name: "言語", note: "絵で覚える英語100語", href: "study/language/pictures.html", new: "2026-11-20", icon: '<path d="M4 5h16v12H9l-5 4z"/>' },
+    { key: "more", name: "自分を知る", note: "好き・得意・大切と6つの型の適性を地図にする", href: "me/", new: "2026-11-21", icon: '<circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5M11 8v6M8 11h6"/>' },
+    { key: "more", name: "質問ノート", note: "自分を高める質問をGPTに・答えと気づきを残す", href: "ask/", new: "2026-11-20", icon: '<circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.7M12 17h.01"/>' },
+    { key: "more", name: "夢日記", note: "ねがいを1行ずつ足す・かなったら○", href: "dreams/", new: "2026-10-15", icon: '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>' },
+    { key: "more", name: "これまでの道", note: "人生タイムライン", href: "timeline/", new: "2026-10-11", icon: '<path d="M6 3v18"/><circle cx="6" cy="7" r="2"/><circle cx="6" cy="17" r="2"/><path d="M10 7h10M10 17h7"/>' },
+    { key: "more", name: "私について", note: "ほかのAIに貼る説明書・全文コピー", href: "about/", new: "2026-10-17", icon: '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>' },
+    { key: "more", name: "勉強", fav: 7, note: "科目をえらぶ（経済・食文化・金融・マクロ）", href: "study/", new: "2026-10-17", icon: '<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5M9 7h6"/>' },
+    { key: "more", name: "SNSと届いた人たち", note: "フォロワーを点で見る・発信のふり返り", href: "sns/", icon: '<circle cx="7" cy="8" r="2"/><circle cx="17" cy="8" r="2"/><circle cx="12" cy="16" r="2"/><path d="M8.5 9.5l2.5 5M15.5 9.5l-2.5 5"/>' },
+    { key: "more", name: "AGI観測所", note: "予測の幅を見て、今できることを選ぶ", href: "agi/", new: "2026-11-14", icon: '<path d="M3 18h18"/><path d="M5 15l4-4 3 2 6-7"/><circle cx="18" cy="6" r="2"/>' } ]},
+  { n: "道具", pages: [
+    { key: "more", name: "円とウォン", note: "100円は何ウォン？しくみと両替", href: "money/yen.html", icon: '<circle cx="8" cy="12" r="5"/><circle cx="16" cy="12" r="5"/>' },
+    { key: "more", name: "駐車タイマー", note: "入庫時刻・経過時間・料金の目安", href: "stopwatch/", new: "2026-10-27", icon: '<circle cx="12" cy="14" r="8"/><path d="M9 2h6M12 6V2M12 10v5l3 2"/>' },
+    { key: "more", name: "YouTube・Instagram・X Reader", note: "動画のリンクから要約・文字起こし（どの端末でも）", href: "youtube/", new: "2026-11-21", icon: '<rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10 9l5 3-5 3z"/>' },
+    { key: "more", name: "道具箱", note: "間合い：計算ツール", href: "../tool/", icon: '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18"/>' } ]}
+];
+// ▲
+var NOW = Date.now();
+// 3年計画の4週見直し（2026-11-22 から28日ごと）。7日前から3日後まで出す
+(function () {
+  var day = 864e5, base = new Date("2026-11-22T00:00:00+09:00").getTime();
+  var k = Math.max(0, Math.ceil((NOW - base - 3 * day) / (28 * day))), at = base + k * 28 * day, left = Math.ceil((at - NOW) / day);
+  if (left > 7) return;
+  var d = new Date(at + 9 * 36e5), md = (d.getUTCMonth() + 1) + "/" + d.getUTCDate();
+  document.getElementById("review-when").textContent = left > 0 ? md + "（あと" + left + "日）・4週をふり返って次を決める" : md + "・見直しの時期です";
+  document.getElementById("review-note").hidden = false;
+})();
+// よく使う：fav の番号の順にタイルで出す
+var ALL = [].concat.apply([], GROUPS.map(function (g) { return g.pages; }));
+function ic(p) { return '<span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">' + p.icon + '</svg></span>'; }
+function fresh(p) { return p.new && NOW - new Date(p.new).getTime() < 7 * 864e5; }
+document.getElementById("tiles").innerHTML = ALL.filter(function (p) { return p.fav; })
+  .sort(function (a, b) { return a.fav - b.fav; })
+  .map(function (p) { return '<a class="tile ' + p.key + '" href="' + p.href + '">' + ic(p) + (p.short || p.name) + '</a>'; }).join("");
+// すべてのページ：グループへ飛ぶボタン＋一覧
+document.getElementById("jump").innerHTML = GROUPS.map(function (g, i) { return '<a href="#g' + i + '">' + g.n + '</a>'; }).join("");
+document.getElementById("groups").innerHTML = GROUPS.map(function (g, i) {
+  return '<h3 class="grp" id="g' + i + '">' + g.n + '</h3><div class="menu">' + g.pages.map(function (p) {
+    return '<a class="item ' + p.key + '" href="' + p.href + '">' + ic(p) + '<span class="t"><b>' + p.name + '</b>' + (fresh(p) ? '<em class="new">NEW</em>' : '') + '<span>' + p.note + '</span></span><span class="chev" aria-hidden="true">›</span></a>';
+  }).join("") + '</div>';
+}).join("");
+if (window.HibikiSync && HibikiSync.on()) document.getElementById("login").textContent = "ログイン中";
+</script>
+<script src="search/search.js"></script>
+<script src="weather/weather.js"></script>
+<script>window.hbLoading && hbLoading();</script>
+</body>
+</html>
