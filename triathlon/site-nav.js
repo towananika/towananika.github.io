@@ -1,0 +1,126 @@
+// 全ページ共通の上部バー・下のメニュー・サイトの字。<script src="(相対パス)/site-nav.js"></script> を body の先頭に置く。
+// よくあるゲーム公式サイトの形：左にロゴ、まん中にメニュー、右に「ログイン」と「プレイ」。スマホは右上の ☰ と、指の届く下のタブ。
+// 下のタブはホーム・お知らせ・ゲーム・地図・キャラ。そのほかは ☰ にまとめる。ページの下には共通のフッターを出す。
+// サイトの字（見出しとロゴ）は FONT_* を変えるだけで全ページが変わる。
+(function () {
+  'use strict';
+  var me = document.currentScript;
+  if (!me) return;
+  var root = me.src.replace(/site-nav\.js(\?.*)?$/, '');
+  var FONT_CSS = 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500&family=Montserrat:wght@500;700&family=Noto+Sans+JP:wght@700;800&display=swap';
+  var FONT_LOGO = '"Montserrat",system-ui,sans-serif', FONT_HEAD = '"Noto Sans JP","Noto Sans SC","Noto Sans TC","Noto Sans KR","Noto Sans",system-ui,sans-serif';
+  // 開発元（仮法人）。名前を変えるときはここだけ
+  var STUDIO = 'Towa'; // 設立 2026-10-25、所在地はゲーム内の二水（Nisui）
+  var MAIN = [['', '🏠', 'ホーム'], ['news/', '📰', 'お知らせ'], ['play/day-one/', '🎮', 'ゲーム'], ['char/', '👥', 'キャラ'], ['map/', '🌐', 'マップ']];
+  var TABS = [['', '🏠', 'ホーム'], ['news/', '📰', 'お知らせ'], ['play/day-one/', '🎮', 'ゲーム'], ['map/', '🌐', 'マップ'], ['char/', '👥', 'キャラ']];
+  // 公開しているのは今の期だけ（「期」という言葉も出さない）。1〜4期と設定資料は管理者だけに見せる
+  var admin = false;
+  if (admin) document.documentElement.classList.add('tri-admin');
+  var MORE = admin ? [['dev/', '🛠️', '開発版'], ['guide.html', '📘', '設定資料（世界ガイド）'], ['settings/', '📋', '設定リスト'], ['guide.html#simulation', '🏡', '暮らしの試作'], ['news/rules.html', '📏', 'アップデートの基準']]
+    : [['watch/', '🕯️', '見守る'], ['part1/', '🏮', '第1部の道のり'], ['kakera/', '✨', '光のかけら'], ['daily/', '🍚', 'ごはんとおやすみの話'], ['album/', '📷', '思い出のアルバム'], ['share/', '📣', 'SNS用カード'], ['sim/', '🌏', '今日の世界'], ['places/', '📷', '好きな場所'], ['saga/', '🗺️', '物語のあらすじ（4世代）'], ['news/rules.html', '📏', 'アップデートの基準']];
+  var path = location.pathname.replace(/index\.html$/, ''), rootPath = new URL(root).pathname;
+  var inDevelopment = path.indexOf(rootPath + 'dev/') === 0 || (path === rootPath + 'play/' && new URLSearchParams(location.search).has('dev'));
+  function cur(p) {
+    if (p.indexOf('#') >= 0) return false;
+    var full = new URL(root + p).pathname;
+    return p === '' ? path === rootPath : path.indexOf(full) === 0 && !(p === 'news/' && /rules\.html$/.test(path));
+  }
+  function link(it, cls) { return '<a class="' + cls + '" href="' + root + it[0] + '"' + (cur(it[0]) ? ' aria-current="page"' : '') + '><span aria-hidden="true">' + it[1] + '</span>' + it[2] + '</a>'; }
+  var fl = document.createElement('link'); fl.rel = 'stylesheet'; fl.href = FONT_CSS; document.head.appendChild(fl);
+  var css = 'html [data-tri-admin-only][hidden]{display:none!important}html:not(.tri-admin) .dev-only{display:none!important}html.tri-admin .pub-only{display:none!important}:root{--tri-logo:' + FONT_LOGO + ';--tri-head:' + FONT_HEAD + '}' +
+    'h1,h2{font-family:var(--tri-head);letter-spacing:.03em}.kick{font-family:var(--tri-logo);font-weight:500;letter-spacing:.28em;text-transform:uppercase}' +
+    '.tri-nav{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:60px;padding:8px 16px;background:#fff;border-bottom:1px solid #cbdedf;font-family:system-ui,-apple-system,"Noto Sans JP",sans-serif;position:sticky;top:0;z-index:60}' +
+    '.tri-brand{color:#163744;text-decoration:none;font-family:var(--tri-logo);font-weight:700;letter-spacing:.22em;font-size:19px;line-height:1;padding:8px 0}' +
+    '.tri-dev{margin-right:auto;background:#2b2f36;color:#ffd76a;font-size:12px;font-weight:800;letter-spacing:.1em;border-radius:6px;padding:4px 10px;text-decoration:none;white-space:nowrap}' +
+    '.tri-top{display:none;gap:4px}.tri-top a{display:flex;align-items:center;gap:6px;min-height:44px;padding:0 12px;border-radius:10px;color:#163744;text-decoration:none;font-size:15px;font-weight:700}' +
+    '.tri-top a:hover{background:#edf5f4}.tri-top a[aria-current="page"]{color:#007f87;box-shadow:inset 0 -3px 0 #007f87;border-radius:0}' +
+    '.tri-menu{position:relative;background:none!important;padding:0!important;border:0!important;border-radius:0!important;margin:0!important}.tri-nav,.tri-bottom{box-sizing:border-box}.tri-nav *,.tri-bottom *{box-sizing:border-box}.tri-menu summary{list-style:none;cursor:pointer;display:grid;place-items:center;width:44px;height:44px;border:1px solid #cbdedf;border-radius:10px;font-size:20px;color:#163744;background:#fff}' +
+    '.tri-act{display:flex;align-items:center;gap:8px;margin-left:auto}.tri-btn{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:0 16px;border-radius:999px;font-size:14px;font-weight:800;text-decoration:none;white-space:nowrap;border:1px solid #007f87;color:#007f87;background:#fff}.tri-btn.in{gap:6px;padding:0 12px 0 4px;max-width:150px}.tri-btn.in img{width:30px;height:30px;border-radius:50%}.tri-btn.in span{overflow:hidden;text-overflow:ellipsis}.tri-btn.play{background:#ffd76a;border-color:#ffd76a;color:#163744}.tri-btn:hover{filter:brightness(.97)}' +
+    '.tri-foot{text-align:left;margin:0;max-width:none;background:#123640;color:#cfe2e4;font-family:system-ui,-apple-system,"Noto Sans JP",sans-serif;font-size:14px;padding:36px 5% 28px}.tri-foot a{color:#fff;text-decoration:none}.tri-foot a:hover{text-decoration:underline}.tri-fcols{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:20px;max-width:1000px;margin:0 auto}.tri-fcols b{display:block;color:#fff;font-size:13px;letter-spacing:.08em;margin-bottom:8px}.tri-fcols a{display:block;padding:5px 0}.tri-fbase{max-width:1000px;margin:24px auto 0;padding-top:16px;border-top:1px solid rgba(255,255,255,.18);display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;font-size:12px}.tri-studio{font-family:"Cormorant Garamond",Georgia,serif;font-size:17px;letter-spacing:.18em;color:#fff}.tri-studio em{display:block;font-style:italic;font-size:13px;letter-spacing:.12em;opacity:.75}.tri-studio small{font-family:system-ui,sans-serif;font-size:11px;letter-spacing:0;opacity:.7}.tri-fbase .logo{font-family:var(--tri-logo);font-weight:700;letter-spacing:.22em;color:#fff;font-size:15px}' +
+    '.tri-menu summary::-webkit-details-marker{display:none}.tri-menu[open] summary{border-color:#007f87;color:#007f87}' +
+    '.tri-more{position:absolute;right:0;top:calc(100% + 8px);display:flex;flex-direction:column;min-width:240px;padding:6px;background:#fff;border:1px solid #cbdedf;border-radius:14px;box-shadow:0 10px 30px rgba(22,55,68,.16)}' +
+    '.tri-more a{display:flex;align-items:center;gap:10px;min-height:48px;padding:0 14px;border-radius:10px;color:#163744;text-decoration:none;font-size:15px;font-weight:600;white-space:nowrap}' +
+    '.tri-more a:hover{background:#edf5f4}.tri-more a[aria-current="page"]{background:#e3f1f1;color:#007f87}' +
+    '.tri-bottom{position:fixed;left:0;right:0;bottom:0;z-index:60;display:grid;grid-template-columns:repeat(5,1fr);background:rgba(255,255,255,.97);border-top:1px solid #cbdedf;padding-bottom:env(safe-area-inset-bottom);font-family:system-ui,-apple-system,"Noto Sans JP",sans-serif;box-shadow:0 -4px 16px rgba(22,55,68,.06)}' +
+    '.tri-bottom a{display:grid;justify-items:center;align-content:center;gap:2px;min-height:60px;color:#4f6b75;text-decoration:none;font-size:11px;font-weight:700}' +
+    '.tri-bottom a span{font-size:22px;line-height:1}.tri-bottom a.tab-play span{display:grid;place-items:center;width:40px;height:40px;margin-top:-14px;border-radius:50%;background:#ffd76a;color:#163744;font-size:16px;box-shadow:0 3px 10px rgba(22,55,68,.2)}.tri-bottom a[aria-current="page"]{color:#007f87;box-shadow:inset 0 3px 0 #007f87}' +
+    '.tri-nav a:focus-visible,.tri-nav summary:focus-visible,.tri-bottom a:focus-visible{outline:3px solid #c27600;outline-offset:2px}' +
+    '@media(max-width:899px){body{padding-bottom:calc(64px + env(safe-area-inset-bottom))}}' +
+    '@media(max-width:899px){.tri-btn.play{display:none}}@media(max-width:379px){.tri-btn{padding:0 12px}.tri-nav{gap:8px;padding:8px 12px}.tri-brand{font-size:16px;letter-spacing:.12em}.tri-dev{font-size:11px;padding:3px 7px}.tri-menu summary{padding:0 12px}}' +
+    '.tri-place{margin:0 auto;max-width:960px;padding:6px 16px 0;font-size:12px;color:#7d8c93;letter-spacing:.02em}' +
+    '@media(min-width:900px){.tri-top{display:flex}.tri-bottom{display:none}.tri-nav{padding:8px 5%}}';
+  var st = document.createElement('style');
+  st.textContent = css;
+  document.head.appendChild(st);
+  var bar = document.createElement('div');
+  bar.className = 'tri-nav';
+  bar.innerHTML = '<a class="tri-brand" href="' + root + '" aria-label="TRIATHLON ホーム">TRIATHLON</a>' + (admin ? '<a class="tri-dev" href="' + root + 'dev/">開発版</a>' : '') +
+    '<div class="tri-top" role="navigation" aria-label="おもなページ">' + MAIN.map(function (it) { return link(it, ''); }).join('') + '</div>' +
+    '<div class="tri-act"><a class="tri-btn play" href="' + root + 'play/day-one/">🎮 ゲームをはじめる</a>' +
+    '<details class="tri-menu"><summary aria-label="メニュー">☰</summary><div class="tri-more" role="navigation" aria-label="そのほかのページ">' + MORE.map(function (it) { return link(it, ''); }).join('') + '</div></details></div>';
+  var bottom = document.createElement('div');
+  bottom.className = 'tri-bottom';
+  bottom.setAttribute('role', 'navigation');
+  bottom.setAttribute('aria-label', 'おもなページ（下）');
+  bottom.innerHTML = TABS.map(function (it) { return link(it, it[0] === 'play/day-one/' ? 'tab-play' : ''); }).join('');
+  document.body.insertBefore(bar, document.body.firstChild);
+  // 町の建物：サイトの仕組みは、二水の町の建物にある（studio/text/world/buildings_v1.md）
+  var PLACE = { 'stories': ['📖', '灯台館', '西岸区 岬口路 1', '1000-1101-0001'], 'map': ['🔭', '灯台館の見晴らし台', '西岸区 岬口路 1', '1000-1101-0001'], 'sim': ['🔭', '灯台館の見晴らし台', '西岸区 岬口路 1', '1000-1101-0001'],
+    'cast': ['🏠', '二水学園 学生寮', '西岸区 学園大路 24', '1000-1124-0001'], 'notes': ['📚', '学園図書館の奥の書棚', '西岸区 学園大路 12', '1000-1112-0001'], 'life': ['🏛️', '町の役所「一生の記録室」', '中洲区 川守路 2', '1000-1202-0001'],
+    'news': ['📌', '役所前の掲示板', '中洲区 川守路 2', '1000-1202-0001'], 'album': ['📷', '写真館', '中洲区 中路 18', '1000-1218-0001'], 'share': ['✉️', '郵便局', '中洲区 中路 5', '1000-1205-0001'], 'daily': ['🍵', '船着き場の茶屋', '南岸区 渡口路 3', '1000-1303-0001'], 'kakera': ['🔥', '灯石工房', '南岸区 工房路 7', '1000-1307-0001'] };
+  var pl = PLACE[path.slice(rootPath.length).split('/')[0]];
+  if (pl) { var pe = document.createElement('p'); pe.className = 'tri-place'; pe.textContent = pl[0] + ' ' + pl[1] + '・' + pl[2] + '・☎ ' + pl[3]; bar.after(pe); }
+  // 共通のフッター（ゲーム画面には出さない）
+  function addFoot() {
+    if (/\/play(?:\/day-one)?\/$/.test(path)) return;
+    var ver = document.getElementById('ver'), old = document.querySelector('.foot');
+    var foot = document.createElement('footer');
+    foot.className = 'tri-foot';
+    function fl(t, a) { return '<div><b>' + t + '</b>' + a.map(function (it) { return '<a href="' + root + it[0] + '"' + (it[0] === 'dev/' ? ' data-tri-admin-only hidden' : '') + '>' + it[1] + '</a>'; }).join('') + '</div>'; }
+    foot.innerHTML = '<div class="tri-fcols">' + fl('作品', [['stories/', '物語（連載）'], ['saga/', '物語のあらすじ'], ['char/', 'キャラクター']]) + fl('世界', [['map/', 'マップ'], ['sim/', '今日の世界'], ['places/', '好きな場所'], ['notes/?door=1', 'まなびやの扉']]) +
+      fl('サポート', [['news/', 'お知らせ'], ['news/rules.html', 'アップデートの基準'], ['login/', 'ログイン'], ['dev/', '開発版']]) + '</div>' +
+      '<div class="tri-fbase"><span class="logo">TRIATHLON</span><span class="tri-studio">© 2026 ' + STUDIO + '<small>（仮）</small><em>Est. 2026.10.25 · Nisui</em></span><span>物語と世界を少しずつ公開しています。画像は検討中のイメージです。' + (ver ? ' · ' + ver.textContent : '') + '</span></div>';
+    if (old) old.replaceWith(foot); else document.body.appendChild(foot);
+    showAdmin(window.TRI_IS_ADMIN === true);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', addFoot); else addFoot();
+  document.body.appendChild(bottom);
+  // ログイン（Google）。右上のボタンは、ログイン中なら顔写真と名前に変わる
+  var entry = document.createElement('a'); entry.className = 'tri-login tri-btn'; entry.href = root + 'login/'; entry.textContent = 'ログイン';
+  bar.querySelector('.tri-act').insertBefore(entry, bar.querySelector('.tri-act').firstChild);
+  // Mode navigation does not grant access; protected data still uses its existing authorization.
+  var devIn = document.createElement('a'); devIn.className = 'tri-devin tri-mode-switch'; devIn.href = inDevelopment ? root : root + 'dev/'; devIn.textContent = inDevelopment ? '公式版' : '開発版'; devIn.hidden = true;
+  devIn.setAttribute('data-tri-admin-only', '');
+  devIn.setAttribute('aria-label', inDevelopment ? '公式版へ切り替える' : '開発版へ切り替える');
+  bar.querySelector('.tri-act').insertBefore(devIn, entry);
+  var dvs = document.createElement('style'); dvs.textContent = '.tri-devin{background:#2b2f36;color:#ffd76a;font-size:12px;font-weight:800;letter-spacing:.08em;border-radius:6px;padding:5px 10px;text-decoration:none;white-space:nowrap;align-self:center}.tri-devin[hidden]{display:none}'; document.head.appendChild(dvs);
+  function showUser(u) {
+    entry.textContent = '';
+    showAdmin(false);
+    if (!u) { entry.textContent = 'ログイン'; entry.classList.remove('in'); entry.removeAttribute('aria-label'); return; }
+    entry.classList.add('in');
+    if (u.photo) { var im = document.createElement('img'); im.src = u.photo; im.alt = ''; im.referrerPolicy = 'no-referrer'; entry.appendChild(im); }
+    var name = u.name || 'プロフィール';
+    var nm = document.createElement('span'); nm.textContent = name.split(' ')[0]; entry.appendChild(nm);
+    entry.setAttribute('aria-label', name + '（ログイン中）');
+  }
+  function showAdmin(allowed) {
+    document.querySelectorAll('[data-tri-admin-only]').forEach(function (element) { element.hidden = !allowed; });
+  }
+  document.addEventListener('tri-admin-status', function (e) { showAdmin(e.detail === true); });
+  document.addEventListener('tri-user', function (e) { showUser(e.detail); });
+  if (window.TRI_USER !== undefined) showUser(window.TRI_USER);
+  var adminScript = document.createElement('script'); adminScript.src = root + 'login/admin-status.js?v=0.101-fix'; document.head.appendChild(adminScript);
+  if (!document.querySelector('script[src*="login/auth.js"],script[src^="auth.js"]')) { var au = document.createElement('script'); au.type = 'module'; au.src = root + 'login/auth.js?v=0.28'; document.head.appendChild(au); }
+  var topStyle = document.createElement('link'); topStyle.rel = 'stylesheet'; topStyle.href = root + 'back-to-top.css'; document.head.appendChild(topStyle);
+  var topScript = document.createElement('script'); topScript.src = root + 'back-to-top.js'; document.body.appendChild(topScript);
+  var themeScript = document.createElement('script'); themeScript.src = root + 'site-theme.js?v=20261107n'; document.head.appendChild(themeScript);
+  if (path === rootPath) {
+    var homeScript = document.createElement('script'); homeScript.src = root + 'home-showcase.js?v=0.101.1-display'; document.head.appendChild(homeScript);
+  }
+  document.addEventListener('click', function (e) {
+    var m = bar.querySelector('.tri-menu');
+    if (m.open && (!m.contains(e.target) || e.target.closest('.tri-more a'))) m.open = false;
+  });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') bar.querySelector('.tri-menu').open = false; });
+})();

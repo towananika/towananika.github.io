@@ -1,0 +1,85 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex"><title>ゲーム企画に必要なこと</title>
+<style>
+/* 開発用：ゲーム企画に必要なことの一覧（2026-11-07）。正本＝企画フォルダ ideas/canon.md。足りない所は questions.html#g で埋める */
+:root{--bg:#f1ece0;--card:#faf6ec;--fg:#3b362e;--mut:#6b6355;--line:#ddd3c0;--ok:#5d7f4e;--hold:#b08f33;--miss:#b4574a;--B:#3f6b8a}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.7 "Hiragino Sans","Noto Sans JP",system-ui,sans-serif}
+.wrap{max-width:560px;margin:0 auto;padding:20px 16px 64px;display:grid;gap:14px}
+h1{font-size:22px;margin:0}h2{font-size:16px;margin:0}p{margin:0}.mut{color:var(--mut);font-size:13px}nav a{color:var(--B);font-size:13px}
+.meter{display:flex;height:14px;border-radius:7px;overflow:hidden;border:1px solid var(--line)}.meter i{display:block;height:100%}
+.leg{display:flex;gap:12px;font-size:12px;color:var(--mut)}.leg span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;background:var(--c)}
+.box{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;display:grid;gap:8px}
+.it{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;align-items:start;padding:6px 0;border-top:1px dashed var(--line)}
+.it:first-of-type{border-top:0}.dot{width:12px;height:12px;border-radius:50%;margin-top:6px;background:var(--c)}
+.it b{font-size:14px}.it small{grid-column:2;color:var(--mut);font-size:12px;line-height:1.5}
+.it a{color:var(--B);font-size:12px;font-weight:700}
+.go{display:block;text-align:center;font-weight:700;text-decoration:none;background:var(--ok);color:var(--card);border-radius:999px;padding:10px}
+</style>
+<script src="return.js?v=20261107n" defer></script>
+</head><body><div class="wrap">
+<nav><a href="./">← 開発トップ</a></nav>
+<h1>ゲーム企画に必要なこと</h1>
+<p class="mut">緑＝決まった　青＝これから作る　黄＝保留（今は考えない）　赤＝足りない。赤は質問ページで答えると埋まります。</p>
+<div class="meter" id="meter"></div><div class="leg" id="leg"></div>
+<a class="go" href="questions.html#g" id="go">足りないことを埋める</a>
+<div id="list" style="display:grid;gap:12px"></div>
+</div>
+<script>
+(function(){
+'use strict';
+/* s: ok＝決まった / hold＝保留 / miss＝足りない（q＝質問の番号） */
+var D=[
+ ['世界',[
+  ['ok','舞台','核戦争のあとの地球。戦争の前は現実の世界そのまま'],
+  ['ok','戦争の原因','現実に起こりうる一つのシナリオを、あいまいに重ねる'],
+  ['hold','あいまいさ・年数','今は考えない'],
+  ['ok','国','水和国・文光国・改神国。ほかに4つの文明'],
+  ['ok','人とAIの関係（国ごと）','国ごとに固定せず、シミュのきまりから自然に分かれる']]],
+ ['魔法',[
+  ['ok','正体','AIが作った、人間には解明できないエネルギーの元を使うと魔法になる'],
+  ['hold','人とAIの使い方の違い','今は考えない'],
+  ['ok','形','線形魔法と円形魔法'],
+  ['ok','年表と魔法の時期','新暦などは別シミュで生まれた結果として参考にし、固定の歴史にはしない']]],
+ ['からだと一生',[
+  ['ok','AP と発揮率','45AP・月+5・発揮率＝生殖能力÷自分の最大'],
+  ['ok','生殖能力','0〜100歳を1歳ごと'],
+  ['ok','寿命・死','現実に近い。戦いや事故で死ぬこともある'],
+  ['ok','継承','組織や文化のきまり（長子・実力・投票）']]],
+ ['文明シミュ',[
+  ['ok','育ち方','キャラ1人1人から、群れ→村→町→国（試作あり）'],
+  ['ok','動かす人','ユーザーとAIがコントロール、または声で影響'],
+  ['ok','ユーザーが動かせる範囲','自分が長になった集まり全体'],
+  ['ok','AIが大事にすること','その人の幸せ。性格・好みを反映する'],
+  ['ok','外交・争い','性格・関係・実績で自動。士気で終わる'],
+  ['ok','資源','使うと減り、管理・回復・技術で増える']]],
+ ['見回り（核）',[
+  ['ok','流れ','3人で見回り→自動戦闘→文章。前後に物語の文'],
+  ['ok','声','助言・準備・ねぎらい。聞くかは本人しだい'],
+  ['ok','文明シミュとのつながり','いまは別。あとでつなぐ']]],
+ ['しくみ・見た目',[
+  ['ok','地図と時間','升目の地図。留守中は戻ったときに追いつく'],
+  ['ok','オンライン','無料のみ。保存は声だけ'],
+  ['ok','色','白黒を使わない自然系の色'],
+  ['ok','物語の終わり','固定しない。世代が引き継ぐ']]],
+ ['人気ゲームの要素（11/7 適用）',[
+  ['ok','愛着のわくキャラ','名前・性格（8種）・記憶。性格で声の聞きやすさが変わる'],
+  ['ok','毎回ちがう物語','きまりの積み重ねから、できごとが自然に生まれる'],
+  ['ok','次の目標が見える','「町まで あと○人」のように、次の節目を出す'],
+  ['ok','ふり返れる記録','節目だけの年表'],
+  ['ok','選択に重み','準備は数に限りがある。声は聞かれないこともある'],
+  ['todo','仲間と遊べる','準備済み：世界＝種＋行動の記録で同じ結果（検算つき）。オンラインはこれから'],
+  ['ok','見せたくなる瞬間','年表と一生カードをコピーして共有できる'],
+  ['ok','最初の5分でわかる','はじめての人への3行の案内'],
+  ['ok','新しさが続く','季節で実りが変わる。豊作・大雨・祭り・はやり病が起きる（週ごとの物語はこれから）']]],
+ ['動画から（11/7）',[
+  ['ok','道や施設は古びる','作ったものは手入れしないと傷み、事故が起きる。手入れの費用は、ほかの使い道（暮らし・守り）と取り合いになる（スペインの鉄道事故の話から）'],
+  ['ok','警報が多すぎると無視される','古い見張りのしくみは、まちがいの知らせが増えて、人が信じなくなる'],
+  ['ok','計算と画面を分ける','シミュの計算を別のファイルにし、機能ごとに分ける（AIで作るときに壊れにくい）。civ-sim.js に分けた']]]
+];
+var C={ok:'var(--ok)',hold:'var(--hold)',miss:'var(--miss)',todo:'var(--B)'},N={ok:0,hold:0,miss:0,todo:0},all=0;
+D.forEach(function(s){s[1].forEach(function(i){N[i[0]]++;all++})});
+document.getElementById('meter').innerHTML=['ok','todo','hold','miss'].map(function(k){return '<i style="width:'+(N[k]/all*100)+'%;background:'+C[k]+'"></i>'}).join('');
+document.getElementById('leg').innerHTML='<span style="--c:var(--ok)">決まった '+N.ok+'</span><span style="--c:var(--B)">これから作る '+N.todo+'</span><span style="--c:var(--hold)">保留 '+N.hold+'</span><span style="--c:var(--miss)">足りない '+N.miss+'</span>';
+if(!N.miss)document.getElementById('go').hidden=true;
+document.getElementById('list').innerHTML=D.map(function(s){return '<div class="box"><h2>'+s[0]+'</h2>'+s[1].map(function(i){return '<div class="it" style="--c:'+C[i[0]]+'"><span class="dot"></span><b>'+i[1]+(i[3]?'　<a href="questions.html#g">質問 '+i[3]+'</a>':'')+'</b><small>'+i[2]+'</small></div>'}).join('')+'</div>'}).join('');
+})();
+</script></body></html>

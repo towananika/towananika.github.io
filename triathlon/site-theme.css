@@ -1,0 +1,35 @@
+/* 色の決まり（2026-11-07 ひびき）：白・黒は使わず、目に優しい自然系（生成り・墨茶・苔・藍）。背景も文字も同じ。記録は admin/ のデザイン設定 */
+html[data-tri-mode]{--tri-surface:#faf6ec;--tri-page:#f1ece0;--tri-text:#3b362e;--tri-muted:#6b6355;--tri-border:#ddd3c0;--tri-link:#3f6b8a;--tri-active:#5d7f4e;--tri-tint:#e6ead6;color-scheme:light}
+html[data-tri-theme=dark]{--tri-surface:#2c2a23;--tri-page:#22201b;--tri-text:#e6dfcf;--tri-muted:#b4ab98;--tri-border:#4a4538;--tri-link:#a9c2d6;--tri-active:#a9c08f;--tri-tint:#343a2c;color-scheme:dark}
+html[data-tri-mode=development]{--tri-surface:#292e27;--tri-page:#1f231e;--tri-text:#e4e1d3;--tri-muted:#b0ae9c;--tri-border:#454a3f;--tri-link:#b9c9dc;--tri-active:#d1bf91;--tri-tint:#333a2f;color-scheme:dark}
+html[data-tri-mode]{--ink:var(--tri-text)!important;--fg:var(--tri-text)!important;--wfg:var(--tri-text)!important;--sub:var(--tri-muted)!important;--mut:var(--tri-muted)!important;--muted:var(--tri-muted)!important;--line:var(--tri-border)!important;--wline:var(--tri-border)!important;--bg:var(--tri-page)!important;--paper:var(--tri-page)!important;--card:var(--tri-surface)!important;--wcard:var(--tri-surface)!important;--win:var(--tri-surface)!important;--soft:var(--tri-tint)!important;--mist:var(--tri-tint)!important;--blue:var(--tri-link)!important;--teal:var(--tri-active)!important;--accent:var(--tri-active)!important}
+html[data-tri-theme=dark],html[data-tri-mode=development]{--deep:var(--tri-link)!important;--track:var(--tri-border)!important;--gold:#ddc484!important;--warm:#ddc484!important;--ex:#ddc484!important}
+html[data-tri-mode] body{background:var(--tri-page);color:var(--tri-text);letter-spacing:0}
+html[data-tri-mode] h1,html[data-tri-mode] h2,html[data-tri-mode] .tri-nav *,html[data-tri-mode] .tri-bottom *{letter-spacing:0}
+html[data-tri-mode] .tri-nav,html[data-tri-mode] .tri-more,html[data-tri-mode] .tri-menu summary,html[data-tri-mode] .tri-bottom{background:var(--tri-surface);border-color:var(--tri-border)}
+html[data-tri-mode] .tri-brand,html[data-tri-mode] .tri-top a,html[data-tri-mode] .tri-more a,html[data-tri-mode] .tri-menu summary,html[data-tri-mode] .tri-bottom a{color:var(--tri-text)}
+html[data-tri-mode] .tri-top a:hover,html[data-tri-mode] .tri-more a:hover{background:var(--tri-tint)}
+html[data-tri-mode] .tri-top a[aria-current=page],html[data-tri-mode] .tri-bottom a[aria-current=page]{color:var(--tri-active);box-shadow:inset 0 -3px 0 var(--tri-active)}
+html[data-tri-mode] .tri-more a[aria-current=page]{color:var(--tri-active);background:var(--tri-tint)}
+.tri-theme-toggle{position:relative;display:grid;place-items:center;flex:0 0 40px;width:40px;height:40px;padding:0;border:0;border-radius:50%;background:transparent;color:var(--tri-muted);cursor:pointer}
+.tri-theme-toggle svg{width:19px;height:19px;display:block;pointer-events:none}
+.tri-theme-toggle:hover{background:var(--tri-tint);color:var(--tri-text)}
+.tri-theme-toggle:after{content:attr(data-tooltip);position:absolute;top:calc(100% + 8px);right:0;white-space:nowrap;padding:5px 9px;border-radius:4px;background:var(--tri-text);color:var(--tri-surface);font:12px/1.5 system-ui,sans-serif;opacity:0;pointer-events:none;visibility:hidden}
+.tri-theme-toggle:hover:after,.tri-theme-toggle:focus-visible:after{opacity:1;visibility:visible}
+.tri-theme-toggle:focus-visible{outline:3px solid var(--tri-active);outline-offset:3px}
+html[data-tri-mode] .tri-btn{border-radius:6px;background:var(--tri-surface);color:var(--tri-text);border-color:var(--tri-border)}
+html[data-tri-mode] .tri-btn.play{background:var(--tri-tint);color:var(--tri-text)}
+html[data-tri-mode] .tri-mode-switch{border:1px solid var(--tri-border);border-radius:6px;background:var(--tri-tint);color:var(--tri-text);font-size:12px;padding:8px;min-height:40px;display:inline-flex;align-items:center;justify-content:center}
+html[data-tri-mode] .tri-mode-switch[hidden]{display:none}
+html [data-tri-admin-only][hidden],#dev-return[hidden]{display:none!important}
+html[data-tri-mode] .tri-foot{background:var(--tri-surface);color:var(--tri-muted);border-top:1px solid var(--tri-border)}
+html[data-tri-mode] .tri-foot :is(a,b,.logo,.tri-studio){color:var(--tri-text)}
+html[data-tri-theme=dark] :is(.latest,.list,.post,.block,.rule,.cast-item,.gate-msg,.links a,.tiles a,.form,.fontcard),html[data-tri-mode=development] :is(.box,.gate-msg,.links a,.tiles a,.form,.fontcard){background:var(--tri-surface);color:var(--tri-text);border-color:var(--tri-border)}
+html[data-tri-theme=dark] :is(input,textarea,select),html[data-tri-mode=development] :is(input,textarea,select){background:var(--tri-page);color:var(--tri-text);border-color:var(--tri-border)}
+html[data-tri-theme=dark] .cast-item{--tint:#29373c;--accent:#accfe0}
+html[data-tri-mode=development] :is(.sub,.note,.links a small,th){color:var(--tri-muted)}
+html[data-tri-mode=development] :is(.box,.form,.fontcard,.tiles a,.links a){border-radius:6px}
+html[data-tri-mode=development] .devbar{background:var(--tri-surface);color:#ddc484;border-bottom:1px solid var(--tri-border)}
+@media(max-width:1100px){html[data-tri-mode] .tri-nav{padding:8px 12px;gap:8px}html[data-tri-mode] .tri-top{display:none}}
+@media(max-width:600px){html[data-tri-mode] .tri-nav{flex-wrap:wrap}html[data-tri-mode] .tri-brand{font-size:16px}html[data-tri-mode] .tri-act{gap:5px}html[data-tri-mode] .tri-btn.in{max-width:112px}html[data-tri-mode] .tri-menu summary{width:40px;height:40px}html[data-tri-mode] .tri-more{min-width:min(260px,calc(100vw - 28px))}}
+@media(max-width:370px){html[data-tri-mode] .tri-act{justify-content:flex-end;flex-wrap:wrap}html[data-tri-mode] .tri-btn{font-size:12px;padding:0 9px}html[data-tri-mode] .tri-btn.in{max-width:100px}html[data-tri-mode] .tri-nav{align-items:center}.tri-theme-toggle{flex-basis:36px;width:36px;height:36px}}
