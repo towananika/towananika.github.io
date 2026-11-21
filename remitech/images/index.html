@@ -43,7 +43,7 @@
 
   <div class="card" id="setup" hidden>
     <h2>保存先の設定</h2>
-    <input type="text" id="stUrl" placeholder="owner/repo" value="towananika/remitech" autocomplete="off">
+    <input type="text" id="stUrl" placeholder="owner/repo" value="towananika/towananika.github.io/remitech" autocomplete="off">
     <input type="password" id="stTok" placeholder="Access token（Contents: Read and write）" autocomplete="off">
     <button id="stSave">保存</button>
     <p class="tiny">端末のブラウザにだけ残ります。HUBの「取り込み」で設定済みなら、ここは出ません。</p>
@@ -73,7 +73,13 @@
   var DIR = "media/ref";
   var $ = function (id) { return document.getElementById(id); };
 
-  function storeGet() { try { return JSON.parse(localStorage.getItem("remitech-store") || "{}") || {}; } catch (e) { return {}; } }
+  // 住所は「owner/repo/フォルダ」も可。古い towananika/remitech は移転先へ読み替える（2026-11）
+  function storeGet() {
+    var c; try { c = JSON.parse(localStorage.getItem("remitech-store") || "{}") || {}; } catch (e) { c = {}; }
+    if (c.url && /^towananika\/remitech$/i.test(c.url)) c.url = "towananika/towananika.github.io/remitech";
+    return c;
+  }
+  function ghSplit(u) { var o = String(u || "").split("/"); return { repo: o[0] + "/" + o[1], dir: o.slice(2).join("/") }; }
   function storeSet(o) { try { localStorage.setItem("remitech-store", JSON.stringify(o)); } catch (e) {} }
   function on() { var c = storeGet(); return !!(c.url && c.token); }
 
@@ -81,7 +87,8 @@
     var c = storeGet();
     var o = Object.assign({ headers: {} }, opt || {});
     o.headers = Object.assign({ "Authorization": "Bearer " + c.token, "Accept": "application/vnd.github+json" }, o.headers);
-    return fetch("https://api.github.com/repos/" + c.url + "/contents/" + path, o);
+    var g = ghSplit(c.url);
+    return fetch("https://api.github.com/repos/" + g.repo + "/contents/" + (g.dir ? g.dir + "/" : "") + path, o);
   }
 
   function show() {
@@ -97,7 +104,7 @@
     var tk = $("stTok").value.trim();
     var o = $("stOut"); o.className = "msg"; o.textContent = "…";
     storeSet({ url: u, token: tk });
-    fetch("https://api.github.com/repos/" + u, { headers: { "Authorization": "Bearer " + tk, "Accept": "application/vnd.github+json" } })
+    fetch("https://api.github.com/repos/" + ghSplit(u).repo, { headers: { "Authorization": "Bearer " + tk, "Accept": "application/vnd.github+json" } })
       .then(function (r) {
         if (r.ok) { o.className = "msg ok"; o.textContent = "OK"; show(); }
         else { o.className = "msg bad"; o.textContent = "使えませんでした · " + r.status; }

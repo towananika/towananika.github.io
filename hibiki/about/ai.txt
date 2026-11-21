@@ -162,7 +162,7 @@
 
 | 名前 | 中身 | 場所 |
 |---|---|---|
-| とわなにか（生活サイト） | 健康・お金・関係・勉強・夢日記・優先順位などのページ。ログインした端末だけで見える | https://towananika.github.io/hibiki/ （リポジトリ towananika/hibiki） |
+| とわなにか（生活サイト） | 健康・お金・関係・勉強・夢日記・優先順位などのページ。ログインした端末だけで見える | https://towananika.github.io/hibiki/ （リポジトリ towananika/towananika.github.io の hibiki/） |
 | 名前のない声（ゲーム「トライアスロン」） | 世代育成のモバイルゲーム。プレイヤーは姿のない「声」で、キャラが自分で一生を決める。3つの世界（うつつ・ゆめ・とこよ）。継がれるのはスキルだけ。金〜日の夜に自動開発 | https://towananika.github.io/game/ （リポジトリ towananika/game、設計 `triathlon/SPEC.md`） |
 | 勉強ノート | 放送大学の講義を、絵の出るノートとゲーム・質問欄つきにしたもの | `study/view.html`、Claudeのページ |
 | Claude Code 初期設定テンプレ集 | 無料版だけを Gumroad で出す予定（口座の準備は不要と本人） | `products/claude-code-starter/` |

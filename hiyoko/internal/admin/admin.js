@@ -1,5 +1,5 @@
 /* HIYOKO 社内資料の管理（オーナーだけ）。関係者（メール）の追加・解除と、資料の登録。
-   判定はサーバー（hibiki-sync の /hiyoko/*、towananika/hibiki の worker/hiyoko.js）。画面の出しわけは見た目だけ。 */
+   判定はサーバー（hibiki-sync の /hiyoko/*、towananika/towananika.github.io の hibiki/worker/hiyoko.js）。画面の出しわけは見た目だけ。 */
 (function () {
   'use strict';
   var API = 'https://hibiki-sync.jaykim-can.workers.dev/hiyoko/';

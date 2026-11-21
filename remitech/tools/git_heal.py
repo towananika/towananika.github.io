@@ -12,7 +12,14 @@ import shutil
 import subprocess
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-GIT_DIR = os.path.join(ROOT, ".git")
+# 2026-11-21 から remitech/ は towananika.github.io の中のフォルダ。.git は親にあるので git に聞く
+def _git_dir():
+    r = subprocess.run(["git", "rev-parse", "--absolute-git-dir"], cwd=ROOT,
+                       capture_output=True, text=True, encoding="utf-8")
+    return r.stdout.strip() if r.returncode == 0 and r.stdout.strip() else os.path.join(ROOT, ".git")
+
+
+GIT_DIR = _git_dir()
 
 
 def git(*args):

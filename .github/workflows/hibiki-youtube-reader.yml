@@ -1,4 +1,4 @@
-# PCなしで YouTube 動画1本の公開字幕を読む（tools/youtube-reader をクラウドで動かす）
+# （hibiki/）PCなしで YouTube 動画1本の公開字幕を読む（hibiki/tools/youtube-reader をクラウドで動かす）
 # 使い方: GitHub の Actions → "YouTube Reader" → Run workflow に動画URLを入れる。
 # 結果は「Artifacts」の captions.json（1日で自動削除）と、ログの本文。リポジトリにはコミットしない。
 name: YouTube Reader
@@ -19,12 +19,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pip install -q -r tools/youtube-reader/requirements.txt
+      - run: pip install -q -r hibiki/tools/youtube-reader/requirements.txt
       - name: 字幕を読む
         env:
           VIDEO_URL: ${{ inputs.url }}
         run: |
-          python tools/youtube-reader/reader.py "$VIDEO_URL" > captions.json
+          python hibiki/tools/youtube-reader/reader.py "$VIDEO_URL" > captions.json
           python -c "import json;d=json.load(open('captions.json'));print(d['title'],'/',d['status'],'/',d.get('language'));print('\n'.join(s['text'] for s in d['segments']))"
       - uses: actions/upload-artifact@v4
         with:

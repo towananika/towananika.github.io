@@ -1,5 +1,5 @@
 /* HIYOKO 社内資料：統合ログイン（/triathlon/login/auth.js）の札をサーバー（hibiki-sync の /hiyoko/doc）へ送り、
-   サーバーが本人と許可リストを確かめてから中身を返す（中身はリポジトリに置かない。サーバーは towananika/hibiki の worker/hiyoko.js）。
+   サーバーが本人と許可リストを確かめてから中身を返す（中身はリポジトリに置かない。サーバーは towananika/towananika.github.io の hibiki/worker/hiyoko.js）。
    使い方：<div id="gate" data-doc="strategy"></div><div id="doc-body" hidden></div> */
 (function () {
   'use strict';

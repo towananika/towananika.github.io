@@ -1706,7 +1706,7 @@
     <footer>
       <p class="fnote" id="fnote"></p>
       <p class="fline"><span id="ftoday"></span>
-        <a id="frepo" href="https://github.com/towananika/remitech" target="_blank" rel="noopener"></a></p>
+        <a id="frepo" href="https://github.com/towananika/towananika.github.io/tree/main/remitech" target="_blank" rel="noopener"></a></p>
     </footer>
   </div>
 
@@ -2403,7 +2403,7 @@
         '<input type="password" id="stTok" placeholder="' + esc(t("storeTok")) + '" value="' + esc(storeGet().token || "") + '">' +
         '<div class="bar"><button id="stSave">' + esc(t("storeSave")) + '</button>' +
         '<span class="tiny" id="stOut"></span></div>' +
-        '<p class="tiny">towananika/remitech · Fine-grained token · Contents: Read and write</p>' +
+        '<p class="tiny">towananika/towananika.github.io/remitech · Fine-grained token · Contents: Read and write</p>' +
         '<p class="tiny">' + esc(t("localOnly")) + '</p></div></div>';
   }
 
@@ -2452,7 +2452,7 @@
       o.textContent = "…";
       document.getElementById("stUrl").value = u;
       storeSet({ url: u, token: tk });
-      fetch("https://api.github.com/repos/" + u, {
+      fetch("https://api.github.com/repos/" + ghSplit(u).repo, {
         headers: { "Authorization": "Bearer " + tk, "Accept": "application/vnd.github+json" },
       }).then(function (r) {
         if (r.ok) { o.textContent = t("storeOk"); return; }
@@ -3371,8 +3371,21 @@
   }
 
   // 置き場（Cloudflare R2 + Worker）。住所と合言葉は端末にだけ残す
+  // 置き場の住所は「owner/repo」か「owner/repo/フォルダ」。
+  // 2026-11 に towananika/remitech は towananika/towananika.github.io の remitech/ へ移った。古い住所は読み替える
   function storeGet() {
-    try { return JSON.parse(localStorage.getItem("remitech-store") || "{}") || {}; } catch (e) { return {}; }
+    var c;
+    try { c = JSON.parse(localStorage.getItem("remitech-store") || "{}") || {}; } catch (e) { c = {}; }
+    if (c.url && /^towananika\/remitech$/i.test(c.url)) c.url = "towananika/towananika.github.io/remitech";
+    return c;
+  }
+  function ghSplit(u) {
+    var o = String(u || "").split("/");
+    return { repo: o[0] + "/" + o[1], dir: o.slice(2).join("/") };
+  }
+  function ghContents(u, path) {
+    var s = ghSplit(u);
+    return "https://api.github.com/repos/" + s.repo + "/contents/" + (s.dir ? s.dir + "/" : "") + path;
   }
   function storeSet(o) { try { localStorage.setItem("remitech-store", JSON.stringify(o)); } catch (e) {} }
   function storeOn() { var c = storeGet(); return !!(c.url && c.token); }
@@ -3388,7 +3401,9 @@
   }
   function ghUrl(repo, path) {
     var o = repo.split("/");
-    return "https://" + o[0] + ".github.io/" + o[1] + "/" + path;
+    var site = o[1].toLowerCase() === (o[0] + ".github.io").toLowerCase() ? "" : o[1] + "/";
+    var dir = o.slice(2).join("/");
+    return "https://" + o[0] + ".github.io/" + site + (dir ? dir + "/" : "") + path;
   }
   function toB64(file) {
     return new Promise(function (res, rej) {
@@ -3399,7 +3414,7 @@
     });
   }
   function ghApi(c, path, opt) {
-    return fetch("https://api.github.com/repos/" + c.url + "/contents/" + path, Object.assign({
+    return fetch(ghContents(c.url, path), Object.assign({
       headers: {
         "Authorization": "Bearer " + c.token,
         "Accept": "application/vnd.github+json",
@@ -8477,7 +8492,7 @@
       var c = storeGet();
       var h = { "Authorization": "Bearer " + c.token, "Accept": "application/vnd.github+json" };
       if (schedEtag) h["If-None-Match"] = schedEtag;
-      return fetch("https://api.github.com/repos/" + c.url + "/contents/schedule.json", { headers: h, cache: "no-store" })
+      return fetch(ghContents(c.url, "schedule.json"), { headers: h, cache: "no-store" })
         .then(function (r) {
           if (r.status === 304 || !r.ok) return null;
           schedEtag = r.headers.get("ETag");

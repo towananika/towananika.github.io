@@ -1,5 +1,7 @@
 # とわなにか（ひびきのライフサイト）作業メモ
 
+> リポジトリは `towananika/towananika.github.io` の `hibiki/` フォルダ（2026-11-21 に単独リポジトリから移転。URL は同じ）。パスはこのフォルダからの相対、コマンドもこのフォルダで実行する。
+
 ひびき（韓国在住・日本語でやりとり）が幸せに成長し、よい人生を送るための場所。公開: https://towananika.github.io/hibiki/
 ひびきは日本語だけで読む（サイトの表示はすべて日本語）。**ハングルは使わない**（原本が韓国語でも）。韓国ならではの言葉は日本語に言いかえ、必要なら「補足」（`> 補足：…`）で説明する（2026-10-11）。新しい内容はトークン節約のため、まず `/mnt/project-files/hibiki/` に md で書き、Webページにするのは頼まれたときだけ（2026-10-11）。ページは文字を少なく、図・メーター・カードで見せる。
 勉強の章は HTML を作らず `study/notes/chN.md`（絵の出る md）を書き、`study/view.html?n=chN` で見せる。科目は `study/index.html`（科目えらび）に1枚足す（デジタル経済は `study/digital.html`、食の暮らしは `view.html?n=tradition7`）。難しい言葉は `study/glossary.json` に足す（選んで「あとで聞く」に入れた言葉の答え）。書き方は `study/notes/README.md`、理由は `/mnt/project-files/hibiki/study/token-research.md`。

@@ -333,7 +333,7 @@
   - fertility-by-age.csv
   - 古い資料：character.md・map.md・economy.md・skill.md・skilltree_rgb.md・ip-brief.md など
 - 物語：/mnt/project-files/triathlon/story/saga.html（第1〜4期）、studio/text/world/（大人・国・AIの立場の案など）
-- サイト https://towananika.github.io/triathlon/ （リポジトリ towananika/triathlon）
+- サイト https://towananika.github.io/triathlon/ （リポジトリ towananika/towananika.github.io の triathlon/）
   - dev/index.html：開発トップ
   - dev/needs.html：必要なこと
   - dev/civ.html と civ-sim.js
