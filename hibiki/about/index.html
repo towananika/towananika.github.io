@@ -33,6 +33,9 @@
   .meter { height:6px; background:var(--border); border-radius:999px; overflow:hidden; margin:6px 0 10px; } .meter i { display:block; height:100%; background:var(--sage); transition:width 1s linear; }
   .row2 { display:grid; grid-template-columns:2fr 1fr; gap:8px; } .row2 button { text-align:center; }
   .log { list-style:none; padding:0; margin:10px 0 0; font-size:12px; color:var(--muted); } .log li { display:flex; justify-content:space-between; align-items:center; gap:8px; border-top:1px solid var(--border); padding:4px 0; }
+  .bd { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; text-align:center; }
+  .bd div { background:var(--wood-soft); border-radius:12px; padding:10px 4px; } .bd b { display:block; font-size:20px; color:var(--wood); font-variant-numeric:tabular-nums; } .bd span { font-size:12px; color:var(--muted); }
+  .bdin { display:flex; gap:8px; margin-top:10px; } .bdin input { flex:1; font:inherit; font-size:15px; padding:10px; border-radius:12px; border:1px solid var(--border); background:var(--surface); color:var(--text); } .bdin button { text-align:center; padding:10px 14px; }
 </style>
 </head>
 <body>
@@ -41,6 +44,7 @@
   <header style="display:flex;align-items:center;gap:16px;margin:18px 0 12px"><img src="profile-mandarin.jpg" alt="ひびきのプロフィール画像：みかんのかぶりものをしたキャラクター" width="88" height="88" style="display:block;object-fit:contain;border-radius:8px"><h1>私について</h1></header>
   <p class="lead">ほかのAIに貼るための説明書。コピーして、AIとの会話の最初に貼ってください。</p>
   <p class="lead">Googleログインでは、移行時点の記録を表示します。変更の自動同期はまだ準備中です。</p>
+  <div class="card" id="bday"></div>
   <div class="card" id="box"><p class="lock">読み込み中…（ログインした端末だけで開けます）</p></div>
   <div class="card" id="ai" style="display:none"></div>
   <div class="card" id="secs" style="display:none"></div>
@@ -153,6 +157,34 @@ function aiCall(action, body) {
   }, function () { if (m) m.textContent = "通信できませんでした"; });
 }
 function aiLoad() { if (!window.hbAi || !MD) return aiDraw(null); window.hbAi("status").then(function (st) { aiDraw(st && !st.error ? st : null); }, function () { aiDraw(null); }); }
+</script>
+<script>
+// 生年月日（2026-11-22 ひびき）。この端末の hibiki-birthday にだけ入れる。公開リポジトリには書かない
+(function () {
+  var K = "hibiki-birthday", el = document.getElementById("bday");
+  function get() { try { var v = localStorage.getItem(K); return /^\d{4}-\d{2}-\d{2}$/.test(v || "") ? v : ""; } catch (e) { return ""; } }
+  function draw(edit) {
+    var v = get();
+    if (!v || edit) {
+      el.innerHTML = '<p style="font-weight:600;margin:0">生年月日</p><div class="bdin"><input type="date" id="bd-in" value="' + v + '" max="9999-12-31"><button class="main" id="bd-ok">保存</button></div>' +
+        '<p class="lock" style="font-size:12px;margin:8px 0 0">この端末の中だけに保存します（公開のファイルには書きません）。</p>';
+      document.getElementById("bd-ok").onclick = function () { var x = document.getElementById("bd-in").value; if (!x) return; try { localStorage.setItem(K, x); } catch (e) {} draw(); };
+      return;
+    }
+    var p = v.split("-").map(Number), now = new Date(), y = now.getFullYear();
+    var had = now.getMonth() + 1 > p[1] || (now.getMonth() + 1 === p[1] && now.getDate() >= p[2]);
+    var age = y - p[0] - (had ? 0 : 1);
+    var t0 = new Date(y, now.getMonth(), now.getDate()), nx = new Date(had ? y + 1 : y, p[1] - 1, p[2]);
+    var days = Math.round((nx - t0) / 864e5);
+    try { localStorage.setItem("hibiki-life-age", String(age)); } catch (e) {}
+    el.innerHTML = '<p style="font-weight:600;margin:0 0 8px">生年月日　<span style="font-weight:400">' + p[0] + '年' + p[1] + '月' + p[2] + '日</span></p>' +
+      '<div class="bd"><div><b>' + age + '</b><span>さい</span></div><div><b>' + (days === 365 || days === 366 ? '🎂' : days + '日') + '</b><span>' + (days === 365 || days === 366 ? 'きょう誕生日' : '誕生日まで') + '</span></div><div><b>' + p[1] + '/' + p[2] + '</b><span>誕生日</span></div></div>' +
+      '<p style="margin:8px 0 0;text-align:right"><a href="#" id="bd-ed" style="color:var(--wood);font-size:13px">直す</a></p>';
+    document.getElementById("bd-ed").onclick = function (e) { e.preventDefault(); draw(true); };
+  }
+  draw();
+  window.addEventListener("storage", function (e) { if (e.key === K) draw(); });
+})();
 </script>
 <script type="module" src="about-cloud.mjs?v=3"></script>
 </body>
