@@ -1,0 +1,23 @@
+:root{--ink:#163744;--sub:#5b7279;--line:#cfe0df;--bg:#edf6f4;--card:#fff;--teal:#007f87;--warn:#c96a12;--mp:#5B8FD6;--hp:#4FAE84;--boss:#D9707A}
+@media (prefers-color-scheme:dark){:root{--ink:#e3eeee;--sub:#9fb6ba;--line:#2c4a52;--bg:#10242a;--card:#16313a}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.7 system-ui,-apple-system,"Noto Sans JP",sans-serif}
+main{width:min(560px,100%);margin:0 auto;padding:20px 16px 80px;display:grid;gap:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px}
+h1{margin:0 0 8px;font-size:26px}h2{margin:0 0 6px}.eyebrow{margin:0;color:var(--teal);font-size:12px;font-weight:800}
+.how{margin:0 0 14px;padding-left:22px}.note{color:var(--sub);font-size:13px;margin:10px 0 0}
+button{font:inherit;font-weight:800;border-radius:14px;min-height:56px;padding:6px 16px;cursor:pointer;border:0}
+button small{display:block;font-weight:500;font-size:12px;opacity:.9}
+.primary{background:var(--teal);color:#fff;width:100%}
+.skill{background:var(--mp);color:#fff}.skill:disabled{background:var(--line);color:var(--sub);cursor:default}
+.btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}.act p{margin:0 0 8px}
+.row{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}.row span{color:var(--sub);font-size:14px}
+.lbl{display:block;font-size:12px;color:var(--sub);margin-top:4px}
+.bar{display:block;height:10px;border-radius:5px;background:var(--line);overflow:hidden}.bar i{display:block;height:100%;transition:width .3s}
+.bar.hp i{background:var(--hp)}.bar.mp i{background:var(--mp)}.bar.boss i{background:var(--boss)}.bar.boss{height:14px}
+.bar.full i{background:linear-gradient(90deg,var(--mp),#f4c765)}
+.big{margin:8px 0 0;font-size:14px;color:var(--warn);font-weight:700}
+.party{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.mem{background:var(--card);border:2px solid var(--line);border-top:5px solid var(--c);border-radius:14px;padding:8px}
+.mem b{display:block}.mem small{color:var(--sub);font-size:11px}.mem.now{border-color:var(--teal)}.mem.down{opacity:.4}
+.log ol{margin:0;padding-left:20px;font-size:14px}.log li:first-child{font-weight:700}
+.end{text-align:center}.end.win h2{color:var(--teal);font-size:28px}
