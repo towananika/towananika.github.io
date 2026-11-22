@@ -39,6 +39,12 @@
   .temper { list-style:none; padding:0; margin:0; } .temper li { border-top:1px solid var(--border); padding:8px 0; } .temper li:first-child { border-top:0; } .temper b { display:block; font-size:15px; } .temper span { font-size:12px; color:var(--muted); }
   .apt { display:grid; grid-template-columns:auto 1fr; gap:6px 10px; align-items:center; font-size:13px; margin-top:8px; } .apt span { white-space:nowrap; } .apt .m { height:8px; background:var(--border); border-radius:999px; overflow:hidden; } .apt .m i { display:block; height:100%; background:var(--wood); border-radius:999px; }
   .fit { margin:0; padding-left:1.4em; font-size:14px; } .fit li { margin:4px 0; } .fit span { display:block; font-size:12px; color:var(--muted); }
+  .stats { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px; } .stats div { background:var(--wood-soft); border-radius:12px; padding:10px; } .stats b { display:block; font-size:22px; color:var(--wood); font-variant-numeric:tabular-nums; } .stats span { font-size:12px; color:var(--muted); }
+  .sub { font-weight:600; font-size:14px; margin:14px 0 4px; }
+  .hbar { display:flex; height:28px; border-radius:8px; overflow:hidden; font-size:11px; } .hbar div { display:grid; place-items:center; color:#fff; white-space:nowrap; overflow:hidden; }
+  .hleg { display:flex; justify-content:space-between; font-size:11px; color:var(--muted); margin-top:3px; }
+  .apt em { font-style:normal; font-size:12px; color:var(--muted); font-variant-numeric:tabular-nums; }
+  .temper .ev { display:block; font-size:12px; color:var(--blue); margin-top:2px; }
   .bdin { display:flex; gap:8px; margin-top:10px; } .bdin input { flex:1; font:inherit; font-size:15px; padding:10px; border-radius:12px; border:1px solid var(--border); background:var(--surface); color:var(--text); } .bdin button { text-align:center; padding:10px 14px; }
 </style>
 </head>
@@ -49,10 +55,16 @@
   <p class="lead">ほかのAIに貼るための説明書。コピーして、AIとの会話の最初に貼ってください。</p>
   <p class="lead">Googleログインでは、移行時点の記録を表示します。変更の自動同期はまだ準備中です。</p>
   <div class="card" id="bday"></div>
-  <div class="card" id="me"><p style="font-weight:600;margin:0 0 8px">ふだんの私</p><dl class="facts" id="facts"></dl></div>
-  <div class="card"><p style="font-weight:600;margin:0 0 6px">気質 <span style="font-weight:400;font-size:12px;color:var(--muted)">見立て・使いながら直す</span></p><ul class="temper" id="temper"></ul></div>
-  <div class="card"><p style="font-weight:600;margin:0 0 2px">適性 <span style="font-weight:400;font-size:12px;color:var(--muted)">見立て・6つの型</span></p><div id="apt"></div>
-    <p style="font-weight:600;margin:12px 0 6px;font-size:14px">向いていそうなこと</p><ol class="fit" id="fit"></ol></div>
+  <div class="card" id="data"><p style="font-weight:600;margin:0">データで見る私 <span style="font-weight:400;font-size:12px;color:var(--muted)">行動の記録から・2026-11-22</span></p>
+    <div class="stats" id="stats"></div>
+    <p class="sub">いつ作っている？（韓国時間）</p><div class="hbar" id="hours"></div>
+    <p class="sub">何に時間を使っている？（更新の回数）</p><div class="apt" id="sites"></div>
+    <p class="sub">見えたこと</p><ul class="temper" id="found"></ul>
+    <p class="lock" style="font-size:12px;margin:8px 0 0">材料：サイトの更新1,318回（9/1〜11/22）、会話約70件、PCのファイル名。作業はAIなので、時刻は「頼んだ時間」の目安。</p></div>
+  <div class="card" id="me"><p style="font-weight:600;margin:0 0 8px">ふだんの私 <span style="font-weight:400;font-size:12px;color:var(--muted)">本人の答え</span></p><dl class="facts" id="facts"></dl></div>
+  <div class="card"><p style="font-weight:600;margin:0 0 6px">気質 <span style="font-weight:400;font-size:12px;color:var(--muted)">本人の答え・INFJ・会話から</span></p><ul class="temper" id="temper"></ul></div>
+  <div class="card"><p style="font-weight:600;margin:0 0 2px">適性 <span style="font-weight:400;font-size:12px;color:var(--muted)">行動データから・6つの型</span></p><div id="apt"></div>
+    <p style="font-weight:600;margin:12px 0 6px;font-size:14px">向いていそうなこと（時間を使っている順）</p><ol class="fit" id="fit"></ol></div>
   <div class="card" id="box"><p class="lock">読み込み中…（ログインした端末だけで開けます）</p></div>
   <div class="card" id="ai" style="display:none"></div>
   <div class="card" id="secs" style="display:none"></div>
@@ -217,14 +229,32 @@ var TEMPER = [
   ["予定はだいたい決めて、あとは流れで", "その場で決めることもある（本人の答え）"],
   ["決めつけられるのが苦手", "事実と違えば、はっきり聞き返す"]
 ];
-// 適性（2026-11-22。会話・行動・本人の答え・MBTI INFJ からの見立て。0〜5）
-var APT = [["しらべる・考える", 4.5], ["まきこむ・導く", 4.5], ["あらわす・創る", 4], ["ささえる・教える", 4], ["ととのえる・続ける", 3], ["つくる・動かす", 1.5]];
+// データで見る私（2026-11-22。根拠は共有フォルダ hibiki/me/data-analysis-2026-11-22.md）
+var STATS = [["6つ", "83日で作ったサイト"], ["1,318回", "更新"], ["82%", "作業した日（68/83日）"], ["2週に1つ", "新しく始めるペース"]];
+var HOURS = [["朝", 11, "var(--blue)"], ["昼 10-14時", 42, "var(--wood)"], ["午後 15-18時", 36, "var(--sage)"], ["夜", 11, "var(--muted)"]];
+var SITES = [["SNS発信（REMITECH）", 450], ["ゲーム世界（トライアスロン）", 288], ["自分の暮らし（ひびき）", 257], ["キャラクター（NACHA）", 163], ["生活の道具", 88]];
+var FOUND = [
+  ["作り続ける人", "83日で6サイト・1,318回。82%の日に作業"],
+  ["始めるのが得意、関心は移っていく", "約2週間ごとに新しいサイト。NACHAは8日、トライアスロンは17日で中心が移った"],
+  ["世界・キャラクター・物語を作る", "ゲーム世界とキャラクターで更新の37%（自分の答えには出てこなかった強み）"],
+  ["発信で人を集める", "いちばん多いのはSNS投稿の準備（450回）"],
+  ["方向を決めて任せる", "指示はほとんど1〜2行。「全権限を与えたい」「おすすめので」"],
+  ["わかりやすさに敏感", "「わかりやすく・シンプル・まだ複雑」が7回以上"],
+  ["昼型", "更新の78%が10〜18時（本人の「昼が好き」と一致）"]
+];
+document.getElementById("stats").innerHTML = STATS.map(function (x) { return "<div><b>" + x[0] + "</b><span>" + x[1] + "</span></div>"; }).join("");
+document.getElementById("hours").innerHTML = HOURS.map(function (x) { return '<div style="flex:' + x[1] + ';background:' + x[2] + '" title="' + x[0] + '">' + (x[1] >= 30 ? x[0].split(" ")[0] + " " + x[1] + "%" : x[1] + "%") + "</div>"; }).join("");
+document.getElementById("hours").insertAdjacentHTML("afterend", '<div class="hleg"><span>朝 6-9時</span><span>夜 19-23時</span></div>');
+document.getElementById("sites").innerHTML = SITES.map(function (x) { return "<span>" + x[0] + '</span><div class="m"><i style="width:' + x[1] / 4.5 + '%"></i></div>'; }).join("");
+document.getElementById("found").innerHTML = FOUND.map(function (x) { return "<li><b>" + x[0] + '</b><span class="ev">根拠：' + x[1] + "</span></li>"; }).join("");
+// 適性（2026-11-22。行動データを主に、本人の答え・MBTI INFJ で確かめた。0〜5）
+var APT = [["あらわす・創る", 5], ["まきこむ・導く", 4.5], ["しらべる・考える", 4], ["ととのえる・続ける", 3.5], ["ささえる・教える", 3.5], ["つくる・動かす", 1.5]];
 var FIT = [
-  ["プロダクトの企画・責任者", "何を作るか決めて、作らせて、使いながら直す"],
-  ["学びの設計（エドテック）", "むずかしい内容を、例え・図・ゲームで分かる形に"],
-  ["経済・心理の解説と発信", "大きな流れを、自分の例えで伝える"],
-  ["仕組みで回る場づくり", "経済的な自由の中で、価値あるものを作る（5年後の私）"],
-  ["人の成長を支える仕事", "行動心理・コーチング・相談。INFJの強み（人の気持ちをくむ）を生かす"]
+  ["世界観・キャラクターのある企画（ゲーム・ブランド）", "いちばん時間を使っている：ゲーム世界とキャラクターで更新の37%"],
+  ["SNS発信・コミュニティ運営", "いちばん更新が多い：REMITECH 450回。反応の数字も集めている"],
+  ["プロダクトの企画・責任者", "短い指示で方向を決め、任せ、使って直す"],
+  ["学びの設計（エドテック）", "「わかりやすく・シンプルに」が7回以上。学習画面を何度も作り直し"],
+  ["経済・心理の解説", "経済学科。ひびきの中で学び30%・お金15%"]
 ];
 document.getElementById("apt").innerHTML = '<div class="apt">' + APT.map(function (a) { return "<span>" + a[0] + '</span><div class="m"><i style="width:' + a[1] * 20 + '%"></i></div>'; }).join("") + "</div>";
 document.getElementById("fit").innerHTML = FIT.map(function (f) { return "<li>" + f[0] + "<span>" + f[1] + "</span></li>"; }).join("");
