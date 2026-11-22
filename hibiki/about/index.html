@@ -159,15 +159,15 @@ function aiCall(action, body) {
 function aiLoad() { if (!window.hbAi || !MD) return aiDraw(null); window.hbAi("status").then(function (st) { aiDraw(st && !st.error ? st : null); }, function () { aiDraw(null); }); }
 </script>
 <script>
-// 生年月日（2026-11-22 ひびき）。この端末の hibiki-birthday にだけ入れる。公開リポジトリには書かない
+// 生年月日（2026-11-22 ひびき：ページに直接書いてよいと決定）。直したらこの端末の hibiki-birthday が優先
 (function () {
-  var K = "hibiki-birthday", el = document.getElementById("bday");
-  function get() { try { var v = localStorage.getItem(K); return /^\d{4}-\d{2}-\d{2}$/.test(v || "") ? v : ""; } catch (e) { return ""; } }
+  var K = "hibiki-birthday", BIRTH = "1995-10-12", el = document.getElementById("bday");
+  function get() { try { var v = localStorage.getItem(K); return /^\d{4}-\d{2}-\d{2}$/.test(v || "") ? v : BIRTH; } catch (e) { return BIRTH; } }
   function draw(edit) {
     var v = get();
     if (!v || edit) {
       el.innerHTML = '<p style="font-weight:600;margin:0">生年月日</p><div class="bdin"><input type="date" id="bd-in" value="' + v + '" max="9999-12-31"><button class="main" id="bd-ok">保存</button></div>' +
-        '<p class="lock" style="font-size:12px;margin:8px 0 0">この端末の中だけに保存します（公開のファイルには書きません）。</p>';
+        '<p class="lock" style="font-size:12px;margin:8px 0 0">直した日付はこの端末に保存します。</p>';
       document.getElementById("bd-ok").onclick = function () { var x = document.getElementById("bd-in").value; if (!x) return; try { localStorage.setItem(K, x); } catch (e) {} draw(); };
       return;
     }
