@@ -37,6 +37,8 @@
   .bd div { background:var(--wood-soft); border-radius:12px; padding:10px 4px; } .bd b { display:block; font-size:20px; color:var(--wood); font-variant-numeric:tabular-nums; } .bd span { font-size:12px; color:var(--muted); }
   .facts { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:0; } .facts div { background:var(--sage-soft); border-radius:12px; padding:10px 12px; } .facts dt { font-size:12px; color:var(--muted); } .facts dd { margin:2px 0 0; font-weight:600; font-size:15px; }
   .temper { list-style:none; padding:0; margin:0; } .temper li { border-top:1px solid var(--border); padding:8px 0; } .temper li:first-child { border-top:0; } .temper b { display:block; font-size:15px; } .temper span { font-size:12px; color:var(--muted); }
+  .apt { display:grid; grid-template-columns:auto 1fr; gap:6px 10px; align-items:center; font-size:13px; margin-top:8px; } .apt span { white-space:nowrap; } .apt .m { height:8px; background:var(--border); border-radius:999px; overflow:hidden; } .apt .m i { display:block; height:100%; background:var(--wood); border-radius:999px; }
+  .fit { margin:0; padding-left:1.4em; font-size:14px; } .fit li { margin:4px 0; } .fit span { display:block; font-size:12px; color:var(--muted); }
   .bdin { display:flex; gap:8px; margin-top:10px; } .bdin input { flex:1; font:inherit; font-size:15px; padding:10px; border-radius:12px; border:1px solid var(--border); background:var(--surface); color:var(--text); } .bdin button { text-align:center; padding:10px 14px; }
 </style>
 </head>
@@ -49,6 +51,8 @@
   <div class="card" id="bday"></div>
   <div class="card" id="me"><p style="font-weight:600;margin:0 0 8px">ふだんの私</p><dl class="facts" id="facts"></dl></div>
   <div class="card"><p style="font-weight:600;margin:0 0 6px">気質 <span style="font-weight:400;font-size:12px;color:var(--muted)">見立て・使いながら直す</span></p><ul class="temper" id="temper"></ul></div>
+  <div class="card"><p style="font-weight:600;margin:0 0 2px">適性 <span style="font-weight:400;font-size:12px;color:var(--muted)">見立て・6つの型</span></p><div id="apt"></div>
+    <p style="font-weight:600;margin:12px 0 6px;font-size:14px">向いていそうなこと</p><ol class="fit" id="fit"></ol></div>
   <div class="card" id="box"><p class="lock">読み込み中…（ログインした端末だけで開けます）</p></div>
   <div class="card" id="ai" style="display:none"></div>
   <div class="card" id="secs" style="display:none"></div>
@@ -211,6 +215,16 @@ var TEMPER = [
   ["新しい場では、まず様子を見る", "人や音の多い場所で疲れやすい。ひとり時間で回復（本人の答え）"],
   ["決めつけられるのが苦手", "事実と違えば、はっきり聞き返す"]
 ];
+// 適性（2026-11-22。会話・行動・本人の答えからの見立て。0〜5）
+var APT = [["まきこむ・導く", 5], ["しらべる・考える", 4.5], ["あらわす・創る", 4], ["ととのえる・続ける", 3], ["ささえる・教える", 3], ["つくる・動かす", 1.5]];
+var FIT = [
+  ["プロダクトの企画・責任者", "何を作るか決めて、作らせて、使いながら直す"],
+  ["学びの設計（エドテック）", "むずかしい内容を、例え・図・ゲームで分かる形に"],
+  ["経済・心理の解説と発信", "大きな流れを、自分の例えで伝える"],
+  ["仕組みで回る場づくり", "経済的な自由の中で、価値あるものを作る（5年後の私）"]
+];
+document.getElementById("apt").innerHTML = '<div class="apt">' + APT.map(function (a) { return "<span>" + a[0] + '</span><div class="m"><i style="width:' + a[1] * 20 + '%"></i></div>'; }).join("") + "</div>";
+document.getElementById("fit").innerHTML = FIT.map(function (f) { return "<li>" + f[0] + "<span>" + f[1] + "</span></li>"; }).join("");
 document.getElementById("facts").innerHTML = FACTS.map(function (f) { return "<div" + (f[2] ? ' style="grid-column:1/-1' + (f[2] === 2 ? ';background:var(--blue-soft)' : '') + '"' : "") + "><dt>" + f[0] + "</dt><dd>" + f[1] + "</dd></div>"; }).join("");
 document.getElementById("temper").innerHTML = TEMPER.map(function (t) { return "<li><b>" + t[0] + "</b><span>" + t[1] + "</span></li>"; }).join("");
 </script>
