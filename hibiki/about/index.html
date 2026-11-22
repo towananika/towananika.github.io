@@ -36,6 +36,7 @@
   .bd { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; text-align:center; }
   .bd div { background:var(--wood-soft); border-radius:12px; padding:10px 4px; } .bd b { display:block; font-size:20px; color:var(--wood); font-variant-numeric:tabular-nums; } .bd span { font-size:12px; color:var(--muted); }
   .facts { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:0; } .facts div { background:var(--sage-soft); border-radius:12px; padding:10px 12px; } .facts dt { font-size:12px; color:var(--muted); } .facts dd { margin:2px 0 0; font-weight:600; font-size:15px; }
+  .temper { list-style:none; padding:0; margin:0; } .temper li { border-top:1px solid var(--border); padding:8px 0; } .temper li:first-child { border-top:0; } .temper b { display:block; font-size:15px; } .temper span { font-size:12px; color:var(--muted); }
   .bdin { display:flex; gap:8px; margin-top:10px; } .bdin input { flex:1; font:inherit; font-size:15px; padding:10px; border-radius:12px; border:1px solid var(--border); background:var(--surface); color:var(--text); } .bdin button { text-align:center; padding:10px 14px; }
 </style>
 </head>
@@ -47,6 +48,7 @@
   <p class="lead">Googleログインでは、移行時点の記録を表示します。変更の自動同期はまだ準備中です。</p>
   <div class="card" id="bday"></div>
   <div class="card" id="me"><p style="font-weight:600;margin:0 0 8px">ふだんの私</p><dl class="facts" id="facts"></dl></div>
+  <div class="card"><p style="font-weight:600;margin:0 0 6px">気質 <span style="font-weight:400;font-size:12px;color:var(--muted)">見立て・使いながら直す</span></p><ul class="temper" id="temper"></ul></div>
   <div class="card" id="box"><p class="lock">読み込み中…（ログインした端末だけで開けます）</p></div>
   <div class="card" id="ai" style="display:none"></div>
   <div class="card" id="secs" style="display:none"></div>
@@ -195,9 +197,21 @@ var FACTS = [
   ["仕事", "会社員"],
   ["学び", "放送大学 経済"],
   ["元気な時間", "昼"],
-  ["休みの日", "勉強・調べもの、散歩"]
+  ["休みの日", "勉強・調べもの、散歩"],
+  ["好きな作業", "企画・アイデア、仕組みづくり"],
+  ["元気が戻る", "ひとり時間・散歩・好きな人と話す", 1],
+  ["5年後の私", "経済的な自由の中で、作りたい新しいもの・価値あるものを形にする", 2]
 ];
-document.getElementById("facts").innerHTML = FACTS.map(function (f) { return "<div><dt>" + f[0] + "</dt><dd>" + f[1] + "</dd></div>"; }).join("");
+// 気質（会話と行動からの見立て。違えば直す）
+var TEMPER = [
+  ["アイデアが次々に出る", "思いついたら試す"],
+  ["方向を決めて、仕組みを作る", "使いながら直していく"],
+  ["総費用・数字で考える", "感覚だけで決めない"],
+  ["決めつけられるのが苦手", "事実と違えば、はっきり聞き返す"],
+  ["静かな場所で回復する", "音・物の多さに疲れやすい"]
+];
+document.getElementById("facts").innerHTML = FACTS.map(function (f) { return "<div" + (f[2] ? ' style="grid-column:1/-1' + (f[2] === 2 ? ';background:var(--blue-soft)' : '') + '"' : "") + "><dt>" + f[0] + "</dt><dd>" + f[1] + "</dd></div>"; }).join("");
+document.getElementById("temper").innerHTML = TEMPER.map(function (t) { return "<li><b>" + t[0] + "</b><span>" + t[1] + "</span></li>"; }).join("");
 </script>
 <script type="module" src="about-cloud.mjs?v=3"></script>
 </body>
