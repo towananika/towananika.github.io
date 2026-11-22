@@ -21,3 +21,8 @@ button small{display:block;font-weight:500;font-size:12px;opacity:.9}
 .mem b{display:block}.mem small{color:var(--sub);font-size:11px}.mem.now{border-color:var(--teal)}.mem.down{opacity:.4}
 .log ol{margin:0;padding-left:20px;font-size:14px}.log li:first-child{font-weight:700}
 .end{text-align:center}.end.win h2{color:var(--teal);font-size:28px}
+.sprite{font-size:72px;line-height:1;text-align:center;margin:0 0 6px}
+.sprite.hit{animation:hit .35s}.sprite.big{animation:hit .5s 2}
+@keyframes hit{0%,100%{transform:none}25%{transform:translateX(-8px) rotate(-6deg)}50%{transform:translateX(8px) rotate(6deg);filter:brightness(1.6)}}
+.face{display:block;font-size:34px;line-height:1.1}
+@media (prefers-reduced-motion:reduce){.sprite.hit{animation:none}}

@@ -12,16 +12,17 @@
   function member(m, i) {
     var d = E.def(m.id), now = !s.result && i === s.turn, cost = d.skill.cost;
     return '<div class="mem' + (now ? ' now' : '') + (m.hp === 0 ? ' down' : '') + '" style="--c:' + d.color + '">' +
-      '<b>' + d.name + '</b><small>' + d.cls + '</small>' +
+      '<span class="face">' + (m.hp === 0 ? '💤' : d.emoji) + '</span><b>' + d.name + '</b><small>' + d.cls + '</small>' +
       '<span class="lbl">HP ' + m.hp + '</span>' + bar(m.hp, m.max, 'hp') +
       '<span class="lbl">MP ' + m.mp + '/' + cost + '</span>' + bar(m.mp, cost, 'mp' + (m.mp >= cost ? ' full' : '')) + '</div>';
   }
+  var fx = '';
   function render() {
     var m = s.party[s.turn], d = E.def(m.id), ok = E.canSkill(s), end = '';
     if (s.result === 'win') end = '<section class="card end win"><h2>ボスクリア！</h2><p>' + s.round + 'ラウンドでたおしました。</p><button class="primary" id="again" type="button">もう一度</button></section>';
     if (s.result === 'lose') end = '<section class="card end"><h2>全員が倒れた</h2><p>スキルの使いどころを変えて、もう一度。</p><button class="primary" id="again" type="button">もう一度</button></section>';
     app.innerHTML =
-      '<section class="card boss"><div class="row"><b>' + C.boss.name + '</b><span>ラウンド ' + s.round + (s.guard ? ' · 🛡 守り中' : '') + '</span></div>' +
+      '<section class="card boss"><div class="sprite' + (fx ? ' ' + fx : '') + '">' + (s.result === 'win' ? '💥' : C.boss.emoji) + '</div><div class="row"><b>' + C.boss.name + '</b><span>ラウンド ' + s.round + (s.guard ? ' · 🛡 守り中' : '') + '</span></div>' +
       '<span class="lbl">HP ' + s.boss.hp + ' / ' + s.boss.max + '</span>' + bar(s.boss.hp, s.boss.max, 'boss') +
       '<p class="big">' + (C.boss.bigEvery - (s.round - 1) % C.boss.bigEvery === 1 ? '⚠ このラウンドの終わりに大技がくる' : '大技まで あと ' + (C.boss.bigEvery - (s.round - 1) % C.boss.bigEvery) + ' ラウンド') + '</p></section>' +
       '<section class="party">' + s.party.map(member).join('') + '</section>' +
@@ -30,9 +31,9 @@
         '<button class="skill" id="sk" type="button"' + (ok ? '' : ' disabled') + '>' + d.skill.name + '<small>' + (ok ? d.skill.text : 'MP ' + d.skill.cost + ' で使える') + '</small></button></div></section>') +
       '<section class="card log"><ol>' + s.log.slice(0, 6).map(function (t) { return '<li>' + t + '</li>'; }).join('') + '</ol></section>';
     var a = document.getElementById('atk'), k = document.getElementById('sk'), g = document.getElementById('again');
-    if (a) a.onclick = function () { E.attack(s); render(); };
-    if (k) k.onclick = function () { E.skill(s); render(); };
-    if (g) g.onclick = function () { s = E.start(); render(); };
+    if (a) a.onclick = function () { fx = 'hit'; E.attack(s); render(); };
+    if (k) k.onclick = function () { fx = d.skill.id === 'smash' ? 'hit big' : ''; E.skill(s); render(); };
+    if (g) g.onclick = function () { fx = ''; s = E.start(); render(); };
   }
   intro();
 })();
