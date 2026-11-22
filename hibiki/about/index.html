@@ -35,6 +35,7 @@
   .log { list-style:none; padding:0; margin:10px 0 0; font-size:12px; color:var(--muted); } .log li { display:flex; justify-content:space-between; align-items:center; gap:8px; border-top:1px solid var(--border); padding:4px 0; }
   .bd { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; text-align:center; }
   .bd div { background:var(--wood-soft); border-radius:12px; padding:10px 4px; } .bd b { display:block; font-size:20px; color:var(--wood); font-variant-numeric:tabular-nums; } .bd span { font-size:12px; color:var(--muted); }
+  .facts { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:0; } .facts div { background:var(--sage-soft); border-radius:12px; padding:10px 12px; } .facts dt { font-size:12px; color:var(--muted); } .facts dd { margin:2px 0 0; font-weight:600; font-size:15px; }
   .bdin { display:flex; gap:8px; margin-top:10px; } .bdin input { flex:1; font:inherit; font-size:15px; padding:10px; border-radius:12px; border:1px solid var(--border); background:var(--surface); color:var(--text); } .bdin button { text-align:center; padding:10px 14px; }
 </style>
 </head>
@@ -45,6 +46,7 @@
   <p class="lead">ほかのAIに貼るための説明書。コピーして、AIとの会話の最初に貼ってください。</p>
   <p class="lead">Googleログインでは、移行時点の記録を表示します。変更の自動同期はまだ準備中です。</p>
   <div class="card" id="bday"></div>
+  <div class="card" id="me"><p style="font-weight:600;margin:0 0 8px">ふだんの私</p><dl class="facts" id="facts"></dl></div>
   <div class="card" id="box"><p class="lock">読み込み中…（ログインした端末だけで開けます）</p></div>
   <div class="card" id="ai" style="display:none"></div>
   <div class="card" id="secs" style="display:none"></div>
@@ -185,6 +187,17 @@ function aiLoad() { if (!window.hbAi || !MD) return aiDraw(null); window.hbAi("s
   draw();
   window.addEventListener("storage", function (e) { if (e.key === K) draw(); });
 })();
+</script>
+<script>
+// 本人の答え（2026-11-22）。足すときは1行ずつ
+var FACTS = [
+  ["住まい", "韓国"],
+  ["仕事", "会社員"],
+  ["学び", "放送大学 経済"],
+  ["元気な時間", "昼"],
+  ["休みの日", "勉強・調べもの、散歩"]
+];
+document.getElementById("facts").innerHTML = FACTS.map(function (f) { return "<div><dt>" + f[0] + "</dt><dd>" + f[1] + "</dd></div>"; }).join("");
 </script>
 <script type="module" src="about-cloud.mjs?v=3"></script>
 </body>
