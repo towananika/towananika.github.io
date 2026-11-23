@@ -1,0 +1,162 @@
+#!/usr/bin/env python3
+"""Rebuild the HIYOKO site nav (all pages) and the home-page sitemap.
+Usage: python3 build_nav.py /path/to/towananika.github.io/hiyoko
+Portal pages (home, links, about, character, vision) come from gen_portal.py; analysis/ holds the SNS analysis hub + sitemap.
+Internal pages load their content from hibiki-sync behind the site login; see internal/doc.js."""
+import os, re, sys
+ROOT = sys.argv[1]
+# (heading, css class, [(label, href rel. to hiyoko/, desc, locked)])
+# Top tabs = sections (global nav). Left nav = pages of the current section only.
+SECTIONS = [("home", "ホーム", ""), ("know", "HIYOKOを知る", "about/"), ("links", "公式リンク", "links/"),
+            ("analysis", "SNS分析", "analysis/"), ("news", "ニュース", "news/"), ("in", "🔒 社内資料", "internal/strategy/")]
+def section_of(p):
+    if p == "": return "home"
+    if p in ("links/", "news/"): return p[:-1]
+    if p in ("about/", "world/", "character/"): return "know"
+    if p.startswith("internal/"): return "in"
+    return "analysis"
+GROUP_SECTION = {"h": "know", "m": "analysis", "x": "analysis", "ig": "analysis", "in": "in"}
+GROUPS = [
+  ("HIYOKOを知る", "h", [("HIYOKOとは", "about/", "しくみとロードマップ", False),
+                   ("目的", "world/", "公式に書かれているねらい", False),
+                   ("キャラクター", "character/", "ひよこのプロフィール", False)]),
+  ("SNS分析", "m", [("SNS分析トップ", "analysis/", "XとInstagramの数字", False),("KPI一覧", "kpi/", "投稿ごとの数字を並べ替え", False),("2026年11月 X・IG ABCD", "2026-11/", "今月の直す候補", False),
+                 ("Aの投稿ランキング（全期間）", "a-ranking/", "届いて反応もあった投稿だけ", False)]),
+  ("X", "x", [("X 詳細", "x/", "悩み→解決で、プロフィールへ", False),
+              ("X 投稿とKPI（事実）", "x/posts/", "全投稿の数字", False),
+              ("X コンテンツ4グループ", "x/content/", "届いたか・訪問されたかで4分け", False),
+              ("X 悩み→解決の企画", "x/plan/", "投稿の型と新しい案", False)]),
+  ("Instagram", "ig", [("Instagram 詳細", "ig/", "短いキャラのリールでシェア→フォロー", False),
+                       ("Instagram 投稿とKPI（事実）", "ig/posts/", "全投稿の数字", False),
+                       ("Instagram コンテンツ3グループ", "ig/content/", "シェア・見られる・届かない", False)]),
+  ("社内資料（関係者のみ）", "in", [("企画・目標・方向性", "internal/strategy/", "ログインして開く", True),
+                          ("振り返り", "internal/review/", "ログインして開く", True)]),
+]
+PAGES = ["", "links/", "about/", "character/", "world/", "news/", "analysis/", "kpi/", "2026-11/", "a-ranking/", "x/", "x/posts/", "x/content/", "x/plan/", "ig/", "ig/posts/", "ig/content/", "internal/strategy/", "internal/review/", "internal/admin/"]
+exists = lambda h: os.path.exists(os.path.join(ROOT, h, "index.html"))
+
+# sub-anchors per page, taken from each page's own nav (current page lists them as #id)
+NAV_RE = re.compile(r'<details class="sitenav".*?</details>', re.S)
+subs = {}
+for p in PAGES:
+    html = open(os.path.join(ROOT, p, "index.html"), encoding="utf-8").read()
+    t = re.search(r'<details class="pagetoc".*?</details>', html, re.S)
+    if t:
+        subs[p] = re.findall(r'<li><a href="#([^"]+)">([^<]*)</a></li>', t.group(0)); continue
+    nav = NAV_RE.search(html).group(0)
+    m = re.search(r'aria-current="page">[^<]*</a><ul>(.*?)</ul>', nav)
+    if not m:  # home: subs absent; take from another page's nav
+        continue
+    subs[p] = re.findall(r'<li><a href="#([^"]+)">([^<]*)</a></li>', m.group(1))
+for p in PAGES:  # pages whose subs we didn't capture: read from home nav
+    if p in subs or p == "": continue
+    if os.path.exists(os.path.join(ROOT, "x", "index.html")) and "<details class=\"toc\"" in open(os.path.join(ROOT, p, "index.html"), encoding="utf-8").read(): continue
+    home = NAV_RE.search(open(os.path.join(ROOT, "index.html"), encoding="utf-8").read()).group(0)
+    m = re.search(r'href="%s">[^<]*</a><ul>(.*?)</ul>' % re.escape(p), home)
+    subs[p] = re.findall(r'<li><a href="%s#([^"]+)">([^<]*)</a></li>' % re.escape(p), m.group(1)) if m else []
+
+MEMBER = {"in"}  # sections shown only to logged-in members (html.is-member, set by account.js after the server says yes)
+def mo(k): return ' mem-only' if k in MEMBER else ''
+
+def nav_for(cur):
+    """Left: site map (pages only). Right: this page's sections (only pages with sections)."""
+    pre = "../" * cur.count("/")
+    sec = section_of(cur)
+    groups = [g for g in GROUPS if GROUP_SECTION[g[1]] == sec]
+    if not groups:  # one-page section: keep an empty, hidden nav so the layout knows there is none
+        out = ['<details class="sitenav" hidden><summary>ページ一覧</summary><div></div></details>']
+    else:
+        out = ['<details class="sitenav" open><summary>このコーナーのページ</summary><div>',
+               f'<a class="brand" href="{pre or "./"}">HIYOKO</a>']
+    for head, cls, items in groups:
+        out.append(f'<span class="ch {cls}{mo(GROUP_SECTION[cls])}">{"🔒 " if cls=="in" else ""}{head}</span><ul class="{mo(GROUP_SECTION[cls]).strip()}">')
+        for label, href, _, locked in items:
+            if locked and not exists(href):
+                out.append(f'<li><span class="page off">{label}（準備中）</span></li>'); continue
+            cur_a = ' aria-current="page"' if href == cur else ""
+            out.append(f'<li><a class="page" href="{pre}{href}"{cur_a}>{label}</a></li>')
+        out.append('</ul>')
+    if groups: out.append('</div></details>')
+    if subs.get(cur):
+        out.append('<details class="pagetoc" open><summary>このページの目次</summary><ul>')
+        out.append("".join(f'<li><a href="#{i}">{t}</a></li>' for i, t in subs[cur]))
+        out.append('</ul></details>')
+    return "".join(out)
+
+def tabs(cur):
+    pre = "../" * cur.count("/"); sec = section_of(cur)
+    return ('<nav class="hy-tabs" aria-label="コーナー"><div>' + "".join(
+        f'<a href="{pre}{h}"' + (f' class="{mo(k).strip()}"' if mo(k) else "") + (' aria-current="true"' if k == sec else "") + f'>{l}</a>' for k, l, h in SECTIONS) + '</div></nav>\n')
+
+def footmap(cur):
+    pre = "../" * cur.count("/")
+    cols = []
+    for k, l, h in SECTIONS:
+        if k == "home": continue
+        items = [it for g in GROUPS if GROUP_SECTION[g[1]] == k for it in g[2] if not (it[3] and not exists(it[1]))]
+        links = "".join(f'<li><a href="{pre}{it[1]}">{it[0]}</a></li>' for it in items[:6])
+        cols.append(f'<div class="{mo(k).strip()}"><a class="fm-h" href="{pre}{h}">{l}</a>' + (f'<ul>{links}</ul>' if links else '') + '</div>')
+    return '<!--fmap--><nav class="fmap" aria-label="サイトマップ">' + "".join(cols) + '</nav><!--/fmap-->\n'
+
+def sitemap():
+    out = ['<!--smap--><div class="smap-h">ページ一覧</div><div class="smap">']
+    for head, cls, items in GROUPS:
+        if cls == "h": continue
+        items = [it for it in items if it[1] != "analysis/"]
+        out.append(f'<div class="sm {cls}{mo(GROUP_SECTION[cls])}"><span class="sm-h">{"🔒 " if cls=="in" else ""}{head}</span>')
+        for label, href, desc, locked in items:
+            if locked and not exists(href):
+                out.append(f'<span class="sm-i off"><strong>{label}</strong><em>準備中</em></span>'); continue
+            out.append(f'<a class="sm-i" href="../{href}"><strong>{label}</strong><em>{desc}</em></a>')
+        out.append('</div>')
+    out.append('</div><!--/smap-->')
+    return "".join(out)
+
+for p in PAGES:
+    f = os.path.join(ROOT, p, "index.html")
+    html = open(f, encoding="utf-8").read()
+    html = re.sub(r'<details class="pagetoc".*?</details>', '', html, flags=re.S)
+    # top header: Towananika > HIYOKO, with the login / settings slot (filled by account.js and i18n.js)
+    pre = "../" * p.count("/")
+    html = re.sub(r'<a class="skip" href="#main">[^<]*</a>', '', html)
+    html = re.sub(r'<header class="hy-top">.*?</header>\n?', '', html, flags=re.S)
+    html = re.sub(r'<nav class="hy-tabs".*?</nav>\n?', '', html, flags=re.S)
+    html = re.sub(r'<!--fmap-->.*?<!--/fmap-->\n?', '', html, flags=re.S)
+    html = re.sub(r'(<body[^>]*>\n?)', lambda m: m.group(1) + f'<a class="skip" href="#main">本文へスキップ</a><header class="hy-top"><nav class="hy-path" aria-label="サイト"><a href="/">Towananika</a><span aria-hidden="true">›</span><a href="{pre or "./"}">HIYOKO</a><span class="fan-badge">非公式ファンサイト</span></nav><div class="hy-set"></div></header>\n' + tabs(p), html, count=1)
+    html = re.sub(r'<main(?![^>]*id=)', '<main id="main"', html, count=1)
+    if p.startswith("internal/") and 'name="robots"' not in html:
+        html = html.replace('<meta charset="utf-8">', '<meta charset="utf-8"><meta name="robots" content="noindex,nofollow">', 1)
+    # breadcrumbs start at Towananika
+    html = re.sub(r'<nav class="crumbs">(?!<a href="/">Towananika)', '<nav class="crumbs"><a href="/">Towananika</a> ／ ', html, count=1)
+    # fan-site disclaimer at the end of every page's main
+    html = re.sub(r'<!--fan-->.*?<!--/fan-->\n?', '', html, flags=re.S)
+    _fan = '<!--fan--><p class="fan-foot"><span>🐣 このサイトはファンが作った非公式サイトです。HIYOKO公式とは関係ありません。</span> <a href="https://hiyokotoken.com/" target="_blank" rel="noopener">正しい情報は公式サイトへ ↗</a></p><!--/fan-->\n'
+    _m = re.search(r'<footer[^>]*>(?:(?!</main>).)*</main>', html, re.S)
+    _fan = _fan + (footmap(p) if p else '')  # home already is the map
+    html = html[:_m.start()] + _fan + html[_m.start():] if _m else html.replace('</main>', _fan + '</main>', 1)
+    html = NAV_RE.sub(lambda _: nav_for(p), html, count=1)
+    if 'account.js' not in html:
+        pre = "../" * p.count("/")
+        html = html.replace('</body>', f'<script src="{pre}account.js" defer></script>\n</body>', 1)
+    if 'nav.js' not in html:
+        pre = "../" * p.count("/")
+        html = html.replace('</body>', f'<script src="{pre}nav.js" defer></script>\n</body>', 1)
+    # old "analysis top" crumb -> HIYOKO / SNS分析
+    def _cr(m):
+        up = m.group(1)
+        return f'<a href="{up}">HIYOKO</a>' + ('' if p.startswith("internal/") else f' ／ <a href="{up}analysis/">SNS分析</a>')
+    html = re.sub(r'<a href="((?:\.\./)+)">HIYOKO分析トップ</a>', _cr, html)
+    if p == "analysis/":
+        html = re.sub(r'(<!--smap-->.*?<!--/smap-->|<div class="dash-c">.*?</div>\s*<div class="dash-l">.*?</div>)',
+                      lambda _: sitemap(), html, count=1, flags=re.S)
+    open(f, "w", encoding="utf-8").write(html)
+print("ok", {k: len(v) for k, v in subs.items()})
+
+# cache-bust shared assets: ?v=<content hash> so browsers never mix new HTML with old CSS/JS
+import hashlib, glob as _g
+_ver = {n: hashlib.sha1(open(os.path.join(ROOT, n), "rb").read()).hexdigest()[:8] for n in ("style.css", "i18n.js", "nav.js", "account.js")}
+for f in _g.glob(os.path.join(ROOT, "**", "index.html"), recursive=True):
+    h = open(f, encoding="utf-8").read()
+    h2 = re.sub(r'((?:href|src)="(?:\.\./)*(style\.css|i18n\.js|nav\.js|account\.js))(?:\?v=\w+)?"', lambda m: f'{m.group(1)}?v={_ver[m.group(2)]}"', h)
+    if h2 != h: open(f, "w", encoding="utf-8").write(h2)
+print("assets", _ver)
