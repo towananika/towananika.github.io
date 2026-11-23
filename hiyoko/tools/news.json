@@ -1,6 +1,13 @@
 [
 [
 "2026-11-23",
+75,
+"KPI一覧の反応詳細・並べ順・ページ移動を改善し、指標の説明をその場に表示",
+"Improved KPI details, sorting and page navigation, with explanations on each metric",
+"KPI 반응 상세·정렬·페이지 이동을 개선하고 지표 설명을 바로 표시"
+],
+[
+"2026-11-23",
 74,
 "KPI一覧の操作とページ移動を改善し、主要指標に基本反応を表示",
 "Improved KPI controls and page navigation, and displayed basic reactions as key metrics",
