@@ -46,6 +46,14 @@
 .kp-grid .pv iframe{width:100%;height:100%;border:0;display:block}
 .kp-grid .h{padding:8px 12px 0}
 .kp-grid dl{grid-template-columns:repeat(3,minmax(0,1fr));padding:6px 12px 12px}
+.bdw{display:grid;gap:6px;padding:0 12px 12px}
+.bdr{display:flex;flex-wrap:wrap;gap:4px 6px;align-items:center}
+.bdh{flex-basis:100%;font-size:.68rem;color:var(--muted);font-weight:700}
+.bd{display:inline-flex;align-items:center;gap:4px;font-size:.76rem;border:1px solid var(--line);border-radius:99px;padding:2px 9px 2px 6px;line-height:1.5}
+.bd i{font-style:normal}
+.bd b{font-variant-numeric:tabular-nums;margin-left:2px}
+.bd.z{opacity:.45}
+.bd.on{background:var(--hy-soft);border-color:var(--hy)}
 @media (max-width:640px){.kp-sum{grid-template-columns:1fr 1fr}.kp-seg button{padding:0 11px}}
 </style>
 </head>
@@ -93,6 +101,13 @@ const $=id=>document.getElementById(id),fmt=n=>Math.round(n).toLocaleString('ja-
 const md=d=>{const p=d.split('-');return `${+p[0]}/${+p[1]}/${+p[2]}`};
 const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const MIN=100;
+// 反応の内わけ（アイコンと名前）と、フォローにつながる行動
+const BD={x:{re:[['❤️','いいね',p=>p[4]],['💬','返信',p=>p[5]],['🔁','リポスト',p=>p[6]],['🔖','保存',p=>p[7]]],
+  fo:[['👤','プロフィール訪問',p=>p[8]],['🔗','リンクのクリック',p=>p[9]]]},
+ ig:{re:[['❤️','いいね',p=>p[5]],['💬','コメント',p=>p[6]],['📤','シェア',p=>p[7]],['🔖','保存',p=>p[8]]],
+  fo:[['➕','フォロー',p=>p[9]]]}};
+const chip=([ic,l,g],p)=>{const v=g(p);return `<span class="bd${v?'':' z'}${l===so?' on':''}"><i aria-hidden="true">${ic}</i>${l}<b>${fmt(v)}</b></span>`};
+const bd=p=>`<div class="bdw"><div class="bdr"><span class="bdh">反応の内わけ</span>${BD[s].re.map(c=>chip(c,p)).join('')}</div><div class="bdr"><span class="bdh">フォローにつながる行動</span>${BD[s].fo.map(c=>chip(c,p)).join('')}</div></div>`;
 function rate(p){const b=F[s].base(p);return b?F[s].re(p)/b:0}
 function val(p,k){if(k==='反応率')return rate(p);const c=F[s].cols.find(c=>c[0]===k);return c[1](p)}
 function list(){const L=D[s],last=L[0][0],st=per?new Date(new Date(last+'T00:00:00Z').getTime()-(per-1)*864e5).toISOString().slice(0,10):'0';
@@ -112,7 +127,7 @@ function draw(){const f=F[s],{P,all,st,last}=list();
  $('kp-list').className='kp-list'+(view==='g'?' kp-grid':'');
  const key=(p,l)=>{const c=f.cols.find(c=>c[0]===l);return l==='反応率'?(rate(p)*100).toFixed(1)+'%':fmt(c[1](p))};
  const k3=[...new Set([so==='new'?'表示':so,'表示','反応','反応率'])].slice(0,3);
- if(view==='g'){$('kp-list').innerHTML=P.slice(0,shown).map((p,j)=>`<li><div class="pv"><iframe src="${emb(p)}" loading="lazy" title="投稿のプレビュー" scrolling="no" allowtransparency="true"></iframe></div><div class="h"><span class="n">${j+1}</span><span class="d">${md(p[0])}${s==='ig'?' · '+p[10]:''}</span><a href="${p[2]}" target="_blank" rel="noopener">開く ↗</a></div><dl>${k3.map(l=>`<div class="${l===so?'on':''}"><dt>${l}</dt><dd>${key(p,l)}</dd></div>`).join('')}</dl></li>`).join('')||'<li class="e">この期間の投稿はありません</li>'}
+ if(view==='g'){$('kp-list').innerHTML=P.slice(0,shown).map((p,j)=>`<li><div class="pv"><iframe src="${emb(p)}" loading="lazy" title="投稿のプレビュー" scrolling="no" allowtransparency="true"></iframe></div><div class="h"><span class="n">${j+1}</span><span class="d">${md(p[0])}${s==='ig'?' · '+p[10]:''}</span><a href="${p[2]}" target="_blank" rel="noopener">開く ↗</a></div><dl>${k3.map(l=>`<div class="${l===so?'on':''}"><dt>${l}</dt><dd>${key(p,l)}</dd></div>`).join('')}</dl>${bd(p)}</li>`).join('')||'<li class="e">この期間の投稿はありません</li>'}
  else $('kp-list').innerHTML=P.slice(0,shown).map((p,j)=>`<li><div class="h"><span class="n">${j+1}</span><span class="d">${md(p[0])}${s==='ig'?' · '+p[10]:''}</span><a href="${p[2]}" target="_blank" rel="noopener">開く ↗</a></div><p class="t">${esc(p[1])||'<span class="e">（テキストなし）</span>'}</p><dl>${f.cols.map(([l,g])=>{const v=l==='反応率'?(rate(p)*100).toFixed(1)+'%':fmt(g(p));return `<div class="${l===so?'on':''}"><dt>${l}</dt><dd>${v}</dd></div>`}).join('')}</dl></li>`).join('')||'<li class="e">この期間の投稿はありません</li>';
  $('kp-more').hidden=P.length<=shown;$('kp-more').textContent=`もっと見る（残り${fmt(P.length-shown)}本）`;
  $('kp-def').innerHTML=f.def;
@@ -148,7 +163,7 @@ try{if(window.matchMedia('(max-width:900px)').matches)document.querySelector('.s
 document.querySelectorAll('.sitenav a').forEach(function(a){a.addEventListener('click',function(){if(window.matchMedia('(max-width:900px)').matches)document.querySelector('.sitenav').removeAttribute('open');});});
 </script>
 <script>(function(){function o(){var h=location.hash.slice(1);var d=h&&document.getElementById(h);if(d&&d.tagName==="DETAILS")d.open=true;}window.addEventListener("hashchange",o);o();})();</script>
-<script src="../i18n.js?v=c0dfd2d6" defer></script>
+<script src="../i18n.js?v=c557fbd8" defer></script>
 <script src="../nav.js?v=d910569b" defer></script>
 <script src="../account.js?v=488b01e9" defer></script>
 </body>
