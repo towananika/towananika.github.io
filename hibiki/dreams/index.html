@@ -58,6 +58,9 @@
   .d .acts { grid-column:2 / 4; gap:6px; }
   .big { font-size:28px; font-weight:700; }
   .sec { font-size:13px; color:var(--muted); margin:16px 0 4px; font-weight:600; }
+  .life-lead { font-size:15px; margin:0 0 10px; line-height:1.6; }
+  .life-row { display:flex; gap:10px; align-items:flex-start; padding:8px 0; border-top:1px solid var(--border, rgba(128,128,128,.2)); font-size:14px; line-height:1.6; }
+  .life-row span { font-size:20px; } .life-row b { display:block; font-size:12px; opacity:.7; font-weight:600; }
 </style>
 </head>
 <body>
@@ -79,6 +82,10 @@
   <form class="add" id="add"><input id="txt" maxlength="120" placeholder="たとえば：静かな部屋で眠りたい" required><button class="main" type="submit">足す</button></form>
 
   <div class="card" id="list"></div>
+  <section class="card" id="life">
+    <p class="sub" style="margin:0 0 6px">夢の暮らし 🔒</p>
+    <div id="life-body"><p class="sub" style="margin:0">ログインした端末でだけ読めます。</p></div>
+  </section>
   <section id="purchases" class="wishlist" aria-labelledby="purchases-title">
     <h2 id="purchases-title">ほしいもの・サービス</h2>
     <p class="sub">希望は注文・契約とは別。予算や時期は、決めたいときに。</p>
@@ -157,6 +164,13 @@
     if (!S.items.some(function (y) { return y.id === x.id || y.text === x.text; })) S.items.push({ id:x.id, text:x.text, at:x.at, done:"" });
     try { localStorage.setItem(KEY, JSON.stringify(S)); localStorage.setItem(marker, "1"); } catch (e) { return; }
     render();
+  }).catch(function () {});
+  if (window.HibikiSync) HibikiSync.open("dream-life").then(function (L) {
+    if (!L || !L.items) return;
+    var e = function (t) { return String(t).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
+    document.getElementById("life-body").innerHTML = '<p class="life-lead">' + e(L.lead) + '</p>' + L.items.map(function (x) {
+      return '<div class="life-row"><span>' + x.icon + '</span><div><b>' + e(x.k) + '</b>' + e(x.v) + '</div></div>';
+    }).join("");
   }).catch(function () {});
   render();
 })();
