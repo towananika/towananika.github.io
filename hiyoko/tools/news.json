@@ -1,6 +1,13 @@
 [
 [
 "2026-11-23",
+73,
+"KPI一覧の反応表示を整理し、投稿を10件・20件ずつページ送りできるように",
+"Improved KPI reaction details and added pagination for 10 or 20 posts",
+"KPI 반응 표시를 정리하고 10개 또는 20개씩 페이지 이동 추가"
+],
+[
+"2026-11-23",
 70,
 "KPI一覧の並べ順に「フォローが多い順」と、いいね・返信・コメント・リポスト・シェア・保存などの反応ごとの順を追加",
 "KPI list: added sorting by follows and by each type of engagement",
