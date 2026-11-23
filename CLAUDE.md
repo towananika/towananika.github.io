@@ -6,7 +6,7 @@ towananika の公開サイトはすべてこの1つのリポジトリにある�
 |---|---|---|---|
 | `drive/` | /drive/ | ゲーム「漢江ハイウェイ」（ドライブ。元は claude.ai のアーティファクト。ここではオフラインで動き、記録・チャットは出ない） | — |
 | `hibiki/` | /hibiki/ | ひびきのライフサイト | `hibiki/CLAUDE.md` |
-| `hiyoko/` | /hiyoko/ | HIYOKO ファンサイト | — |
+| `hiyoko/` | /hiyoko/ | HIYOKO ファンサイト | `hiyoko/AGENTS.md` |
 | `nacha/` | /nacha/ | NACHA | `nacha/NACHA_CORE.md` |
 | `remitech/` | /remitech/ | REMITECH HUB | `remitech/CLAUDE.md` |
 | `tool/` | /tool/ | 生活の道具（為替・保証金など） | `tool/CLAUDE.md` |
