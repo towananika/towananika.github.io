@@ -37,13 +37,13 @@ const MIN=100;
 // SNSの画面に近い並びと、すべての反応詳細
 const BD={x:{basic:[['💬','返信',p=>p[5]],['🔁','リポスト',p=>p[6]],['❤️','いいね',p=>p[4]],['👁','表示',p=>p[3]]],
   detail:[['➕','フォロー',p=>p[11]],['🔗','リンクのクリック',p=>p[9]],['👤','プロフィール訪問',p=>p[8]],['🔖','保存',p=>p[7]],['📊','エンゲージメント',p=>p[10]]]},
- ig:{basic:[['❤️','いいね',p=>p[5]],['💬','コメント',p=>p[6]],['📤','シェア',p=>p[7]],['🔖','保存',p=>p[8]]],
-  detail:[['➕','フォロー',p=>p[9]],['💛','反応',p=>p[5]+p[6]+p[7]+p[8]],['📊','反応率',p=>p[4]?(p[5]+p[6]+p[7]+p[8])/p[4]:0],['👥','リーチ',p=>p[4]],['👁','表示',p=>p[3]]]}};
-const descriptions={x:{'表示':'投稿が画面に表示された回数','返信':'投稿への返信数（自分のスレッドの返信を含む）','リポスト':'投稿がリポストされた回数','いいね':'投稿へのいいね数','保存':'投稿が保存された回数','フォロー':'この投稿からフォローした人の数（Xが投稿に結びつけた分）','プロフィール訪問':'この投稿からプロフィールを開いた回数','リンクのクリック':'投稿内のリンクがクリックされた回数','エンゲージメント':'X Analyticsが記録した投稿への操作の合計。反応とは集計範囲が異なります','反応':'いいね・返信・リポスト・保存の合計','反応率':'反応を表示回数で割った割合'},ig:{'表示':'投稿が見られた回数','リーチ':'投稿を見た人の数','いいね':'投稿へのいいね数','コメント':'投稿へのコメント数','シェア':'投稿がシェアされた回数','保存':'投稿が保存された回数','フォロー':'この投稿を見てフォローした人の数','反応':'いいね・コメント・シェア・保存の合計','反応率':'反応をリーチで割った割合'}};
+ ig:{basic:[['💬','返信',p=>p[6]],['🔁','リポスト',p=>null],['❤️','いいね',p=>p[5]],['👁','表示',p=>p[3]]],
+  detail:[['➕','フォロー',p=>p[9]],['📤','シェア',p=>p[7]],['🔖','保存',p=>p[8]],['💛','反応',p=>p[5]+p[6]+p[7]+p[8]],['📊','反応率',p=>p[4]?(p[5]+p[6]+p[7]+p[8])/p[4]:0],['👥','リーチ',p=>p[4]]]}};
+const descriptions={x:{'表示':'投稿が画面に表示された回数','返信':'投稿への返信数（自分のスレッドの返信を含む）','リポスト':'投稿がリポストされた回数','いいね':'投稿へのいいね数','保存':'投稿が保存された回数','フォロー':'この投稿からフォローした人の数（Xが投稿に結びつけた分）','プロフィール訪問':'この投稿からプロフィールを開いた回数','リンクのクリック':'投稿内のリンクがクリックされた回数','エンゲージメント':'X Analyticsが記録した投稿への操作の合計。反応とは集計範囲が異なります','反応':'いいね・返信・リポスト・保存の合計','反応率':'反応を表示回数で割った割合'},ig:{'返信':'Instagramのコメント数','リポスト':'Instagramのリポスト数はこのデータでは取得できません','表示':'投稿が見られた回数','リーチ':'投稿を見た人の数','いいね':'投稿へのいいね数','コメント':'投稿へのコメント数','シェア':'投稿がシェアされた回数','保存':'投稿が保存された回数','フォロー':'この投稿を見てフォローした人の数','反応':'いいね・コメント・シェア・保存の合計','反応率':'反応をリーチで割った割合'}};
 const hint=l=>` tabindex="0" data-tip="${esc(descriptions[s][l]||l)}" aria-label="${esc(l+'：'+(descriptions[s][l]||l))}"`;
 const shortLabel={'フォロー':'フォロー','リンクのクリック':'リンク','プロフィール訪問':'プロフ'};
 const chip=([ic,l,g],p)=>{const v=g(p);return `<span${hint(l)} class="bd${v?'':' z'}${l===so?' on':''}"><i aria-hidden="true">${ic}</i>${shortLabel[l]||l}<b>${l==='反応率'?(v*100).toFixed(1)+'%':fmt(v)}</b></span>`};
-const bd=p=>`<div class="bdw"><div class="bdr"><span class="bdh">反応詳細</span>${BD[s].detail.filter(c=>!BD[s].basic.some(b=>b[1]===c[1])).map(c=>chip(c,p)).join('')}</div></div>`;
+const bd=p=>`<div class="bdw"><div class="bdr ${s}"><span class="bdh">反応詳細</span>${BD[s].detail.filter(c=>!BD[s].basic.some(b=>b[1]===c[1])).map(c=>chip(c,p)).join('')}</div></div>`;
 function rate(p){const b=F[s].base(p);return b?F[s].re(p)/b:0}
 function val(p,k){if(k==='反応率')return rate(p);const c=F[s].cols.find(c=>c[0]===k);return c[1](p)}
 function list(){const L=D[s],last=L[0][0],st=per?new Date(new Date(last+'T00:00:00Z').getTime()-(per-1)*864e5).toISOString().slice(0,10):'0';
@@ -59,7 +59,7 @@ function draw(){const f=F[s];if(!f.sorts.flatMap(g=>g[1]).some(x=>x[1]===so))so=
  document.querySelectorAll('[data-v]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===view));
  $('kp-list').className='kp-list'+(view==='g'?' kp-grid':'');
  const pages=Math.max(1,Math.ceil(P.length/size));page=Math.min(page,pages);const visible=P.slice((page-1)*size,page*size);
- if(view==='g'){$('kp-list').innerHTML=visible.map((p,j)=>`<li><div class="pv"><span class="pv-loading">読み込み中…</span><iframe src="${emb(p)}" loading="lazy" title="投稿のプレビュー" scrolling="no" allowtransparency="true" onload="this.previousElementSibling.hidden=true"></iframe></div><div class="h"><span class="d">${md(p[0])}${s==='ig'?' · '+p[10]:''}</span></div><dl>${BD[s].basic.map(([ic,l,g])=>`<div class="${l===so?'on':''}"><dt${hint(l)}>${ic} ${l}</dt><dd>${fmt(g(p))}</dd></div>`).join('')}</dl>${bd(p)}</li>`).join('')||'<li class="e">この期間の投稿はありません</li>'}
+ if(view==='g'){$('kp-list').innerHTML=visible.map((p,j)=>`<li><div class="pv"><span class="pv-loading">読み込み中…</span><iframe src="${emb(p)}" loading="lazy" title="投稿のプレビュー" scrolling="no" allowtransparency="true" onload="this.previousElementSibling.hidden=true"></iframe></div><div class="h"><span class="d">${md(p[0])}${s==='ig'?' · '+p[10]:''}</span></div><dl>${BD[s].basic.map(([ic,l,g])=>`<div class="${l===so?'on':''}"><dt${hint(l)}>${ic} ${l}</dt><dd>${g(p)==null?'—':fmt(g(p))}</dd></div>`).join('')}</dl>${bd(p)}</li>`).join('')||'<li class="e">この期間の投稿はありません</li>'}
  else $('kp-list').innerHTML=visible.map((p,j)=>`<li><div class="h"><span class="d">${md(p[0])}${s==='ig'?' · '+p[10]:''}</span></div><p class="t"><a href="${esc(p[2])}" target="_blank" rel="noopener">${esc(p[1])||'<span class="e">（テキストなし）</span>'}</a></p><dl>${f.cols.map(([l,g])=>{const v=l==='反応率'?(rate(p)*100).toFixed(1)+'%':fmt(g(p));return `<div class="${l===so?'on':''}"><dt${hint(l)}>${l}</dt><dd>${v}</dd></div>`}).join('')}</dl></li>`).join('')||'<li class="e">この期間の投稿はありません</li>';
  const nums=[...new Set([1, page-1, page, page+1, pages].filter(n=>n>=1&&n<=pages))].sort((a,b)=>a-b);
  const numbers=nums.map((n,i)=>`${i&&n-nums[i-1]>1?'<span class="kp-ellipsis" aria-hidden="true">…</span>':''}<button type="button" data-page="${n}" aria-label="${n}ページ"${n===page?' aria-current="page"':''}>${n}</button>`).join('');
