@@ -117,7 +117,7 @@ function sw(){
   /* 言語の切り替えは「設定」メニューの中（右上の歯車） */
   var w=document.querySelector('.hy-set'), fresh=!w; if(fresh){w=document.createElement('div'); w.className='hy-set';}
   var dt=document.createElement('details'), su=document.createElement('summary'), ic=document.createElement('span'), tx=document.createElement('span');
-  ic.className='hy-set-ic'; ic.setAttribute('aria-hidden','true'); ic.textContent='\u2699'; tx.textContent='設定';
+  ic.className='hy-set-ic'; ic.setAttribute('aria-hidden','true'); ic.textContent='🌐'; tx.textContent='設定';
   su.appendChild(ic); su.appendChild(tx); dt.appendChild(su);
   var p=document.createElement('div'); p.className='hy-set-p';
   var h=document.createElement('div'); h.className='hy-set-h'; h.textContent='言語'; p.appendChild(h);
