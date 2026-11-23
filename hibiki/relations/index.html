@@ -186,7 +186,7 @@ if (window.HibikiSync) HibikiSync.open("feelings").then(function (F) {
   var li = function (a) { return '<ul>' + a.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join("") + '</ul>'; };
   document.getElementById("feel").innerHTML = F.entries.slice().reverse().map(function (e) {
     return '<div class="fe"><h3>' + esc(e.title) + ' <small>' + esc(e.date) + '</small></h3>' +
-      '<small>気持ち</small>' + li(e.feel) + '<small>考えたこと</small>' + li(e.think) +
+      (e.alias ? '<small>' + esc(e.alias) + '</small><br>' : '') + '<small>気持ち</small>' + li(e.feel) + '<small>考えたこと</small>' + li(e.think) +
       '<p class="now">' + esc(e.now) + '</p></div>';
   }).join("");
 });
