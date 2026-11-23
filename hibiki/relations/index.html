@@ -62,6 +62,10 @@
   .practice { display:flex; gap:14px; align-items:center; text-decoration:none; color:var(--text); }
   .practice svg { width:30px; height:30px; flex:none; fill:none; stroke:var(--red); stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
   .practice b { display:block; font-size:16px; } .practice small { color:var(--muted); font-size:13px; }
+  .fe h3 { font-size:15px; margin:0 0 6px; } .fe small { color:var(--muted); font-size:12px; }
+  .fe ul { margin:6px 0 10px; padding-left:18px; font-size:14px; line-height:1.7; }
+  .fe .now { border-left:3px solid var(--sage); padding:6px 10px; font-size:14px; line-height:1.7; margin:0; }
+  .fe + .fe { border-top:1px solid var(--border); margin-top:12px; padding-top:12px; }
 </style>
 </head>
 <body>
@@ -89,6 +93,11 @@
   <section class="card">
     <p class="label"><span>ひびきへ</span></p>
     <p style="margin:0;font-size:15px;line-height:1.8">いい関係は、大きなことより<b>小さなことの回数</b>でできています。<br>ひとこと連絡する、ありがとうを言う。それで十分です。<br>そして、自分にやさしくすることも、関係のひとつです。</p>
+  </section>
+
+  <section class="card" id="feelings">
+    <p class="label"><span>気持ちの記録</span><b>🔒</b></p>
+    <div id="feel"><p class="note" style="margin:0">ログインした端末でだけ読めます。</p></div>
   </section>
 
   <a class="card practice" href="https://claude.ai/artifact/FnqYHh8fccXg9WtL34TtAH" target="_blank" rel="noopener">
@@ -172,6 +181,15 @@ document.getElementById("add").addEventListener("submit", function (e) {
   people.push({ name: v, last: null }); document.getElementById("who").value = ""; psave(people); prender();
 });
 prender();
+if (window.HibikiSync) HibikiSync.open("feelings").then(function (F) {
+  if (!F || !F.entries) return;
+  var li = function (a) { return '<ul>' + a.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join("") + '</ul>'; };
+  document.getElementById("feel").innerHTML = F.entries.slice().reverse().map(function (e) {
+    return '<div class="fe"><h3>' + esc(e.title) + ' <small>' + esc(e.date) + '</small></h3>' +
+      (e.alias ? '<small>' + esc(e.alias) + '</small><br>' : '') + '<small>気持ち</small>' + li(e.feel) + '<small>考えたこと</small>' + li(e.think) +
+      '<p class="now">' + esc(e.now) + '</p></div>';
+  }).join("");
+});
 </script>
 </body>
 </html>

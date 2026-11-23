@@ -9,7 +9,7 @@ YouTube Reader：`youtube/` の既存ブックマーク方式に加え、PC内�
 - `agi/` AGI観測所。到来を断定せず、早い・中心・慎重な仮説の幅、観測すること、今週の小さな備えを記録する。端末どうしの記録は `hibiki-agi-observatory-v1`。
 - `grow/` アカリと育つ。今日したこと（散歩・朝ごはん・早寝・おいしいもの・好きなこと・休んだ）を押すと、アカリが一緒に過ごし、過ごした日数で一生が進む（減らない）。記録は `hibiki-grow-v1`。同じページの下に「自分を育てる」（毎日のふり返り `hibiki-growth-v1`・性格と心理の記録 `hibiki-personality-v1`）を統合。旧 `growth/` は `grow/#growth` へ転送する（2026-11-17）。
 - `money/` お金（金利メーター、配分、週間レポート `money/report.html`）／円とウォン `money/yen.html`（`hibiki-yen-v1`）／使える制度 `money/support.html`（韓国の制度おすすめ、`hibiki-support-v1`）／AIの疑似投資 `money/sim.html`（架空の1万ドルで8つのやり方を比べる。データは `money/sim.json`、週間レポートのルーチンが毎週足す）
-- `health/` 健康、`sleep/` 睡眠メモ（`hibiki-sleep-v1`）、`relations/` 愛と関係、`home/` 住まい（入居チェック）
+- `health/` 健康、`sleep/` 睡眠メモ（`hibiki-sleep-v1`）、`relations/` 愛と関係（🔒気持ちの記録は `private/feelings.json`）、`home/` 住まい（入居チェック）
 - `study/` 勉強（7章は `study/ch7.html` にくわしく。放送大学「デジタル経済の理解」全15章、進み具合は `hibiki-study-digital-v1`。貨幣金融論8講は `study/view.html?n=money8`、上級マクロ経済論8〜15講は `study/view.html?n=macro8`〜`macro15`）
 - 勉強ノートは説明の直後に4択の確認問題を表示。選ぶと正誤と理由が分かり、やり直せる。
 - `study/` の週別プラン：形成評価期間8/17〜12/13を基準に、各15講・週1講の目安を表示（公式講割りではない）。講座カード内のグラフで、完了は緑、今週の目安は青に表示。総講数や完了数の分数は一覧に表示しない。週別プラン・学習週の設定画面は設けず、講座のグラフを押すと、その科目の各講の完了状況を記録できる（`hibiki-study-plan-v1`）。
