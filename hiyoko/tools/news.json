@@ -1,6 +1,13 @@
 [
 [
 "2026-11-23",
+76,
+"KPI一覧を12件ずつ表示し、ページ移動と反応の見やすさを改善",
+"Improved KPI pagination and reaction readability, showing 12 posts per page",
+"KPI를 페이지당 12개씩 표시하고 페이지 이동과 반응 가독성을 개선"
+],
+[
+"2026-11-23",
 75,
 "KPI一覧の反応詳細・並べ順・ページ移動を改善し、指標の説明をその場に表示",
 "Improved KPI details, sorting and page navigation, with explanations on each metric",

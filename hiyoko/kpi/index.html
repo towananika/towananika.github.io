@@ -30,7 +30,7 @@
 .kp-list dl{display:grid;grid-template-columns:repeat(auto-fill,minmax(6.4em,1fr));gap:4px;margin:0}
 .kp-list dl div{border-radius:8px;padding:3px 6px;background:var(--paper,transparent);line-height:1.3}
 .kp-list dl div.on{background:var(--hy-soft);box-shadow:inset 0 0 0 1px var(--hy)}
-.kp-list dt{font-size:.68rem;color:var(--muted)}
+.kp-list dt{font-size:.68rem;color:var(--muted);white-space:nowrap}
 .kp-list dd{margin:0;font-weight:700;font-size:.92rem;font-variant-numeric:tabular-nums}
 .kp-list .e{color:var(--muted)}
 .kp-more{font:inherit;font-weight:700;min-height:44px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);cursor:pointer}
@@ -43,9 +43,9 @@
 .kp-grid .h{padding:8px 12px 0}
 .kp-grid dl{grid-template-columns:repeat(4,minmax(0,1fr));padding:6px 12px 12px}
 .bdw{display:grid;gap:6px;padding:0 12px 12px}
-.bdr{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 6px;align-items:stretch}
+.bdr{display:grid;grid-template-columns:minmax(0,1fr);gap:4px 6px;align-items:stretch}
 .bdh{grid-column:1/-1;font-size:.68rem;color:var(--muted);font-weight:700}
-.bd{display:inline-flex;align-items:center;gap:4px;font-size:.76rem;border:1px solid var(--line);border-radius:9px;padding:2px 9px 2px 6px;line-height:1.5;min-width:0;overflow-wrap:anywhere}
+.bd{display:inline-flex;align-items:center;gap:4px;font-size:.76rem;border:1px solid var(--line);border-radius:9px;padding:2px 9px 2px 6px;line-height:1.5;min-width:0;white-space:nowrap}
 .bd i{font-style:normal}
 .bd b{font-variant-numeric:tabular-nums;margin-left:auto}
 .bd.z{opacity:.45}
@@ -55,6 +55,8 @@
 .kp-pages{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px}.kp-pages button,.kp-pages select{font:inherit;min-height:44px;padding:0 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink)}.kp-pages button:disabled{opacity:.4}.kp-numbers{display:flex;flex-wrap:wrap;justify-content:center;gap:4px}.kp-numbers button{min-width:44px}.kp-numbers button[aria-current="page"]{background:var(--ink);color:var(--card);font-weight:700}.kp-pages label{display:flex;align-items:center;gap:6px}.kp-grid .pv{position:relative}.pv-loading{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted)}.pv-loading[hidden]{display:none}.kp-grid .pv iframe{position:relative}
 
 .kp-tip{position:fixed;z-index:1000;max-width:min(280px,calc(100vw - 16px));padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);font-size:.8rem;line-height:1.5;box-shadow:0 3px 12px #0003;pointer-events:none}.kp-tip[hidden]{display:none}[data-tip]{cursor:help}[data-tip]:focus-visible{outline:2px solid var(--hy);outline-offset:2px}
+
+.kp-pager{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:6px}.kp-ellipsis{padding:0 2px}.kp-status{text-align:center;color:var(--muted);font-size:.8rem}.kp-list:focus{outline:none}
 </style>
 </head>
 <body class="">
@@ -72,9 +74,10 @@
   <div class="kp-seg kp-view" role="group" aria-label="見かた"><button data-v="g">🖼 画像で見る</button><button data-v="l">☰ リスト</button></div>
  </div>
  <label class="kp-sel"><span>並べ順</span><select id="kp-sort"></select></label>
- <nav class="kp-pages" aria-label="ページ送り"><button id="kp-prev-top">前へ</button><label>ページ <select id="kp-jump-top"></select></label><span id="kp-total"></span><button id="kp-next-top">次へ</button></nav>
- <ol class="kp-list" id="kp-list"></ol>
- <nav class="kp-pages" aria-label="ページ送り"><label>表示件数 <select id="kp-size"><option value="10">10件</option><option value="20">20件</option></select></label><button id="kp-prev">前へ</button><span class="kp-numbers" id="kp-page"></span><button id="kp-next">次へ</button></nav>
+ <nav class="kp-pages" aria-label="ページ送り"><div class="kp-pager" data-pager></div><label>ページ <select id="kp-jump"></select></label></nav>
+ <ol class="kp-list" id="kp-list" tabindex="-1"></ol>
+ <nav class="kp-pages" aria-label="ページ送り"><div class="kp-pager" data-pager></div></nav>
+ <span id="kp-status" class="kp-status" role="status" aria-live="polite"></span>
 </div>
 <!--smap--><!--/smap-->
 <script>
@@ -91,7 +94,7 @@ const F={x:{
   cols:[['表示',p=>p[3]],['リーチ',p=>p[4]],['反応',p=>p[5]+p[6]+p[7]+p[8]],['反応率',null],['いいね',p=>p[5]],['コメント',p=>p[6]],['シェア',p=>p[7]],['保存',p=>p[8]],['フォロー',p=>p[9]]],
   sorts:[['基本',[['新しい順','new'],['フォローが多い順','フォロー'],['反応が多い順','反応'],['反応率が高い順','反応率'],['表示が多い順','表示'],['リーチが多い順','リーチ']]],['反応ごと',[['❤️ いいねが多い順','いいね'],['💬 コメントが多い順','コメント'],['📤 シェアが多い順','シェア'],['🔖 保存が多い順','保存']]]],
   def:'<b>表示</b>：投稿が見られた回数。<b>リーチ</b>：見た人の数。<b>反応</b>：いいね＋コメント＋シェア＋保存。<b>反応率</b>：反応÷リーチ。<b>シェア</b>：送られた回数。<b>フォロー</b>：その投稿を見てフォローした人。出典：Instagram インサイトの投稿別の書き出し。'}};
-let s='x',per=91,so='new',view='g',page=1,size=10;
+let s='x',per=91,so='new',view='g',page=1,size=12;
 const dark=matchMedia('(prefers-color-scheme: dark)').matches;
 function emb(p){if(s==='ig'){const u=p[2].replace(/\/?$/,'/');return u+'embed/'}const id=(p[2].match(/status\/(\d+)/)||[])[1];return id?`https://platform.twitter.com/embed/Tweet.html?id=${id}&theme=${dark?'dark':'light'}&dnt=true&hideThread=true&lang=ja`:''}
 const $=id=>document.getElementById(id),fmt=n=>Math.round(n).toLocaleString('ja-JP');
@@ -124,20 +127,18 @@ function draw(){const f=F[s];if(!f.sorts.flatMap(g=>g[1]).some(x=>x[1]===so))so=
  const pages=Math.max(1,Math.ceil(P.length/size));page=Math.min(page,pages);const visible=P.slice((page-1)*size,page*size);
  if(view==='g'){$('kp-list').innerHTML=visible.map((p,j)=>`<li><div class="pv"><span class="pv-loading">読み込み中…</span><iframe src="${emb(p)}" loading="lazy" title="投稿のプレビュー" scrolling="no" allowtransparency="true" onload="this.previousElementSibling.hidden=true"></iframe></div><div class="h"><span class="n">${(page-1)*size+j+1}</span><span class="d">${md(p[0])}${s==='ig'?' · '+p[10]:''}</span><a href="${p[2]}" target="_blank" rel="noopener">開く ↗</a></div><dl>${BD[s].basic.map(([ic,l,g])=>`<div class="${l===so?'on':''}"><dt${hint(l)}>${ic} ${l}</dt><dd>${fmt(g(p))}</dd></div>`).join('')}</dl>${bd(p)}</li>`).join('')||'<li class="e">この期間の投稿はありません</li>'}
  else $('kp-list').innerHTML=visible.map((p,j)=>`<li><div class="h"><span class="n">${(page-1)*size+j+1}</span><span class="d">${md(p[0])}${s==='ig'?' · '+p[10]:''}</span><a href="${p[2]}" target="_blank" rel="noopener">開く ↗</a></div><p class="t">${esc(p[1])||'<span class="e">（テキストなし）</span>'}</p><dl>${f.cols.map(([l,g])=>{const v=l==='反応率'?(rate(p)*100).toFixed(1)+'%':fmt(g(p));return `<div class="${l===so?'on':''}"><dt${hint(l)}>${l}</dt><dd>${v}</dd></div>`}).join('')}</dl></li>`).join('')||'<li class="e">この期間の投稿はありません</li>';
- $('kp-prev-top').disabled=page===1;$('kp-next-top').disabled=page===pages;$('kp-jump-top').innerHTML=Array.from({length:pages},(_,i)=>`<option value="${i+1}"${i+1===page?' selected':''}>${i+1}</option>`).join('');$('kp-total').textContent=`/ ${pages}`;
- $('kp-prev').disabled=page===1;$('kp-next').disabled=page===pages;$('kp-page').innerHTML=Array.from({length:Math.min(10,pages-Math.floor((page-1)/10)*10)},(_,i)=>{const n=Math.floor((page-1)/10)*10+i+1;return `<button type="button" data-page="${n}"${n===page?' aria-current="page"':''}>${n}</button>`}).join('');
+ const nums=[...new Set([1, page-1, page, page+1, pages].filter(n=>n>=1&&n<=pages))].sort((a,b)=>a-b);
+ const numbers=nums.map((n,i)=>`${i&&n-nums[i-1]>1?'<span class="kp-ellipsis" aria-hidden="true">…</span>':''}<button type="button" data-page="${n}" aria-label="${n}ページ"${n===page?' aria-current="page"':''}>${n}</button>`).join('');
+ document.querySelectorAll('[data-pager]').forEach(el=>{el.innerHTML=`<button type="button" data-move="prev"${page===1?' disabled':''}>前へ</button><span class="kp-numbers">${numbers}</span><button type="button" data-move="next"${page===pages?' disabled':''}>次へ</button>`});
+ $('kp-jump').innerHTML=Array.from({length:pages},(_,i)=>`<option value="${i+1}"${i+1===page?' selected':''}>${i+1}</option>`).join('');
+ $('kp-status').textContent=P.length?`${(page-1)*size+1}–${Math.min(page*size,P.length)} / ${P.length}`:'0 / 0';
  try{history.replaceState(null,'','#'+s)}catch(e){}}
 document.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{s=b.dataset.s;page=1;draw()});
 document.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{per=+b.dataset.p;page=1;draw()});
 document.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{view=b.dataset.v;page=1;draw()});
 $('kp-sort').onchange=e=>{so=e.target.value;page=1;draw()};
-$('kp-size').onchange=e=>{size=+e.target.value;page=1;draw()};
-$('kp-jump-top').onchange=e=>{page=+e.target.value;draw()};
-$('kp-prev-top').onclick=()=>{page--;draw()};
-$('kp-next-top').onclick=()=>{page++;draw()};
-$('kp-page').onclick=e=>{const b=e.target.closest('[data-page]');if(b){page=+b.dataset.page;draw();$('kp-list').scrollIntoView({block:'start'})}};
-$('kp-prev').onclick=()=>{page--;draw();$('kp-list').scrollIntoView({block:'start'})};
-$('kp-next').onclick=()=>{page++;draw();$('kp-list').scrollIntoView({block:'start'})};
+$('kp-jump').onchange=e=>{page=+e.target.value;draw();$('kp-list').scrollIntoView({block:'start'});$('kp-list').focus({preventScroll:true})};
+document.querySelectorAll('[data-pager]').forEach(el=>el.addEventListener('click',e=>{const b=e.target.closest('button');if(!b||b.disabled)return;if(b.dataset.page)page=+b.dataset.page;else if(b.dataset.move)page+=b.dataset.move==='next'?1:-1;else return;draw();$('kp-list').scrollIntoView({block:'start'});$('kp-list').focus({preventScroll:true})}));
 const tip=document.createElement('div');tip.className='kp-tip';tip.id='kp-tip';tip.setAttribute('role','tooltip');tip.hidden=true;document.body.appendChild(tip);
 function showTip(el){tip.textContent=el.dataset.tip;tip.hidden=false;const r=el.getBoundingClientRect();tip.style.left=Math.max(8,Math.min(r.left,innerWidth-tip.offsetWidth-8))+'px';tip.style.top=Math.max(8,Math.min(r.bottom+6,innerHeight-tip.offsetHeight-8))+'px';el.setAttribute('aria-describedby','kp-tip')}
 function hideTip(){tip.hidden=true;document.querySelectorAll('[aria-describedby="kp-tip"]').forEach(el=>el.removeAttribute('aria-describedby'))}
@@ -175,7 +176,7 @@ try{if(window.matchMedia('(max-width:900px)').matches)document.querySelector('.s
 document.querySelectorAll('.sitenav a').forEach(function(a){a.addEventListener('click',function(){if(window.matchMedia('(max-width:900px)').matches)document.querySelector('.sitenav').removeAttribute('open');});});
 </script>
 <script>(function(){function o(){var h=location.hash.slice(1);var d=h&&document.getElementById(h);if(d&&d.tagName==="DETAILS")d.open=true;}window.addEventListener("hashchange",o);o();})();</script>
-<script src="../i18n.js?v=d6a9bddc" defer></script>
+<script src="../i18n.js?v=3e3dda62" defer></script>
 <script src="../nav.js?v=d910569b" defer></script>
 <script src="../account.js?v=488b01e9" defer></script>
 </body>
