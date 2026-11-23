@@ -30,6 +30,7 @@ Object.assign(D,{"公式サイト：エコシステム ↗":["Official site: Eco
 /*kpi7*/Object.assign(D,{"基本反応":["Key metrics","기본 반응"],"反応詳細":["Engagement details","반응 상세"]});
 /*kpi8*/Object.assign(D,{"表示件数":["Posts per page","페이지당 게시물"],"10件":["10 posts","10개"],"20件":["20 posts","20개"],"前へ":["Previous","이전"],"次へ":["Next","다음"],"読み込み中…":["Loading…","불러오는 중…"]});
 /*kpi-news*/Object.assign(D,{"KPI一覧の反応表示を整理し、投稿を10件・20件ずつページ送りできるように": ["Improved KPI reaction details and added pagination for 10 or 20 posts", "KPI 반응 표시를 정리하고 10개 또는 20개씩 페이지 이동 추가"]});
+/*kpi-news-74*/Object.assign(D,{"KPI一覧の表示切り替えを期間の隣に移し、ページ番号から直接移動できるように": ["Moved KPI view controls beside the period selector and added direct page navigation", "KPI 보기 전환을 기간 옆으로 옮기고 페이지 번호로 바로 이동하도록 개선"]});
 var L=['ja','ko','en'],LBL={ja:'日本語',ko:'한국어',en:'EN'};
 var MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 var JP=/[぀-ヿ一-鿿]/;
