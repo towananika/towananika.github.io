@@ -1,6 +1,13 @@
 [
 [
 "2026-11-23",
+77,
+"KPI一覧の反応詳細の表示名を短く整理",
+"Shortened the labels in KPI reaction details",
+"KPI 반응 상세의 표시 이름을 짧게 정리"
+],
+[
+"2026-11-23",
 76,
 "KPI一覧を12件ずつ表示し、ページ移動と反応の見やすさを改善",
 "Improved KPI pagination and reaction readability, showing 12 posts per page",
