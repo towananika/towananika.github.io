@@ -1,6 +1,13 @@
 [
 [
 "2026-11-23",
+83,
+"言語設定のアイコンを変更し、表示できないX投稿をKPI一覧から整理",
+"Updated the language icon and removed an unavailable X post from the KPI list",
+"언어 설정 아이콘을 바꾸고 표시할 수 없는 X 게시물을 KPI 목록에서 정리"
+],
+[
+"2026-11-23",
 81,
 "KPI一覧のXとInstagramの主要指標の並びを統一",
 "Aligned the key metric order for X and Instagram in the KPI list",

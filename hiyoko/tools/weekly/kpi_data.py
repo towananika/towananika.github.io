@@ -1,10 +1,12 @@
 import csv,json,datetime as dt
 def px(s): return dt.datetime.strptime(s.strip('"'),"%a, %b %d, %Y").date().isoformat()
 X={}
+# Xの公式埋め込みで見つからなかった投稿は再生成時も表示しない。
+UNAVAILABLE_X={"2124660961370054723"}
 srcs=['/mnt/project-files/x-analytics/raw-2026-11-23/account_analytics_content.csv','/mnt/user-data/uploads/Downloads/hiyoko (2).csv','/mnt/project-files/x-analytics/hiyoko_posts_jul-nov_by_content.csv']
 for f in srcs:
     for r in csv.DictReader(open(f,encoding='utf-8-sig')):
-        if r['Post id'] in X: continue
+        if r['Post id'] in X or r['Post id'] in UNAVAILABLE_X: continue
         d=r['Date'];d=d[:10] if d[:2]=='20' else px(d)
         n=lambda k:int(float(r.get(k) or 0))
         X[r['Post id']]=[d,r['Post text'][:200].replace('\n',' '),r['Post Link'],n('Impressions'),n('Likes'),n('Replies'),n('Reposts'),n('Bookmarks'),n('Profile visits'),n('URL Clicks'),n('Engagements'),n('New follows')]
