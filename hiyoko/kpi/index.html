@@ -43,10 +43,10 @@
 .kp-grid .h{padding:8px 12px 0}
 .kp-grid dl{grid-template-columns:repeat(4,minmax(0,1fr));padding:6px 12px 12px}
 .bdw{display:grid;gap:6px;padding:0 12px 12px}
-.bdr{display:grid;grid-template-columns:minmax(0,1fr);gap:4px 6px;align-items:stretch}
+.bdr{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px;align-items:stretch}
 .bdh{grid-column:1/-1;font-size:.68rem;color:var(--muted);font-weight:700}
 .bd{display:inline-flex;align-items:center;gap:4px;font-size:.76rem;border:1px solid var(--line);border-radius:9px;padding:2px 9px 2px 6px;line-height:1.5;min-width:0;white-space:nowrap}
-.bd i{font-style:normal}
+.bdr .bd{grid-column:span 2;font-size:.68rem;padding:3px 4px;gap:2px}.bdr .bd:nth-of-type(n+5){grid-column:span 3}.bd i{font-style:normal}
 .bd b{font-variant-numeric:tabular-nums;margin-left:auto}
 .bd.z{opacity:.45}
 .bd.on{background:var(--hy-soft);border-color:var(--hy)}
@@ -108,7 +108,7 @@ const BD={x:{basic:[['💬','返信',p=>p[5]],['🔁','リポスト',p=>p[6]],['
   detail:[['❤️','いいね',p=>p[5]],['💬','コメント',p=>p[6]],['📤','シェア',p=>p[7]],['🔖','保存',p=>p[8]],['➕','フォロー',p=>p[9]]]}};
 const descriptions={x:{'表示':'投稿が画面に表示された回数','返信':'投稿への返信数（自分のスレッドの返信を含む）','リポスト':'投稿がリポストされた回数','いいね':'投稿へのいいね数','保存':'投稿が保存された回数','フォロー':'この投稿からフォローした人の数（Xが投稿に結びつけた分）','プロフィール訪問':'この投稿からプロフィールを開いた回数','リンクのクリック':'投稿内のリンクがクリックされた回数','エンゲージメント':'X Analyticsが記録した投稿への操作の合計。反応とは集計範囲が異なります','反応':'いいね・返信・リポスト・保存の合計','反応率':'反応を表示回数で割った割合'},ig:{'表示':'投稿が見られた回数','リーチ':'投稿を見た人の数','いいね':'投稿へのいいね数','コメント':'投稿へのコメント数','シェア':'投稿がシェアされた回数','保存':'投稿が保存された回数','フォロー':'この投稿を見てフォローした人の数','反応':'いいね・コメント・シェア・保存の合計','反応率':'反応をリーチで割った割合'}};
 const hint=l=>` tabindex="0" data-tip="${esc(descriptions[s][l]||l)}" aria-label="${esc(l+'：'+(descriptions[s][l]||l))}"`;
-const shortLabel={'フォロー':'ﾌｫﾛｰ','リンクのクリック':'リンク','プロフィール訪問':'プロフ'};
+const shortLabel={'フォロー':'フォロー','リンクのクリック':'リンク','プロフィール訪問':'プロフ'};
 const chip=([ic,l,g],p)=>{const v=g(p);return `<span${hint(l)} class="bd${v?'':' z'}${l===so?' on':''}"><i aria-hidden="true">${ic}</i>${shortLabel[l]||l}<b>${fmt(v)}</b></span>`};
 const bd=p=>`<div class="bdw"><div class="bdr"><span class="bdh">反応詳細</span>${BD[s].detail.filter(c=>!BD[s].basic.some(b=>b[1]===c[1])).map(c=>chip(c,p)).join('')}</div></div>`;
 function rate(p){const b=F[s].base(p);return b?F[s].re(p)/b:0}
@@ -177,7 +177,7 @@ try{if(window.matchMedia('(max-width:900px)').matches)document.querySelector('.s
 document.querySelectorAll('.sitenav a').forEach(function(a){a.addEventListener('click',function(){if(window.matchMedia('(max-width:900px)').matches)document.querySelector('.sitenav').removeAttribute('open');});});
 </script>
 <script>(function(){function o(){var h=location.hash.slice(1);var d=h&&document.getElementById(h);if(d&&d.tagName==="DETAILS")d.open=true;}window.addEventListener("hashchange",o);o();})();</script>
-<script src="../i18n.js?v=e56478c0" defer></script>
+<script src="../i18n.js?v=488a86d9" defer></script>
 <script src="../nav.js?v=d910569b" defer></script>
 <script src="../account.js?v=488b01e9" defer></script>
 </body>
