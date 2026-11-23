@@ -57,8 +57,6 @@
 <main id="main">
 <nav class="crumbs"><a href="/">Towananika</a> ／ <a href="../">HIYOKO</a> ／ <a href="../analysis/">SNS分析</a> ／ KPI一覧</nav>
 <h1>📋 KPI一覧（事実のデータ）</h1>
-<div class="meta">更新：2026年11月23日（X：2026年7月2日〜11月23日の投稿、Instagram：2026年1月29日〜11月17日の投稿）</div>
-<p class="kp-lead">分析や意見は入れず、XとInstagramの書き出しの数字をそのまま並べています。並べ替えと期間は下のボタンで選べます。</p>
 <div class="kp">
  <div class="kp-top">
   <div class="kp-seg" role="group" aria-label="SNSを選ぶ"><button data-s="x">X</button><button data-s="ig">Instagram</button></div>
@@ -66,7 +64,6 @@
  </div>
  <div class="kp-seg kp-view" role="group" aria-label="見かた"><button data-v="g">🖼 画像で見る</button><button data-v="l">☰ リスト</button></div>
  <label class="kp-sel"><span>並べ順</span><select id="kp-sort"></select></label>
- <p class="kp-note" id="kp-note"></p>
  <div class="kp-sum" id="kp-sum"></div>
  <ol class="kp-list" id="kp-list"></ol>
  <button class="kp-more" id="kp-more">もっと見る</button>
@@ -109,8 +106,7 @@ function draw(){const f=F[s],{P,all,st,last}=list();
  if(!f.sorts.some(x=>x[1]===so))so='new';
  $('kp-sort').innerHTML=f.sorts.map(x=>`<option value="${x[1]}"${x[1]===so?' selected':''}>${x[0]}</option>`).join('');
  const from=per?st:D[s][D[s].length-1][0];
- $('kp-note').textContent=`${md(from)}〜${md(last)}の投稿 ${fmt(all)}本`+(so==='反応率'?`（反応率は、${s==='x'?'表示':'リーチ'}が${MIN}以上の${fmt(P.length)}本だけで並べています）`:'');
- const base=L=>L;const S=list().P;const src=so==='反応率'?D[s].filter(p=>p[0]>=st):S;
+  const base=L=>L;const S=list().P;const src=so==='反応率'?D[s].filter(p=>p[0]>=st):S;
  $('kp-sum').innerHTML=f.sum.map(([l,g])=>`<div><b>${fmt(src.reduce((a,p)=>a+g(p),0))}</b><span>${l}${l==='投稿'?'':'（合計）'}</span></div>`).join('');
  document.querySelectorAll('[data-v]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===view));
  $('kp-list').className='kp-list'+(view==='g'?' kp-grid':'');
@@ -152,7 +148,7 @@ try{if(window.matchMedia('(max-width:900px)').matches)document.querySelector('.s
 document.querySelectorAll('.sitenav a').forEach(function(a){a.addEventListener('click',function(){if(window.matchMedia('(max-width:900px)').matches)document.querySelector('.sitenav').removeAttribute('open');});});
 </script>
 <script>(function(){function o(){var h=location.hash.slice(1);var d=h&&document.getElementById(h);if(d&&d.tagName==="DETAILS")d.open=true;}window.addEventListener("hashchange",o);o();})();</script>
-<script src="../i18n.js?v=6b4e31a9" defer></script>
+<script src="../i18n.js?v=bb82ad22" defer></script>
 <script src="../nav.js?v=d910569b" defer></script>
 <script src="../account.js?v=488b01e9" defer></script>
 </body>
