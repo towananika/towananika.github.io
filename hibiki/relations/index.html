@@ -100,6 +100,11 @@
     <div id="feel"><p class="note" style="margin:0">ログインした端末でだけ読めます。</p></div>
   </section>
 
+  <section class="card" id="intimacy">
+    <p class="label"><span>親密さと好み</span><b>🔒</b></p>
+    <div id="intim"><p class="note" style="margin:0">ログインした端末でだけ読めます。</p></div>
+  </section>
+
   <a class="card practice" href="https://claude.ai/artifact/FnqYHh8fccXg9WtL34TtAH" target="_blank" rel="noopener">
     <svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 10h8M8 13h5"/></svg>
     <span><b>はじめましての練習</b><small>気分が動く相手と会話の練習。Lv1から</small></span>
@@ -189,6 +194,13 @@ if (window.HibikiSync) HibikiSync.open("feelings").then(function (F) {
       (e.alias ? '<small>' + esc(e.alias) + '</small><br>' : '') + '<small>気持ち</small>' + li(e.feel) + '<small>考えたこと</small>' + li(e.think) +
       '<p class="now">' + esc(e.now) + '</p></div>';
   }).join("");
+});
+if (window.HibikiSync) HibikiSync.open("intimacy").then(function (I) {
+  if (!I || !I.sections) return;
+  var li = function (a) { return '<ul>' + a.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join("") + '</ul>'; };
+  document.getElementById("intim").innerHTML = '<small>' + esc(I.note) + '</small>' + I.sections.map(function (x) {
+    return '<div class="fe"><h3>' + esc(x.title) + '</h3><small>私の気持ち</small>' + li(x.me) + '<small>考えたこと</small>' + li(x.think) + '</div>';
+  }).join("") + '<div class="fe"><p class="now">' + esc(I.now) + '</p></div>';
 });
 </script>
 </body>
