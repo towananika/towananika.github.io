@@ -2,9 +2,9 @@
 [
 "2026-11-23",
 74,
-"KPI一覧の表示切り替えを期間の隣に移し、ページ番号から直接移動できるように",
-"Moved KPI view controls beside the period selector and added direct page navigation",
-"KPI 보기 전환을 기간 옆으로 옮기고 페이지 번호로 바로 이동하도록 개선"
+"KPI一覧の操作とページ移動を改善し、主要指標に基本反応を表示",
+"Improved KPI controls and page navigation, and displayed basic reactions as key metrics",
+"KPI 조작과 페이지 이동을 개선하고 기본 반응을 주요 지표로 표시"
 ],
 [
 "2026-11-23",
