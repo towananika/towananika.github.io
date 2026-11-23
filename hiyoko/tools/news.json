@@ -1,6 +1,13 @@
 [
 [
 "2026-11-23",
+74,
+"KPI一覧の操作とページ移動を改善し、主要指標に基本反応を表示",
+"Improved KPI controls and page navigation, and displayed basic reactions as key metrics",
+"KPI 조작과 페이지 이동을 개선하고 기본 반응을 주요 지표로 표시"
+],
+[
+"2026-11-23",
 73,
 "KPI一覧の反応表示を整理し、投稿を10件・20件ずつページ送りできるように",
 "Improved KPI reaction details and added pagination for 10 or 20 posts",
