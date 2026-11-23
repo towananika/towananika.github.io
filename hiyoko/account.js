@@ -46,11 +46,14 @@
   // 一般の人には入口そのものを出さない（中身はもともとサーバーが本人を確かめてから返す）。
   var API = 'https://hibiki-sync.jaykim-can.workers.dev/hiyoko/', KEY = 'hyMember', asked = null;
   function setMem(v) { document.documentElement.classList.toggle('is-member', !!v); }
+  // オーナーだけに上の「Towananika › HIYOKO」を出す（is-owner）
+  var OKEY = 'hyOwner';
+  function setOwn(v) { document.documentElement.classList.toggle('is-owner', !!v); }
   function ss(k, v) { try { if (v === undefined) return sessionStorage.getItem(k); if (v === null) sessionStorage.removeItem(k); else sessionStorage.setItem(k, v); } catch (e) { return null; } }
   function member(u) {
     if (u === undefined) return;
-    if (!u) { setMem(false); ss(KEY, null); asked = null; return; }
-    if (ss(KEY) === u.email) { setMem(true); return; }
+    if (!u) { setMem(false); setOwn(false); ss(KEY, null); ss(OKEY, null); asked = null; return; }
+    if (ss(KEY) === u.email) { setMem(true); if (ss(OKEY) === u.email) setOwn(true); return; }
     if (asked === u.email || !window.triToken) return;
     asked = u.email;
     window.triToken().then(function (tk) {
@@ -58,9 +61,15 @@
     }).then(function (r) { return r.json(); }).then(function (o) {
       var ok = !o.error || o.error === 'none';
       setMem(ok); if (ok) ss(KEY, u.email);
+      if (!ok) return;
+      // オーナー（管理者）かどうか：管理ページと同じ 'list' が通ればオーナー
+      return window.triToken().then(function (tk) {
+        return fetch(API + 'list', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + tk }, body: '{}' });
+      }).then(function (r) { return r.json(); }).then(function (o) { var ow = !o.error; setOwn(ow); ss(OKEY, ow ? u.email : null); });
     }).catch(function () { asked = null; });
   }
   if (ss(KEY)) setMem(true);
+  if (ss(OKEY)) setOwn(true);
   document.addEventListener('tri-user', function (e) { show(e.detail); member(e.detail); });
   import('/triathlon/login/auth.js?v=0.28').then(function () { if (window.TRI_USER !== undefined) { show(window.TRI_USER); member(window.TRI_USER); } })
     .catch(function () { box.replaceChildren(); });

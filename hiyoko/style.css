@@ -745,6 +745,10 @@ html:not(.is-member) .mem-only{display:none!important}
 .chara-pic{width:96px;height:96px;flex:none;border-radius:50%;overflow:hidden;background:#fff;border:3px solid var(--card);box-shadow:0 4px 14px rgba(120,90,0,.12)}
 .chara-pic img{display:block;width:100%;height:100%;object-fit:cover}
 
+/* owner-only path + no in-page crumbs (2026-11-23) */
+.crumbs{display:none}
+html:not(.is-owner) .hy-path>a,html:not(.is-owner) .hy-path>span[aria-hidden]{display:none}
+
 /* weekly analysis + trend (analysis/, 2026-11-23) */
 .wa{display:grid;gap:14px;margin:6px 0 22px}
 .wa-p{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;min-width:0}
