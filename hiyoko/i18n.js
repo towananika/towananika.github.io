@@ -40,6 +40,7 @@ Object.assign(D,{"公式サイト：エコシステム ↗":["Official site: Eco
 /*kpi-short-labels*/Object.assign(D,{"ﾌｫﾛｰ":["Follows","팔로우"],"リンク":["Link","링크"],"プロフ":["Profile","프로필"]});
 /*kpi-news-77*/Object.assign(D,{"KPI一覧の反応詳細の表示名を短く整理": ["Shortened the labels in KPI reaction details", "KPI 반응 상세의 표시 이름을 짧게 정리"]});
 /*kpi-news-78*/Object.assign(D,{"KPI一覧の反応詳細を2行に整理": ["Arranged KPI reaction details in two rows", "KPI 반응 상세를 두 줄로 정리"]});
+/*kpi-news-79*/Object.assign(D,{"InstagramのKPIデータを更新し、投稿カードの番号と「開く」を整理": ["Updated Instagram KPI data and simplified the post cards", "Instagram KPI 데이터를 업데이트하고 게시물 카드 정리"]});
 var L=['ja','ko','en'],LBL={ja:'日本語',ko:'한국어',en:'EN'};
 var MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 var JP=/[぀-ヿ一-鿿]/;
