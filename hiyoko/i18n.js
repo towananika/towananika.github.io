@@ -44,6 +44,7 @@ Object.assign(D,{"公式サイト：エコシステム ↗":["Official site: Eco
 /*kpi-news-80*/Object.assign(D,{"KPI一覧のページ移動を下にまとめ、Instagramの反応詳細を追加": ["Moved KPI pagination below the list and expanded Instagram reaction details", "KPI 페이지 이동을 목록 아래에 모으고 Instagram 반응 상세 추가"]});
 /*kpi-ig-metrics*/Object.assign(D,{"Instagramのコメント数":["Number of Instagram comments","Instagram 댓글 수"],"Instagramのリポスト数はこのデータでは取得できません":["Instagram repost counts are unavailable in this data","이 데이터에는 Instagram 리포스트 수가 없습니다"]});
 /*kpi-news-81*/Object.assign(D,{"KPI一覧のXとInstagramの主要指標の並びを統一": ["Aligned the key metric order for X and Instagram in the KPI list", "KPI 목록의 X와 Instagram 주요 지표 순서 통일"]});
+/*kpi-news-83*/Object.assign(D,{"言語設定のアイコンを変更し、表示できないX投稿をKPI一覧から整理": ["Updated the language icon and removed an unavailable X post from the KPI list", "언어 설정 아이콘을 바꾸고 표시할 수 없는 X 게시물을 KPI 목록에서 정리"]});
 var L=['ja','ko','en'],LBL={ja:'日本語',ko:'한국어',en:'EN'};
 var MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 var JP=/[぀-ヿ一-鿿]/;
