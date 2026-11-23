@@ -5,11 +5,11 @@
  <div class="kp-top">
   <div class="kp-seg" role="group" aria-label="SNSを選ぶ"><button data-s="x">X</button><button data-s="ig">Instagram</button></div>
   <div class="kp-seg" role="group" aria-label="期間"><button data-p="30">1ヶ月</button><button data-p="91">3ヶ月</button><button data-p="182">6ヶ月</button><button data-p="0">全期間</button></div>
+  <div class="kp-seg kp-view" role="group" aria-label="見かた"><button data-v="g">🖼 画像で見る</button><button data-v="l">☰ リスト</button></div>
  </div>
- <div class="kp-seg kp-view" role="group" aria-label="見かた"><button data-v="g">🖼 画像で見る</button><button data-v="l">☰ リスト</button></div>
  <label class="kp-sel"><span>並べ順</span><select id="kp-sort"></select></label>
  <ol class="kp-list" id="kp-list"></ol>
- <nav class="kp-pages" aria-label="ページ送り"><label>表示件数 <select id="kp-size"><option value="10">10件</option><option value="20">20件</option></select></label><button id="kp-prev">前へ</button><span id="kp-page" aria-live="polite"></span><button id="kp-next">次へ</button></nav>
+ <nav class="kp-pages" aria-label="ページ送り"><label>表示件数 <select id="kp-size"><option value="10">10件</option><option value="20">20件</option></select></label><button id="kp-prev">前へ</button><span class="kp-numbers" id="kp-page"></span><button id="kp-next">次へ</button></nav>
  <details class="kp-def"><summary>それぞれの数字の意味</summary><div id="kp-def"></div></details>
 </div>
 <!--smap--><!--/smap-->
@@ -60,7 +60,7 @@ function draw(){const f=F[s];if(!f.sorts.flatMap(g=>g[1]).some(x=>x[1]===so))so=
  const k3=[...new Set([so==='new'?'表示':so,'表示','反応','反応率'])].slice(0,3);
  if(view==='g'){$('kp-list').innerHTML=visible.map((p,j)=>`<li><div class="pv"><span class="pv-loading">読み込み中…</span><iframe src="${emb(p)}" loading="lazy" title="投稿のプレビュー" scrolling="no" allowtransparency="true" onload="this.previousElementSibling.hidden=true"></iframe></div><div class="h"><span class="n">${(page-1)*size+j+1}</span><span class="d">${md(p[0])}${s==='ig'?' · '+p[10]:''}</span><a href="${p[2]}" target="_blank" rel="noopener">開く ↗</a></div><dl>${k3.map(l=>`<div class="${l===so?'on':''}"><dt>${l}</dt><dd>${key(p,l)}</dd></div>`).join('')}</dl>${bd(p)}</li>`).join('')||'<li class="e">この期間の投稿はありません</li>'}
  else $('kp-list').innerHTML=visible.map((p,j)=>`<li><div class="h"><span class="n">${(page-1)*size+j+1}</span><span class="d">${md(p[0])}${s==='ig'?' · '+p[10]:''}</span><a href="${p[2]}" target="_blank" rel="noopener">開く ↗</a></div><p class="t">${esc(p[1])||'<span class="e">（テキストなし）</span>'}</p><dl>${f.cols.map(([l,g])=>{const v=l==='反応率'?(rate(p)*100).toFixed(1)+'%':fmt(g(p));return `<div class="${l===so?'on':''}"><dt>${l}</dt><dd>${v}</dd></div>`}).join('')}</dl></li>`).join('')||'<li class="e">この期間の投稿はありません</li>';
- $('kp-prev').disabled=page===1;$('kp-next').disabled=page===pages;$('kp-page').textContent=`${page} / ${pages}`;
+ $('kp-prev').disabled=page===1;$('kp-next').disabled=page===pages;$('kp-page').innerHTML=Array.from({length:Math.min(10,pages-Math.floor((page-1)/10)*10)},(_,i)=>{const n=Math.floor((page-1)/10)*10+i+1;return `<button type="button" data-page="${n}"${n===page?' aria-current="page"':''}>${n}</button>`}).join('');
  $('kp-def').innerHTML=f.def;
  try{history.replaceState(null,'','#'+s)}catch(e){}}
 document.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{s=b.dataset.s;page=1;draw()});
@@ -68,6 +68,7 @@ document.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{per=+b.dataset.p
 document.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{view=b.dataset.v;page=1;draw()});
 $('kp-sort').onchange=e=>{so=e.target.value;page=1;draw()};
 $('kp-size').onchange=e=>{size=+e.target.value;page=1;draw()};
+$('kp-page').onclick=e=>{const b=e.target.closest('[data-page]');if(b){page=+b.dataset.page;draw();$('kp-list').scrollIntoView({block:'start'})}};
 $('kp-prev').onclick=()=>{page--;draw();$('kp-list').scrollIntoView({block:'start'})};
 $('kp-next').onclick=()=>{page++;draw();$('kp-list').scrollIntoView({block:'start'})};
 if(location.hash==='#ig')s='ig';
