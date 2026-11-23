@@ -43,16 +43,18 @@
 .kp-grid .h{padding:8px 12px 0}
 .kp-grid dl{grid-template-columns:repeat(4,minmax(0,1fr));padding:6px 12px 12px}
 .bdw{display:grid;gap:6px;padding:0 12px 12px}
-.bdr{display:flex;flex-wrap:wrap;gap:4px 6px;align-items:center}
-.bdh{flex-basis:100%;font-size:.68rem;color:var(--muted);font-weight:700}
-.bd{display:inline-flex;align-items:center;gap:4px;font-size:.76rem;border:1px solid var(--line);border-radius:99px;padding:2px 9px 2px 6px;line-height:1.5}
+.bdr{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 6px;align-items:stretch}
+.bdh{grid-column:1/-1;font-size:.68rem;color:var(--muted);font-weight:700}
+.bd{display:inline-flex;align-items:center;gap:4px;font-size:.76rem;border:1px solid var(--line);border-radius:9px;padding:2px 9px 2px 6px;line-height:1.5;min-width:0;overflow-wrap:anywhere}
 .bd i{font-style:normal}
-.bd b{font-variant-numeric:tabular-nums;margin-left:2px}
+.bd b{font-variant-numeric:tabular-nums;margin-left:auto}
 .bd.z{opacity:.45}
 .bd.on{background:var(--hy-soft);border-color:var(--hy)}
 @media (max-width:640px){.kp-seg button{padding:0 11px}}
 
 .kp-pages{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px}.kp-pages button,.kp-pages select{font:inherit;min-height:44px;padding:0 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink)}.kp-pages button:disabled{opacity:.4}.kp-numbers{display:flex;flex-wrap:wrap;justify-content:center;gap:4px}.kp-numbers button{min-width:44px}.kp-numbers button[aria-current="page"]{background:var(--ink);color:var(--card);font-weight:700}.kp-pages label{display:flex;align-items:center;gap:6px}.kp-grid .pv{position:relative}.pv-loading{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted)}.pv-loading[hidden]{display:none}.kp-grid .pv iframe{position:relative}
+
+.kp-tip{position:fixed;z-index:1000;max-width:min(280px,calc(100vw - 16px));padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);font-size:.8rem;line-height:1.5;box-shadow:0 3px 12px #0003;pointer-events:none}.kp-tip[hidden]{display:none}[data-tip]{cursor:help}[data-tip]:focus-visible{outline:2px solid var(--hy);outline-offset:2px}
 </style>
 </head>
 <body class="">
@@ -70,9 +72,9 @@
   <div class="kp-seg kp-view" role="group" aria-label="見かた"><button data-v="g">🖼 画像で見る</button><button data-v="l">☰ リスト</button></div>
  </div>
  <label class="kp-sel"><span>並べ順</span><select id="kp-sort"></select></label>
+ <nav class="kp-pages" aria-label="ページ送り"><button id="kp-prev-top">前へ</button><label>ページ <select id="kp-jump-top"></select></label><span id="kp-total"></span><button id="kp-next-top">次へ</button></nav>
  <ol class="kp-list" id="kp-list"></ol>
  <nav class="kp-pages" aria-label="ページ送り"><label>表示件数 <select id="kp-size"><option value="10">10件</option><option value="20">20件</option></select></label><button id="kp-prev">前へ</button><span class="kp-numbers" id="kp-page"></span><button id="kp-next">次へ</button></nav>
- <details class="kp-def"><summary>それぞれの数字の意味</summary><div id="kp-def"></div></details>
 </div>
 <!--smap--><!--/smap-->
 <script>
@@ -81,9 +83,9 @@ const D={"x":[["2026-11-23","you know stocks, right? 🤔 tokens are the same. o
 // X: [date,text,link,imp,likes,replies,reposts,bookmarks,pv,urlclicks,eng]  IG: [date,text,link,views,reach,likes,comments,shares,saves,follows,type]
 const F={x:{
   re:p=>p[4]+p[5]+p[6]+p[7], base:p=>p[3],
-  cols:[['表示',p=>p[3]],['反応',p=>p[4]+p[5]+p[6]+p[7]],['反応率',null],['いいね',p=>p[4]],['返信',p=>p[5]],['リポスト',p=>p[6]],['保存',p=>p[7]],['プロフィール訪問',p=>p[8]],['リンクのクリック',p=>p[9]],['フォロー',p=>p[11]]],
-  sorts:[['基本',[['新しい順','new'],['フォローが多い順','フォロー'],['反応が多い順','反応'],['反応率が高い順','反応率'],['表示が多い順','表示']]],['反応ごと',[['❤️ いいねが多い順','いいね'],['💬 返信が多い順','返信'],['🔁 リポストが多い順','リポスト'],['🔖 保存が多い順','保存']]],['フォローにつながる行動',[['➕ フォローが多い順','フォロー'],['👤 プロフィール訪問が多い順','プロフィール訪問'],['🔗 リンクのクリックが多い順','リンクのクリック']]]],
-  def:'<b>表示</b>：投稿が画面に出た回数。<b>反応</b>：いいね＋返信＋リポスト＋保存。<b>反応率</b>：反応÷表示。<b>プロフィール訪問</b>：その投稿からアカウントのページを開いた回数。<b>リンクのクリック</b>：投稿内のリンクが押された回数。<b>フォロー</b>：その投稿からフォローした人（X が投稿に結びつけた分だけ。アカウント全体のフォロー数より少なくなります）。返信には自分のスレッドの返信もふくまれます。出典：X Analytics の投稿別の書き出し。'},
+  cols:[['表示',p=>p[3]],['反応',p=>p[4]+p[5]+p[6]+p[7]],['反応率',null],['いいね',p=>p[4]],['返信',p=>p[5]],['リポスト',p=>p[6]],['保存',p=>p[7]],['プロフィール訪問',p=>p[8]],['リンクのクリック',p=>p[9]],['フォロー',p=>p[11]],['エンゲージメント',p=>p[10]]],
+  sorts:[['基本',[['新しい順','new'],['フォローが多い順','フォロー'],['反応が多い順','反応'],['反応率が高い順','反応率'],['表示が多い順','表示']]],['反応ごと',[['❤️ いいねが多い順','いいね'],['💬 返信が多い順','返信'],['🔁 リポストが多い順','リポスト'],['🔖 保存が多い順','保存']]],['反応詳細',[['➕ フォローが多い順','フォロー'],['🔗 リンクのクリックが多い順','リンクのクリック'],['👤 プロフィール訪問が多い順','プロフィール訪問'],['📊 エンゲージメントが多い順','エンゲージメント']]]],
+  def:'<b>表示</b>：投稿が画面に出た回数。<b>反応</b>：いいね＋返信＋リポスト＋保存。<b>反応率</b>：反応÷表示。<b>エンゲージメント</b>：X Analytics が記録した投稿への操作の合計（いいね・返信などの「反応」とは集計範囲が異なります）。<b>プロフィール訪問</b>：その投稿からアカウントのページを開いた回数。<b>リンクのクリック</b>：投稿内のリンクが押された回数。<b>フォロー</b>：その投稿からフォローした人（X が投稿に結びつけた分だけ。アカウント全体のフォロー数より少なくなります）。返信には自分のスレッドの返信もふくまれます。出典：X Analytics の投稿別の書き出し。'},
  ig:{
   re:p=>p[5]+p[6]+p[7]+p[8], base:p=>p[4],
   cols:[['表示',p=>p[3]],['リーチ',p=>p[4]],['反応',p=>p[5]+p[6]+p[7]+p[8]],['反応率',null],['いいね',p=>p[5]],['コメント',p=>p[6]],['シェア',p=>p[7]],['保存',p=>p[8]],['フォロー',p=>p[9]]],
@@ -98,11 +100,13 @@ const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',
 const MIN=100;
 // SNSの画面に近い並びと、すべての反応詳細
 const BD={x:{basic:[['💬','返信',p=>p[5]],['🔁','リポスト',p=>p[6]],['❤️','いいね',p=>p[4]],['👁','表示',p=>p[3]]],
-  detail:[['❤️','いいね',p=>p[4]],['💬','返信',p=>p[5]],['🔁','リポスト',p=>p[6]],['🔖','保存',p=>p[7]],['➕','フォロー',p=>p[11]],['👤','プロフィール訪問',p=>p[8]],['🔗','リンクのクリック',p=>p[9]]]},
+  detail:[['➕','フォロー',p=>p[11]],['🔗','リンクのクリック',p=>p[9]],['👤','プロフィール訪問',p=>p[8]],['🔖','保存',p=>p[7]],['📊','エンゲージメント',p=>p[10]]]},
  ig:{basic:[['❤️','いいね',p=>p[5]],['💬','コメント',p=>p[6]],['📤','シェア',p=>p[7]],['🔖','保存',p=>p[8]]],
   detail:[['❤️','いいね',p=>p[5]],['💬','コメント',p=>p[6]],['📤','シェア',p=>p[7]],['🔖','保存',p=>p[8]],['➕','フォロー',p=>p[9]]]}};
-const chip=([ic,l,g],p)=>{const v=g(p);return `<span class="bd${v?'':' z'}${l===so?' on':''}"><i aria-hidden="true">${ic}</i>${l}<b>${fmt(v)}</b></span>`};
-const bd=p=>`<div class="bdw"><div class="bdr"><span class="bdh">反応詳細</span>${BD[s].detail.filter(c=>!BD[s].basic.some(b=>b[1]===c[1])).sort((a,b)=>b[2](p)-a[2](p)).map(c=>chip(c,p)).join('')}</div></div>`;
+const descriptions={x:{'表示':'投稿が画面に表示された回数','返信':'投稿への返信数（自分のスレッドの返信を含む）','リポスト':'投稿がリポストされた回数','いいね':'投稿へのいいね数','保存':'投稿が保存された回数','フォロー':'この投稿からフォローした人の数（Xが投稿に結びつけた分）','プロフィール訪問':'この投稿からプロフィールを開いた回数','リンクのクリック':'投稿内のリンクがクリックされた回数','エンゲージメント':'X Analyticsが記録した投稿への操作の合計。反応とは集計範囲が異なります','反応':'いいね・返信・リポスト・保存の合計','反応率':'反応を表示回数で割った割合'},ig:{'表示':'投稿が見られた回数','リーチ':'投稿を見た人の数','いいね':'投稿へのいいね数','コメント':'投稿へのコメント数','シェア':'投稿がシェアされた回数','保存':'投稿が保存された回数','フォロー':'この投稿を見てフォローした人の数','反応':'いいね・コメント・シェア・保存の合計','反応率':'反応をリーチで割った割合'}};
+const hint=l=>` tabindex="0" data-tip="${esc(descriptions[s][l]||l)}" aria-label="${esc(l+'：'+(descriptions[s][l]||l))}"`;
+const chip=([ic,l,g],p)=>{const v=g(p);return `<span${hint(l)} class="bd${v?'':' z'}${l===so?' on':''}"><i aria-hidden="true">${ic}</i>${l}<b>${fmt(v)}</b></span>`};
+const bd=p=>`<div class="bdw"><div class="bdr"><span class="bdh">反応詳細</span>${BD[s].detail.filter(c=>!BD[s].basic.some(b=>b[1]===c[1])).map(c=>chip(c,p)).join('')}</div></div>`;
 function rate(p){const b=F[s].base(p);return b?F[s].re(p)/b:0}
 function val(p,k){if(k==='反応率')return rate(p);const c=F[s].cols.find(c=>c[0]===k);return c[1](p)}
 function list(){const L=D[s],last=L[0][0],st=per?new Date(new Date(last+'T00:00:00Z').getTime()-(per-1)*864e5).toISOString().slice(0,10):'0';
@@ -118,19 +122,31 @@ function draw(){const f=F[s];if(!f.sorts.flatMap(g=>g[1]).some(x=>x[1]===so))so=
  document.querySelectorAll('[data-v]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===view));
  $('kp-list').className='kp-list'+(view==='g'?' kp-grid':'');
  const pages=Math.max(1,Math.ceil(P.length/size));page=Math.min(page,pages);const visible=P.slice((page-1)*size,page*size);
- if(view==='g'){$('kp-list').innerHTML=visible.map((p,j)=>`<li><div class="pv"><span class="pv-loading">読み込み中…</span><iframe src="${emb(p)}" loading="lazy" title="投稿のプレビュー" scrolling="no" allowtransparency="true" onload="this.previousElementSibling.hidden=true"></iframe></div><div class="h"><span class="n">${(page-1)*size+j+1}</span><span class="d">${md(p[0])}${s==='ig'?' · '+p[10]:''}</span><a href="${p[2]}" target="_blank" rel="noopener">開く ↗</a></div><dl>${BD[s].basic.map(([ic,l,g])=>`<div class="${l===so?'on':''}"><dt>${ic} ${l}</dt><dd>${fmt(g(p))}</dd></div>`).join('')}</dl>${bd(p)}</li>`).join('')||'<li class="e">この期間の投稿はありません</li>'}
- else $('kp-list').innerHTML=visible.map((p,j)=>`<li><div class="h"><span class="n">${(page-1)*size+j+1}</span><span class="d">${md(p[0])}${s==='ig'?' · '+p[10]:''}</span><a href="${p[2]}" target="_blank" rel="noopener">開く ↗</a></div><p class="t">${esc(p[1])||'<span class="e">（テキストなし）</span>'}</p><dl>${f.cols.map(([l,g])=>{const v=l==='反応率'?(rate(p)*100).toFixed(1)+'%':fmt(g(p));return `<div class="${l===so?'on':''}"><dt>${l}</dt><dd>${v}</dd></div>`}).join('')}</dl></li>`).join('')||'<li class="e">この期間の投稿はありません</li>';
+ if(view==='g'){$('kp-list').innerHTML=visible.map((p,j)=>`<li><div class="pv"><span class="pv-loading">読み込み中…</span><iframe src="${emb(p)}" loading="lazy" title="投稿のプレビュー" scrolling="no" allowtransparency="true" onload="this.previousElementSibling.hidden=true"></iframe></div><div class="h"><span class="n">${(page-1)*size+j+1}</span><span class="d">${md(p[0])}${s==='ig'?' · '+p[10]:''}</span><a href="${p[2]}" target="_blank" rel="noopener">開く ↗</a></div><dl>${BD[s].basic.map(([ic,l,g])=>`<div class="${l===so?'on':''}"><dt${hint(l)}>${ic} ${l}</dt><dd>${fmt(g(p))}</dd></div>`).join('')}</dl>${bd(p)}</li>`).join('')||'<li class="e">この期間の投稿はありません</li>'}
+ else $('kp-list').innerHTML=visible.map((p,j)=>`<li><div class="h"><span class="n">${(page-1)*size+j+1}</span><span class="d">${md(p[0])}${s==='ig'?' · '+p[10]:''}</span><a href="${p[2]}" target="_blank" rel="noopener">開く ↗</a></div><p class="t">${esc(p[1])||'<span class="e">（テキストなし）</span>'}</p><dl>${f.cols.map(([l,g])=>{const v=l==='反応率'?(rate(p)*100).toFixed(1)+'%':fmt(g(p));return `<div class="${l===so?'on':''}"><dt${hint(l)}>${l}</dt><dd>${v}</dd></div>`}).join('')}</dl></li>`).join('')||'<li class="e">この期間の投稿はありません</li>';
+ $('kp-prev-top').disabled=page===1;$('kp-next-top').disabled=page===pages;$('kp-jump-top').innerHTML=Array.from({length:pages},(_,i)=>`<option value="${i+1}"${i+1===page?' selected':''}>${i+1}</option>`).join('');$('kp-total').textContent=`/ ${pages}`;
  $('kp-prev').disabled=page===1;$('kp-next').disabled=page===pages;$('kp-page').innerHTML=Array.from({length:Math.min(10,pages-Math.floor((page-1)/10)*10)},(_,i)=>{const n=Math.floor((page-1)/10)*10+i+1;return `<button type="button" data-page="${n}"${n===page?' aria-current="page"':''}>${n}</button>`}).join('');
- $('kp-def').innerHTML=f.def;
  try{history.replaceState(null,'','#'+s)}catch(e){}}
 document.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{s=b.dataset.s;page=1;draw()});
 document.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{per=+b.dataset.p;page=1;draw()});
 document.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{view=b.dataset.v;page=1;draw()});
 $('kp-sort').onchange=e=>{so=e.target.value;page=1;draw()};
 $('kp-size').onchange=e=>{size=+e.target.value;page=1;draw()};
+$('kp-jump-top').onchange=e=>{page=+e.target.value;draw()};
+$('kp-prev-top').onclick=()=>{page--;draw()};
+$('kp-next-top').onclick=()=>{page++;draw()};
 $('kp-page').onclick=e=>{const b=e.target.closest('[data-page]');if(b){page=+b.dataset.page;draw();$('kp-list').scrollIntoView({block:'start'})}};
 $('kp-prev').onclick=()=>{page--;draw();$('kp-list').scrollIntoView({block:'start'})};
 $('kp-next').onclick=()=>{page++;draw();$('kp-list').scrollIntoView({block:'start'})};
+const tip=document.createElement('div');tip.className='kp-tip';tip.id='kp-tip';tip.setAttribute('role','tooltip');tip.hidden=true;document.body.appendChild(tip);
+function showTip(el){tip.textContent=el.dataset.tip;tip.hidden=false;const r=el.getBoundingClientRect();tip.style.left=Math.max(8,Math.min(r.left,innerWidth-tip.offsetWidth-8))+'px';tip.style.top=Math.max(8,Math.min(r.bottom+6,innerHeight-tip.offsetHeight-8))+'px';el.setAttribute('aria-describedby','kp-tip')}
+function hideTip(){tip.hidden=true;document.querySelectorAll('[aria-describedby="kp-tip"]').forEach(el=>el.removeAttribute('aria-describedby'))}
+document.addEventListener('pointerover',e=>{const el=e.target.closest('[data-tip]');if(el&&e.pointerType==='mouse')showTip(el)});
+document.addEventListener('pointerout',e=>{if(e.pointerType==='mouse'&&e.target.closest('[data-tip]'))hideTip()});
+document.addEventListener('focusin',e=>{const el=e.target.closest('[data-tip]');if(el)showTip(el)});
+document.addEventListener('focusout',e=>{if(e.target.closest('[data-tip]'))hideTip()});
+document.addEventListener('click',e=>{const el=e.target.closest('[data-tip]');if(el)showTip(el);else hideTip()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')hideTip()});
 if(location.hash==='#ig')s='ig';
 draw();
 })();
@@ -159,7 +175,7 @@ try{if(window.matchMedia('(max-width:900px)').matches)document.querySelector('.s
 document.querySelectorAll('.sitenav a').forEach(function(a){a.addEventListener('click',function(){if(window.matchMedia('(max-width:900px)').matches)document.querySelector('.sitenav').removeAttribute('open');});});
 </script>
 <script>(function(){function o(){var h=location.hash.slice(1);var d=h&&document.getElementById(h);if(d&&d.tagName==="DETAILS")d.open=true;}window.addEventListener("hashchange",o);o();})();</script>
-<script src="../i18n.js?v=6a372b16" defer></script>
+<script src="../i18n.js?v=d6a9bddc" defer></script>
 <script src="../nav.js?v=d910569b" defer></script>
 <script src="../account.js?v=488b01e9" defer></script>
 </body>

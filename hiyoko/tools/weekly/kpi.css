@@ -34,13 +34,15 @@
 .kp-grid .h{padding:8px 12px 0}
 .kp-grid dl{grid-template-columns:repeat(4,minmax(0,1fr));padding:6px 12px 12px}
 .bdw{display:grid;gap:6px;padding:0 12px 12px}
-.bdr{display:flex;flex-wrap:wrap;gap:4px 6px;align-items:center}
-.bdh{flex-basis:100%;font-size:.68rem;color:var(--muted);font-weight:700}
-.bd{display:inline-flex;align-items:center;gap:4px;font-size:.76rem;border:1px solid var(--line);border-radius:99px;padding:2px 9px 2px 6px;line-height:1.5}
+.bdr{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 6px;align-items:stretch}
+.bdh{grid-column:1/-1;font-size:.68rem;color:var(--muted);font-weight:700}
+.bd{display:inline-flex;align-items:center;gap:4px;font-size:.76rem;border:1px solid var(--line);border-radius:9px;padding:2px 9px 2px 6px;line-height:1.5;min-width:0;overflow-wrap:anywhere}
 .bd i{font-style:normal}
-.bd b{font-variant-numeric:tabular-nums;margin-left:2px}
+.bd b{font-variant-numeric:tabular-nums;margin-left:auto}
 .bd.z{opacity:.45}
 .bd.on{background:var(--hy-soft);border-color:var(--hy)}
 @media (max-width:640px){.kp-seg button{padding:0 11px}}
 
 .kp-pages{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px}.kp-pages button,.kp-pages select{font:inherit;min-height:44px;padding:0 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink)}.kp-pages button:disabled{opacity:.4}.kp-numbers{display:flex;flex-wrap:wrap;justify-content:center;gap:4px}.kp-numbers button{min-width:44px}.kp-numbers button[aria-current="page"]{background:var(--ink);color:var(--card);font-weight:700}.kp-pages label{display:flex;align-items:center;gap:6px}.kp-grid .pv{position:relative}.pv-loading{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted)}.pv-loading[hidden]{display:none}.kp-grid .pv iframe{position:relative}
+
+.kp-tip{position:fixed;z-index:1000;max-width:min(280px,calc(100vw - 16px));padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);font-size:.8rem;line-height:1.5;box-shadow:0 3px 12px #0003;pointer-events:none}.kp-tip[hidden]{display:none}[data-tip]{cursor:help}[data-tip]:focus-visible{outline:2px solid var(--hy);outline-offset:2px}
