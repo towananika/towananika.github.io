@@ -80,13 +80,13 @@ const D={"x":[["2026-11-23","you know stocks, right? 🤔 tokens are the same. o
 const F={x:{
   re:p=>p[4]+p[5]+p[6]+p[7], base:p=>p[3],
   cols:[['表示',p=>p[3]],['反応',p=>p[4]+p[5]+p[6]+p[7]],['反応率',null],['いいね',p=>p[4]],['返信',p=>p[5]],['リポスト',p=>p[6]],['保存',p=>p[7]],['プロフィール訪問',p=>p[8]],['リンクのクリック',p=>p[9]]],
-  sorts:[['新しい順','new'],['反応が多い順','反応'],['反応率が高い順','反応率'],['表示が多い順','表示'],['プロフィール訪問が多い順','プロフィール訪問'],['リンクのクリックが多い順','リンクのクリック']],
+  sorts:[['新しい順','new'],['反応が多い順','反応'],['反応率が高い順','反応率'],['いいねが多い順','いいね'],['表示が多い順','表示'],['プロフィール訪問が多い順','プロフィール訪問'],['リンクのクリックが多い順','リンクのクリック']],
   sum:[['投稿',p=>1],['表示',p=>p[3]],['反応',p=>p[4]+p[5]+p[6]+p[7]],['プロフィール訪問',p=>p[8]]],
   def:'<b>表示</b>：投稿が画面に出た回数。<b>反応</b>：いいね＋返信＋リポスト＋保存。<b>反応率</b>：反応÷表示。<b>プロフィール訪問</b>：その投稿からアカウントのページを開いた回数。<b>リンクのクリック</b>：投稿内のリンクが押された回数。返信には自分のスレッドの返信もふくまれます。出典：X Analytics の投稿別の書き出し。'},
  ig:{
   re:p=>p[5]+p[6]+p[7]+p[8], base:p=>p[4],
   cols:[['表示',p=>p[3]],['リーチ',p=>p[4]],['反応',p=>p[5]+p[6]+p[7]+p[8]],['反応率',null],['いいね',p=>p[5]],['コメント',p=>p[6]],['シェア',p=>p[7]],['保存',p=>p[8]],['フォロー',p=>p[9]]],
-  sorts:[['新しい順','new'],['反応が多い順','反応'],['反応率が高い順','反応率'],['表示が多い順','表示'],['シェアが多い順','シェア'],['フォローが多い順','フォロー']],
+  sorts:[['新しい順','new'],['反応が多い順','反応'],['反応率が高い順','反応率'],['いいねが多い順','いいね'],['表示が多い順','表示'],['シェアが多い順','シェア'],['フォローが多い順','フォロー']],
   sum:[['投稿',p=>1],['表示',p=>p[3]],['反応',p=>p[5]+p[6]+p[7]+p[8]],['フォロー',p=>p[9]]],
   def:'<b>表示</b>：投稿が見られた回数。<b>リーチ</b>：見た人の数。<b>反応</b>：いいね＋コメント＋シェア＋保存。<b>反応率</b>：反応÷リーチ。<b>シェア</b>：送られた回数。<b>フォロー</b>：その投稿を見てフォローした人。出典：Instagram インサイトの投稿別の書き出し。'}};
 let s='x',per=91,so='new',view='g',shown=24;
@@ -152,7 +152,7 @@ try{if(window.matchMedia('(max-width:900px)').matches)document.querySelector('.s
 document.querySelectorAll('.sitenav a').forEach(function(a){a.addEventListener('click',function(){if(window.matchMedia('(max-width:900px)').matches)document.querySelector('.sitenav').removeAttribute('open');});});
 </script>
 <script>(function(){function o(){var h=location.hash.slice(1);var d=h&&document.getElementById(h);if(d&&d.tagName==="DETAILS")d.open=true;}window.addEventListener("hashchange",o);o();})();</script>
-<script src="../i18n.js?v=25d5cd95" defer></script>
+<script src="../i18n.js?v=6b4e31a9" defer></script>
 <script src="../nav.js?v=d910569b" defer></script>
 <script src="../account.js?v=488b01e9" defer></script>
 </body>
