@@ -132,9 +132,9 @@ if (!S.legacyDreamsMigrated) {
   Object.keys(S.days).sort().forEach(function(k) {
     var r = S.days[k] || {}, parts = [];
     if ((r.dream || "").trim()) parts.push(r.dream.trim());
-    if ((r.feeling || "").trim()) parts.push("【目覚めたときの気持ち】\\n" + r.feeling.trim());
+    if ((r.feeling || "").trim()) parts.push("【目覚めたときの気持ち】\n" + r.feeling.trim());
     if (parts.length && !S.posts.some(function(p) { return p.id === "legacy-" + k; })) {
-      S.posts.push({ id:"legacy-" + k, title:"夢の記録 " + k, body:parts.join("\\n\\n"), date:k, createdAt:k + "T00:00:00" });
+      S.posts.push({ id:"legacy-" + k, title:"夢の記録 " + k, body:parts.join("\n\n"), date:k, createdAt:k + "T00:00:00" });
     }
   });
   S.legacyDreamsMigrated = true; save();
@@ -165,7 +165,7 @@ function drawSleep() {
 function drawMonthlyAverages() {
   var months = {};
   Object.keys(S.days).forEach(function(k) {
-    if (!/^\\d{4}-\\d{2}-\\d{2}$/.test(k)) return;
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(k)) return;
     var v = hours(S.days[k]); if (v == null) return;
     var m = k.slice(0,7); if (!months[m]) months[m] = {sum:0,count:0};
     months[m].sum += v; months[m].count++;
@@ -183,20 +183,20 @@ function drawMonthlyAverages() {
     row.appendChild(label); row.appendChild(track); row.appendChild(value); monthlyAverages.appendChild(row);
   });
 }
-function postDate(p) { return p.date || String(p.createdAt || "").slice(0,10) || ""; }
+function getPostDate(p) { return p.date || String(p.createdAt || "").slice(0,10) || ""; }
 function postTime(p) { return String(p.createdAt || p.date || p.id || ""); }
 function filteredPosts() {
   var q = postSearch.value.trim().toLocaleLowerCase(), month = postMonth.value;
   return S.posts.slice().sort(function(a,b) { return postTime(b).localeCompare(postTime(a)); }).filter(function(p) {
-    var d = postDate(p);
+    var d = getPostDate(p);
     if (month && d.slice(0,7) !== month) return false;
-    if (q && (String(p.title || "") + "\\n" + String(p.body || "")).toLocaleLowerCase().indexOf(q) < 0) return false;
+    if (q && (String(p.title || "") + "\n" + String(p.body || "")).toLocaleLowerCase().indexOf(q) < 0) return false;
     return true;
   });
 }
 function updateMonthOptions() {
   var selected = postMonth.value, months = {};
-  S.posts.forEach(function(p) { var d = postDate(p); if (/^\\d{4}-\\d{2}/.test(d)) months[d.slice(0,7)] = true; });
+  S.posts.forEach(function(p) { var d = getPostDate(p); if (/^\d{4}-\d{2}/.test(d)) months[d.slice(0,7)] = true; });
   postMonth.innerHTML = "";
   var all = document.createElement("option"); all.value = ""; all.textContent = "すべての月"; postMonth.appendChild(all);
   Object.keys(months).sort().reverse().forEach(function(m) {
@@ -222,7 +222,7 @@ function drawDreamHistory() {
   visible.forEach(function(p) {
     var item = document.createElement("article"); item.className = "post";
     var meta = document.createElement("div"); meta.className = "post-meta";
-    var date = document.createElement("span"); date.textContent = postDate(p); meta.appendChild(date);
+    var date = document.createElement("span"); date.textContent = getPostDate(p); meta.appendChild(date);
     var tag = document.createElement("span"); tag.textContent = "夢の記録"; meta.appendChild(tag);
     var title = document.createElement("h3"); title.textContent = (p.title || "").trim() || "（タイトルなし）";
     var body = document.createElement("p"); body.className = "post-body"; body.textContent = p.body || "";
