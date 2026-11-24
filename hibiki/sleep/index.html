@@ -281,20 +281,19 @@ memo.onchange = function() { cur().memo = memo.value; save(); };
 window.addEventListener("storage",function() { S = load(); S.days = S.days || {}; S.posts = Array.isArray(S.posts) ? S.posts : []; drawSleep(); drawDreamHistory(); });
 drawSleep(); drawDreamHistory();
 
-// 最初の夢投稿を、会話で確認できた事実に沿って一度だけ修正する。
-// 同期データを先に取得してから、最も古い投稿だけを対象にする。既存のID・日付・作成日時は保持。
+// 最初の夢投稿の修正と、整理した内容の新規投稿を同期後に一度だけ行う。
 function reviseFirstDreamPost() {
   var syncReady = window.HibikiSync && HibikiSync.on() && HibikiSync.sync
     ? HibikiSync.sync(false).catch(function() { return null; })
     : Promise.resolve(null);
   syncReady.then(function() {
     S = load(); S.days = S.days || {}; S.posts = Array.isArray(S.posts) ? S.posts : [];
-    if (S.firstDreamFactRevision >= 1 || !S.posts.length) return;
-    var first = S.posts.slice().sort(function(a,b) {
+    var ordered = S.posts.slice().sort(function(a,b) {
       return postTime(a).localeCompare(postTime(b));
-    })[0];
-    first.title = "山登りと石像、三つの大型マート";
-    first.body = [
+    });
+    var first = ordered[0] || null;
+    var dreamTitle = "山登りと石像、三つの大型マート";
+    var dreamBody = [
       "あまり知らない人たちと山登りをしていた。山登りの途中で、木の葉などを高い値段で買い、料理してみんなで食べた。料理の詳しい様子は覚えていない。",
       "ソヒョンさんが綺麗な石像になっていた。石像は角のような形で、入口のような場所に置かれていた。左側の近くにはソヒョンさんより背の高い人物の石像があり、その手前に新しいソヒョンさんの石像があった。自分も石になるのかなと思った。",
       "店員との間で、買い取ることを提案されたようなやり取りがあり、二度断った記憶がある。",
@@ -302,9 +301,30 @@ function reviseFirstDreamPost() {
       "女性と買い物をしていた。自分が袋を持ち、女性が商品を選んでいた。スパゲッティを食べたかったが、その女性には伝えず、目が覚めた。",
       "最後にツナ缶を見た。航空便で届いたようなツナ缶が二つあり、少し形が歪んでいたため割引されていた。見た目はそこまでひどくなかったが、通常の棚にもいろいろなツナ缶が並んでいた。少し状態や味が違うように感じたが、買わなかった。"
     ].join("\n\n");
-    S.firstDreamFactRevision = 1;
-    save();
-    drawDreamHistory();
+    var changed = false;
+    if (S.firstDreamFactRevision < 1 && first) {
+      first.title = dreamTitle;
+      first.body = dreamBody;
+      S.firstDreamFactRevision = 1;
+      changed = true;
+    }
+    if (!S.dreamSummaryPostAdded && !S.posts.some(function(p) { return p.id === "dream-summary-20261125"; })) {
+      var now = new Date();
+      S.posts.push({
+        id: "dream-summary-20261125",
+        title: "山登り・石像・大型マートの夢（まとめ）",
+        body: dreamBody,
+        date: first ? (getPostDate(first) || today) : today,
+        createdAt: now.toISOString()
+      });
+      S.dreamSummaryPostAdded = 1;
+      changed = true;
+    }
+    if (changed) {
+      save();
+      currentPage = 1;
+      drawDreamHistory();
+    }
   });
 }
 reviseFirstDreamPost();
