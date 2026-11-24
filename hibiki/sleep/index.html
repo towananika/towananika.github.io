@@ -15,10 +15,6 @@
   a.back { color:var(--wood); font-size:14px; text-decoration:none; }
   h1 { font-size:24px; margin:6px 0 12px; }
   .card { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:16px; margin-bottom:16px; box-shadow:var(--shadow); }
-  .taps { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-  .tap { font:inherit; border:0; border-radius:16px; padding:18px 8px; cursor:pointer; color:#fff; font-size:17px; font-weight:700; }
-  .tap small { display:block; font-size:12px; font-weight:400; opacity:.9; }
-  .bed { background:var(--blue); } .wake { background:var(--wood); }
   .row { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:12px; }
   .row label { font-size:13px; color:var(--muted); white-space:nowrap; }
   input { font:inherit; padding:8px 10px; border-radius:10px; border:1px solid var(--border); background:var(--surface); color:var(--text); }
@@ -78,12 +74,9 @@
   <h1>睡眠メモ</h1>
 
   <div class="card">
-    <div class="taps">
-      <button class="tap bed" id="tBed">🌙 寝る<small id="sBed">いまの時刻</small></button>
-      <button class="tap wake" id="tWake">☀️ 起きた<small id="sWake">いまの時刻</small></button>
-    </div>
     <div class="row"><label for="recordDate">記録する日</label><input type="date" id="recordDate" style="flex:1;min-width:0"></div>
-    <div class="row"><label>寝た</label><input type="time" id="bed"><label>起きた</label><input type="time" id="wake"></div>
+    <p class="muted" style="margin:12px 0 0">睡眠時間の記録（任意）</p>
+    <div class="row"><label for="bed">寝た時刻</label><input type="time" id="bed"><label for="wake">起きた時刻</label><input type="time" id="wake"></div>
     <div class="row"><label>夜中に起きた</label><div class="cnt"><button id="m">−</button><b id="up">0</b><button id="p">＋</button></div></div>
     <input id="memo" maxlength="60" placeholder="ひとこと（夢・体調など）">
     <div class="row"><span class="muted" id="day"></span><span><span class="big" id="hrs">−</span> 時間</span></div>
@@ -280,13 +273,6 @@ postMonth.onchange = function() { currentPage = 1; drawDreamHistory(); };
 prevPage.onclick = function() { if (currentPage > 1) { currentPage--; drawDreamHistory(); } };
 nextPage.onclick = function() { currentPage++; drawDreamHistory(); };
 recordDate.onchange = function() { selectedDate = recordDate.value || today; drawSleep(); };
-tBed.onclick = function() {
-  var now = new Date(), d = new Date(selectedDate + "T12:00:00");
-  if (selectedDate === today && now.getHours() >= 18) d.setDate(d.getDate() + 1);
-  selectedDate = ymd(d); recordDate.value = selectedDate;
-  cur().bed = hm(now); save(); sBed.textContent = hm(now) + " に記録"; drawSleep();
-};
-tWake.onclick = function() { cur().wake = hm(new Date()); save(); sWake.textContent = hm(new Date()) + " に記録"; drawSleep(); };
 bed.onchange = function() { cur().bed = bed.value; save(); drawSleep(); };
 wake.onchange = function() { cur().wake = wake.value; save(); drawSleep(); };
 p.onclick = function() { cur().up = (cur().up || 0) + 1; save(); drawSleep(); };
