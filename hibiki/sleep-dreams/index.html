@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>睡眠の夢日記 | 響</title>
+<script src="../sync.js"></script>
+<style>
+:root{--bg:#f5f1e9;--surface:#fbf9f4;--border:#e2dac8;--text:#2b2924;--muted:#8a8271;--wood:#93704b;--blue:#5b7c99;--blue-soft:#dde6ee;--red:#a8553f}
+@media(prefers-color-scheme:dark){:root{--bg:#1c1a16;--surface:#242119;--border:#38332a;--text:#ede8dd;--muted:#a89e8a;--wood:#c99f74;--blue:#8fb0cc;--blue-soft:#222d37;--red:#d98a72}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.7 -apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",sans-serif}
+main{max-width:720px;margin:auto;padding:24px 16px 64px}a{color:var(--wood)}.back{text-decoration:none;font-size:14px}
+h1{font-size:25px;margin:10px 0 4px}.lead{color:var(--muted);font-size:14px;margin:0 0 20px}
+.card,.post{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:16px;margin:14px 0}
+label{display:block;font-size:13px;color:var(--muted);margin:12px 0 5px}
+input,textarea,button{font:inherit;color:inherit}input,textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:var(--bg)}
+textarea{min-height:170px;resize:vertical;line-height:1.7}
+button{border:1px solid var(--border);border-radius:999px;background:var(--surface);padding:8px 14px;cursor:pointer}
+button.primary{background:var(--wood);border-color:var(--wood);color:#fff}button.danger{color:var(--red)}
+button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.actions{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:12px}
+.meta,.small{font-size:12px;color:var(--muted)}.post h2{font-size:19px;line-height:1.4;margin:8px 0}.post-content{white-space:pre-wrap;overflow-wrap:anywhere;margin:12px 0}
+.post-top{display:flex;justify-content:space-between;align-items:center;gap:10px}.post time{font-size:12px;color:var(--muted)}
+#status{min-height:20px}.empty{color:var(--muted);font-size:14px}
+</style>
+</head>
+<body><main>
+<a class="back" href="../">← 響き</a>
+<h1>睡眠の夢日記</h1>
+<p class="lead">眠っているときに見た夢を、一つずつ投稿として残します。断片だけでも、意味が分からなくても大丈夫。</p>
+<section class="card" aria-labelledby="form-title">
+<h2 id="form-title" style="font-size:17px;margin:0">夢を投稿する</h2>
+<label for="title">タイトル</label>
+<input id="title" maxlength="120" placeholder="例：知らない街を歩く夢">
+<label for="dream-date">夢を見た日時</label>
+<input id="dream-date" type="datetime-local">
+<label for="content">夢の内容</label>
+<textarea id="content" maxlength="20000" placeholder="覚えている場面、人物、会話、場所、気持ちなどを自由に書いてください。"></textarea>
+<label for="feeling">気持ち・印象（任意）</label>
+<input id="feeling" maxlength="100" placeholder="例：懐かしい、不思議、少し怖い">
+<div class="actions"><button id="cancel" type="button" hidden>編集をやめる</button><button id="save" class="primary" type="button">投稿する</button></div>
+<p id="status" class="small" role="status" aria-live="polite"></p>
+</section>
+<section aria-labelledby="posts-title">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><h2 id="posts-title" style="font-size:18px">投稿した夢</h2><span id="count" class="small">0件</span></div>
+<div id="posts"><p class="empty">まだ投稿はありません。</p></div>
+</section>
+<p class="small">投稿日時・更新日時は自動で記録されます。データはこの端末に保存され、響きのログイン同期が有効な場合は端末間で同期されます。</p>
+</main>
+<script>
+(function(){
+"use strict";
+var KEY="hibiki-sleep-dream-posts-v1",items=[],editing=null;
+var $=function(id){return document.getElementById(id);};
+function localDateTime(d){var z=function(n){return String(n).padStart(2,"0");};return d.getFullYear()+"-"+z(d.getMonth()+1)+"-"+z(d.getDate())+"T"+z(d.getHours())+":"+z(d.getMinutes());}
+function displayDate(v){if(!v)return "日時未設定";return v.replace("T"," ");}
+function stamp(v){try{return new Date(v).toLocaleString("ja-JP",{year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"});}catch(e){return v||"";}}
+function load(){try{var data=JSON.parse(localStorage.getItem(KEY));items=data&&Array.isArray(data.items)?data.items:[];}catch(e){items=[];}}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify({items:items}));$("status").textContent="保存しました。";}catch(e){$("status").textContent="保存できませんでした。端末の空き容量を確認してください。";}}
+function reset(){editing=null;$("title").value="";$("dream-date").value=localDateTime(new Date());$("content").value="";$("feeling").value="";$("save").textContent="投稿する";$("cancel").hidden=true;$("form-title").textContent="夢を投稿する";}
+function node(tag,cls,txt){var e=document.createElement(tag);if(cls)e.className=cls;if(txt!==undefined)e.textContent=txt;return e;}
+function render(){
+var root=$("posts");root.textContent="";var sorted=items.slice().sort(function(a,b){return b.postedAt-a.postedAt;});$("count").textContent=sorted.length+"件";
+if(!sorted.length){root.appendChild(node("p","empty","まだ投稿はありません。"));return;}
+sorted.forEach(function(item){
+var article=node("article","post"),top=node("div","post-top"),dreamTime=node("span","meta","夢を見た日時："+displayDate(item.dreamDate));
+top.appendChild(dreamTime);top.appendChild(node("time","","投稿："+stamp(item.postedAt)));
+article.appendChild(top);article.appendChild(node("h2","",item.title));article.appendChild(node("p","post-content",item.content));
+if(item.feeling)article.appendChild(node("span","meta","印象： "+item.feeling));
+if(item.updatedAt&&item.updatedAt!==item.postedAt)article.appendChild(node("p","meta","更新："+stamp(item.updatedAt)));
+var actions=node("div","actions"),edit=node("button","","編集"),del=node("button","danger","削除");
+edit.type=del.type="button";
+edit.onclick=function(){editing=item.id;$("title").value=item.title;$("dream-date").value=item.dreamDate||"";$("content").value=item.content;$("feeling").value=item.feeling||"";$("save").textContent="変更を保存";$("cancel").hidden=false;$("form-title").textContent="投稿を編集";$("title").focus();window.scrollTo({top:0,behavior:"smooth"});};
+del.onclick=function(){if(!confirm("この投稿を削除しますか？"))return;items=items.filter(function(x){return x.id!==item.id;});persist();render();if(editing===item.id)reset();};
+actions.appendChild(edit);actions.appendChild(del);article.appendChild(actions);root.appendChild(article);
+});
+}
+$("save").onclick=function(){
+var title=$("title").value.trim(),dreamDate=$("dream-date").value,content=$("content").value.trim(),feeling=$("feeling").value.trim();
+if(!title){$("status").textContent="タイトルを入力してください。";$("title").focus();return;}
+if(!content){$("status").textContent="夢の内容を入力してください。";$("content").focus();return;}
+var now=Date.now(),existing=items.find(function(x){return x.id===editing;});
+if(existing){existing.title=title;existing.dreamDate=dreamDate;existing.content=content;existing.feeling=feeling;existing.updatedAt=now;}
+else items.push({id:"dream-"+now.toString(36)+"-"+Math.random().toString(36).slice(2,8),title:title,dreamDate:dreamDate,content:content,feeling:feeling,postedAt:now,updatedAt:now});
+persist();reset();render();
+};
+$("cancel").onclick=function(){reset();$("status").textContent="編集を取り消しました。";};
+window.addEventListener("storage",function(e){if(e.key===KEY){load();render();}});
+load();reset();render();
+})();
+</script>
+</body></html>
