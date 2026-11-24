@@ -68,22 +68,22 @@
   <a class="back" href="../">← ひびき</a>
   <h1>夢日記</h1>
   <p><a href="#purchases">ほしいもの・サービス</a></p>
-  <p class="lead">ねがい・やってみたいこと・こうなったらいいなを、思いついたときに1行ずつ足します。かなったら○を押すと、あとで振り返れます。この端末とログインした端末にだけ残ります。</p>
+  <p class="lead">これからなりたい未来の自分、実現したい暮らし、大切にしたい考えを書き留める場所です。思いついたことを少しずつ足し、実現したら印を付けて振り返れます。この端末とログインした端末にだけ残ります。</p>
 
   <div class="card">
     <div class="sum">
-      <div class="out"><small>足した夢</small><span class="big" id="n1">0</span></div>
-      <div class="in"><small>かなった</small><span class="big" id="n2">0</span></div>
+      <div class="out"><small>書き留めたこと</small><span class="big" id="n1">0</span></div>
+      <div class="in"><small>実現した</small><span class="big" id="n2">0</span></div>
     </div>
     <div class="meter"><i id="mbar" style="width:0%"></i></div>
     <div class="note" id="mnote"></div>
   </div>
 
-  <form class="add" id="add"><input id="txt" maxlength="120" placeholder="たとえば：静かな部屋で眠りたい" required><button class="main" type="submit">足す</button></form>
+  <form class="add" id="add"><input id="txt" maxlength="120" placeholder="たとえば：落ち着いて、自分の時間を大切にできる人になる" required><button class="main" type="submit">足す</button></form>
 
   <div class="card" id="list"></div>
   <section class="card" id="life">
-    <p class="sub" style="margin:0 0 6px">夢の暮らし 🔒</p>
+    <p class="sub" style="margin:0 0 6px">未来の暮らし 🔒</p>
     <div id="life-body"><p class="sub" style="margin:0">ログインした端末でだけ読めます。</p></div>
   </section>
   <section id="purchases" class="wishlist" aria-labelledby="purchases-title">
@@ -111,7 +111,7 @@
     var n = S.items.length, k = S.items.filter(function (x) { return x.done; }).length;
     document.getElementById("n1").textContent = n; document.getElementById("n2").textContent = k;
     document.getElementById("mbar").style.width = (n ? k / n * 100 : 0) + "%";
-    document.getElementById("mnote").textContent = !n ? "最初の夢を足してみましょう。" : k ? "夢が " + n + " 個、そのうち " + k + " 個がかないました。" : "夢が " + n + " 個たまりました。かなったら○を押します。";
+    document.getElementById("mnote").textContent = !n ? "未来の自分に近づく願いを、ひとつ書いてみましょう。" : k ? "記録が " + n + " 件、そのうち " + k + " 件が実現しました。" : "記録が " + n + " 件あります。実現したら○を押して振り返れます。";
   }
   function row(it) {
     var r = el("div", "d" + (it.done ? " ok" : ""));
