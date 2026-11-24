@@ -72,7 +72,7 @@
 <main>
   <a class="back" href="../">← ひびき</a>
   <h1>睡眠メモ</h1>
-  <p class="muted" style="margin:0 0 16px">眠っているときに見た夢を記録する場所です。夢を見た日付は、必要なら本文に書き留めてください。</p>
+  <p class="muted" style="margin:0 0 16px">心の健康を大切にするために、眠っているときに見た夢や、そのときの気持ちを自分のペースで書き留める場所です。</p>
 
   <div class="card">
     <div class="row"><label for="recordDate">記録する日</label><input type="date" id="recordDate" style="flex:1;min-width:0"></div>
@@ -229,9 +229,15 @@ function drawDreamHistory() {
     var title = document.createElement("h3");
     var titleButton = document.createElement("button"); titleButton.type = "button"; titleButton.className = "post-title";
     titleButton.textContent = (p.title || "").trim() || "（タイトルなし）";
-    var body = document.createElement("p"); body.className = "post-body"; body.textContent = p.body || ""; body.hidden = true;
+    var details = document.createElement("div"); details.className = "post-details"; details.hidden = true;
+    var body = document.createElement("p"); body.className = "post-body"; body.textContent = p.body || "";
     titleButton.setAttribute("aria-expanded", "false");
-    titleButton.onclick = function() { body.hidden = !body.hidden; titleButton.setAttribute("aria-expanded", String(!body.hidden)); };
+    titleButton.setAttribute("aria-label", (p.title || "タイトルなし") + " の本文を開く");
+    titleButton.onclick = function() {
+      details.hidden = !details.hidden;
+      titleButton.setAttribute("aria-expanded", String(!details.hidden));
+      titleButton.setAttribute("aria-label", (p.title || "タイトルなし") + (details.hidden ? " の本文を開く" : " の本文を閉じる"));
+    };
     title.appendChild(titleButton);
     var actions = document.createElement("div"); actions.className = "post-actions";
     var edit = document.createElement("button"); edit.type = "button"; edit.textContent = "編集"; edit.onclick = function() { openEditor(p); };
@@ -243,7 +249,8 @@ function drawDreamHistory() {
       }
     };
     actions.appendChild(edit); actions.appendChild(del);
-    item.appendChild(meta); item.appendChild(title); item.appendChild(body); item.appendChild(actions);
+    details.appendChild(body); details.appendChild(actions);
+    item.appendChild(meta); item.appendChild(title); item.appendChild(details);
     dreamHistory.appendChild(item);
   });
 }
