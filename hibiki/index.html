@@ -90,6 +90,14 @@
   .more .ic { background:var(--blue-soft); } .more svg { stroke:var(--blue); }
   .new { font-style:normal; font-size:10px; font-weight:700; color:#fff; background:var(--red); border-radius:999px; padding:2px 7px; margin-left:6px; vertical-align:2px; }
   .simple-weather { margin:20px 0 0; }
+  .memo-card { margin-top:16px; padding:14px 16px; border-radius:16px; background:var(--surface); border:1px solid var(--border); }
+  .memo-card-head { display:flex; align-items:center; gap:8px; margin-bottom:6px; }
+  .memo-badge { font-size:11px; font-weight:700; color:var(--blue); background:var(--blue-soft); padding:2px 8px; border-radius:999px; }
+  .memo-card b { font-size:15px; color:var(--text); }
+  .memo-card p { margin:0; font-size:13px; color:var(--muted); line-height:1.6; }
+  .memo-list { margin:8px 0 0; padding-left:18px; font-size:13px; color:var(--text); }
+  .memo-list li { margin-bottom:4px; }
+  .memo-list li:last-child { margin-bottom:0; }
   footer { color:var(--muted); font-size:12px; margin-top:28px; text-align:center; }
   footer a { color:inherit; display:inline-block; padding:10px; }
   @media (max-width:350px) { .tiles { grid-template-columns:repeat(3,minmax(0,1fr)); } }
@@ -117,6 +125,19 @@
     <a class="today" href="productivity/"><span><small>今日</small><b>今日の一歩</b><span class="d">必須は散歩10分だけ。ほかはボーナス</span></span><span class="go" aria-hidden="true">›</span></a>
     <a id="review-note" class="review" href="plan/" hidden><b>4週の見直し</b><span id="review-when"></span><span class="go" aria-hidden="true">›</span></a>
     <section class="simple-weather weather-compact" data-weather id="home-weather" aria-label="天気予報"></section>
+
+    <aside class="memo-card" aria-label="スマートフォンの知恵">
+      <div class="memo-card-head">
+        <span class="memo-badge">スマホのメモ</span>
+        <b>メッセージと画像（MMS・カラーメール）</b>
+      </div>
+      <p>通常のメッセージ（SMS）に写真やイラストを添付すると、自動的に「MMS（カラーメール）」に切り替わります。</p>
+      <ul class="memo-list">
+        <li><b>文字だけ</b>：SMS（通常のテキストメッセージ）</li>
+        <li><b>画像を添付</b>：MMS（カラーメール）に自動切り替え</li>
+        <li><b>これからは</b>：画像はLINEやカカオトークなどの無料チャットや共有リンクを使うと安心</li>
+      </ul>
+    </aside>
 
     <h2 id="fav-title">よく使う</h2>
     <nav id="tiles" class="tiles" aria-labelledby="fav-title"></nav>
