@@ -33,6 +33,37 @@
   .bars i { display:block; width:100%; border-radius:6px 6px 0 0; background:var(--sage); }
   .bars i.short { background:var(--red); }
   .bars .dot { color:var(--red); height:14px; }
+  .board { margin:0 0 18px; }
+  .board-head { display:flex; align-items:center; justify-content:space-between; gap:10px; margin:8px 0 14px; }
+  .board-head h2 { font-size:20px; margin:0; }
+  .board-head p { margin:2px 0 0; }
+  .primary { border:0; border-radius:11px; padding:10px 13px; background:var(--wood); color:#fff; font:inherit; font-weight:700; cursor:pointer; white-space:nowrap; }
+  .quiet { border:1px solid var(--border); border-radius:9px; padding:7px 11px; color:var(--text); background:var(--surface); font:inherit; cursor:pointer; }
+  .quiet:disabled { opacity:.4; cursor:default; }
+  .editor[hidden] { display:none; }
+  .editor-top,.editor-actions,.list-meta,.pager { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .post-label { display:block; margin:14px 0 6px; font-size:13px; font-weight:700; }
+  #postBody { min-height:220px; }
+  #postTitle,#postDate { width:100%; }
+  .editor-actions { margin-top:14px; flex-wrap:wrap; }
+  .filters { display:grid; grid-template-columns:1fr; gap:8px; margin:12px 0; }
+  .filters input,.filters select { width:100%; min-width:0; }
+  .list-meta { margin:8px 2px; }
+  .post-list { display:grid; gap:10px; }
+  .post { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:14px; }
+  .post-meta { display:flex; align-items:center; justify-content:space-between; gap:8px; color:var(--muted); font-size:12px; }
+  .post h3 { font-size:17px; margin:7px 0; overflow-wrap:anywhere; }
+  .post-body { white-space:pre-wrap; overflow-wrap:anywhere; margin:0; font-size:14px; }
+  .post-actions { display:flex; justify-content:flex-end; gap:8px; margin-top:12px; }
+  .post-actions button { border:1px solid var(--border); background:transparent; color:var(--text); border-radius:9px; padding:6px 10px; font:inherit; font-size:13px; cursor:pointer; }
+  .post-actions .delete { color:var(--red); }
+  .pager { justify-content:center; margin:14px 0 4px; }
+  .pager span { min-width:64px; text-align:center; }
+  .month-chart { display:grid; gap:10px; margin-top:12px; }
+  .month-row { display:grid; grid-template-columns:76px 1fr 48px; align-items:center; gap:8px; font-size:12px; }
+  .month-track { height:12px; border-radius:8px; background:var(--wood-soft); overflow:hidden; }
+  .month-fill { height:100%; border-radius:8px; background:var(--sage); }
+  .month-value { text-align:right; font-weight:700; font-variant-numeric:tabular-nums; }
   .goal { position:relative; }
   .goal:after { content:""; position:absolute; left:0; right:0; bottom:calc(35px + 75.6px); border-top:1px dashed var(--wood); }
 </style>
@@ -47,39 +78,80 @@
       <button class="tap bed" id="tBed">🌙 寝る<small id="sBed">いまの時刻</small></button>
       <button class="tap wake" id="tWake">☀️ 起きた<small id="sWake">いまの時刻</small></button>
     </div>
+    <div class="row"><label for="recordDate">記録する日</label><input type="date" id="recordDate" style="flex:1;min-width:0"></div>
     <div class="row"><label>寝た</label><input type="time" id="bed"><label>起きた</label><input type="time" id="wake"></div>
     <div class="row"><label>夜中に起きた</label><div class="cnt"><button id="m">−</button><b id="up">0</b><button id="p">＋</button></div></div>
     <input id="memo" maxlength="60" placeholder="ひとこと（夢・体調など）">
     <div class="row"><span class="muted" id="day"></span><span><span class="big" id="hrs">−</span> 時間</span></div>
   </div>
 
+  <section class="board">
+    <div class="board-head"><div><h2>🌙 夢の記録</h2><p class="muted">目覚めたら、本文からすぐ書けます。</p></div><button class="primary" id="newPost" type="button">＋ 新しい記録</button></div>
+    <div class="editor card" id="postEditor" hidden>
+      <div class="editor-top"><b id="editorHeading">新しい夢を記録</b><button class="quiet" id="cancelPost" type="button">閉じる</button></div>
+      <label class="post-label" for="postBody">夢の内容・本文</label>
+      <textarea id="postBody" maxlength="20000" placeholder="覚えている場面、会話、景色、気持ちなどを、順番も気にせず書いてみよう。長文でも大丈夫。"></textarea>
+      <label class="post-label" for="postTitle">タイトル（任意）</label>
+      <input id="postTitle" maxlength="120" placeholder="あとから付けても大丈夫">
+      <label class="post-label" for="postDate">記録日</label>
+      <input id="postDate" type="date">
+      <div class="editor-actions"><span class="muted">あとから何度でも編集できます。</span><button class="primary" id="savePost" type="button">投稿を保存</button></div>
+    </div>
+    <div class="filters">
+      <input id="postSearch" type="search" placeholder="タイトル・本文を検索" aria-label="夢の記録を検索">
+      <select id="postMonth" aria-label="月で絞り込む"><option value="">すべての月</option></select>
+    </div>
+    <div class="list-meta"><span id="postCount" class="muted">0件</span><span id="pageInfo" class="muted"></span></div>
+    <div id="dreamHistory" class="post-list"><p class="muted">まだ夢の記録はありません。</p></div>
+    <div class="pager"><button class="quiet" id="prevPage" type="button" disabled>← 前へ</button><span id="pageLabel" class="muted">1 / 1</span><button class="quiet" id="nextPage" type="button" disabled>次へ →</button></div>
+  </section>
+
   <div class="card">
     <div class="row" style="margin-top:0"><b>この7日</b><span class="muted">平均 <b id="avg">−</b> 時間 ・ 点線＝7時間</span></div>
     <div class="bars goal" id="bars"></div>
   </div>
+  <div class="card">
+    <div class="row" style="margin-top:0"><b>月ごとの睡眠時間</b><span class="muted">月平均</span></div>
+    <div id="monthlyAverages" class="month-chart"><p class="muted">睡眠記録がたまると、月ごとの平均が表示されます。</p></div>
+  </div>
 </main>
 <script>
-var KEY = "hibiki-sleep-v1", WK = ["日","月","火","水","木","金","土"];
+var KEY = "hibiki-sleep-v1", WK = ["日","月","火","水","木","金","土"], PAGE_SIZE = 20;
 function load() { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } }
-var S = load(); S.days = S.days || {};
-function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+var S = load(); S.days = S.days || {}; S.posts = Array.isArray(S.posts) ? S.posts : [];
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { alert("保存できませんでした。端末の空き容量を確認してください。"); } }
 function pad(n) { return (n < 10 ? "0" : "") + n; }
 function ymd(d) { return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
 function hm(d) { return pad(d.getHours()) + ":" + pad(d.getMinutes()); }
-// 起きた日の日付で1日分。昼より前は「今朝」の記録
-var today = ymd(new Date());
-function cur() { return S.days[today] || (S.days[today] = { bed: "", wake: "", up: 0, memo: "" }); }
+var today = ymd(new Date()), selectedDate = today, currentPage = 1, editingPostId = null;
+recordDate.value = today;
+
+// 旧形式の夢・気持ちが日付別に保存されている場合、投稿へ一度だけ引き継ぐ。
+// 既存の S.posts は消さず、同じ日付の移行済み投稿も重複させない。
+if (!S.legacyDreamsMigrated) {
+  Object.keys(S.days).sort().forEach(function(k) {
+    var r = S.days[k] || {}, parts = [];
+    if ((r.dream || "").trim()) parts.push(r.dream.trim());
+    if ((r.feeling || "").trim()) parts.push("【目覚めたときの気持ち】\\n" + r.feeling.trim());
+    if (parts.length && !S.posts.some(function(p) { return p.id === "legacy-" + k; })) {
+      S.posts.push({ id:"legacy-" + k, title:"夢の記録 " + k, body:parts.join("\\n\\n"), date:k, createdAt:k + "T00:00:00" });
+    }
+  });
+  S.legacyDreamsMigrated = true; save();
+}
+function cur() { return S.days[selectedDate] || (S.days[selectedDate] = { bed:"", wake:"", up:0, memo:"" }); }
 function hours(r) {
   if (!r || !r.bed || !r.wake) return null;
   var b = r.bed.split(":"), w = r.wake.split(":");
-  var m = (w[0] * 60 + +w[1]) - (b[0] * 60 + +b[1]); if (m <= 0) m += 1440;
+  var m = (Number(w[0]) * 60 + Number(w[1])) - (Number(b[0]) * 60 + Number(b[1]));
+  if (m <= 0) m += 1440;
   return Math.round(m / 6) / 10;
 }
-function draw() {
-  var r = S.days[today] || {};
+function drawSleep() {
+  var r = S.days[selectedDate] || {};
   bed.value = r.bed || ""; wake.value = r.wake || ""; up.textContent = r.up || 0; memo.value = r.memo || "";
   var h = hours(r); hrs.textContent = h == null ? "−" : h;
-  day.textContent = today.slice(5).replace("-", "/") + " の朝";
+  day.textContent = selectedDate.slice(5).replace("-", "/") + " の朝";
   var html = "", sum = 0, n = 0;
   for (var i = 6; i >= 0; i--) {
     var d = new Date(); d.setDate(d.getDate() - i);
@@ -87,22 +159,132 @@ function draw() {
     if (v != null) { sum += v; n++; }
     html += '<div><span class="dot">' + (x && x.up ? "●".repeat(Math.min(x.up, 3)) : "") + '</span><i class="' + (v != null && v < 6 ? "short" : "") + '" style="height:' + (v == null ? 0 : Math.min(v, 10) * 10.8) + 'px"></i>' + (v == null ? "−" : v) + '<br>' + WK[d.getDay()] + '</div>';
   }
-  bars.innerHTML = html; avg.textContent = n ? Math.round(sum / n * 10) / 10 : "−";
+  bars.innerHTML = html; avg.textContent = n ? (Math.round(sum / n * 10) / 10) : "−";
+  drawMonthlyAverages();
 }
-// 「寝る」は夜に押すので、翌朝の日付に入れる（夕方6時以降なら明日）
-tBed.onclick = function () {
-  var now = new Date(), d = new Date(now); if (now.getHours() >= 18) d.setDate(d.getDate() + 1);
-  var k = ymd(d); S.days[k] = S.days[k] || { bed: "", wake: "", up: 0, memo: "" }; S.days[k].bed = hm(now);
-  save(); sBed.textContent = hm(now) + " に記録"; draw();
+function drawMonthlyAverages() {
+  var months = {};
+  Object.keys(S.days).forEach(function(k) {
+    if (!/^\\d{4}-\\d{2}-\\d{2}$/.test(k)) return;
+    var v = hours(S.days[k]); if (v == null) return;
+    var m = k.slice(0,7); if (!months[m]) months[m] = {sum:0,count:0};
+    months[m].sum += v; months[m].count++;
+  });
+  var keys = Object.keys(months).sort().reverse().slice(0,12);
+  monthlyAverages.innerHTML = "";
+  if (!keys.length) { var empty = document.createElement("p"); empty.className = "muted"; empty.textContent = "睡眠記録がたまると、月ごとの平均が表示されます。"; monthlyAverages.appendChild(empty); return; }
+  keys.forEach(function(k) {
+    var avg = Math.round(months[k].sum / months[k].count * 10) / 10;
+    var row = document.createElement("div"); row.className = "month-row";
+    var label = document.createElement("span"); label.textContent = k.replace("-", "年") + "月";
+    var track = document.createElement("div"); track.className = "month-track";
+    var fill = document.createElement("div"); fill.className = "month-fill"; fill.style.width = Math.min(avg / 12 * 100, 100) + "%"; track.appendChild(fill);
+    var value = document.createElement("span"); value.className = "month-value"; value.textContent = avg + " h";
+    row.appendChild(label); row.appendChild(track); row.appendChild(value); monthlyAverages.appendChild(row);
+  });
+}
+function postDate(p) { return p.date || String(p.createdAt || "").slice(0,10) || ""; }
+function postTime(p) { return String(p.createdAt || p.date || p.id || ""); }
+function filteredPosts() {
+  var q = postSearch.value.trim().toLocaleLowerCase(), month = postMonth.value;
+  return S.posts.slice().sort(function(a,b) { return postTime(b).localeCompare(postTime(a)); }).filter(function(p) {
+    var d = postDate(p);
+    if (month && d.slice(0,7) !== month) return false;
+    if (q && (String(p.title || "") + "\\n" + String(p.body || "")).toLocaleLowerCase().indexOf(q) < 0) return false;
+    return true;
+  });
+}
+function updateMonthOptions() {
+  var selected = postMonth.value, months = {};
+  S.posts.forEach(function(p) { var d = postDate(p); if (/^\\d{4}-\\d{2}/.test(d)) months[d.slice(0,7)] = true; });
+  postMonth.innerHTML = "";
+  var all = document.createElement("option"); all.value = ""; all.textContent = "すべての月"; postMonth.appendChild(all);
+  Object.keys(months).sort().reverse().forEach(function(m) {
+    var op = document.createElement("option"); op.value = m; op.textContent = m.slice(0,4) + "年" + Number(m.slice(5,7)) + "月"; postMonth.appendChild(op);
+  });
+  postMonth.value = months[selected] ? selected : "";
+}
+function drawDreamHistory() {
+  updateMonthOptions();
+  var posts = filteredPosts(), total = posts.length, pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  currentPage = Math.min(Math.max(1,currentPage),pages);
+  var from = (currentPage - 1) * PAGE_SIZE, visible = posts.slice(from,from + PAGE_SIZE);
+  dreamHistory.innerHTML = "";
+  postCount.textContent = total + "件";
+  pageInfo.textContent = total ? (from + 1) + "〜" + Math.min(from + PAGE_SIZE,total) + "件を表示" : "";
+  pageLabel.textContent = currentPage + " / " + pages;
+  prevPage.disabled = currentPage <= 1; nextPage.disabled = currentPage >= pages;
+  if (!visible.length) {
+    var empty = document.createElement("p"); empty.className = "muted";
+    empty.textContent = S.posts.length ? "条件に合う夢の記録はありません。" : "まだ夢の記録はありません。「＋ 新しい記録」から書き始められます。";
+    dreamHistory.appendChild(empty); return;
+  }
+  visible.forEach(function(p) {
+    var item = document.createElement("article"); item.className = "post";
+    var meta = document.createElement("div"); meta.className = "post-meta";
+    var date = document.createElement("span"); date.textContent = postDate(p); meta.appendChild(date);
+    var tag = document.createElement("span"); tag.textContent = "夢の記録"; meta.appendChild(tag);
+    var title = document.createElement("h3"); title.textContent = (p.title || "").trim() || "（タイトルなし）";
+    var body = document.createElement("p"); body.className = "post-body"; body.textContent = p.body || "";
+    var actions = document.createElement("div"); actions.className = "post-actions";
+    var edit = document.createElement("button"); edit.type = "button"; edit.textContent = "編集"; edit.onclick = function() { openEditor(p); };
+    var del = document.createElement("button"); del.type = "button"; del.className = "delete"; del.textContent = "削除";
+    del.onclick = function() {
+      if (confirm("この夢の記録を削除しますか？")) {
+        S.posts = S.posts.filter(function(x) { return x.id !== p.id; }); save(); drawDreamHistory();
+        if (editingPostId === p.id) closeEditor();
+      }
+    };
+    actions.appendChild(edit); actions.appendChild(del);
+    item.appendChild(meta); item.appendChild(title); item.appendChild(body); item.appendChild(actions);
+    dreamHistory.appendChild(item);
+  });
+}
+function openEditor(post) {
+  editingPostId = post ? post.id : null;
+  editorHeading.textContent = post ? "夢の記録を編集" : "新しい夢を記録";
+  postBody.value = post ? (post.body || "") : "";
+  postTitle.value = post ? (post.title || "") : "";
+  postDate.value = post ? (postDate(post) || selectedDate) : selectedDate;
+  savePost.textContent = post ? "変更を保存" : "投稿を保存";
+  postEditor.hidden = false;
+  postBody.focus();
+  postEditor.scrollIntoView({behavior:"smooth",block:"start"});
+}
+function closeEditor() { postEditor.hidden = true; editingPostId = null; postBody.value = ""; postTitle.value = ""; }
+newPost.onclick = function() { openEditor(null); };
+cancelPost.onclick = closeEditor;
+savePost.onclick = function() {
+  var body = postBody.value.trim(), title = postTitle.value.trim(), date = postDate.value || ymd(new Date());
+  if (!body) { alert("本文を入力してください。"); postBody.focus(); return; }
+  var now = new Date();
+  if (editingPostId) {
+    var target = S.posts.find(function(p) { return p.id === editingPostId; });
+    if (target) { target.title = title; target.body = body; target.date = date; target.updatedAt = now.toISOString(); }
+  } else {
+    S.posts.push({id:"post-" + now.getTime() + "-" + Math.random().toString(36).slice(2,7),title:title,body:body,date:date,createdAt:now.toISOString()});
+  }
+  save(); closeEditor(); currentPage = 1; drawDreamHistory();
 };
-tWake.onclick = function () { cur().wake = hm(new Date()); save(); sWake.textContent = hm(new Date()) + " に記録"; draw(); };
-bed.onchange = function () { cur().bed = bed.value; save(); draw(); };
-wake.onchange = function () { cur().wake = wake.value; save(); draw(); };
-p.onclick = function () { cur().up = (cur().up || 0) + 1; save(); draw(); };
-m.onclick = function () { cur().up = Math.max(0, (cur().up || 0) - 1); save(); draw(); };
-memo.onchange = function () { cur().memo = memo.value; save(); };
-window.addEventListener("storage", function () { S = load(); S.days = S.days || {}; draw(); });
-draw();
+postSearch.oninput = function() { currentPage = 1; drawDreamHistory(); };
+postMonth.onchange = function() { currentPage = 1; drawDreamHistory(); };
+prevPage.onclick = function() { if (currentPage > 1) { currentPage--; drawDreamHistory(); } };
+nextPage.onclick = function() { currentPage++; drawDreamHistory(); };
+recordDate.onchange = function() { selectedDate = recordDate.value || today; drawSleep(); };
+tBed.onclick = function() {
+  var now = new Date(), d = new Date(selectedDate + "T12:00:00");
+  if (selectedDate === today && now.getHours() >= 18) d.setDate(d.getDate() + 1);
+  selectedDate = ymd(d); recordDate.value = selectedDate;
+  cur().bed = hm(now); save(); sBed.textContent = hm(now) + " に記録"; drawSleep();
+};
+tWake.onclick = function() { cur().wake = hm(new Date()); save(); sWake.textContent = hm(new Date()) + " に記録"; drawSleep(); };
+bed.onchange = function() { cur().bed = bed.value; save(); drawSleep(); };
+wake.onchange = function() { cur().wake = wake.value; save(); drawSleep(); };
+p.onclick = function() { cur().up = (cur().up || 0) + 1; save(); drawSleep(); };
+m.onclick = function() { cur().up = Math.max(0,(cur().up || 0) - 1); save(); drawSleep(); };
+memo.onchange = function() { cur().memo = memo.value; save(); };
+window.addEventListener("storage",function() { S = load(); S.days = S.days || {}; S.posts = Array.isArray(S.posts) ? S.posts : []; drawSleep(); drawDreamHistory(); });
+drawSleep(); drawDreamHistory();
 </script>
 </body>
 </html>
