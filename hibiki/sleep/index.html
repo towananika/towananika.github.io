@@ -182,6 +182,13 @@ function drawMonthlyAverages() {
 }
 function getPostDate(p) { return p.date || String(p.createdAt || "").slice(0,10) || ""; }
 function postTime(p) { return String(p.createdAt || p.date || p.id || ""); }
+function formatPostedAt(p) {
+  var raw = p.createdAt || "";
+  if (!raw || !/[T ]\\d{2}:\\d{2}/.test(raw)) return "投稿日時：記録なし";
+  var d = new Date(raw);
+  if (isNaN(d.getTime())) return "投稿日時：記録なし";
+  return "投稿日時：" + d.getFullYear() + "/" + pad(d.getMonth() + 1) + "/" + pad(d.getDate()) + " " + pad(d.getHours()) + ":" + pad(d.getMinutes());
+}
 function filteredPosts() {
   var q = postSearch.value.trim().toLocaleLowerCase(), month = postMonth.value;
   return S.posts.slice().sort(function(a,b) { return postTime(b).localeCompare(postTime(a)); }).filter(function(p) {
@@ -219,8 +226,8 @@ function drawDreamHistory() {
   visible.forEach(function(p) {
     var item = document.createElement("article"); item.className = "post";
     var meta = document.createElement("div"); meta.className = "post-meta";
-    var date = document.createElement("span"); date.textContent = getPostDate(p); meta.appendChild(date);
-    var tag = document.createElement("span"); tag.textContent = "夢の記録"; meta.appendChild(tag);
+    var date = document.createElement("span"); date.textContent = "夢の日付：" + (getPostDate(p) || "日付なし"); meta.appendChild(date);
+    var posted = document.createElement("span"); posted.textContent = formatPostedAt(p); posted.style.textAlign = "right"; meta.appendChild(posted);
     var title = document.createElement("h3");
     var titleButton = document.createElement("button"); titleButton.type = "button"; titleButton.className = "post-title";
     titleButton.textContent = (p.title || "").trim() || "（タイトルなし）";
