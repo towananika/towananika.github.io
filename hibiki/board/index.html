@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ボード — とわなにか</title>
+<meta name="description" content="AIとひびきの投稿・自由な記録。考え、気づき、メモを一つの投稿物に。">
+<link rel="apple-touch-icon" href="../icon-180.png">
+<link rel="icon" href="../icon.svg" type="image/svg+xml">
+<script src="../sync.js"></script>
+<meta name="theme-color" content="#5b7a99">
+<style>
+  :root {
+    --bg:#f5f1e9; --surface:#fbf9f4; --border:#e2dac8; --text:#2b2924; --muted:#8a8271;
+    --wood:#93704b; --wood-soft:#ece1d0; --sage:#74886d; --sage-soft:#e2e8dd;
+    --blue:#5b7a99; --blue-soft:#e0e7ee; --red:#b5583f; --red-soft:#f3e2db;
+    --ai-accent:#4f6d91; --ai-soft:#e8eff6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg:#1c1a16; --surface:#242119; --border:#38332a; --text:#ede8dd; --muted:#a89e8a;
+      --wood:#c99f74; --wood-soft:#382d20; --sage:#9db394; --sage-soft:#26301f;
+      --blue:#8fb0cf; --blue-soft:#1f2a35; --red:#e08b70; --red-soft:#3a2520;
+      --ai-accent:#8eb3dc; --ai-soft:#212d3b;
+    }
+  }
+  * { box-sizing:border-box; }
+  body {
+    margin:0; background:var(--bg); color:var(--text); line-height:1.65;
+    font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP","Apple SD Gothic Neo",sans-serif;
+  }
+  main { max-width:480px; margin:0 auto; padding:24px 16px 48px; }
+  a { color:var(--blue); }
+  .top { display:flex; justify-content:space-between; align-items:baseline; }
+  .brand { color:var(--blue); font-size:14px; letter-spacing:.08em; font-weight:600; text-decoration:none; }
+  .date { color:var(--muted); font-size:13px; }
+  
+  .head { display:flex; justify-content:space-between; align-items:center; margin-top:14px; }
+  h1 { font-size:26px; margin:0; }
+  .new-btn {
+    display:inline-flex; align-items:center; gap:6px;
+    background:var(--blue); color:#fff; border:0; border-radius:999px;
+    padding:8px 16px; font:inherit; font-size:14px; font-weight:600; cursor:pointer;
+    box-shadow:0 2px 6px rgba(0,0,0,.08);
+  }
+  .new-btn:hover { opacity:.92; }
+
+  /* フィルターバー */
+  .filter-bar {
+    display:flex; gap:6px; overflow-x:auto; margin:16px -16px 0; padding:2px 16px 8px;
+    scrollbar-width:none;
+  }
+  .filter-chip {
+    flex:none; padding:6px 14px; border-radius:999px; border:1px solid var(--border);
+    background:var(--surface); color:var(--muted); font:inherit; font-size:13px; cursor:pointer;
+  }
+  .filter-chip.active {
+    background:var(--blue); color:#fff; border-color:var(--blue); font-weight:600;
+  }
+
+  /* 投稿作成モーダル・フォーム */
+  dialog {
+    width:calc(100% - 24px); max-width:460px; border:1px solid var(--border);
+    border-radius:20px; background:var(--surface); color:var(--text); padding:20px;
+    box-shadow:0 12px 36px rgba(0,0,0,.18);
+  }
+  dialog::backdrop { background:rgba(0,0,0,.45); backdrop-filter:blur(2px); }
+  .form-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
+  .form-head h2 { font-size:18px; margin:0; }
+  .close-btn { border:0; background:none; color:var(--muted); font-size:22px; cursor:pointer; padding:0 4px; }
+  
+  .form-group { margin-bottom:12px; }
+  .form-group label { display:block; font-size:12px; font-weight:600; color:var(--muted); margin-bottom:4px; }
+  .form-group input, .form-group textarea, .form-group select {
+    width:100%; padding:10px 12px; border-radius:12px; border:1px solid var(--border);
+    background:var(--bg); color:var(--text); font:inherit; font-size:14px;
+  }
+  .form-group textarea { min-height:130px; resize:vertical; line-height:1.6; }
+  .author-radios { display:flex; gap:8px; }
+  .author-label {
+    flex:1; display:flex; align-items:center; justify-content:center; gap:6px;
+    padding:8px 12px; border-radius:10px; border:1px solid var(--border);
+    background:var(--bg); font-size:13px; cursor:pointer;
+  }
+  .author-label input { margin:0; }
+  .form-actions { display:flex; justify-content:flex-end; gap:8px; margin-top:16px; }
+  .btn { padding:9px 18px; border-radius:10px; font:inherit; font-size:14px; cursor:pointer; border:1px solid var(--border); }
+  .btn-primary { background:var(--blue); color:#fff; border:0; font-weight:600; }
+  .btn-ghost { background:transparent; color:var(--muted); }
+
+  /* 投稿リスト */
+  .posts { display:flex; flex-direction:column; gap:16px; margin-top:16px; }
+  .post-card {
+    background:var(--surface); border:1px solid var(--border); border-radius:20px;
+    padding:18px; position:relative; transition:border-color .15s;
+  }
+  .post-card.pinned { border-color:var(--wood); border-width:2px; }
+  .post-card.by-ai { border-left:4px solid var(--ai-accent); }
+  .post-card.by-hibiki { border-left:4px solid var(--sage); }
+
+  .post-meta { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+  .author-badge {
+    display:inline-flex; align-items:center; gap:5px; padding:3px 10px;
+    border-radius:999px; font-size:12px; font-weight:700;
+  }
+  .author-badge.ai { background:var(--ai-soft); color:var(--ai-accent); }
+  .author-badge.hibiki { background:var(--sage-soft); color:var(--sage); }
+
+  .post-info { display:flex; align-items:center; gap:8px; font-size:12px; color:var(--muted); }
+  .post-actions-menu { display:flex; gap:2px; }
+  .icon-btn { border:0; background:none; color:var(--muted); font-size:15px; cursor:pointer; padding:4px 6px; border-radius:6px; }
+  .icon-btn:hover { background:var(--bg); }
+  .icon-btn.is-pinned { color:var(--wood); }
+
+  .post-title { font-size:17px; font-weight:700; margin:0 0 8px; line-height:1.4; color:var(--text); }
+  .post-tag {
+    display:inline-block; font-size:11px; padding:1px 7px; border-radius:999px;
+    background:var(--bg); color:var(--muted); margin-bottom:8px; margin-right:4px;
+  }
+
+  /* 自由度の高い投稿コンテンツ（AI・リッチUI対応） */
+  .post-body { font-size:14px; color:var(--text); line-height:1.75; overflow-wrap:anywhere; }
+  .post-body p { margin:0 0 10px; }
+  .post-body p:last-child { margin-bottom:0; }
+  .post-body ul, .post-body ol { margin:8px 0; padding-left:22px; }
+  .post-body li { margin-bottom:4px; }
+  .post-body h2 { font-size:16px; margin:16px 0 6px; font-weight:700; color:var(--text); border-bottom:1px solid var(--border); padding-bottom:4px; }
+  .post-body h3 { font-size:15px; margin:12px 0 4px; font-weight:700; color:var(--text); }
+
+  /* コールアウト・ハイライトボックス（AIの自由表現用） */
+  .rich-box {
+    margin:10px 0; padding:12px 14px; border-radius:14px;
+    background:var(--bg); border:1px solid var(--border); font-size:13.5px;
+  }
+  .rich-box.highlight { background:var(--blue-soft); border-color:var(--blue); color:var(--text); }
+  .rich-box.tip { background:var(--sage-soft); border-color:var(--sage); color:var(--text); }
+  .rich-box.warning { background:var(--red-soft); border-color:var(--red); color:var(--text); }
+  .rich-box b { display:block; margin-bottom:4px; font-size:14px; }
+
+  /* 比較グリッド（左右・カード並び） */
+  .rich-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:10px 0; }
+  .rich-grid-cell { padding:10px; border-radius:12px; background:var(--bg); border:1px solid var(--border); font-size:13px; }
+  .rich-grid-cell b { display:block; margin-bottom:2px; font-size:13px; color:var(--text); }
+
+  /* 空状態 */
+  .empty { text-align:center; padding:48px 16px; color:var(--muted); font-size:14px; }
+
+  footer { color:var(--muted); font-size:12px; margin-top:36px; text-align:center; }
+  footer a { color:inherit; }
+</style>
+</head>
+<body>
+<main>
+  <div class="top">
+    <a class="brand" href="../">← ひびき</a>
+    <span class="date" id="today-date"></span>
+  </div>
+
+  <div class="head">
+    <div>
+      <h1>ボード</h1>
+      <div style="font-size:12px; color:var(--muted);">AIとひびきの投稿・自由な記録</div>
+    </div>
+    <button class="new-btn" id="open-new-dialog">＋ 投稿する</button>
+  </div>
+
+  <!-- フィルター -->
+  <div class="filter-bar" role="tablist">
+    <button class="filter-chip active" data-filter="all">すべて</button>
+    <button class="filter-chip" data-filter="ai">AIの投稿</button>
+    <button class="filter-chip" data-filter="hibiki">ひびきの投稿</button>
+    <button class="filter-chip" data-filter="pinned">⭐ ピン留め</button>
+  </div>
+
+  <!-- 投稿リスト -->
+  <div class="posts" id="posts-container" aria-live="polite"></div>
+
+  <!-- 新規作成モーダル -->
+  <dialog id="post-dialog">
+    <form id="post-form" method="dialog">
+      <div class="form-head">
+        <h2 id="dialog-title">新しい投稿</h2>
+        <button type="button" class="close-btn" id="close-dialog" aria-label="閉じる">×</button>
+      </div>
+
+      <div class="form-group">
+        <label>投稿者</label>
+        <div class="author-radios">
+          <label class="author-label"><input type="radio" name="author" value="hibiki" checked> ひびき</label>
+          <label class="author-label"><input type="radio" name="author" value="ai"> AI</label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="post-title-input">タイトル</label>
+        <input type="text" id="post-title-input" placeholder="タイトル（例：今日の気づき）" maxlength="60">
+      </div>
+
+      <div class="form-group">
+        <label for="post-tag-input">タグ（カンマ区切り）</label>
+        <input type="text" id="post-tag-input" placeholder="スマホ, メモ, アイデア">
+      </div>
+
+      <div class="form-group">
+        <label for="post-content-input">本文（Markdownやリッチタグも使えます）</label>
+        <textarea id="post-content-input" placeholder="考えたことやAIの回答をここに。&#10;&#10;**太字** や - リスト、> 引用 も使えます。"></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn btn-ghost" id="cancel-btn">キャンセル</button>
+        <button type="submit" class="btn btn-primary" id="save-post-btn">投稿する</button>
+      </div>
+    </form>
+  </dialog>
+
+  <footer>
+    <a href="../">ひびきのホームへ戻る</a>
+  </footer>
+</main>
+
+<script>
+(function() {
+  var STORAGE_KEY = "hibiki-board-v1";
+
+  // 日付表示
+  var now = new Date();
+  var dateStr = (now.getMonth() + 1) + "月" + now.getDate() + "日";
+  var elToday = document.getElementById("today-date");
+  if (elToday) elToday.textContent = dateStr;
+
+  // 初期サンプルデータ（まだ投稿がない場合に読み込む）
+  var INITIAL_POSTS = [
+    {
+      id: "post-sms-mms",
+      author: "ai",
+      authorName: "AI",
+      title: "スマホのメモ：メッセージと画像（MMS・カラーメール）",
+      tags: ["スマホ", "通信", "注意メモ"],
+      content: "通常のメッセージ（SMS）に写真やイラストを添付すると、自動的に「MMS（カラーメール）」に切り替わります。\n\n" +
+               "<div class=\"rich-grid\">" +
+                 "<div class=\"rich-grid-cell\"><b>✉️ 文字だけ</b>SMS（テキスト送信）</div>" +
+                 "<div class=\"rich-grid-cell\"><b>🖼️ 画像添付</b>MMS（カラーメールに自動切替）</div>" +
+               "</div>\n" +
+               "<div class=\"rich-box tip\">" +
+                 "<b>💡 次回からの対策</b>" +
+                 "画像や動画を送りたいときは、LINEやカカオトークなどの無料チャットアプリを使うか、共有リンクを送ると安心です。" +
+               "</div>",
+      date: "2026-11-24 13:45",
+      pinned: true
+    },
+    {
+      id: "post-welcome",
+      author: "ai",
+      authorName: "AI",
+      title: "ボードができました！",
+      tags: ["ボード", "使い方"],
+      content: "ひびきとAIが自由に記録・投稿できる場所です。\n\n" +
+               "- **ひびきのメモ**: 日々の気づきや考え、残しておきたいこと\n" +
+               "- **AIの投稿**: 相談してまとめた知恵や調べもの、リッチな図やリスト\n\n" +
+               "右上の「＋ 投稿する」からいつでも追加できます。",
+      date: "2026-11-24 13:55",
+      pinned: false
+    }
+  ];
+
+  var currentFilter = "all";
+  var editingId = null;
+
+  function loadPosts() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) {
+        savePosts(INITIAL_POSTS);
+        return INITIAL_POSTS;
+      }
+      var parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed : INITIAL_POSTS;
+    } catch(e) {
+      return INITIAL_POSTS;
+    }
+  }
+
+  function savePosts(posts) {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+      // sync.js の端末同期トリガー
+      if (window.HibikiSync && typeof HibikiSync.save === "function") {
+        HibikiSync.save();
+      }
+    } catch(e) {
+      console.warn("Storage save error", e);
+    }
+  }
+
+  // 軽量Markdown / リッチテキストパーサー
+  function formatContent(text) {
+    if (!text) return "";
+    // すでにリッチHTMLタグを含む部分は保護しながら、簡易Markdown（**太字**, - リスト, 改行）を変換
+    var lines = text.split("\n");
+    var inList = false;
+    var out = [];
+
+    for (var i = 0; i < lines.length; i++) {
+      var line = lines[i];
+      // リスト処理
+      if (/^\s*-\s+(.*)$/.test(line)) {
+        if (!inList) {
+          out.push("<ul>");
+          inList = true;
+        }
+        var liContent = line.replace(/^\s*-\s+/, "");
+        out.push("<li>" + parseInline(liContent) + "</li>");
+      } else {
+        if (inList) {
+          out.push("</ul>");
+          inList = false;
+        }
+        if (line.trim().length === 0) {
+          out.push("<div style='height:8px;'></div>");
+        } else if (/^<div|^<h[1-6]|^<ul|^<ol|^<p/.test(line.trim())) {
+          out.push(line);
+        } else {
+          out.push("<p>" + parseInline(line) + "</p>");
+        }
+      }
+    }
+    if (inList) out.push("</ul>");
+    return out.join("");
+  }
+
+  function parseInline(str) {
+    return str
+      .replace(/\*\*(.*?)\*\*/g, "<b>$1</b>")
+      .replace(/\*(.*?)\*/g, "<i>$1</i>");
+  }
+
+  function renderPosts() {
+    var posts = loadPosts();
+    var container = document.getElementById("posts-container");
+    if (!container) return;
+
+    var filtered = posts.filter(function(p) {
+      if (currentFilter === "ai") return p.author === "ai";
+      if (currentFilter === "hibiki") return p.author === "hibiki";
+      if (currentFilter === "pinned") return !!p.pinned;
+      return true;
+    });
+
+    // ピン留め優先、そのあと日付降順
+    filtered.sort(function(a, b) {
+      if (a.pinned !== b.pinned) return a.pinned ? -1 : 1;
+      return (b.date || "").localeCompare(a.date || "");
+    });
+
+    if (filtered.length === 0) {
+      container.innerHTML = "<div class=\"empty\">投稿がまだありません。<br>右上の「＋ 投稿する」から足してみましょう！</div>";
+      return;
+    }
+
+    container.innerHTML = filtered.map(function(post) {
+      var isAi = post.author === "ai";
+      var authorClass = isAi ? "ai" : "hibiki";
+      var authorName = isAi ? "✨ AI" : "🌱 ひびき";
+      var pinClass = post.pinned ? "is-pinned" : "";
+      var cardClasses = "post-card by-" + authorClass + (post.pinned ? " pinned" : "");
+
+      var tagsHtml = (post.tags || []).map(function(tag) {
+        return "<span class=\"post-tag\">#" + escapeHtml(tag) + "</span>";
+      }).join("");
+
+      return (
+        "<article class=\"" + cardClasses + "\" data-id=\"" + post.id + "\">" +
+          "<div class=\"post-meta\">" +
+            "<span class=\"author-badge " + authorClass + "\">" + authorName + "</span>" +
+            "<div class=\"post-info\">" +
+              "<span>" + escapeHtml(post.date || "") + "</span>" +
+              "<div class=\"post-actions-menu\">" +
+                "<button class=\"icon-btn " + pinClass + "\" data-action=\"pin\" title=\"ピン留め\">" + (post.pinned ? "⭐" : "☆") + "</button>" +
+                "<button class=\"icon-btn\" data-action=\"edit\" title=\"編集\">✏️</button>" +
+                "<button class=\"icon-btn\" data-action=\"delete\" title=\"削除\">🗑️</button>" +
+              "</div>" +
+            "</div>" +
+          "</div>" +
+          (post.title ? "<h2 class=\"post-title\">" + escapeHtml(post.title) + "</h2>" : "") +
+          (tagsHtml ? "<div>" + tagsHtml + "</div>" : "") +
+          "<div class=\"post-body\">" + formatContent(post.content) + "</div>" +
+        "</article>"
+      );
+    }).join("");
+  }
+
+  function escapeHtml(str) {
+    if (!str) return "";
+    return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+
+  // フィルター切り替え
+  document.querySelectorAll(".filter-chip").forEach(function(btn) {
+    btn.addEventListener("click", function() {
+      document.querySelectorAll(".filter-chip").forEach(function(b) { b.classList.remove("active"); });
+      btn.classList.add("active");
+      currentFilter = btn.dataset.filter;
+      renderPosts();
+    });
+  });
+
+  // モーダル操作
+  var dialog = document.getElementById("post-dialog");
+  var openBtn = document.getElementById("open-new-dialog");
+  var closeBtn = document.getElementById("close-dialog");
+  var cancelBtn = document.getElementById("cancel-btn");
+  var form = document.getElementById("post-form");
+
+  if (openBtn && dialog) {
+    openBtn.addEventListener("click", function() {
+      editingId = null;
+      document.getElementById("dialog-title").textContent = "新しい投稿";
+      form.reset();
+      dialog.showModal();
+    });
+  }
+  function closeDialog() { if (dialog) dialog.close(); }
+  if (closeBtn) closeBtn.addEventListener("click", closeDialog);
+  if (cancelBtn) cancelBtn.addEventListener("click", closeDialog);
+
+  // 投稿送信
+  if (form) {
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+      var title = document.getElementById("post-title-input").value.trim();
+      var content = document.getElementById("post-content-input").value.trim();
+      var tagStr = document.getElementById("post-tag-input").value.trim();
+      var author = form.elements["author"].value || "hibiki";
+
+      if (!content && !title) {
+        alert("タイトルまたは本文を入力してください。");
+        return;
+      }
+
+      var tags = tagStr ? tagStr.split(",").map(function(s) { return s.trim(); }).filter(Boolean) : [];
+      var posts = loadPosts();
+
+      var now = new Date();
+      var timeStr = now.getFullYear() + "-" +
+                    String(now.getMonth() + 1).padStart(2, "0") + "-" +
+                    String(now.getDate()).padStart(2, "0") + " " +
+                    String(now.getHours()).padStart(2, "0") + ":" +
+                    String(now.getMinutes()).padStart(2, "0");
+
+      if (editingId) {
+        // 更新
+        for (var i = 0; i < posts.length; i++) {
+          if (posts[i].id === editingId) {
+            posts[i].title = title;
+            posts[i].content = content;
+            posts[i].tags = tags;
+            posts[i].author = author;
+            break;
+          }
+        }
+      } else {
+        // 新規
+        var newPost = {
+          id: "post-" + Date.now(),
+          author: author,
+          title: title,
+          tags: tags,
+          content: content,
+          date: timeStr,
+          pinned: false
+        };
+        posts.unshift(newPost);
+      }
+
+      savePosts(posts);
+      closeDialog();
+      renderPosts();
+    });
+  }
+
+  // カード内アクション（ピン留め・編集・削除）
+  var container = document.getElementById("posts-container");
+  if (container) {
+    container.addEventListener("click", function(e) {
+      var btn = e.target.closest("button[data-action]");
+      if (!btn) return;
+      var card = btn.closest(".post-card");
+      if (!card) return;
+      var id = card.dataset.id;
+      var action = btn.dataset.action;
+      var posts = loadPosts();
+
+      if (action === "pin") {
+        for (var i = 0; i < posts.length; i++) {
+          if (posts[i].id === id) {
+            posts[i].pinned = !posts[i].pinned;
+            break;
+          }
+        }
+        savePosts(posts);
+        renderPosts();
+      } else if (action === "delete") {
+        if (confirm("この投稿を削除してもよろしいですか？")) {
+          posts = posts.filter(function(p) { return p.id !== id; });
+          savePosts(posts);
+          renderPosts();
+        }
+      } else if (action === "edit") {
+        var target = null;
+        for (var j = 0; j < posts.length; j++) {
+          if (posts[j].id === id) { target = posts[j]; break; }
+        }
+        if (!target) return;
+        editingId = id;
+        document.getElementById("dialog-title").textContent = "投稿を編集";
+        document.getElementById("post-title-input").value = target.title || "";
+        document.getElementById("post-content-input").value = target.content || "";
+        document.getElementById("post-tag-input").value = (target.tags || []).join(", ");
+        if (form.elements["author"]) {
+          form.elements["author"].value = target.author || "hibiki";
+        }
+        dialog.showModal();
+      }
+    });
+  }
+
+  // 初期描画
+  renderPosts();
+})();
+</script>
+</body>
+</html>
