@@ -319,7 +319,8 @@ function reviseFirstDreamPost() {
       S.firstDreamFactRevision = 1;
       changed = true;
     }
-    if (!S.dreamSummaryPostAdded && !S.posts.some(function(p) { return p.id === "dream-summary-20261125"; })) {
+    // 夢のまとめ投稿が欠けていたら復元する。フラグだけ残っていても投稿本体を優先する。
+    if (!S.posts.some(function(p) { return p.id === "dream-summary-20261125"; })) {
       var now = new Date();
       S.posts.push({
         id: "dream-summary-20261125",
