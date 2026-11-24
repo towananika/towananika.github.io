@@ -47,7 +47,7 @@
   .list-meta { margin:8px 2px; }
   .post-list { display:grid; gap:10px; }
   .post { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:14px; }
-  .post-meta { display:flex; align-items:center; justify-content:space-between; gap:8px; color:var(--muted); font-size:12px; }
+  .post-meta { display:flex; align-items:center; justify-content:flex-start; flex-wrap:wrap; gap:8px; color:var(--muted); font-size:12px; }\n  .post-meta span { display:block; width:100%; text-align:left !important; white-space:nowrap; font-variant-numeric:tabular-nums; }
   .post h3 { font-size:17px; margin:7px 0; overflow-wrap:anywhere; }
   .post-title { border:0; padding:0; background:none; color:var(--text); font:inherit; font-weight:700; text-align:left; cursor:pointer; }
   .post-title:after { content:"＋"; color:var(--muted); font-size:12px; margin-left:8px; }
@@ -225,7 +225,7 @@ function drawDreamHistory() {
   visible.forEach(function(p) {
     var item = document.createElement("article"); item.className = "post";
     var meta = document.createElement("div"); meta.className = "post-meta";
-    var posted = document.createElement("span"); posted.textContent = formatPostedAt(p); posted.style.textAlign = "right"; meta.appendChild(posted);
+    var posted = document.createElement("span"); posted.textContent = formatPostedAt(p); posted.style.textAlign = "left"; meta.appendChild(posted);
     var title = document.createElement("h3");
     var titleButton = document.createElement("button"); titleButton.type = "button"; titleButton.className = "post-title";
     titleButton.textContent = (p.title || "").trim() || "（タイトルなし）";
