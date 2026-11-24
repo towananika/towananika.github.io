@@ -53,7 +53,11 @@
   .post { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:14px; }
   .post-meta { display:flex; align-items:center; justify-content:space-between; gap:8px; color:var(--muted); font-size:12px; }
   .post h3 { font-size:17px; margin:7px 0; overflow-wrap:anywhere; }
-  .post-body { white-space:pre-wrap; overflow-wrap:anywhere; margin:0; font-size:14px; }
+  .post-title { border:0; padding:0; background:none; color:var(--text); font:inherit; font-weight:700; text-align:left; cursor:pointer; }
+  .post-title:after { content:"＋"; color:var(--muted); font-size:12px; margin-left:8px; }
+  .post-title[aria-expanded="true"]:after { content:"−"; }
+  .post-body { white-space:pre-wrap; overflow-wrap:anywhere; margin:8px 0 0; font-size:14px; }
+  .post-body[hidden] { display:none; }
   .post-actions { display:flex; justify-content:flex-end; gap:8px; margin-top:12px; }
   .post-actions button { border:1px solid var(--border); background:transparent; color:var(--text); border-radius:9px; padding:6px 10px; font:inherit; font-size:13px; cursor:pointer; }
   .post-actions .delete { color:var(--red); }
@@ -224,8 +228,13 @@ function drawDreamHistory() {
     var meta = document.createElement("div"); meta.className = "post-meta";
     var date = document.createElement("span"); date.textContent = getPostDate(p); meta.appendChild(date);
     var tag = document.createElement("span"); tag.textContent = "夢の記録"; meta.appendChild(tag);
-    var title = document.createElement("h3"); title.textContent = (p.title || "").trim() || "（タイトルなし）";
-    var body = document.createElement("p"); body.className = "post-body"; body.textContent = p.body || "";
+    var title = document.createElement("h3");
+    var titleButton = document.createElement("button"); titleButton.type = "button"; titleButton.className = "post-title";
+    titleButton.textContent = (p.title || "").trim() || "（タイトルなし）";
+    var body = document.createElement("p"); body.className = "post-body"; body.textContent = p.body || ""; body.hidden = true;
+    titleButton.setAttribute("aria-expanded", "false");
+    titleButton.onclick = function() { body.hidden = !body.hidden; titleButton.setAttribute("aria-expanded", String(!body.hidden)); };
+    title.appendChild(titleButton);
     var actions = document.createElement("div"); actions.className = "post-actions";
     var edit = document.createElement("button"); edit.type = "button"; edit.textContent = "編集"; edit.onclick = function() { openEditor(p); };
     var del = document.createElement("button"); del.type = "button"; del.className = "delete"; del.textContent = "削除";
@@ -245,7 +254,7 @@ function openEditor(post) {
   editorHeading.textContent = post ? "夢の記録を編集" : "新しい夢を記録";
   postBody.value = post ? (post.body || "") : "";
   postTitle.value = post ? (post.title || "") : "";
-  postDate.value = post ? (postDate(post) || selectedDate) : selectedDate;
+  postDate.value = post ? (getPostDate(post) || selectedDate) : selectedDate;
   savePost.textContent = post ? "変更を保存" : "投稿を保存";
   postEditor.hidden = false;
   postBody.focus();
