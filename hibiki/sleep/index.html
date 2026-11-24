@@ -72,6 +72,7 @@
 <main>
   <a class="back" href="../">← ひびき</a>
   <h1>睡眠メモ</h1>
+  <p class="muted" style="margin:0 0 16px">眠っているときに見た夢を記録する場所です。夢を見た日付は、必要なら本文に書き留めてください。</p>
 
   <div class="card">
     <div class="row"><label for="recordDate">記録する日</label><input type="date" id="recordDate" style="flex:1;min-width:0"></div>
@@ -83,15 +84,13 @@
   </div>
 
   <section class="board">
-    <div class="board-head"><div><h2>🌙 夢の記録</h2><p class="muted">目覚めたら、本文からすぐ書けます。</p></div><button class="primary" id="newPost" type="button">＋ 新しい記録</button></div>
+    <div class="board-head"><div><h2>🌙 眠っているときの夢</h2><p class="muted">目覚めたら、覚えていることをそのまま書き留めましょう。</p></div><button class="primary" id="newPost" type="button">＋ 新しい記録</button></div>
     <div class="editor card" id="postEditor" hidden>
       <div class="editor-top"><b id="editorHeading">新しい夢を記録</b><button class="quiet" id="cancelPost" type="button">閉じる</button></div>
       <label class="post-label" for="postBody">夢の内容・本文</label>
-      <textarea id="postBody" maxlength="20000" placeholder="覚えている場面、会話、景色、気持ちなどを、順番も気にせず書いてみよう。長文でも大丈夫。"></textarea>
+      <textarea id="postBody" maxlength="20000" placeholder="眠っているときに見た場面、人物、会話、景色、気持ちなどを自由に書いてみよう。長文でも大丈夫。"></textarea>
       <label class="post-label" for="postTitle">タイトル（任意）</label>
       <input id="postTitle" maxlength="120" placeholder="あとから付けても大丈夫">
-      <label class="post-label" for="postDate">記録日</label>
-      <input id="postDate" type="date">
       <div class="editor-actions"><span class="muted">あとから何度でも編集できます。</span><button class="primary" id="savePost" type="button">投稿を保存</button></div>
     </div>
     <div class="filters">
@@ -180,7 +179,7 @@ function drawMonthlyAverages() {
     row.appendChild(label); row.appendChild(track); row.appendChild(value); monthlyAverages.appendChild(row);
   });
 }
-function getPostDate(p) { return p.date || String(p.createdAt || "").slice(0,10) || ""; }
+function getPostDate(p) { return String(p.createdAt || "").slice(0,10) || p.date || ""; }
 function postTime(p) { return String(p.createdAt || p.date || p.id || ""); }
 function formatPostedAt(p) {
   var raw = p.createdAt || "";
@@ -253,7 +252,6 @@ function openEditor(post) {
   editorHeading.textContent = post ? "夢の記録を編集" : "新しい夢を記録";
   postBody.value = post ? (post.body || "") : "";
   postTitle.value = post ? (post.title || "") : "";
-  postDate.value = post ? (getPostDate(post) || selectedDate) : selectedDate;
   savePost.textContent = post ? "変更を保存" : "投稿を保存";
   postEditor.hidden = false;
   postBody.focus();
@@ -263,12 +261,12 @@ function closeEditor() { postEditor.hidden = true; editingPostId = null; postBod
 newPost.onclick = function() { openEditor(null); };
 cancelPost.onclick = closeEditor;
 savePost.onclick = function() {
-  var body = postBody.value.trim(), title = postTitle.value.trim(), date = postDate.value || ymd(new Date());
+  var body = postBody.value.trim(), title = postTitle.value.trim(), date = ymd(new Date());
   if (!body) { alert("本文を入力してください。"); postBody.focus(); return; }
   var now = new Date();
   if (editingPostId) {
     var target = S.posts.find(function(p) { return p.id === editingPostId; });
-    if (target) { target.title = title; target.body = body; target.date = date; target.updatedAt = now.toISOString(); }
+    if (target) { target.title = title; target.body = body; target.updatedAt = now.toISOString(); }
   } else {
     S.posts.push({id:"post-" + now.getTime() + "-" + Math.random().toString(36).slice(2,7),title:title,body:body,date:date,createdAt:now.toISOString()});
   }
