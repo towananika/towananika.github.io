@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="HIYOKO公式Xの月別推移をビジュアル化し、平均から離れた月の原因をコンテンツ・企画単位で分析するページ。">
+<title>HIYOKO X 月間分析（1年推移・急増急減の要因）</title>
+<link rel="stylesheet" href="../../style.css?v=f26360e5">
+<style>
+.mtabs{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.mtabs button{font:inherit;font-size:.84rem;padding:6px 12px;border:1px solid var(--line);border-radius:99px;background:var(--card);color:var(--muted);cursor:pointer}
+.mtabs button:hover{color:var(--ink);border-color:var(--ink)}
+.mtabs button.active{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:700}
+.phase-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:14px 0 22px}
+.phase{border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--card);border-top:4px solid var(--accent)}
+.phase.up{border-top-color:var(--good)}
+.phase.down{border-top-color:var(--bad)}
+.phase h3{margin:0 0 6px;font-size:.98rem}
+.phase p{margin:4px 0;font-size:.86rem;line-height:1.55}
+.mcard{border:1px solid var(--line);border-radius:12px;padding:16px;background:var(--card);margin:12px 0 20px}
+.mcard h3{margin:0 0 8px}
+.mbar{cursor:pointer}
+.mbar:hover rect{opacity:0.75}
+.top-list{list-style:none;padding:0;margin:8px 0 0;display:grid;gap:8px}
+.top-list li{padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--paper);font-size:.86rem}
+.top-list .meta-line{font-size:.78rem;color:var(--muted);margin-bottom:3px}
+</style>
+</head>
+<body class="ch-x">
+<a class="skip" href="#main">本文へスキップ</a><header class="hy-top"><nav class="hy-path" aria-label="サイト"><a href="/">Towananika</a><span aria-hidden="true">›</span><a href="../../">HIYOKO</a><span class="fan-badge">非公式ファンサイト</span></nav><div class="hy-set"></div></header>
+<nav class="hy-tabs" aria-label="コーナー"><div><a href="../../">ホーム</a><a href="../../about/">HIYOKOを知る</a><a href="../../links/">公式リンク</a><a href="../../analysis/" aria-current="true">SNS分析</a><a href="../../news/">ニュース</a><a href="../../internal/strategy/" class="mem-only">🔒 社内資料</a></div></nav>
+<div class="layout">
+<details class="sitenav" open><summary>このコーナーのページ</summary><div><a class="brand" href="../../">HIYOKO</a><span class="ch m">SNS分析</span><ul class=""><li><a class="page" href="../../analysis/">SNS分析トップ</a></li><li><a class="page" href="../../kpi/">KPI一覧</a></li><li><a class="page" href="../../2026-11/">2026年11月 X・IG ABCD</a></li><li><a class="page" href="../../a-ranking/">Aの投稿ランキング（全期間）</a></li></ul><span class="ch x">X</span><ul class=""><li><a class="page" href="../../x/">HIYOKO X 概要</a></li><li><a class="page" href="../../x/posts/" >HIYOKO X KPI</a></li><li><a class="page" href="../../x/content/">X コンテンツ4グループ</a></li><li><a class="page" href="../../x/plan/">X 悩み→解決の企画</a></li></ul><span class="ch ig">Instagram</span><ul class=""><li><a class="page" href="../../ig/">Instagram 詳細</a></li><li><a class="page" href="../../ig/posts/">Instagram 投稿とKPI（事実）</a></li><li><a class="page" href="../../ig/content/">Instagram コンテンツ3グループ</a></li></ul></div></details><details class="pagetoc" open><summary>このページの目次</summary><ul><li><a href="#phases">1年間の4フェーズ</a></li><li><a href="#chart">月別中央値の推移</a></li><li><a href="#detail">月ごとの詳細分析</a></li><li><a href="#top5">通常投稿 上位5つ</a></li><li><a href="#links">関連ページ</a></li></ul></details>
+<main id="main">
+<nav class="crumbs"><a href="/">Towananika</a> ／ <a href="../../">HIYOKO</a> ／ <a href="../../analysis/">SNS分析</a> ／ <a href="../">X</a> ／ 月間分析</nav>
+<div class="chhead"><span class="dot"></span>X</div>
+<h1>X：月間分析（1年の推移と急増・急減の理由）</h1>
+<div class="meta">全877投稿（2025年12月24日〜2026年11月24日／2月11日固定投稿は平均から除外）＋ アカウント全体366日データ</div>
+<p class="lead">1年間の月別推移から<strong>「いつ・なぜ急増／急減したのか」</strong>を、実測KPI（根拠）と仮説・データ限界（可能性）に分けてまとめた月間分析レポートです。</p>
+
+<h2 id="phases">1. 1年間の4フェーズ（全体像）</h2>
+<div class="phase-grid">
+  <div class="phase up">
+    <h3>① 立ち上げ・保存期（25/12〜26/03）</h3>
+    <p><b>アカウント全体：</b>表示 26,013・FW 153・<b>保存 478</b></p>
+    <p><b>根拠と可能性：</b>2月の再始動ストーリー（02/04）や設計思想が刺さり、2〜3月は保存が月200件超と最も濃く読まれた時期（2/11の6,599表示は固定投稿のため除外）。</p>
+  </div>
+  <div class="phase up">
+    <h3>② リーチ最大化・上場期（26/04〜06）</h3>
+    <p><b>アカウント全体：</b>表示 <b>55,238</b>・FW <b>177</b>・保存 <b>383</b></p>
+    <p><b>根拠と可能性：</b>5月が中央値94.0・保存124で最盛期。6月は198件の大量投稿で中央値60.0へ低下しつつも、上場（6/1）と6/15・6/17の伸びで月1.8万表示を維持。</p>
+  </div>
+  <div class="phase down">
+    <h3>③ 量産・急落期（26/07〜09）</h3>
+    <p><b>アカウント全体：</b>表示 21,573・FW 43・<b>保存 6</b></p>
+    <p><b>根拠と可能性：</b>7月は158件投稿するも中央値34.0・返信115（-56%）・保存4（-96%）。連投＋価格/リンク偏重と上場特需後の外部反応減が重なった可能性。</p>
+  </div>
+  <div class="phase up">
+    <h3>④ 質転換・回復期（26/10〜11）</h3>
+    <p><b>アカウント全体：</b>表示 11,066・FW <b>105</b>（<b>9.5件/1k表示</b>）</p>
+    <p><b>根拠と可能性：</b>URLクリック-44%、タグ平均2.0〜2.1個へ転換し中央値75→105.5へ回復。転換率は年間最高だが保存（月0〜1）は未回復。</p>
+  </div>
+</div>
+
+<h2 id="chart">2. 月別インプレッション中央値の推移（棒をクリックで詳細へ）</h2>
+<figure><svg viewBox="0 0 640 230" role="img" aria-label="月別インプレッション中央値推移">
+  <line x1="44" y1="196" x2="622" y2="196" stroke="var(--line)"/>
+  <line x1="44" y1="99.3" x2="622" y2="99.3" stroke="var(--muted)" stroke-dasharray="4 4" opacity="0.7"/>
+  <text x="622" y="95.3" text-anchor="end" font-size="10" fill="var(--muted)">全月平均中央値: 85.3</text>
+  <g class="mbar" data-m="2025-12"><rect x="54.0" y="69.1" width="32.6" height="126.9" rx="3" fill="var(--good)" opacity="0.9"/><text x="70.3" y="64.1" text-anchor="middle" font-size="11" fill="var(--ink)" font-weight="700">112</text><text x="70.3" y="212" text-anchor="middle" font-size="11" fill="var(--muted)">25/12</text></g><g class="mbar" data-m="2026-01"><rect x="106.5" y="41.9" width="32.6" height="154.1" rx="3" fill="var(--good)" opacity="0.9"/><text x="122.8" y="36.9" text-anchor="middle" font-size="11" fill="var(--ink)" font-weight="700">136.0</text><text x="122.8" y="212" text-anchor="middle" font-size="11" fill="var(--muted)">26/01</text></g><g class="mbar" data-m="2026-02"><rect x="159.1" y="30.0" width="32.6" height="166.0" rx="3" fill="var(--good)" opacity="0.9"/><text x="175.4" y="25.0" text-anchor="middle" font-size="11" fill="var(--ink)" font-weight="700">146.5</text><text x="175.4" y="212" text-anchor="middle" font-size="11" fill="var(--muted)">26/02</text></g><g class="mbar" data-m="2026-04"><rect x="211.6" y="112.2" width="32.6" height="83.8" rx="3" fill="var(--bad)" opacity="0.9"/><text x="227.9" y="107.2" text-anchor="middle" font-size="11" fill="var(--ink)" font-weight="700">74</text><text x="227.9" y="212" text-anchor="middle" font-size="11" fill="var(--muted)">26/04</text></g><g class="mbar" data-m="2026-05"><rect x="264.2" y="89.5" width="32.6" height="106.5" rx="3" fill="var(--good)" opacity="0.9"/><text x="280.5" y="84.5" text-anchor="middle" font-size="11" fill="var(--ink)" font-weight="700">94</text><text x="280.5" y="212" text-anchor="middle" font-size="11" fill="var(--muted)">26/05</text></g><g class="mbar" data-m="2026-06"><rect x="316.7" y="128.0" width="32.6" height="68.0" rx="3" fill="var(--bad)" opacity="0.9"/><text x="333.0" y="123.0" text-anchor="middle" font-size="11" fill="var(--ink)" font-weight="700">60.0</text><text x="333.0" y="212" text-anchor="middle" font-size="11" fill="var(--muted)">26/06</text></g><g class="mbar" data-m="2026-07"><rect x="369.3" y="157.5" width="32.6" height="38.5" rx="3" fill="var(--bad)" opacity="0.9"/><text x="385.5" y="152.5" text-anchor="middle" font-size="11" fill="var(--ink)" font-weight="700">34.0</text><text x="385.5" y="212" text-anchor="middle" font-size="11" fill="var(--muted)">26/07</text></g><g class="mbar" data-m="2026-08"><rect x="421.8" y="162.6" width="32.6" height="33.4" rx="3" fill="var(--bad)" opacity="0.9"/><text x="438.1" y="157.6" text-anchor="middle" font-size="11" fill="var(--ink)" font-weight="700">29.5</text><text x="438.1" y="212" text-anchor="middle" font-size="11" fill="var(--muted)">26/08</text></g><g class="mbar" data-m="2026-09"><rect x="474.3" y="114.4" width="32.6" height="81.6" rx="3" fill="var(--bad)" opacity="0.9"/><text x="490.6" y="109.4" text-anchor="middle" font-size="11" fill="var(--ink)" font-weight="700">72.0</text><text x="490.6" y="212" text-anchor="middle" font-size="11" fill="var(--muted)">26/09</text></g><g class="mbar" data-m="2026-10"><rect x="526.9" y="111.0" width="32.6" height="85.0" rx="3" fill="var(--bad)" opacity="0.9"/><text x="543.2" y="106.0" text-anchor="middle" font-size="11" fill="var(--ink)" font-weight="700">75</text><text x="543.2" y="212" text-anchor="middle" font-size="11" fill="var(--muted)">26/10</text></g><g class="mbar" data-m="2026-11"><rect x="579.4" y="76.5" width="32.6" height="119.5" rx="3" fill="var(--good)" opacity="0.9"/><text x="595.7" y="71.5" text-anchor="middle" font-size="11" fill="var(--ink)" font-weight="700">105.5</text><text x="595.7" y="212" text-anchor="middle" font-size="11" fill="var(--muted)">26/11</text></g>
+</svg><figcaption>緑＝全月平均以上、赤＝全月平均未満（2/11固定投稿は除外）。棒をクリックすると下の月別詳細が切り替わります。</figcaption></figure>
+
+<h2 id="detail">3. 月ごとの詳細分析（根拠・可能性・代表投稿）</h2>
+<div class="mtabs" id="mtabs" role="tablist"><button type="button" class="" data-m="2025-12">2025-12 (3)</button><button type="button" class="" data-m="2026-01">2026-01 (10)</button><button type="button" class="" data-m="2026-02">2026-02 (6)</button><button type="button" class="" data-m="2026-04">2026-04 (61)</button><button type="button" class="" data-m="2026-05">2026-05 (163)</button><button type="button" class="active" data-m="2026-06">2026-06 (198)</button><button type="button" class="" data-m="2026-07">2026-07 (158)</button><button type="button" class="" data-m="2026-08">2026-08 (60)</button><button type="button" class="" data-m="2026-09">2026-09 (80)</button><button type="button" class="" data-m="2026-10">2026-10 (73)</button><button type="button" class="" data-m="2026-11">2026-11 (64)</button></div>
+<div class="mcard" id="mcard"></div>
+
+<h2 id="top5">全期間 通常投稿 上位5つ（固定投稿を除く）</h2>
+<p class="note">※ 2026-02-11（<a href="https://x.com/HiyokoGlobal/status/2021383652073144382" target="_blank" rel="noopener">6,599表示</a>）は固定投稿のため除外した、通常投稿876件中の上位5つです。</p>
+<ul class="top-list">
+  <li><div class="meta-line"><b>1位</b> ｜ 2026-05-23 ｜ 表示 <b>743</b> ｜ いいね 9 ｜ 返信 5 ｜ プロフ訪問 12 ｜ 保存 1</div><a href="https://x.com/HiyokoGlobal/status/2058110698778247442" target="_blank" rel="noopener">HIYOKO participation roadmap: Now: $0.015 (presale active)...</a></li>
+  <li><div class="meta-line"><b>2位</b> ｜ 2026-06-15 ｜ 表示 <b>724</b> ｜ いいね 32 ｜ 返信 27 ｜ プロフ訪問 37 ｜ 保存 1</div><a href="https://x.com/HiyokoGlobal/status/2066430577352552530" target="_blank" rel="noopener">Why HIYOKO can be global from day one: ① Happy Chick is already a global platform...</a></li>
+  <li><div class="meta-line"><b>3位</b> ｜ 2026-06-17 ｜ 表示 <b>609</b> ｜ いいね 15 ｜ 返信 9 ｜ プロフ訪問 15</div><a href="https://x.com/HiyokoGlobal/status/2067155324331807034" target="_blank" rel="noopener">Listing is complete. The ecosystem is beginning to move...</a></li>
+  <li><div class="meta-line"><b>4位</b> ｜ 2026-02-04 ｜ 表示 <b>427</b> ｜ いいね 13 ｜ <b>プロフ訪問 212</b> ｜ 保存 3</div><a href="https://x.com/HiyokoGlobal/status/2018840143348822253" target="_blank" rel="noopener">Why We Paused — and Why We Are Moving Forward Again...</a></li>
+  <li><div class="meta-line"><b>5位</b> ｜ 2026-04-15 ｜ 表示 <b>415</b> ｜ いいね 13 ｜ 返信 4 ｜ プロフ訪問 3 ｜ 保存 1</div><a href="https://x.com/HiyokoGlobal/status/2044325153182756934" target="_blank" rel="noopener">Listing is not the end. Once everything is in place, it becomes the starting line...</a></li>
+</ul>
+
+<h2 id="links">5. 関連ページ</h2>
+<p><a href="../posts/">→ 月間KPI分析（全877件の絞り込み・一覧）</a>　<a href="../../kpi/">→ KPI一覧（X・Instagram統合）</a>　<a href="../">→ HIYOKO X 概要</a></p>
+
+<!--fan--><p class="fan-foot"><span>🐣 このサイトはファンが作った非公式サイトです。HIYOKO公式とは関係ありません。</span> <a href="https://hiyokotoken.com/" target="_blank" rel="noopener">正しい情報は公式サイトへ ↗</a></p><!--/fan-->
+<!--fmap--><nav class="fmap" aria-label="サイトマップ"><div class=""><a class="fm-h" href="../../about/">HIYOKOを知る</a><ul><li><a href="../../about/">HIYOKOとは</a></li><li><a href="../../world/">目的</a></li><li><a href="../../character/">キャラクター</a></li></ul></div><div class=""><a class="fm-h" href="../../links/">公式リンク</a></div><div class=""><a class="fm-h" href="../../analysis/">SNS分析</a><ul><li><a href="../../analysis/">SNS分析トップ</a></li><li><a href="../../kpi/">KPI一覧</a></li><li><a href="../../2026-11/">2026年11月 X・IG ABCD</a></li><li><a href="../../a-ranking/">Aの投稿ランキング（全期間）</a></li><li><a href="../../x/">HIYOKO X 概要</a></li><li><a href="../../x/monthly/">X 月間分析</a></li><li><a href="../../x/monthly/" aria-current="page">X 月間分析</a></li><li><a class="page" href="../../x/posts/">HIYOKO X KPI</a></li><li><a class="page" href="../../x/report/">X レポート</a></li></ul></div><div class=""><a class="fm-h" href="../../news/">ニュース</a></div><div class="mem-only"><a class="fm-h" href="../../internal/strategy/">🔒 社内資料</a><ul><li><a href="../../internal/strategy/">企画・目標・方向性</a></li><li><a href="../../internal/review/">振り返り</a></li></ul></div></nav><!--/fmap-->
+<footer>HIYOKO ／ 更新日 2026年11月25日</footer>
+</main>
+</div>
+<script>
+(function(){
+var STATS=[{"m": "2025-12", "cnt": 3, "sum_imp": 389, "med": 112, "avg": 129.7, "rp": 2, "bm": 0, "pv": 5, "no_tag_pct": 33, "url_pct": 0, "top": [{"d": "2025-12-24", "imp": 167, "pv": 4, "rp": 1, "bm": 0, "u": "https://x.com/HiyokoGlobal/status/2003752794214617163", "t": "From 2026 onward, HIYOKO Global will enter its next phase. While thing"}, {"d": "2025-12-27", "imp": 112, "pv": 1, "rp": 0, "bm": 0, "u": "https://x.com/HiyokoGlobal/status/2004874752943685995", "t": "【From Transportation to Entertainment Spaces】 XCAR Officially Adopted "}, {"d": "2025-12-26", "imp": 110, "pv": 0, "rp": 1, "bm": 0, "u": "https://x.com/HiyokoGlobal/status/2004499400106922056", "t": "We didn’t change the dates. We changed how HIYOKO grows. With this roa"}], "themes": [["キャラ/ミーム", 3]], "formats": [["説明/告知", 3]]}, {"m": "2026-01", "cnt": 10, "sum_imp": 1572, "med": 136.0, "avg": 157.2, "rp": 4, "bm": 6, "pv": 27, "no_tag_pct": 80, "url_pct": 0, "top": [{"d": "2026-01-12", "imp": 299, "pv": 7, "rp": 1, "bm": 1, "u": "https://x.com/HiyokoGlobal/status/2010537881467785584", "t": "Why launch a new business? HIYOKO has been moving forward with collabo"}, {"d": "2026-01-07", "imp": 237, "pv": 5, "rp": 1, "bm": 0, "u": "https://x.com/HiyokoGlobal/status/2008837951527264720", "t": "【New Exchange Listing】 A new exchange listing is not just an event. It"}, {"d": "2026-01-22", "imp": 188, "pv": 2, "rp": 1, "bm": 1, "u": "https://x.com/HiyokoGlobal/status/2014246311957319707", "t": "What Is the Structural Weakness of Many Crypto Projects? Many past cry"}], "themes": [["キャラ/ミーム", 5], ["ゲーム(Happy Chick)", 2], ["NFT/所有", 1], ["価格・購入", 1]], "formats": [["説明/告知", 7], ["問いかけ解説", 3]]}, {"m": "2026-02", "cnt": 6, "sum_imp": 1059, "med": 146.5, "avg": 176.5, "rp": 3, "bm": 14, "pv": 227, "no_tag_pct": 100, "url_pct": 0, "top": [{"d": "2026-02-04", "imp": 427, "pv": 212, "rp": 0, "bm": 3, "u": "https://x.com/HiyokoGlobal/status/2018840143348822253", "t": "Why We Paused — and Why We Are Moving Forward Again Over the past peri"}, {"d": "2026-02-05", "imp": 160, "pv": 2, "rp": 0, "bm": 3, "u": "https://x.com/HiyokoGlobal/status/2019388286418977265", "t": "HIYOKO’s Progress Through New Products From the very beginning, HIYOKO"}, {"d": "2026-02-09", "imp": 151, "pv": 6, "rp": 1, "bm": 4, "u": "https://x.com/HiyokoGlobal/status/2020786863397830966", "t": "【Toward a Complete Ecosystem】 “Play to Earn (P2E)” and “Health to Earn"}], "themes": [["キャラ/ミーム", 4], ["価格・購入", 1], ["ゲーム(Happy Chick)", 1]], "formats": [["説明/告知", 4], ["問いかけ解説", 2]]}, {"m": "2026-04", "cnt": 61, "sum_imp": 5403, "med": 74, "avg": 88.6, "rp": 78, "bm": 46, "pv": 84, "no_tag_pct": 100, "url_pct": 0, "top": [{"d": "2026-04-15", "imp": 415, "pv": 3, "rp": 4, "bm": 1, "u": "https://x.com/HiyokoGlobal/status/2044325153182756934", "t": "Listing is not the end. Once everything is in place, it becomes the st"}, {"d": "2026-04-17", "imp": 243, "pv": 4, "rp": 1, "bm": 1, "u": "https://x.com/HiyokoGlobal/status/2045052079170109821", "t": "Here’s the full flow: Install MetaMask → secure your seed phrase → buy"}, {"d": "2026-04-16", "imp": 241, "pv": 9, "rp": 12, "bm": 1, "u": "https://x.com/HiyokoGlobal/status/2044691794886295862", "t": "Vesting is not a \"restriction,\" it’s a \"design.\" Release schedules are"}], "themes": [["価格・購入", 22], ["コミュニティ/告知", 8], ["ゲーム(Happy Chick)", 7], ["トークン設計", 6]], "formats": [["説明/告知", 35], ["リスト/図解", 12], ["問いかけ解説", 11], ["Q&A", 2]]}, {"m": "2026-05", "cnt": 163, "sum_imp": 15508, "med": 94, "avg": 95.1, "rp": 132, "bm": 124, "pv": 229, "no_tag_pct": 100, "url_pct": 0, "top": [{"d": "2026-05-23", "imp": 743, "pv": 12, "rp": 5, "bm": 1, "u": "https://x.com/HiyokoGlobal/status/2058110698778247442", "t": "HIYOKO participation roadmap: Now: $0.015 (presale active) From June: "}, {"d": "2026-05-31", "imp": 342, "pv": 3, "rp": 3, "bm": 1, "u": "https://x.com/HiyokoGlobal/status/2061024589858369627", "t": "do you even know what this coin is?😎"}, {"d": "2026-05-27", "imp": 254, "pv": 8, "rp": 2, "bm": 1, "u": "https://x.com/HiyokoGlobal/status/2059537624667410477", "t": "HYK's 4 use cases: ① Use: in-game items, NFT marketplace, ecosystem se"}], "themes": [["価格・購入", 52], ["NFT/所有", 26], ["ゲーム(Happy Chick)", 26], ["ヘルス(Vitalis)", 22]], "formats": [["説明/告知", 71], ["リスト/図解", 48], ["問いかけ解説", 18], ["Q&A", 17]]}, {"m": "2026-06", "cnt": 198, "sum_imp": 15192, "med": 60.0, "avg": 76.7, "rp": 264, "bm": 100, "pv": 265, "no_tag_pct": 100, "url_pct": 0, "top": [{"d": "2026-06-15", "imp": 724, "pv": 37, "rp": 27, "bm": 1, "u": "https://x.com/HiyokoGlobal/status/2066430577352552530", "t": "Why HIYOKO can be global from day one: ① Happy Chick is already a glob"}, {"d": "2026-06-17", "imp": 609, "pv": 15, "rp": 9, "bm": 0, "u": "https://x.com/HiyokoGlobal/status/2067155324331807034", "t": "Listing is complete. The ecosystem is beginning to move. We're improvi"}, {"d": "2026-06-18", "imp": 390, "pv": 24, "rp": 13, "bm": 0, "u": "https://x.com/HiyokoGlobal/status/2067517704484094370", "t": "There's more \"blank time\" in cars than you'd think. - Charging time (g"}], "themes": [["価格・購入", 70], ["NFT/所有", 26], ["ヘルス(Vitalis)", 22], ["ゲーム(Happy Chick)", 20]], "formats": [["説明/告知", 72], ["リスト/図解", 65], ["問いかけ解説", 21], ["Q&A", 18]]}, {"m": "2026-07", "cnt": 158, "sum_imp": 7886, "med": 34.0, "avg": 49.9, "rp": 115, "bm": 4, "pv": 99, "no_tag_pct": 94, "url_pct": 0, "top": [{"d": "2026-07-09", "imp": 323, "pv": 1, "rp": 1, "bm": 0, "u": "https://x.com/HiyokoGlobal/status/2075015333728170329", "t": "CheePoints accumulate. Then you swap. Today: how it works. 🐣"}, {"d": "2026-07-22", "imp": 171, "pv": 0, "rp": 1, "bm": 0, "u": "https://x.com/HiyokoGlobal/status/2079737529058906363", "t": "HIYOKO is now listed on Coinstore. 🎉 You can trade it today. 🐣 Trading"}, {"d": "2026-07-20", "imp": 161, "pv": 8, "rp": 7, "bm": 0, "u": "https://x.com/HiyokoGlobal/status/2079114595202134279", "t": "HIYOKO is receiving a warm welcome in Indonesia. 🇮🇩🐣 Preparations with"}], "themes": [["価格・購入", 67], ["ゲーム(Happy Chick)", 21], ["その他(一言)", 19], ["NFT/所有", 15]], "formats": [["説明/告知", 50], ["リスト/図解", 37], ["問いかけ解説", 23], ["Q&A", 18]]}, {"m": "2026-08", "cnt": 60, "sum_imp": 2378, "med": 29.5, "avg": 39.6, "rp": 32, "bm": 0, "pv": 18, "no_tag_pct": 87, "url_pct": 0, "top": [{"d": "2026-08-17", "imp": 113, "pv": 3, "rp": 4, "bm": 0, "u": "https://x.com/HiyokoGlobal/status/2089147956775841942", "t": "Where does HYK's value come from? 🪄 Happy Chick — 148M+ downloads Vita"}, {"d": "2026-08-27", "imp": 111, "pv": 1, "rp": 1, "bm": 0, "u": "https://x.com/HiyokoGlobal/status/2092884841570406599", "t": "let's take a deeper look at HIYOKO's revenue model. 🪄 revenue comes fr"}, {"d": "2026-08-24", "imp": 99, "pv": 1, "rp": 1, "bm": 0, "u": "https://x.com/HiyokoGlobal/status/2091797726447157385", "t": "heard of a Treasury? 🪄 it's an asset management system designed to sup"}], "themes": [["その他(一言)", 13], ["ヘルス(Vitalis)", 11], ["価格・購入", 10], ["ゲーム(Happy Chick)", 9]], "formats": [["リスト/図解", 18], ["説明/告知", 15], ["一言", 11], ["問いかけ解説", 11]]}, {"m": "2026-09", "cnt": 80, "sum_imp": 5661, "med": 72.0, "avg": 70.8, "rp": 29, "bm": 2, "pv": 39, "no_tag_pct": 56, "url_pct": 0, "top": [{"d": "2026-09-27", "imp": 148, "pv": 2, "rp": 1, "bm": 0, "u": "https://x.com/HiyokoGlobal/status/2104118098282606998", "t": "memes aren't just jokes. 🪄 Dogecoin — started as a meme. became a tril"}, {"d": "2026-09-10", "imp": 136, "pv": 0, "rp": 3, "bm": 0, "u": "https://x.com/HiyokoGlobal/status/2097850427014615422", "t": "why does HIYOKO have value? 🪄 today we're going to answer that. one th"}, {"d": "2026-09-12", "imp": 135, "pv": 1, "rp": 0, "bm": 0, "u": "https://x.com/HiyokoGlobal/status/2098569783138722092", "t": "HYK is listed on Coinstore. 🪄 what's Coinstore? a global crypto exchan"}], "themes": [["価格・購入", 26], ["その他(一言)", 14], ["コミュニティ/告知", 13], ["ヘルス(Vitalis)", 10]], "formats": [["説明/告知", 26], ["リスト/図解", 23], ["一言", 11], ["問いかけ解説", 11]]}, {"m": "2026-10", "cnt": 73, "sum_imp": 5475, "med": 75, "avg": 75.0, "rp": 27, "bm": 0, "pv": 34, "no_tag_pct": 41, "url_pct": 0, "top": [{"d": "2026-10-31", "imp": 155, "pv": 0, "rp": 0, "bm": 0, "u": "https://x.com/HiyokoGlobal/status/2116384677359661126", "t": "cutest doodle just came to life 🐣✏️ #fyp #hiyoko #cute"}, {"d": "2026-10-19", "imp": 154, "pv": 2, "rp": 0, "bm": 0, "u": "https://x.com/HiyokoGlobal/status/2112091890430705937", "t": "HIYOKO season 1 has begun. 🪄🐣 the after-sale is over. a new chapter st"}, {"d": "2026-10-27", "imp": 152, "pv": 2, "rp": 1, "bm": 0, "u": "https://x.com/HiyokoGlobal/status/2114877247945679233", "t": "there's a whole world in here. 🐣 🎮 Happy Chick 💊 Vitalis ⭐ CheePoint 🪙"}], "themes": [["ヘルス(Vitalis)", 17], ["ゲーム(Happy Chick)", 14], ["コミュニティ/告知", 11], ["価格・購入", 10]], "formats": [["説明/告知", 37], ["リスト/図解", 18], ["問いかけ解説", 8], ["一言", 5]]}, {"m": "2026-11", "cnt": 64, "sum_imp": 6600, "med": 105.5, "avg": 103.1, "rp": 50, "bm": 1, "pv": 48, "no_tag_pct": 27, "url_pct": 0, "top": [{"d": "2026-11-18", "imp": 216, "pv": 1, "rp": 1, "bm": 0, "u": "https://x.com/HiyokoGlobal/status/2122962015602037131", "t": "130M users on a game app. 68K waiting for an AI health platform. one t"}, {"d": "2026-11-20", "imp": 215, "pv": 1, "rp": 0, "bm": 0, "u": "https://x.com/HiyokoGlobal/status/2123574807472243075", "t": "what if you could sell your game items as NFTs? 🎮 hiyoko NFT marketpla"}, {"d": "2026-11-17", "imp": 204, "pv": 1, "rp": 1, "bm": 0, "u": "https://x.com/HiyokoGlobal/status/2122599631989469239", "t": "wanna get hiyoko? 🐣 go to coinstore. search HYK/USDT. #HIYOKO #HYK #Se"}], "themes": [["ヘルス(Vitalis)", 18], ["価格・購入", 12], ["キャラ/ミーム", 9], ["その他(一言)", 8]], "formats": [["説明/告知", 27], ["問いかけ解説", 12], ["リンク誘導", 8], ["一言", 6]]}];
+var NOTES={
+ '2025-12':'立ち上げ初期（3件・中央値112）。基礎的な認知形成のフェーズ。',
+ '2026-01':'10件・中央値136。投稿頻度を上げつつ初期ファンを獲得。',
+ '2026-02':'【急増】02/11固定投稿(6,599表示)除外でも中央値146.5。02/04再始動記事がpv212を獲得し、アカウント全体の保存が3→263へ急増。',
+ '2026-04':'【急増】61件・中央値74.0・保存46。4/15の上場/Vesting解説や4/16（返信12）でアカウント全体表示が倍増（9,621→19,223）、新規FW年間最多72件。',
+ '2026-05':'【最盛期】163件・合計15,508表示・中央値94.0・保存124。ロードマップやトークン設計解説が安定して保存・拡散された。',
+ '2026-06':'【明暗・転換点】198件・合計15,192表示・保存100・返信264。6/15(724表示)や6/17(609表示)が伸びた一方、大量連投で中央値は94.0→60.0へ低下。',
+ '2026-07':'【急減】158件・中央値34.0・返信115(-56%)・保存4(-96%)。6月同様の大量連投のままタグ不足・セール誘導偏重となり、上場特需後の外部反応も消失。',
+ '2026-08':'【停滞】60件へ本数を絞るも中央値29.5・保存0。タグ平均0.5個と少なく回復途上。',
+ '2026-09':'【回復兆し】80件・中央値72.0。タグ平均1.3個・インドネシア関連/解説投稿でリーチ倍増。',
+ '2026-10':'【上昇】73件・中央値75.0（後半W43-44は98→113）。URLクリック-44%、タグ平均2.0個、アカウント新規FW+181%（45件）。',
+ '2026-11':'【継続上昇】64件・中央値105.5、タグ平均2.1個。アカウント新規FW60件（19日分）で転換率年間最高。'
+};
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]});}
+function showMonth(m){
+ var s=STATS.find(function(x){return x.m===m;})||STATS[0];
+ document.querySelectorAll('#mtabs button').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-m')===s.m);});
+ var thHtml=s.themes.map(function(x){return esc(x[0])+'('+x[1]+')';}).join(' ／ ');
+ var fHtml=s.formats.map(function(x){return esc(x[0])+'('+x[1]+')';}).join(' ／ ');
+ var topHtml=s.top.map(function(p){
+  return '<li><div class="meta-line">'+p.d+' ｜ 表示 <b>'+p.imp+'</b> ｜ プロフ訪問 '+p.pv+' ｜ 返信 '+p.rp+' ｜ 保存 '+p.bm+'</div><a href="'+p.u+'" target="_blank" rel="noopener">'+esc(p.t)+'</a></li>';
+ }).join('');
+ document.getElementById('mcard').innerHTML=
+  '<h3>'+s.m+' の分析サマリー</h3>'+
+  '<p><b>要点：</b>'+esc(NOTES[s.m]||'')+'</p>'+
+  '<div class="traits">'+
+    '<div><b>'+s.cnt+'</b>投稿数</div>'+
+    '<div><b>'+s.sum_imp.toLocaleString('ja-JP')+'</b>合計表示</div>'+
+    '<div><b>'+s.med+'</b>表示中央値</div>'+
+    '<div><b>'+s.rp+'</b>返信合計</div>'+
+    '<div><b>'+s.bm+'</b>保存合計</div>'+
+    '<div><b>'+s.no_tag_pct+'% / '+s.url_pct+'%</b>タグなし / URL付</div>'+
+  '</div>'+
+  '<p style="font-size:.86rem"><b>主なテーマ：</b>'+thHtml+'<br><b>主な企画の型：</b>'+fHtml+'</p>'+
+  '<h4 style="margin:10px 0 4px">この月の主な投稿（表示上位）</h4><ul class="top-list">'+topHtml+'</ul>';
+}
+document.getElementById('mtabs').addEventListener('click',function(e){var b=e.target.closest('button[data-m]');if(b)showMonth(b.getAttribute('data-m'));});
+document.querySelectorAll('.mbar').forEach(function(g){g.addEventListener('click',function(){showMonth(g.getAttribute('data-m'));document.getElementById('detail').scrollIntoView({behavior:'smooth'});});});
+showMonth('2026-06');
+})();
+</script>
+<script>
+try{if(window.matchMedia('(max-width:900px)').matches)document.querySelector('.sitenav').removeAttribute('open');}catch(e){}
+document.querySelectorAll('.sitenav a').forEach(function(a){a.addEventListener('click',function(){if(window.matchMedia('(max-width:900px)').matches)document.querySelector('.sitenav').removeAttribute('open');});});
+</script>
+<script src="../../i18n.js?v=5f4eb884" defer></script>
+<script src="../../nav.js?v=d910569b" defer></script>
+<script src="../../account.js?v=488b01e9" defer></script>
+</body>
+</html>
