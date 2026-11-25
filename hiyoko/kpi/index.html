@@ -205,7 +205,7 @@ function draw(){const f=F[s];if(!f.sorts.flatMap(g=>g[1]).some(x=>x[1]===so))so=
  const flat=f.sorts.flatMap(g=>g[1]);if(!flat.some(x=>x[1]===so))so='new';
  $('kp-cat-wrap').style.display=s==='x'?'':'none';
  if(s==='x'){$('kp-cat').innerHTML='<option value="">すべて</option>'+[...new Set(D.x.map(p=>p[12]).filter(Boolean))].sort().map(c=>`<option value="${esc(c)}"${c===cat?' selected':''}>${esc(c)}</option>`).join('');}
- $('kp-sort').innerHTML=f.sorts.map(([g,L])=>`<optgroup label="${g}">${L.map(x=>`<option value="${x[1]}"${x[1]===so?' selected':''}>${x[0]}</option>`).join('')}</optgroup>`).join('');
+ if($('kp-sort'))$('kp-sort').innerHTML=f.sorts.map(([g,L])=>`<optgroup label="${g}">${L.map(x=>`<option value="${x[1]}"${x[1]===so?' selected':''}>${x[0]}</option>`).join('')}</optgroup>`).join('');
  // 並べ順ドロップダウンメニュー更新
  {const aS=f.sorts.flatMap(([,L])=>L);const sm=$('kp-sort-menu');if(sm){sm.innerHTML=aS.map(([lbl,val])=>'<button type="button" data-so="'+val+'"'+(val===so?' aria-pressed="true"':'')+'>'+lbl+'</button>').join('');sm.querySelectorAll('[data-so]').forEach(b=>b.onclick=()=>{so=b.dataset.so;page=1;draw();});}const sl=$('kp-sort-label');if(sl)sl.firstChild.textContent=aS.find(([,v])=>v===so)?.[0]||'並べ順';}
  document.querySelectorAll('[data-v]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===view));
@@ -227,7 +227,8 @@ $('kp-from').onchange=e=>{fromDate=e.target.value;per='custom';page=1;draw()};
 $('kp-to').onchange=e=>{toDate=e.target.value;per='custom';page=1;draw()};
 $('kp-dir').onclick=()=>{dir=dir==='desc'?'asc':'desc';page=1;draw()};
 document.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{view=b.dataset.v;page=1;draw()});
-$('kp-sort').onchange=e=>{so=e.target.value;page=1;draw()};
+// kp-sort select removed (dropdown used instead)
+if($('kp-sort'))$('kp-sort').onchange=e=>{so=e.target.value;page=1;draw()};
 $('kp-cat').onchange=e=>{cat=e.target.value;page=1;draw()};
 $('kp-jump').onchange=e=>{page=+e.target.value;draw();$('kp-list').scrollIntoView({block:'start'});$('kp-list').focus({preventScroll:true})};
 document.querySelectorAll('[data-pager]').forEach(el=>el.addEventListener('click',e=>{const b=e.target.closest('button');if(!b||b.disabled)return;if(b.dataset.page)page=+b.dataset.page;else if(b.dataset.move)page+=b.dataset.move==='next'?1:-1;else return;draw();$('kp-list').scrollIntoView({block:'start'});$('kp-list').focus({preventScroll:true})}));
