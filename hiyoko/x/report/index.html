@@ -7,75 +7,42 @@
 <title>レポート | HIYOKO X</title>
 <link rel="stylesheet" href="../../style.css?v=f26360e5">
 <style>
-.rpt-toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:12px 0 18px}
 .btn{font:inherit;cursor:pointer;border-radius:8px;padding:8px 16px;font-size:.88rem;border:1px solid transparent;transition:background .15s,color .15s}
-.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
-.btn-primary:hover{opacity:.88}
 .btn-ghost{background:none;color:var(--accent);border-color:var(--accent)}
 .btn-ghost:hover{background:var(--accent);color:#fff}
-.btn-sm{padding:4px 10px;font-size:.78rem;border-radius:6px}
-.btn-danger{background:none;color:var(--bad);border-color:var(--bad)}
-.btn-danger:hover{background:var(--bad);color:#fff}
-.btn-edit{background:none;color:var(--muted);border-color:var(--line)}
-.btn-edit:hover{color:var(--ink);border-color:var(--ink)}
 
-/* ===== 一覧表示（定番1行掲示板スタイル） ===== */
+/* ===== 一覧表示 ===== */
 .rpt-list{border:1px solid var(--line);border-radius:10px;background:var(--card);overflow:hidden;margin:0 0 32px}
-.rpt-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;border:0;border-bottom:1px solid var(--line);background:transparent;cursor:pointer;text-align:left;width:100%;font:inherit;transition:background .12s}
-.rpt-row:last-child{border-bottom:0}
-.rpt-row:hover{background:var(--paper)}
+.rpt-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);text-align:left;width:100%;transition:background .12s}
 .rpt-row-title{font-size:.95rem;font-weight:600;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
-.rpt-row:hover .rpt-row-title{color:var(--accent)}
 .rpt-row-meta{font-size:.78rem;color:var(--muted);white-space:nowrap;flex:none;font-variant-numeric:tabular-nums}
 @media(max-width:520px){.rpt-row-meta{display:none}}
 
-/* ===== 単体詳細ビュー ===== */
-.rpt-detail{border:1px solid var(--line);border-radius:12px;background:var(--card);padding:20px 22px;margin:0 0 32px}
-.rpt-detail-top{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;padding-bottom:12px;border-bottom:1px solid var(--line);margin-bottom:14px}
-.rpt-detail-title{font-size:1.22rem;font-weight:700;color:var(--ink);margin:0 0 8px;line-height:1.4}
-.rpt-detail-meta{font-size:.82rem;color:var(--muted);margin-bottom:16px}
+/* ===== 詳細ビュー ===== */
 .rpt-detail-body{font-size:.94rem;line-height:1.75;color:var(--ink)}
 .rpt-detail-body h3{font-size:1.02rem;margin:18px 0 6px;padding-bottom:4px;border-bottom:1px solid var(--line);color:var(--ink)}
 .rpt-detail-body p{margin:6px 0}
 .rpt-detail-body ul{margin:6px 0 10px;padding-left:1.3em}
 .rpt-detail-body li{margin:4px 0}
 .rpt-detail-body a{color:var(--accent)}
-.rpt-actions{display:flex;gap:8px}
-.empty-state{text-align:center;padding:40px 20px;color:var(--muted);border:2px dashed var(--line);border-radius:10px;margin:20px 0}
 
 /* ===== プレビューカード ===== */
 .pv-card{display:block;border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:8px;background:var(--paper);padding:10px 14px;margin:8px 0 12px;text-decoration:none;color:var(--ink);transition:border-color .15s,background .15s}
 .pv-card:hover{border-color:var(--accent);background:var(--card)}
 .pv-head{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:.76rem;color:var(--muted);margin-bottom:4px}
 .pv-badge{font-weight:700;color:var(--accent);border:1px solid var(--accent);border-radius:99px;padding:0 7px;font-size:.7rem}
-.pv-text{font-size:.86rem;line-height:1.5;color:var(--ink);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-.pv-kpi{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px;font-size:.76rem;color:var(--muted);font-variant-numeric:tabular-nums}
-.pv-kpi b{color:var(--ink)}
+.pv-text{font-size:.86rem;line-height:1.5;color:var(--ink)}
 
-/* ===== モーダル＆書式ツールバー ===== */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;align-items:flex-start;justify-content:center;padding:32px 16px;overflow-y:auto}
-.modal-overlay.open{display:flex}
-.modal{background:var(--card);border-radius:12px;width:100%;max-width:680px;padding:24px;box-shadow:0 8px 32px rgba(0,0,0,.2);margin:auto}
-.modal h2{margin:0 0 16px;font-size:1.1rem}
-.form-row{margin-bottom:14px}
-.form-row label{display:block;font-size:.82rem;color:var(--muted);margin-bottom:4px;font-weight:600}
-.form-row input,.form-row textarea{width:100%;font:inherit;font-size:.92rem;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);box-sizing:border-box}
-.form-row textarea{resize:vertical;line-height:1.65;min-height:220px;border-top-left-radius:0;border-top-right-radius:0}
-.form-row input:focus,.form-row textarea:focus{outline:2px solid var(--accent);border-color:transparent}
-.ed-bar{display:flex;flex-wrap:wrap;gap:4px;align-items:center;padding:6px 8px;background:var(--paper);border:1px solid var(--line);border-bottom:0;border-radius:8px 8px 0 0}
-.ed-btn{font:inherit;font-size:.8rem;padding:4px 9px;border:1px solid var(--line);border-radius:5px;background:var(--card);color:var(--ink);cursor:pointer}
-.ed-btn:hover{border-color:var(--accent);color:var(--accent)}
-.ed-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
-.ed-sep{width:1px;height:18px;background:var(--line);margin:0 2px}
-.ed-preview{display:none;min-height:220px;max-height:360px;overflow-y:auto;padding:12px 14px;border:1px solid var(--line);border-radius:0 0 8px 8px;background:var(--paper)}
-.form-hint{font-size:.78rem;color:var(--muted);margin-top:4px}
-.modal-footer{display:flex;gap:10px;justify-content:flex-end;margin-top:18px;flex-wrap:wrap}
-
-.confirm-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1100;align-items:center;justify-content:center}
-.confirm-overlay.open{display:flex}
-.confirm-box{background:var(--card);border-radius:10px;padding:24px;max-width:380px;width:90%;text-align:center}
-.confirm-box p{margin:0 0 20px;font-size:.95rem}
-.confirm-footer{display:flex;gap:10px;justify-content:center}
+/* ===== detailsアコーディオン ===== */
+details.rpt-entry>summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);cursor:pointer;width:100%;text-align:left;transition:background .12s}
+details.rpt-entry>summary::-webkit-details-marker{display:none}
+details.rpt-entry>summary::marker{display:none;content:''}
+details.rpt-entry>summary:hover{background:var(--paper)}
+details.rpt-entry[open]>summary .rpt-row-title{color:var(--accent)}
+details.rpt-entry:last-child>summary{border-bottom:0}
+details.rpt-entry[open]>summary{border-bottom:1px solid var(--line)}
+.rpt-entry-body{padding:16px 20px;border-bottom:1px solid var(--line);background:var(--paper)}
+details.rpt-entry:last-child .rpt-entry-body{border-bottom:0}
 </style>
 </head>
 <body class="ch-x">
@@ -83,18 +50,189 @@
 <nav class="hy-tabs" aria-label="コーナー"><div><a href="../../">ホーム</a><a href="../../about/">HIYOKOを知る</a><a href="../../links/">公式リンク</a><a href="../../analysis/" aria-current="true">SNS分析</a><a href="../../news/">ニュース</a><a href="../../internal/strategy/" class="mem-only">🔒 社内資料</a></div></nav>
 <div class="layout">
 <details class="sitenav" open><summary>このコーナーのページ</summary><div><a class="brand" href="../../">HIYOKO</a><span class="ch m">SNS分析</span><ul class=""><li><a class="page" href="../../analysis/">SNS分析トップ</a></li><li><a class="page" href="../../kpi/">KPI一覧</a></li><li><a class="page" href="../../2026-11/">2026年11月 X・IG ABCD</a></li><li><a class="page" href="../../a-ranking/">Aの投稿ランキング（全期間）</a></li></ul><span class="ch x">HIYOKO X</span><ul class=""><li><a class="page" href="../../x/">概要</a></li><li><a class="page" href="../../x/monthly/">月間分析</a></li><li><a class="page" href="../../x/posts/">KPI</a></li><li><a class="page" href="../../x/report/" aria-current="page">レポート</a></li></ul><span class="ch ig">Instagram</span><ul class=""><li><a class="page" href="../../ig/">Instagram 詳細</a></li><li><a class="page" href="../../ig/posts/">Instagram 投稿とKPI（事実）</a></li><li><a class="page" href="../../ig/content/">Instagram コンテンツ3グループ</a></li></ul></div></details>
-<details class="pagetoc" open><summary>このページの目次</summary><ul id="toc-list"><li><em style="color:var(--muted);font-size:.85rem">読み込み中…</em></li></ul></details>
+<details class="pagetoc" open><summary>このページの目次</summary><ul id="toc-list">
+<li><a href="#r1">【調査予定】10〜11月 インプレッション再上昇の要因を探る</a></li>
+<li><a href="#r2">7月 インプレッション急減（中央値 −43%）の要因分析</a></li>
+<li><a href="#r3">4〜5月 インプレッション急増の要因調査（6つの可能性）</a></li>
+<li><a href="#r4">X コンテンツ4グループのボード（A〜D分類）</a></li>
+<li><a href="#r5">X 「悩み→解決」シリーズの企画</a></li>
+<li><a href="#r6">全期間 通常投稿 上位5つ（固定投稿を除く）</a></li>
+</ul></details>
 <main id="main">
 <nav class="crumbs"><a href="/">Towananika</a> ／ <a href="../../">HIYOKO</a> ／ <a href="../../analysis/">SNS分析</a> ／ <a href="../">HIYOKO X</a> ／ レポート</nav>
 <div class="chhead"><span class="dot"></span>HIYOKO X</div>
 <h1>レポート</h1>
 
-<div class="rpt-toolbar" id="rpt-toolbar">
-  <button class="btn btn-primary" onclick="openCreate()">＋ 新規投稿</button>
-</div>
-
 <div id="rpt-view">
-  <div class="empty-state">読み込み中…</div>
+<div class="rpt-list">
+
+<details class="rpt-entry" id="r1">
+<summary class="rpt-row">
+<span class="rpt-row-title">【調査予定】10〜11月 インプレッション再上昇の要因を探る</span>
+<span class="rpt-row-meta">2026-11-25 ・ 初期レポート</span>
+</summary>
+<div class="rpt-entry-body rpt-detail-body">
+<p>9月（中央値72）→10月（75）→11月（105.5）と段階的に上昇。Season 1 開始やタグ復活との関連を調査中。</p>
+<h3>根拠（実測）</h3>
+<ul>
+<li>2026-09: 中央値 72.0（8月29.5から+144%）</li>
+<li>2026-10: 中央値 75.0、新規FW +181%（前月比）</li>
+<li>2026-11: 中央値 105.5（2026年6月以降で最高）</li>
+<li>2026-10: URLクリック -44%（リンク投稿が減少）</li>
+<li>2026-10: タグ平均 2.0個（7月のタグなし93%から大幅回復）</li>
+</ul>
+<h3>可能性・仮説（調査対象）</h3>
+<ul>
+<li>Season 1 開始によるコンテンツ転換の効果か</li>
+<li>タグ復活→新規リーチが増加した可能性</li>
+<li>投稿頻度の適正化（大量連投の抑制）の効果か</li>
+<li>ゲーム・Happy Chick テーマの比率変化との相関</li>
+</ul>
+</div>
+</details>
+
+<details class="rpt-entry" id="r2">
+<summary class="rpt-row">
+<span class="rpt-row-title">7月 インプレッション急減（中央値 −43%）の要因分析</span>
+<span class="rpt-row-meta">2026-11-25 ・ 初期レポート</span>
+</summary>
+<div class="rpt-entry-body rpt-detail-body">
+<p>6月（中央値60）→7月（中央値34）に急落。158件投稿したにもかかわらずエンゲージメントがほぼ消滅した月。</p>
+<h3>根拠（実測）</h3>
+<ul>
+<li>6月→7月: 中央値 60→34（-43%）</li>
+<li>7月: rp≥2 の投稿が0件（158件中）</li>
+<li>6/30〜 1日8本以上の連投が始まった</li>
+<li>7月: タグなし投稿が全体の93%</li>
+<li>7月 保存合計: 4件（6月比で大幅減少）</li>
+</ul>
+<h3>可能性・仮説</h3>
+<ul>
+<li><strong>大量連投による希薄化</strong>: 1日8本以上投稿すると各投稿のリーチが分散しアルゴリズム的に不利になる可能性がある（因果未確認）</li>
+<li><strong>タグなし投稿の増加</strong>: 新規ユーザーの発見経路が減少した可能性</li>
+<li><strong>上場特需後の流入消滅</strong>: 5〜6月の「上場」関連の外部リプ流入が自然減した可能性（外部要因）</li>
+<li><strong>コンテンツ制作時間の短縮</strong>: 大量投稿に伴い個々の制作時間が減少した可能性</li>
+</ul>
+<h3>データの制約</h3>
+<ul>
+<li>7月のCSVは97件のみ収録（158件投稿のうち）。残り61件のKPIは不明。</li>
+</ul>
+</div>
+</details>
+
+<details class="rpt-entry" id="r3">
+<summary class="rpt-row">
+<span class="rpt-row-title">4〜5月 インプレッション急増の要因調査（6つの可能性）</span>
+<span class="rpt-row-meta">2026-11-25 ・ 初期レポート</span>
+</summary>
+<div class="rpt-entry-body rpt-detail-body">
+<p>アカウント全体表示は3月（9,621）→4月（19,223）でちょうど2倍に急増し、5月も17,269と高水準を維持しました。ただし「なぜ増えたのか」を詳細に分解すると、<strong>4月のスパイク型急増</strong>と<strong>5月の底上げ型維持</strong>では性質が異なります。</p>
+<h3>1. 根拠（実測KPIの事実）</h3>
+<ul>
+<li><strong>いいね数は増えていない</strong>：アカウント全体のいいねは 3月 876 → 4月 734 → 5月 721 と微減。増えたのは <strong>表示数（2倍）・プロフ訪問（3月144→4月307）・返信（166→221）</strong>。</li>
+<li><strong>4月は4/15〜17に極端集中</strong>：4/15単日だけで表示 2,405・新規フォロー 27（月間72の38%）・プロフ訪問 49・返信 46 を記録。一方、4/20〜22の中央値は 33〜35 に戻っている。</li>
+<li><strong>5月は外れ値を除いても全体が底上げ</strong>：300 imp超のスパイク投稿を除外した中央値も <strong>4月 72.5 → 5月 92.0</strong>（6月は58.0）へ上昇。5/08以降は週別中央値が 94〜110 で安定。</li>
+<li><strong>形式シフト（5月）</strong>：「リスト/図解」が4月 12件 → <strong>5月 48件（中央値 117.5）</strong> へ4倍増し、保存合計も 4月46件 → 5月124件へ増加。</li>
+</ul>
+<h3>2. 考えられる6つの可能性</h3>
+<ul>
+<li><strong>① ボット／自動応答による露出・返信の押し上げ（可能性高）</strong><br>いいね数が横ばい〜微減なのに表示数と返信だけ急増している点、また4/15や5/23の突出投稿でWeb3セール系ワードを含む投稿だけ異常値が出ている点から、ボットがリプライ・クロールして見かけの表示数を押し上げた可能性が高い。<br><a href="https://x.com/HiyokoGlobal/status/2044325153182756934" target="_blank" rel="noopener">x.com/HiyokoGlobal/status/2044325153182756934 ↗</a><br><a href="https://x.com/HiyokoGlobal/status/2058110698778247442" target="_blank" rel="noopener">x.com/HiyokoGlobal/status/2058110698778247442 ↗</a></li>
+<li><strong>② プレセール開始＋上場予定発表による外部検索・駆け込み需要</strong><br>4/15〜17に「Presale is active」「Listing planned mid-to-late May」「Vesting」「MetaMask手順」を集中投下し、5月下旬は「来週がラストスパート（最安値 $0.015）」としてプロフ訪問が増えた可能性。</li>
+<li><strong>③ インドネシアKOLマーケティングによる現地流入</strong><br>4/15の投稿本文に 🇮🇩 KOL marketing in Indonesia is active や 🇮🇩 Indonesia's community と明記されており、同日の新規フォロー27件・表示2,405はKOL施策からの流入と重なる可能性がある。</li>
+<li><strong>④ 「リスト／図解」形式へのシフトによる実力ベースの底上げ（5月）</strong><br>5月は「リスト/図解」を48件（中央値117.5）投入し、HYK's 4 use cases やロードマップなど一目でわかる投稿が増えたため、スパイクを除いた通常投稿の中央値も92.0まで底上げされた可能性。</li>
+<li><strong>⑤ 4/1〜4/13の未収録期間における別要因</strong><br>4月のアカウント全体表示 19,223 のうち、4/14以降の投稿別CSV収録分は 5,403 のみ。差分の約13,820表示は4/1〜13の投稿や投稿外インプレッションによるもので、前半に別の拡散要因があった可能性もある。</li>
+<li><strong>⑥ プロフ訪問増による固定投稿・過去投稿への連鎖閲覧</strong><br>4月にプロフ訪問が307件（3月の2.1倍）に増えたことで、プロフィール上の固定投稿（2/11）や他投稿への回遊が増え、アカウント全体の表示数が増えた可能性。</li>
+</ul>
+<h3>3. 個別投稿の違和感ポイント</h3>
+<ul>
+<li><strong>4/15投稿（415 imp）</strong>：同日スレッド的5本のうち最初の3本は71〜83 imp・いいね2・返信1だったのに4本目だけ415 imp・返信4に突出。</li>
+<li><strong>5/23投稿（743 imp・全期間1位）</strong>：同内容の5/09（187 imp）・5/11（201 imp）といいね数は大差ない（9 vs 6〜8）のに表示数だけ約4倍・ER 5.9%へ低下し、presale.hiyoko.io 記載にも関わらずURLクリックは0件。</li>
+</ul>
+<h3>データの制約</h3>
+<ul>
+<li>4/1〜4/13および3月の投稿別CSVが欠損しているため、4月前半の投稿別内訳は確認できていません。</li>
+<li>ボット判定はCSVの数値挙動からの推測であり、当時のリプライアカウント精査が別途必要です。</li>
+</ul>
+</div>
+</details>
+
+<details class="rpt-entry" id="r4">
+<summary class="rpt-row">
+<span class="rpt-row-title">X コンテンツ4グループのボード（A〜D分類）</span>
+<span class="rpt-row-meta">2026-11-19 ・ 初期レポート</span>
+</summary>
+<div class="rpt-entry-body rpt-detail-body">
+<p>対象：@HiyokoGlobal の投稿 359件（2026年7月2日〜11月19日）<br>全投稿を「見られたか（同じ月の中央値以上か）」×「プロフィールまで来たか（訪問1回以上）」で4つに分類。</p>
+<h3>4グループの整理</h3>
+<ul>
+<li><strong>A（見られて、来る｜70件）</strong>：この型をそのまま増やす（悩み→解決シリーズや解説記事など）</li>
+<li><strong>B（見られるが、素通り｜112件）</strong>：本文の最後に「HIYOKO公式で見る」等を1行足す</li>
+<li><strong>C（見られないが、来る｜30件）</strong>：中身は効いているが露出不足。書き直して再投稿</li>
+<li><strong>D（届かない｜147件）</strong>：リンクだけ・一言だけの投稿はやめる</li>
+</ul>
+<h3>グループを分ける主な要因</h3>
+<ul>
+<li>ハッシュタグあり投稿は35〜38%がA、タグなしは11%がA（多くがD）</li>
+<li>1日2本の日は38%がA、6本以上の日はAが9%まで低下</li>
+<li>リンクだけの投稿は94%がDまたはB</li>
+</ul>
+<a class="pv-card" href="../content/"><div class="pv-head"><span class="pv-badge">詳細ボード</span><span>../content/</span></div><div class="pv-text"><b>X コンテンツ4グループのボード（散布図・A〜D詳細）</b><br>全359件の散布図、月ごとの変化、グループ別の改善アクションを確認できます。</div></a>
+</div>
+</details>
+
+<details class="rpt-entry" id="r5">
+<summary class="rpt-row">
+<span class="rpt-row-title">X 「悩み→解決」シリーズの企画</span>
+<span class="rpt-row-meta">2026-11-19 ・ 初期レポート</span>
+</summary>
+<div class="rpt-entry-body rpt-detail-body">
+<p>Xでプロフィール訪問とフォローを生んでいるのは、NFT・アイテム所有のテーマを「読み手の悩み」から書いた投稿。</p>
+<h3>根拠（実測）</h3>
+<ul>
+<li>悩みから入った投稿（11/9）：1,000表示あたりプロフィール訪問 40（全体平均は6.8）</li>
+<li>NFTの機能説明から入った投稿（8/28・9/17）：訪問 0</li>
+<li>リンクだけのNFT投稿（11/15）：表示 25・訪問 0</li>
+</ul>
+<h3>投稿の型（5ステップ）</h3>
+<ul>
+<li>1. 悩み：「you」が主語の1行（例：ゲームがサ終してアイテムが消える）</li>
+<li>2. ひっくり返す：なぜそうなるのかを1行</li>
+<li>3. 答え：HIYOKOの事実を1つだけ（専門用語は言い換える）</li>
+<li>4. 質問：答えたくなる問いで締める</li>
+<li>5. タグ：3つ（#HIYOKO＋テーマ＋流行タグ）</li>
+</ul>
+<p>※ 本文は60〜200字。リンクは本文に入れず返信欄か固定ポストに置く。</p>
+<a class="pv-card" href="../plan/"><div class="pv-head"><span class="pv-badge">企画ページ</span><span>../plan/</span></div><div class="pv-text"><b>X 「悩み→解決」シリーズの企画・投稿案</b><br>効いた投稿の型と、そのまま使える新しい投稿案をまとめています。</div></a>
+</div>
+</details>
+
+<details class="rpt-entry" id="r6">
+<summary class="rpt-row">
+<span class="rpt-row-title">全期間 通常投稿 上位5つ（固定投稿を除く）</span>
+<span class="rpt-row-meta">2026-11-25 ・ 初期レポート</span>
+</summary>
+<div class="rpt-entry-body rpt-detail-body">
+<p>全期間（2025年12月24日〜2026年11月24日）の通常投稿876件のうち、インプレッション上位5つのまとめです。<br>※ 2026-02-11（6,599表示）は固定投稿のため除外しています。</p>
+<h3>1位：2026-05-23（743 imp / いいね9 / 返信5 / プロフ訪問12 / 保存1）</h3>
+<a class="pv-card" href="https://x.com/HiyokoGlobal/status/2058110698778247442" target="_blank" rel="noopener"><div class="pv-head"><span class="pv-badge">X 投稿</span><span>x.com</span></div><div class="pv-text">x.com/HiyokoGlobal/status/2058110698778247442 ↗</div></a>
+<p><strong>特徴・注意点</strong>：同系の価格ロードマップ投稿（5/09: 187 imp・5/11: 201 imp）といいね数は大差ないのに表示だけ約4倍。presale.hiyoko.io 記載にも関わらずURLクリックは0件のため、ボット／スパムリプライによる露出増の可能性あり。</p>
+<h3>2位：2026-06-15（724 imp / いいね32 / 返信27 / プロフ訪問37 / 保存1）</h3>
+<a class="pv-card" href="https://x.com/HiyokoGlobal/status/2066430577352552530" target="_blank" rel="noopener"><div class="pv-head"><span class="pv-badge">X 投稿</span><span>x.com</span></div><div class="pv-text">x.com/HiyokoGlobal/status/2066430577352552530 ↗</div></a>
+<p><strong>特徴・注意点</strong>：<strong>※確認上ボットのリプライの可能性が非常に高い。</strong></p>
+<h3>3位：2026-06-17（609 imp / いいね15 / 返信9 / プロフ訪問15）</h3>
+<a class="pv-card" href="https://x.com/HiyokoGlobal/status/2067155324331807034" target="_blank" rel="noopener"><div class="pv-head"><span class="pv-badge">X 投稿</span><span>x.com</span></div><div class="pv-text">x.com/HiyokoGlobal/status/2067155324331807034 ↗</div></a>
+<p><strong>特徴</strong>：上場完了（Listing is complete）とエコシステム始動を知らせる投稿。</p>
+<h3>4位：2026-02-04（427 imp / いいね13 / プロフ訪問212 / 保存3）</h3>
+<a class="pv-card" href="https://x.com/HiyokoGlobal/status/2018840143348822253" target="_blank" rel="noopener"><div class="pv-head"><span class="pv-badge">X 投稿</span><span>x.com</span></div><div class="pv-text">x.com/HiyokoGlobal/status/2018840143348822253 ↗</div></a>
+<p><strong>特徴</strong>：再始動ストーリー投稿。プロフ訪問 <strong>212件</strong> は通常投稿の中で突出して高い転換実績。</p>
+<h3>5位：2026-04-15（415 imp / いいね13 / 返信4 / プロフ訪問3 / 保存1）</h3>
+<a class="pv-card" href="https://x.com/HiyokoGlobal/status/2044325153182756934" target="_blank" rel="noopener"><div class="pv-head"><span class="pv-badge">X 投稿</span><span>x.com</span></div><div class="pv-text">x.com/HiyokoGlobal/status/2044325153182756934 ↗</div></a>
+<p><strong>特徴・注意点</strong>：同日の連続投稿のうちこの投稿のみ突出。ボット反応またはインドネシアKOL施策との連動の可能性。</p>
+<a class="pv-card" href="../monthly/"><div class="pv-head"><span class="pv-badge">分析ページ</span><span>../monthly/</span></div><div class="pv-text"><b>X 月間分析（11か月・上位5投稿）</b><br>月別の推移グラフと各月の詳細レポートを確認できます。</div></a>
+</div>
+</details>
+
+</div>
 </div>
 
 <!--fan--><p class="fan-foot"><span>🐣 このサイトはファンが作った非公式サイトです。HIYOKO公式とは関係ありません。</span> <a href="https://hiyokotoken.com/" target="_blank" rel="noopener">正しい情報は公式サイトへ ↗</a></p><!--/fan-->
@@ -102,563 +240,6 @@
 <footer>HIYOKO ／ レポート</footer>
 </main>
 </div>
-
-<!-- ===== 投稿フォーム モーダル ===== -->
-<div class="modal-overlay" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-  <div class="modal">
-    <h2 id="modal-title">新規投稿</h2>
-    <input type="hidden" id="edit-id">
-    <div class="form-row">
-      <label for="f-title">タイトル</label>
-      <input type="text" id="f-title" placeholder="レポートのタイトルを入力">
-    </div>
-    <div class="form-row">
-      <label for="f-body">本文</label>
-      <div class="ed-bar">
-        <button type="button" class="ed-btn" onclick="fmtWrap('**','**')" title="太字"><b>B</b></button>
-        <button type="button" class="ed-btn" onclick="fmtLine('## ')" title="見出し">H 見出し</button>
-        <button type="button" class="ed-btn" onclick="fmtLine('・')" title="箇条書き">・リスト</button>
-        <button type="button" class="ed-btn" onclick="fmtLink()" title="リンクを挿入">🔗 リンク</button>
-        <span class="ed-sep"></span>
-        <button type="button" class="ed-btn" id="btn-prev-toggle" onclick="togglePreview()">👁 プレビュー</button>
-      </div>
-      <textarea id="f-body" rows="10" placeholder="根拠（実測値）や考察を入力。X投稿のURLを貼ると自動でカードプレビュー表示されます。"></textarea>
-      <div class="ed-preview rpt-detail-body" id="ed-preview"></div>
-      <div class="form-hint">※ `**太字**` / `## 見出し` / `[文字](URL)` が使えます。URL単体はカードプレビュー表示され、日時は自動取得されます。</div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal()">キャンセル</button>
-      <button class="btn btn-primary" onclick="savePost()">保存</button>
-    </div>
-  </div>
-</div>
-
-<!-- ===== 削除確認 ===== -->
-<div class="confirm-overlay" id="confirm" role="dialog" aria-modal="true">
-  <div class="confirm-box">
-    <p id="confirm-msg">この投稿を削除しますか？</p>
-    <div class="confirm-footer">
-      <button class="btn btn-ghost" onclick="closeConfirm()">キャンセル</button>
-      <button class="btn btn-danger" id="confirm-ok">削除する</button>
-    </div>
-  </div>
-</div>
-
-<script>
-var STORAGE_KEY = 'hiyoko-x-report-v1';
-var POST_MAP = {};
-
-/* ===== data.json を読み込んでX投稿URLのプレビューに使う ===== */
-fetch('../posts/data.json').then(function(r){ return r.json(); }).then(function(cfg){
-  if (cfg && Array.isArray(cfg.rows)) {
-    cfg.rows.forEach(function(row){
-      if (row.u) POST_MAP[row.u] = row;
-    });
-    renderView();
-  }
-}).catch(function(){});
-
-/* ===== 初期データ ===== */
-var INITIAL_POSTS = [
-  {
-    id: '1',
-    no: 1,
-    date: '2026-11-25 16:30',
-    authorEmail: '',
-    authorName: '初期レポート',
-    title: '【調査予定】10〜11月 インプレッション再上昇の要因を探る',
-    body: '9月（中央値72）→10月（75）→11月（105.5）と段階的に上昇。Season 1 開始やタグ復活との関連を調査中。\n\n## 根拠（実測）\n・2026-09: 中央値 72.0（8月29.5から+144%）\n・2026-10: 中央値 75.0、新規FW +181%（前月比）\n・2026-11: 中央値 105.5（2026年6月以降で最高）\n・2026-10: URLクリック -44%（リンク投稿が減少）\n・2026-10: タグ平均 2.0個（7月のタグなし93%から大幅回復）\n\n## 可能性・仮説（調査対象）\n・Season 1 開始によるコンテンツ転換の効果か\n・タグ復活→新規リーチが増加した可能性\n・投稿頻度の適正化（大量連投の抑制）の効果か\n・ゲーム・Happy Chick テーマの比率変化との相関'
-  },
-  {
-    id: '2',
-    no: 2,
-    date: '2026-11-25 16:30',
-    authorEmail: '',
-    authorName: '初期レポート',
-    title: '7月 インプレッション急減（中央値 −43%）の要因分析',
-    body: '6月（中央値60）→7月（中央値34）に急落。158件投稿したにもかかわらずエンゲージメントがほぼ消滅した月。\n\n## 根拠（実測）\n・6月→7月: 中央値 60→34（-43%）\n・7月: rp≥2 の投稿が0件（158件中）\n・6/30〜 1日8本以上の連投が始まった\n・7月: タグなし投稿が全体の93%\n・7月 保存合計: 4件（6月比で大幅減少）\n\n## 可能性・仮説\n・**大量連投による希薄化**: 1日8本以上投稿すると各投稿のリーチが分散しアルゴリズム的に不利になる可能性がある（因果未確認）\n・**タグなし投稿の増加**: 新規ユーザーの発見経路が減少した可能性\n・**上場特需後の流入消滅**: 5〜6月の「上場」関連の外部リプ流入が自然減した可能性（外部要因）\n・**コンテンツ制作時間の短縮**: 大量投稿に伴い個々の制作時間が減少した可能性\n\n## データの制約\n・7月のCSVは97件のみ収録（158件投稿のうち）。残り61件のKPIは不明。'
-  },
-  {
-    id: '3',
-    no: 3,
-    date: '2026-11-25 16:56',
-    authorEmail: '',
-    authorName: '初期レポート',
-    title: '4〜5月 インプレッション急増の要因調査（6つの可能性）',
-    body: 'アカウント全体表示は3月（9,621）→4月（19,223）でちょうど2倍に急増し、5月も17,269と高水準を維持しました。ただし「なぜ増えたのか」を詳細に分解すると、**4月のスパイク型急増**と**5月の底上げ型維持**では性質が異なります。
-
-## 1. 根拠（実測KPIの事実）
-・**いいね数は増えていない**：アカウント全体のいいねは 3月 876 → 4月 734 → 5月 721 と微減。増えたのは **表示数（2倍）・プロフ訪問（3月144→4月307）・返信（166→221）**。
-・**4月は4/15〜17に極端集中**：4/15単日だけで表示 2,405・新規フォロー 27（月間72の38%）・プロフ訪問 49・返信 46 を記録。一方、4/20〜22の中央値は 33〜35 に戻っている。
-・**5月は外れ値を除いても全体が底上げ**：300 imp超のスパイク投稿を除外した中央値も **4月 72.5 → 5月 92.0**（6月は58.0）へ上昇。5/08以降は週別中央値が 94〜110 で安定。
-・**形式シフト（5月）**：「リスト/図解」が4月 12件 → **5月 48件（中央値 117.5）** へ4倍増し、保存合計も 4月46件 → 5月124件へ増加。
-
-## 2. 考えられる6つの可能性
-
-・**① ボット／自動応答による露出・返信の押し上げ（可能性高）**
-いいね数が横ばい〜微減なのに表示数と返信だけ急増している点、また4/15や5/23の突出投稿でWeb3セール系ワードを含む投稿だけ異常値が出ている点から、ボットがリプライ・クロールして見かけの表示数を押し上げた可能性が高い。
-
-https://x.com/HiyokoGlobal/status/2044325153182756934
-
-https://x.com/HiyokoGlobal/status/2058110698778247442
-
-・**② プレセール開始＋上場予定発表による外部検索・駆け込み需要**
-4/15〜17に「Presale is active」「Listing planned mid-to-late May」「Vesting」「MetaMask手順」を集中投下し、5月下旬は「来週がラストスパート（最安値 $0.015）」としてプロフ訪問が増えた可能性。
-
-・**③ インドネシアKOLマーケティングによる現地流入**
-4/15の投稿本文に `🇮🇩 KOL marketing in Indonesia is active` や `🇮🇩 Indonesia’s community` と明記されており、同日の新規フォロー27件・表示2,405はKOL施策からの流入と重なる可能性がある。
-
-・**④ 「リスト／図解」形式へのシフトによる実力ベースの底上げ（5月）**
-5月は「リスト/図解」を48件（中央値117.5）投入し、`HYK\'s 4 use cases` やロードマップなど一目でわかる投稿が増えたため、スパイクを除いた通常投稿の中央値も92.0まで底上げされた可能性。
-
-・**⑤ 4/1〜4/13の未収録期間における別要因**
-4月のアカウント全体表示 19,223 のうち、4/14以降の投稿別CSV収録分は 5,403 のみ。差分の約13,820表示は4/1〜13の投稿や投稿外インプレッションによるもので、前半に別の拡散要因があった可能性もある。
-
-・**⑥ プロフ訪問増による固定投稿・過去投稿への連鎖閲覧**
-4月にプロフ訪問が307件（3月の2.1倍）に増えたことで、プロフィール上の固定投稿（2/11）や他投稿への回遊が増え、アカウント全体の表示数が増えた可能性。
-
-## 3. 個別投稿の違和感ポイント
-・**4/15投稿（415 imp）**：同日スレッド的5本のうち最初の3本は71〜83 imp・いいね2・返信1だったのに4本目だけ415 imp・返信4に突出。
-・**5/23投稿（743 imp・全期間1位）**：同内容の5/09（187 imp）・5/11（201 imp）といいね数は大差ない（9 vs 6〜8）のに表示数だけ約4倍・ER 5.9%へ低下し、`presale.hiyoko.io` 記載にも関わらずURLクリックは0件。
-
-## データの制約
-・4/1〜4/13および3月の投稿別CSVが欠損しているため、4月前半の投稿別内訳は確認できていません。
-・ボット判定はCSVの数値挙動からの推測であり、当時のリプライアカウント精査が別途必要です。'
-  },
-  {
-    id: '4',
-    no: 4,
-    date: '2026-11-19 12:00',
-    authorEmail: '',
-    authorName: '初期レポート',
-    title: 'X コンテンツ4グループのボード（A〜D分類）',
-    body: '対象：@HiyokoGlobal の投稿 359件（2026年7月2日〜11月19日）\n全投稿を「見られたか（同じ月の中央値以上か）」×「プロフィールまで来たか（訪問1回以上）」で4つに分類。\n\n## 4グループの整理\n・**A（見られて、来る｜70件）**：この型をそのまま増やす（悩み→解決シリーズや解説記事など）\n・**B（見られるが、素通り｜112件）**：本文の最後に「HIYOKO公式で見る」等を1行足す\n・**C（見られないが、来る｜30件）**：中身は効いているが露出不足。書き直して再投稿\n・**D（届かない｜147件）**：リンクだけ・一言だけの投稿はやめる\n\n## グループを分ける主な要因\n・ハッシュタグあり投稿は35〜38%がA、タグなしは11%がA（多くがD）\n・1日2本の日は38%がA、6本以上の日はAが9%まで低下\n・リンクだけの投稿は94%がDまたはB\n\n../content/'
-  },
-  {
-    id: '5',
-    no: 5,
-    date: '2026-11-19 12:00',
-    authorEmail: '',
-    authorName: '初期レポート',
-    title: 'X 「悩み→解決」シリーズの企画',
-    body: 'Xでプロフィール訪問とフォローを生んでいるのは、NFT・アイテム所有のテーマを「読み手の悩み」から書いた投稿。\n\n## 根拠（実測）\n・悩みから入った投稿（11/9）：1,000表示あたりプロフィール訪問 40（全体平均は6.8）\n・NFTの機能説明から入った投稿（8/28・9/17）：訪問 0\n・リンクだけのNFT投稿（11/15）：表示 25・訪問 0\n\n## 投稿の型（5ステップ）\n・1. 悩み：「you」が主語の1行（例：ゲームがサ終してアイテムが消える）\n・2. ひっくり返す：なぜそうなるのかを1行\n・3. 答え：HIYOKOの事実を1つだけ（専門用語は言い換える）\n・4. 質問：答えたくなる問いで締める\n・5. タグ：3つ（#HIYOKO＋テーマ＋流行タグ）\n\n※ 本文は60〜200字。リンクは本文に入れず返信欄か固定ポストに置く。\n\n../plan/'
-  },
-  {
-    id: '6',
-    no: 6,
-    date: '2026-11-25 17:00',
-    authorEmail: '',
-    authorName: '初期レポート',
-    title: '全期間 通常投稿 上位5つ（固定投稿を除く）',
-    body: '全期間（2025年12月24日〜2026年11月24日）の通常投稿876件のうち、インプレッション上位5つのまとめです。\n※ 2026-02-11（6,599表示）は固定投稿のため除外しています。\n\n## 1位：2026-05-23（743 imp / いいね9 / 返信5 / プロフ訪問12 / 保存1）\nhttps://x.com/HiyokoGlobal/status/2058110698778247442\n・**特徴・注意点**：同系の価格ロードマップ投稿（5/09: 187 imp・5/11: 201 imp）といいね数は大差ないのに表示だけ約4倍。`presale.hiyoko.io` 記載にも関わらずURLクリックは0件のため、ボット／スパムリプライによる露出増の可能性あり。\n\n## 2位：2026-06-15（724 imp / いいね32 / 返信27 / プロフ訪問37 / 保存1）\nhttps://x.com/HiyokoGlobal/status/2066430577352552530\n・**特徴・注意点**：**※確認上ボットのリプライの可能性が非常に高い。**\n\n## 3位：2026-06-17（609 imp / いいね15 / 返信9 / プロフ訪問15）\nhttps://x.com/HiyokoGlobal/status/2067155324331807034\n・**特徴**：上場完了（Listing is complete）とエコシステム始動を知らせる投稿。\n\n## 4位：2026-02-04（427 imp / いいね13 / プロフ訪問212 / 保存3）\nhttps://x.com/HiyokoGlobal/status/2018840143348822253\n・**特徴**：再始動ストーリー投稿。プロフ訪問 **212件** は通常投稿の中で突出して高い転換実績。\n\n## 5位：2026-04-15（415 imp / いいね13 / 返信4 / プロフ訪問3 / 保存1）\nhttps://x.com/HiyokoGlobal/status/2044325153182756934\n・**特徴・注意点**：同日の連続投稿のうちこの投稿のみ突出。ボット反応またはインドネシアKOL施策との連動の可能性。\n\n../monthly/'
-  }
-];
-
-/* ===== 権限判定（作成者または管理者のみ編集・削除可） ===== */
-function isOwner() {
-  return document.documentElement.classList.contains('is-owner');
-}
-function currentUser() {
-  return window.TRI_USER || null;
-}
-function canManage(post) {
-  if (isOwner()) return true;
-  var u = currentUser();
-  if (u && u.email && post && post.authorEmail && u.email === post.authorEmail) return true;
-  return false;
-}
-
-/* ===== 日時フォーマット（自動取得） ===== */
-function nowDateTime() {
-  var d = new Date();
-  var p = function(n){ return String(n).padStart(2, '0'); };
-  return d.getFullYear() + '-' + p(d.getMonth()+1) + '-' + p(d.getDate()) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
-}
-
-/* ===== データ管理 ===== */
-function normalizePost(p) {
-  if (p.body !== undefined) return p;
-  var parts = [];
-  if (p.summary) parts.push(p.summary);
-  if (p.fact) parts.push('## 根拠（実測）\n' + p.fact);
-  if (p.hypo) parts.push('## 可能性・仮説\n' + p.hypo);
-  if (p.note) parts.push('## 注意事項\n' + p.note);
-  return {
-    id: p.id,
-    no: p.no || parseInt(p.id, 10) || 0,
-    date: p.date || '',
-    authorEmail: p.authorEmail || '',
-    authorName: p.authorName || '',
-    title: p.title || '',
-    body: parts.join('\n\n')
-  };
-}
-
-function loadPosts() {
-  var posts = null;
-  try {
-    var raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) posts = JSON.parse(raw).map(normalizePost);
-  } catch(e) {}
-  if (!posts) {
-    posts = INITIAL_POSTS.slice();
-    savePosts(posts);
-    return posts;
-  }
-  // 初期投稿のうち、今回更新した #3（4〜5月分析）が旧版のままなら最新文面に同期
-  var changed = false;
-  posts.forEach(function(p, idx){
-    if ((p.id === '3' || p.id === 'r1') && (p.title === '4〜5月 インプレッション急増（中央値 94）の要因分析' || p.title === '4〜5月 インプレッション急増（4/15・5/23投稿の要因分析）')) {
-      posts[idx] = INITIAL_POSTS[2];
-      changed = true;
-    }
-  });
-  var has6 = posts.some(function(p){ return p.id === '6'; });
-  if (!has6) { posts.push(INITIAL_POSTS[5]); changed = true; }
-  if (changed) savePosts(posts);
-  return posts;
-}
-
-function savePosts(posts) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
-}
-
-function nextPostNo(posts) {
-  var maxNo = 0;
-  posts.forEach(function(p) {
-    var n = parseInt(p.no || p.id, 10);
-    if (!isNaN(n) && n > maxNo) maxNo = n;
-  });
-  return maxNo + 1;
-}
-
-/* ===== 簡易書式＆URLプレビューカード描画 ===== */
-function esc(s) {
-  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-var INTERNAL_PREVIEWS = {
-  '../content/': { badge: '詳細ボード', title: 'X コンテンツ4グループのボード（散布図・A〜D詳細）', desc: '全359件の散布図、月ごとの変化、グループ別の改善アクションを確認できます。' },
-  '../plan/': { badge: '企画ページ', title: 'X 「悩み→解決」シリーズの企画・投稿案', desc: '効いた投稿の型と、そのまま使える新しい投稿案をまとめています。' },
-  '../monthly/': { badge: '分析ページ', title: 'X 月間分析（11か月・上位5投稿）', desc: '月別の推移グラフと各月の詳細レポートを確認できます。' },
-  '../posts/': { badge: 'KPI一覧', title: 'HIYOKO X KPI（全877投稿データ）', desc: '全投稿の絞り込み・並べ替え・月別異常診断を確認できます。' }
-};
-
-function renderPreviewCard(url) {
-  // 1. サイト内ページ
-  if (INTERNAL_PREVIEWS[url]) {
-    var info = INTERNAL_PREVIEWS[url];
-    return '<a class="pv-card" href="' + esc(url) + '">'
-      + '<div class="pv-head"><span class="pv-badge">' + esc(info.badge) + '</span><span>' + esc(url) + '</span></div>'
-      + '<div class="pv-text"><b>' + esc(info.title) + '</b><br>' + esc(info.desc) + '</div>'
-      + '</a>';
-  }
-  // 2. X 投稿 (data.json に一致があれば実測KPIつきプレビュー)
-  var row = POST_MAP[url];
-  if (row) {
-    return '<a class="pv-card" href="' + esc(url) + '" target="_blank" rel="noopener">'
-      + '<div class="pv-head"><span class="pv-badge">X 投稿プレビュー</span><span>' + esc(row.d) + '</span><span>' + esc(row.th || '') + '</span></div>'
-      + '<div class="pv-text">' + esc(row.t) + '</div>'
-      + '<div class="pv-kpi"><span>表示 <b>' + row.imp + '</b></span><span>いいね <b>' + row.lk + '</b></span><span>返信 <b>' + row.rp + '</b></span><span>保存 <b>' + row.bm + '</b></span><span>プロフ訪問 <b>' + row.pv + '</b></span></div>'
-      + '</a>';
-  }
-  // 3. その他のURL
-  var host = url.replace(/^https?:\/\//, '').split('/')[0];
-  return '<a class="pv-card" href="' + esc(url) + '" target="_blank" rel="noopener">'
-    + '<div class="pv-head"><span class="pv-badge">リンクプレビュー</span><span>' + esc(host) + '</span></div>'
-    + '<div class="pv-text">' + esc(url) + ' ↗</div>'
-    + '</a>';
-}
-
-function inlineFormat(line) {
-  var s = esc(line);
-  // [text](url)
-  s = s.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+|\.\.\/[a-zA-Z0-9_\/-]+)\)/g, function(_, txt, u){
-    var ext = u.indexOf('http') === 0 ? ' target="_blank" rel="noopener"' : '';
-    return '<a href="' + u + '"' + ext + '>' + txt + '</a>';
-  });
-  // **bold**
-  s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-  // `code`
-  s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
-  // 文中の生URLをリンク化
-  s = s.replace(/(^|[^"'>])(https?:\/\/[^\s<]+)/g, '$1<a href="$2" target="_blank" rel="noopener">$2</a>');
-  return s;
-}
-
-function renderRichBody(text) {
-  if (!text) return '<p style="color:var(--muted)">（本文なし）</p>';
-  var lines = text.split('\n');
-  var out = [];
-  var inUl = false;
-  function closeUl(){ if (inUl) { out.push('</ul>'); inUl = false; } }
-
-  lines.forEach(function(raw){
-    var line = raw.trim();
-    if (!line) {
-      closeUl();
-      return;
-    }
-    // 単独URL行または ../xxx/ 行はプレビューカード化
-    if (/^(https?:\/\/[^\s]+|\.\.\/[a-zA-Z0-9_\/-]+\/?)$/.test(line)) {
-      closeUl();
-      out.push(renderPreviewCard(line));
-      return;
-    }
-    // 見出し ##
-    if (line.indexOf('## ') === 0) {
-      closeUl();
-      out.push('<h3>' + inlineFormat(line.slice(3)) + '</h3>');
-      return;
-    }
-    // 箇条書き ・ or -
-    if (line.indexOf('・') === 0 || line.indexOf('- ') === 0) {
-      if (!inUl) { out.push('<ul>'); inUl = true; }
-      var item = line.indexOf('・') === 0 ? line.slice(1).trim() : line.slice(2).trim();
-      out.push('<li>' + inlineFormat(item) + '</li>');
-      return;
-    }
-    closeUl();
-    out.push('<p>' + inlineFormat(line) + '</p>');
-  });
-  closeUl();
-  return out.join('');
-}
-
-/* ===== エディタツールバー ===== */
-function fmtWrap(before, after) {
-  var ta = document.getElementById('f-body');
-  var start = ta.selectionStart, end = ta.selectionEnd;
-  var sel = ta.value.slice(start, end) || 'テキスト';
-  ta.value = ta.value.slice(0, start) + before + sel + after + ta.value.slice(end);
-  ta.focus();
-  ta.setSelectionRange(start + before.length, start + before.length + sel.length);
-}
-
-function fmtLine(prefix) {
-  var ta = document.getElementById('f-body');
-  var start = ta.selectionStart;
-  var lineStart = ta.value.lastIndexOf('\n', start - 1) + 1;
-  ta.value = ta.value.slice(0, lineStart) + prefix + ta.value.slice(lineStart);
-  ta.focus();
-  ta.setSelectionRange(start + prefix.length, start + prefix.length);
-}
-
-function fmtLink() {
-  var url = prompt('リンク先のURLを入力（例: https://x.com/... または ../content/）');
-  if (!url) return;
-  url = url.trim();
-  var ta = document.getElementById('f-body');
-  var start = ta.selectionStart, end = ta.selectionEnd;
-  var sel = ta.value.slice(start, end);
-  var ins = sel ? '[' + sel + '](' + url + ')' : '\n' + url + '\n';
-  ta.value = ta.value.slice(0, start) + ins + ta.value.slice(end);
-  ta.focus();
-}
-
-var _previewOn = false;
-function togglePreview() {
-  _previewOn = !_previewOn;
-  var ta = document.getElementById('f-body');
-  var pv = document.getElementById('ed-preview');
-  var btn = document.getElementById('btn-prev-toggle');
-  if (_previewOn) {
-    pv.innerHTML = renderRichBody(ta.value);
-    ta.style.display = 'none';
-    pv.style.display = 'block';
-    btn.classList.add('active');
-  } else {
-    pv.style.display = 'none';
-    ta.style.display = 'block';
-    btn.classList.remove('active');
-  }
-}
-
-/* ===== 表示（一覧 ⇔ 単体詳細ビュー） ===== */
-function getSelectedId() {
-  return location.hash ? location.hash.slice(1) : '';
-}
-
-function openPost(id) {
-  location.hash = '#' + id;
-}
-
-function backToList() {
-  history.pushState(null, '', location.pathname + location.search);
-  renderView();
-}
-
-function renderView() {
-  var posts = loadPosts();
-  var view = document.getElementById('rpt-view');
-  var toolbar = document.getElementById('rpt-toolbar');
-  var toc = document.getElementById('toc-list');
-
-  if (!posts.length) {
-    toc.innerHTML = '<li><em style="color:var(--muted);font-size:.85rem">なし</em></li>';
-  } else {
-    toc.innerHTML = posts.map(function(p) {
-      return '<li><a href="#' + esc(p.id) + '">' + esc(p.title) + '</a></li>';
-    }).join('');
-  }
-
-  var selId = getSelectedId();
-  var sel = selId ? posts.find(function(p){ return p.id === selId; }) : null;
-
-  if (sel) {
-    toolbar.style.display = 'none';
-    var actionsHtml = '';
-    if (canManage(sel)) {
-      actionsHtml = '<div class="rpt-actions">'
-        + '<button class="btn btn-sm btn-edit" onclick="openEdit(\'' + esc(sel.id) + '\')">編集</button>'
-        + '<button class="btn btn-sm btn-danger" onclick="confirmDelete(\'' + esc(sel.id) + '\')">削除</button>'
-        + '</div>';
-    }
-    var authorStr = sel.authorName ? ' ｜ ' + esc(sel.authorName) : '';
-
-    view.innerHTML = '<div class="rpt-detail">'
-      + '<div class="rpt-detail-top">'
-      + '<button type="button" class="btn btn-sm btn-ghost" onclick="backToList()">← 一覧に戻る</button>'
-      + actionsHtml
-      + '</div>'
-      + '<h2 class="rpt-detail-title">' + esc(sel.title) + '</h2>'
-      + '<div class="rpt-detail-meta">' + esc(sel.date) + authorStr + '</div>'
-      + '<div class="rpt-detail-body">' + renderRichBody(sel.body) + '</div>'
-      + '</div>';
-    window.scrollTo({ top: 0, behavior: 'instant' });
-    return;
-  }
-
-  toolbar.style.display = 'flex';
-  if (!posts.length) {
-    view.innerHTML = '<div class="empty-state">投稿がありません。「＋ 新規投稿」から作成してください。</div>';
-    return;
-  }
-
-  view.innerHTML = '<div class="rpt-list">' + posts.map(function(p) {
-    var meta = esc((p.date || '').slice(0, 10));
-    if (p.authorName) meta += ' ・ ' + esc(p.authorName);
-    return '<button type="button" class="rpt-row" onclick="openPost(\'' + esc(p.id) + '\')">'
-      + '<span class="rpt-row-title">' + esc(p.title) + '</span>'
-      + '<span class="rpt-row-meta">' + meta + '</span>'
-      + '</button>';
-  }).join('') + '</div>';
-}
-
-/* ===== モーダル ===== */
-function resetEditorMode() {
-  if (_previewOn) togglePreview();
-}
-
-function openCreate() {
-  resetEditorMode();
-  document.getElementById('modal-title').textContent = '新規投稿';
-  document.getElementById('edit-id').value = '';
-  document.getElementById('f-title').value = '';
-  document.getElementById('f-body').value = '';
-  document.getElementById('modal').classList.add('open');
-  document.getElementById('f-title').focus();
-}
-
-function openEdit(id) {
-  var posts = loadPosts();
-  var p = posts.find(function(x){ return x.id === id; });
-  if (!p || !canManage(p)) return;
-  resetEditorMode();
-  document.getElementById('modal-title').textContent = '投稿を編集';
-  document.getElementById('edit-id').value = p.id;
-  document.getElementById('f-title').value = p.title || '';
-  document.getElementById('f-body').value = p.body || '';
-  document.getElementById('modal').classList.add('open');
-  document.getElementById('f-title').focus();
-}
-
-function closeModal() {
-  resetEditorMode();
-  document.getElementById('modal').classList.remove('open');
-}
-
-function savePost() {
-  var title = document.getElementById('f-title').value.trim();
-  if (!title) { alert('タイトルを入力してください'); return; }
-  var body = document.getElementById('f-body').value.trim();
-  var id = document.getElementById('edit-id').value;
-  var posts = loadPosts();
-  var u = currentUser();
-
-  if (id) {
-    var idx = posts.findIndex(function(p){ return p.id === id; });
-    if (idx >= 0) {
-      if (!canManage(posts[idx])) return;
-      posts[idx].title = title;
-      posts[idx].body = body;
-    }
-  } else {
-    var no = nextPostNo(posts);
-    var post = {
-      id: String(no),
-      no: no,
-      date: nowDateTime(),
-      authorEmail: u && u.email ? u.email : '',
-      authorName: u && (u.name || u.email) ? (u.name || u.email) : 'ゲスト',
-      title: title,
-      body: body
-    };
-    posts.unshift(post);
-    id = post.id;
-  }
-  savePosts(posts);
-  closeModal();
-  location.hash = '#' + id;
-  renderView();
-}
-
-/* ===== 削除 ===== */
-var _deleteId = null;
-
-function confirmDelete(id) {
-  var posts = loadPosts();
-  var p = posts.find(function(x){ return x.id === id; });
-  if (!p || !canManage(p)) return;
-  _deleteId = id;
-  document.getElementById('confirm-msg').textContent = '「' + p.title + '」を削除しますか？この操作は取り消せません。';
-  document.getElementById('confirm').classList.add('open');
-  document.getElementById('confirm-ok').onclick = function() { doDelete(); };
-}
-
-function closeConfirm() {
-  document.getElementById('confirm').classList.remove('open');
-  _deleteId = null;
-}
-
-function doDelete() {
-  if (!_deleteId) return;
-  var posts = loadPosts();
-  var target = posts.find(function(p){ return p.id === _deleteId; });
-  if (!target || !canManage(target)) { closeConfirm(); return; }
-  posts = posts.filter(function(p){ return p.id !== _deleteId; });
-  savePosts(posts);
-  closeConfirm();
-  backToList();
-}
-
-/* ===== イベント・権限変化監視 ===== */
-document.getElementById('modal').addEventListener('click', function(e){
-  if (e.target === this) closeModal();
-});
-document.getElementById('confirm').addEventListener('click', function(e){
-  if (e.target === this) closeConfirm();
-});
-document.addEventListener('keydown', function(e){
-  if (e.key === 'Escape') { closeModal(); closeConfirm(); }
-});
-window.addEventListener('hashchange', renderView);
-document.addEventListener('tri-user', function(){ renderView(); });
-new MutationObserver(function(){ renderView(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-
-/* ===== 初期表示 ===== */
-renderView();
-</script>
 <script src="../../i18n.js?v=5f4eb884" defer></script>
 <script src="../../nav.js?v=d910569b" defer></script>
 <script src="../../account.js?v=488b01e9" defer></script>
