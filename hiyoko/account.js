@@ -32,6 +32,9 @@
     mem.appendChild(link('internal/strategy/', '企画・目標・方向性'));
     mem.appendChild(link('internal/review/', '振り返り'));
     mem.appendChild(link('internal/admin/', '管理'));
+    var own = el('div', 'own-only');
+    own.appendChild(link('join/', '会員登録ページ（招待）'));
+    mem.appendChild(own);
     p.appendChild(mem);
     var out = el('button', 'hy-acct-btn ghost', 'ログアウト'); out.type = 'button';
     out.addEventListener('click', function () { window.triLogout && window.triLogout(); });
@@ -82,6 +85,7 @@
     '.hy-acct-ic{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:var(--ink);color:var(--paper);font-size:.8rem;flex:none}' +
     '.hy-acct-n{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}@media (max-width:560px){.hy-acct-n{display:none}.hy-acct-d>summary{padding:3px}}' +
     '.hy-acct-e{font-size:.78rem;color:var(--muted);margin:0 0 10px;word-break:break-all}' +
+    'html:not(.is-owner) .own-only{display:none}' +
     '.hy-acct-a{display:block;padding:7px 8px;border-radius:8px;color:var(--ink);text-decoration:none;font-size:.88rem}.hy-acct-a:hover{background:var(--paper)}';
   document.head.appendChild(st);
 })();

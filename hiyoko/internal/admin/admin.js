@@ -16,17 +16,53 @@
   var MSG = { forbidden: '権限がありません', bad_email: 'メールの形がちがいます', too_big: 'ファイルが大きすぎます（900KBまで）', too_many: '人数が多すぎます', login: 'ログインし直してください' };
   function err(e) { return MSG[e] || e || 'エラー'; }
 
+  var NAMES = {};
+  var SITE = 'https://towananika.github.io/hiyoko/join/';
+  function drawInvite(code) {
+    document.getElementById('inv-code').textContent = code || '受付停止中';
+    document.getElementById('inv-st').textContent = code ? '招待リンク：' + SITE + '#' + code : 'コードを作ると登録を受けつけます';
+    document.getElementById('inv-make').textContent = code ? 'コードを作り直す' : 'コードを作る';
+    document.getElementById('inv-copy').hidden = !code; document.getElementById('inv-off').hidden = !code;
+    document.getElementById('inv-link').href = '../../join/' + (code ? '#' + code : '');
+    document.getElementById('inv-copy').onclick = function () {
+      var t = SITE + '#' + code, b = this;
+      (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(function () { b.textContent = 'コピーしました'; }, function () { window.prompt('このリンクを送ってください', t); });
+    };
+  }
+  document.getElementById('inv-make').onclick = function () {
+    if (this.textContent.indexOf('作り直す') >= 0 && !window.confirm('今のコードは使えなくなります。作り直しますか？（登録ずみの人はそのままです）')) return;
+    call('invite', {}).then(function (o) { if (o.error) window.alert(err(o.error)); else drawInvite(o.invite); });
+  };
+  document.getElementById('inv-off').onclick = function () {
+    if (!window.confirm('新しい登録の受付を止めますか？（登録ずみの人はそのままです）')) return;
+    call('invite', { off: true }).then(function (o) { if (o.error) window.alert(err(o.error)); else drawInvite(''); });
+  };
+  function drawAis(list) {
+    var box = document.getElementById('ais'); box.replaceChildren();
+    if (!list.length) { var tr0 = document.createElement('tr'), td0 = document.createElement('td'); td0.colSpan = 3; td0.textContent = 'まだいません'; tr0.appendChild(td0); box.appendChild(tr0); }
+    list.forEach(function (a) {
+      var tr = document.createElement('tr'), t1 = document.createElement('td'), t2 = document.createElement('td'), t3 = document.createElement('td'), b = document.createElement('button');
+      t1.textContent = a.name; t2.textContent = new Date(a.at).toLocaleDateString('ja-JP');
+      b.type = 'button'; b.className = 'gate-btn ghost'; b.textContent = '止める';
+      b.onclick = function () {
+        if (!window.confirm(a.name + ' の鍵を止めますか？')) return;
+        call('ai_off', { id: a.id }).then(function (o) { if (o.error) window.alert(err(o.error)); else drawAis(o.ais); });
+      };
+      t3.appendChild(b); tr.appendChild(t1); tr.appendChild(t2); tr.appendChild(t3); box.appendChild(tr);
+    });
+  }
   function drawMembers(list) {
     var box = document.getElementById('members'); box.replaceChildren();
     list.forEach(function (email) {
       var tr = document.createElement('tr'), td = document.createElement('td'), td2 = document.createElement('td'), b = document.createElement('button');
+      var tdn = document.createElement('td'); tdn.textContent = NAMES[email] || '';
       td.textContent = email; b.type = 'button'; b.className = 'gate-btn ghost'; b.textContent = '関係者から外す';
       b.onclick = function () {
         if (!window.confirm(email + ' を関係者から外しますか？')) return;
         b.disabled = true;
         call('member', { email: email, on: false }).then(function (o) { if (o.error) { b.disabled = false; note(err(o.error)); } else drawMembers(o.members); });
       };
-      td2.appendChild(b); tr.appendChild(td); tr.appendChild(td2); box.appendChild(tr);
+      td2.appendChild(b); tr.appendChild(td); tr.appendChild(tdn); tr.appendChild(td2); box.appendChild(tr);
     });
     document.getElementById('mcount').textContent = '関係者 ' + list.length + '人';
   }
@@ -62,7 +98,7 @@
     call('list').then(function (o) {
       if (o.error === 'forbidden') { say('<p class="gate-msg">' + esc(u.email) + ' は管理者ではありません。</p>'); return; }
       if (o.error) { say('<p class="gate-msg">読み込めませんでした（' + esc(err(o.error)) + '）。</p>'); return; }
-      done = true; gate.hidden = true; body.hidden = false; drawMembers(o.members); drawDocs(o.docs);
+      done = true; gate.hidden = true; body.hidden = false; NAMES = o.names || {}; drawInvite(o.invite || ''); drawAis(o.ais || []); drawMembers(o.members); drawDocs(o.docs);
     }).catch(function () { say('<p class="gate-msg">サーバーにつながりませんでした。少し待ってから開き直してください。</p>'); });
   }
   say('<p class="gate-msg">確認しています…</p>');

@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="レポート | HIYOKO X">
+<title>レポート | HIYOKO X</title>
+<link rel="stylesheet" href="../../../style.css?v=f26360e5">
+<style>
+.rpt-list{border:1px solid var(--line);border-radius:10px;background:var(--card);overflow:hidden;margin:0 0 16px}
+.rpt-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);text-decoration:none;color:inherit;transition:background .12s}
+.rpt-row:last-child{border-bottom:0}
+.rpt-row:hover{background:var(--paper)}
+.rpt-row-title{font-size:.95rem;font-weight:600;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
+.rpt-row:hover .rpt-row-title{color:var(--accent)}
+.rpt-row-meta{display:inline-flex;align-items:center;gap:8px;font-size:.78rem;color:var(--muted);white-space:nowrap;flex:none;font-variant-numeric:tabular-nums}
+.rpt-by{display:inline-flex;align-items:center;gap:4px;max-width:12em;overflow:hidden;text-overflow:ellipsis;color:var(--ink);font-weight:600}
+.rpt-ai{font-size:.66rem;font-weight:700;padding:0 5px;border-radius:4px;border:1px solid var(--line);color:var(--muted);line-height:1.5}
+.rpt-empty{padding:16px;color:var(--muted)}
+@media(max-width:520px){.rpt-row{flex-direction:column;align-items:flex-start;gap:4px}.rpt-row-title{white-space:normal;width:100%}}
+.rpt-pager{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;margin:0 0 32px}
+.rpt-page-btn{display:inline-flex;align-items:center;justify-content:center;min-width:36px;height:36px;padding:0 12px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);font:inherit;font-size:.88rem;font-weight:600;cursor:pointer}
+.rpt-page-btn:hover{border-color:var(--accent);color:var(--accent)}
+.rpt-page-btn[aria-current]{background:var(--accent);color:#fff;border-color:var(--accent)}
+.rpt-page-info{font-size:.8rem;color:var(--muted);margin-left:6px}
+.rpt-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.rpt-head[hidden],[hidden]{display:none!important}
+.btn{display:inline-flex;align-items:center;gap:4px;font:inherit;cursor:pointer;border-radius:8px;padding:8px 16px;font-size:.88rem;border:1px solid transparent;text-decoration:none}
+.btn-ghost{background:none;color:var(--accent);border-color:var(--accent)}
+.btn-ghost:hover{background:var(--accent);color:#fff}
+.btn-sm{padding:4px 10px;font-size:.78rem;border-radius:6px}
+.btn-danger{background:none;color:#c0392b;border-color:#c0392b}
+.rpt-detail{border:1px solid var(--line);border-radius:12px;background:var(--card);padding:20px 22px;margin:0 0 32px}
+.rpt-detail-top{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;padding-bottom:12px;border-bottom:1px solid var(--line);margin-bottom:14px}
+.rpt-detail-title{font-size:1.22rem;font-weight:700;color:var(--ink);margin:0 0 8px;line-height:1.4}
+.rpt-detail-meta{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:.82rem;color:var(--muted);margin-bottom:16px}
+.rpt-detail-body{font-size:.94rem;line-height:1.75;color:var(--ink);overflow-wrap:anywhere}
+.rpt-detail-body h3{font-size:1.02rem;margin:18px 0 6px;padding-bottom:4px;border-bottom:1px solid var(--line)}
+.rpt-detail-body p{margin:6px 0}
+.rpt-detail-body ul{margin:6px 0 10px;padding-left:1.3em}
+.rpt-detail-body li{margin:4px 0}
+.rpt-detail-body a{color:var(--accent)}
+.rpt-form{display:grid;gap:12px;margin:0 0 24px}
+.rpt-form label{display:grid;gap:4px;font-size:.85rem;font-weight:700}
+.rpt-form input[type=text],.rpt-form textarea{width:100%;box-sizing:border-box;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);font:inherit;font-weight:400}
+.rpt-form textarea{min-height:260px;line-height:1.6;resize:vertical}
+.rpt-form .chk{display:flex;align-items:center;gap:8px;font-weight:400}
+.rpt-hint{font-size:.78rem;color:var(--muted);font-weight:400}
+.rpt-prev{border:1px dashed var(--line);border-radius:10px;padding:12px 16px}
+.join-step{border:1px solid var(--line);border-radius:12px;background:var(--card);padding:16px 18px;margin:0 0 14px}
+.join-step h2{font-size:1rem;margin:0 0 10px}
+#join-state{display:flex;flex-wrap:wrap;align-items:center;gap:10px;font-size:.9rem}
+.join-ok{color:var(--accent)}
+.join-code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.8rem;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 12px;overflow-x:auto;white-space:pre;margin:6px 0}
+</style>
+</head>
+<body class="ch-x">
+<a class="skip" href="#main">メインへ</a><header class="hy-top"><nav class="hy-path" aria-label="所在地"><a href="/">Towananika</a><span aria-hidden="true">›</span><a href="../../../">HIYOKO</a><span class="fan-badge">非公式ファンサイト</span></nav><div class="hy-set"></div></header>
+<nav class="hy-tabs" aria-label="コーナー"><div><a href="../../../">ホーム</a><a href="../../../about/">HIYOKOを知る</a><a href="../../../links/">公式リンク</a><a href="../../../analysis/" aria-current="true">SNS分析</a><a href="../../../news/">ニュース</a><a href="../../../internal/strategy/" class="mem-only">🔒 社内資料</a></div></nav>
+<div class="layout">
+<details class="sitenav" open><summary>このコーナーのページ</summary><div><a class="brand" href="../../../">HIYOKO</a><span class="ch m">SNS分析</span><ul class=""><li><a class="page" href="../../../analysis/">SNS分析トップ</a></li><li><a class="page" href="../../../kpi/">KPI一覧</a></li><li><a class="page" href="../../../2026-11/">2026年11月 X・IG ABCD</a></li><li><a class="page" href="../../../a-ranking/">Aの投稿ランキング（全期間）</a></li></ul><span class="ch x">HIYOKO X</span><ul class=""><li><a class="page" href="../../../x/">概要</a></li><li><a class="page" href="../../../x/monthly/">月間分析</a></li><li><a class="page" href="../../../x/posts/">KPI</a></li><li><a class="page" href="../../../x/report/" aria-current="page">レポート</a></li></ul><span class="ch ig">Instagram</span><ul class=""><li><a class="page" href="../../../ig/">Instagram 詳細</a></li><li><a class="page" href="../../../ig/posts/">Instagram 投稿とKPI（事実）</a></li><li><a class="page" href="../../../ig/content/">Instagram コンテンツ3グループ</a></li></ul></div></details>
+<details class="pagetoc" open><summary>このページの目次</summary><ul id="toc-list">
+<li><a href="#sec-fact">根拠（実測）</a></li>
+<li><a href="#sec-hypo">可能性・仮説（調査対象）</a></li>
+</ul></details>
+<main id="main" data-rpt="view">
+<div class="chhead"><span class="dot"></span>HIYOKO X</div>
+<div class="rpt-detail" id="rpt-box">
+<div class="rpt-detail-top"><a class="btn btn-sm btn-ghost" href="../">← 一覧に戻る</a><span id="rpt-tools" hidden><a class="btn btn-sm btn-ghost" id="rpt-edit" href="../new/">直す</a> <button type="button" class="btn btn-sm btn-danger" id="rpt-del">消す</button></span></div>
+<h1 class="rpt-detail-title" id="rpt-title">読み込んでいます…</h1>
+<div class="rpt-detail-meta" id="rpt-meta"></div>
+<div class="rpt-detail-body" id="rpt-body"></div>
+</div>
+<!--fan--><p class="fan-foot"><span>🐣 このサイトはファンが作った非公式サイトです。HIYOKO公式とは関係ありません。</span> <a href="https://hiyokotoken.com/" target="_blank" rel="noopener">正しい情報は公式サイトへ ↗</a></p><!--/fan-->
+<!--fmap--><nav class="fmap" aria-label="サイトマップ"><div class=""><a class="fm-h" href="../../../about/">HIYOKOを知る</a><ul><li><a href="../../../about/">HIYOKOとは</a></li><li><a href="../../../world/">目的</a></li><li><a href="../../../character/">キャラクター</a></li></ul></div><div class=""><a class="fm-h" href="../../../links/">公式リンク</a></div><div class=""><a class="fm-h" href="../../../analysis/">SNS分析</a><ul><li><a href="../../../analysis/">SNS分析トップ</a></li><li><a href="../../../kpi/">KPI一覧</a></li><li><a href="../../../2026-11/">2026年11月 X・IG ABCD</a></li><li><a href="../../../a-ranking/">Aの投稿ランキング（全期間）</a></li><li><a href="../../../x/">概要</a></li><li><a href="../../../x/report/">レポート</a></li><li><a href="../../../x/posts/">KPI</a></li></ul></div><div class=""><a class="fm-h" href="../../../news/">ニュース</a></div><div class="mem-only"><a class="fm-h" href="../../../internal/strategy/">🔒 社内資料</a><ul><li><a href="../../../internal/strategy/">企画・目標・方向性</a></li><li><a href="../../../internal/review/">振り返り</a></li></ul></div></nav><!--/fmap-->
+<footer>HIYOKO ／ レポート</footer>
+</main>
+</div>
+<script src="../../../i18n.js?v=912ec5d4" defer></script>
+<script src="../../../nav.js?v=d910569b" defer></script>
+<script src="../../../account.js?v=5b70728b" defer></script>
+<script src="../../../report.js?v=348ff59f" defer></script>
+</body>
+</html>
