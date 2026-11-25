@@ -68,6 +68,13 @@
 .kp-ana-foot{margin:8px 0 0;font-size:.84rem}
 .kp-cat{display:inline-block;font-size:.72rem;padding:1px 7px;border-radius:99px;border:1px solid var(--line);color:var(--muted);background:var(--paper)}
 .kp-ctrls{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center}
+.kp-dir{font:inherit;font-size:.88rem;font-weight:700;min-height:44px;padding:0 14px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:4px}
+.kp-dir:hover{border-color:var(--ink)}
+.kp-dir[aria-pressed="true"]{background:var(--hy-soft);border-color:var(--hy)}
+.kp-range{display:none;flex-wrap:wrap;align-items:center;gap:6px;font-size:.86rem;color:var(--muted)}
+.kp-range.open{display:flex}
+.kp-range input[type="date"]{font:inherit;font-size:.88rem;font-weight:600;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:10px;min-height:40px;padding:0 10px}
+.kp-range input[type="date"]:focus-visible{outline:3px solid var(--hy);outline-offset:2px}
 </style>
 </head>
 <body class="">
@@ -81,10 +88,15 @@
 <div class="kp">
  <div class="kp-top">
   <div class="kp-seg" role="group" aria-label="SNSを選ぶ"><button data-s="x">X</button><button data-s="ig">Instagram</button></div>
-  <div class="kp-seg" role="group" aria-label="期間"><button data-p="30">1ヶ月</button><button data-p="91">3ヶ月</button><button data-p="182">6ヶ月</button><button data-p="0">全期間</button></div>
+  <div class="kp-seg" role="group" aria-label="期間"><button data-p="30">1ヶ月</button><button data-p="91">3ヶ月</button><button data-p="182">6ヶ月</button><button data-p="0">全期間</button><button data-p="custom">区間指定</button></div>
   <div class="kp-seg kp-view" role="group" aria-label="見かた"><button data-v="g">🖼 画像で見る</button><button data-v="l">☰ リスト</button></div>
  </div>
- <div class="kp-ctrls"><label class="kp-sel"><span>並べ順</span><select id="kp-sort"></select></label><label class="kp-sel" id="kp-cat-wrap"><span>カテゴリ</span><select id="kp-cat"><option value="">すべて</option></select></label></div>
+ <div class="kp-range" id="kp-range">
+  <label>開始 <input type="date" id="kp-from"></label>
+  <span aria-hidden="true">〜</span>
+  <label>終了 <input type="date" id="kp-to"></label>
+ </div>
+ <div class="kp-ctrls"><label class="kp-sel"><span>並べ順</span><select id="kp-sort"></select></label><button type="button" id="kp-dir" class="kp-dir" aria-pressed="false" title="並べ順を反転">↓ 降順</button><label class="kp-sel" id="kp-cat-wrap"><span>カテゴリ</span><select id="kp-cat"><option value="">すべて</option></select></label></div>
  <ol class="kp-list" id="kp-list" tabindex="-1"></ol>
  <nav class="kp-pages" aria-label="ページ送り"><div class="kp-pager" data-pager></div><label>ページ <select id="kp-jump"></select></label></nav>
  <span id="kp-status" class="kp-status" role="status" aria-live="polite"></span>
@@ -104,7 +116,7 @@ const F={x:{
   cols:[['表示',p=>p[3]],['リーチ',p=>p[4]],['反応',p=>p[5]+p[6]+p[7]+p[8]],['反応率',null],['いいね',p=>p[5]],['コメント',p=>p[6]],['シェア',p=>p[7]],['保存',p=>p[8]],['フォロー',p=>p[9]]],
   sorts:[['基本',[['新しい順','new'],['フォローが多い順','フォロー'],['反応が多い順','反応'],['反応率が高い順','反応率'],['表示が多い順','表示'],['リーチが多い順','リーチ']]],['反応ごと',[['❤️ いいねが多い順','いいね'],['💬 コメントが多い順','コメント'],['📤 シェアが多い順','シェア'],['🔖 保存が多い順','保存']]]],
   def:'<b>表示</b>：投稿が見られた回数。<b>リーチ</b>：見た人の数。<b>反応</b>：いいね＋コメント＋シェア＋保存。<b>反応率</b>：反応÷リーチ。<b>シェア</b>：送られた回数。<b>フォロー</b>：その投稿を見てフォローした人。出典：Instagram インサイトの投稿別の書き出し。'}};
-let s='x',per=0,so='new',cat='',view='g',page=1,size=12;
+let s='x',per=0,fromDate='',toDate='',so='new',dir='desc',cat='',view='g',page=1,size=12;
 const dark=matchMedia('(prefers-color-scheme: dark)').matches;
 function emb(p){if(s==='ig'){const u=p[2].replace(/\/?$/,'/');return u+'embed/'}const id=(p[2].match(/status\/(\d+)/)||[])[1];return id?`https://platform.twitter.com/embed/Tweet.html?id=${id}&theme=${dark?'dark':'light'}&dnt=true&hideThread=true&lang=ja`:''}
 const $=id=>document.getElementById(id),fmt=n=>Math.round(n).toLocaleString('ja-JP');
@@ -123,17 +135,33 @@ const chip=([ic,l,g],p)=>{const v=g(p);return `<span${hint(l)} class="bd${v?'':'
 const bd=p=>`<div class="bdw"><div class="bdr ${s}"><span class="bdh">反応詳細</span>${BD[s].detail.filter(c=>!BD[s].basic.some(b=>b[1]===c[1])).map(c=>chip(c,p)).join('')}</div></div>`;
 function rate(p){const b=F[s].base(p);return b?F[s].re(p)/b:0}
 function val(p,k){if(k==='反応率')return rate(p);const c=F[s].cols.find(c=>c[0]===k);return c[1](p)}
-function list(){const L=D[s],last=L[0][0],st=per?new Date(new Date(last+'T00:00:00Z').getTime()-(per-1)*864e5).toISOString().slice(0,10):'0';
- let P=L.filter(p=>p[0]>=st);const all=P.length;
+function list(){const L=D[s],last=L[0][0],first=L[L.length-1][0];
+ let st='0',en='9999-12-31';
+ if(per==='custom'){
+  st=fromDate||first; en=toDate||last;
+  if(st>en){const t=st;st=en;en=t;}
+ }else if(per){
+  st=new Date(new Date(last+'T00:00:00Z').getTime()-(per-1)*864e5).toISOString().slice(0,10);
+ }
+ let P=L.filter(p=>p[0]>=st&&p[0]<=en);const all=P.length;
  if(s==='x'&&cat)P=P.filter(p=>p[12]===cat);
  if(so==='反応率')P=P.filter(p=>F[s].base(p)>=MIN);
- if(so==='カテゴリ')P=P.slice().sort((a,b)=>(a[12]||'').localeCompare(b[12]||'','ja')||(b[3]-a[3])||(a[0]<b[0]?1:-1));
- else if(so==='型')P=P.slice().sort((a,b)=>(a[13]||'').localeCompare(b[13]||'','ja')||(b[3]-a[3])||(a[0]<b[0]?1:-1));
- else if(so!=='new')P=P.slice().sort((a,b)=>val(b,so)-val(a,so)||(a[0]<b[0]?1:-1));
- return {P,all,st,last}}
-function draw(){const f=F[s];if(!f.sorts.flatMap(g=>g[1]).some(x=>x[1]===so))so='new';const {P,all,st,last}=list();
+ const mul=dir==='asc'?-1:1;
+ if(so==='new'){if(dir==='asc')P=P.slice().reverse();}
+ else if(so==='カテゴリ')P=P.slice().sort((a,b)=>mul*((a[12]||'').localeCompare(b[12]||'','ja')||(b[3]-a[3])||(a[0]<b[0]?1:-1)));
+ else if(so==='型')P=P.slice().sort((a,b)=>mul*((a[13]||'').localeCompare(b[13]||'','ja')||(b[3]-a[3])||(a[0]<b[0]?1:-1)));
+ else P=P.slice().sort((a,b)=>mul*(val(b,so)-val(a,so))||(a[0]<b[0]?1:-1));
+ return {P,all,st,last,first}}
+function draw(){const f=F[s];if(!f.sorts.flatMap(g=>g[1]).some(x=>x[1]===so))so='new';const {P,all,st,last,first}=list();
  document.querySelectorAll('[data-s]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.s===s));
- document.querySelectorAll('[data-p]').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.p===per));
+ document.querySelectorAll('[data-p]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.p)===String(per)));
+ $('kp-range').classList.toggle('open',per==='custom');
+ $('kp-from').min=first;$('kp-from').max=last;
+ $('kp-to').min=first;$('kp-to').max=last;
+ if(per==='custom'){if(!$('kp-from').value)$('kp-from').value=fromDate||first;if(!$('kp-to').value)$('kp-to').value=toDate||last;}
+ const dirBtn=$('kp-dir');
+ dirBtn.setAttribute('aria-pressed',dir==='asc');
+ dirBtn.textContent=so==='new'?(dir==='asc'?'↑ 古い順':'↓ 新しい順'):(dir==='asc'?'↑ 少ない順':'↓ 多い順');
  const flat=f.sorts.flatMap(g=>g[1]);if(!flat.some(x=>x[1]===so))so='new';
  $('kp-cat-wrap').style.display=s==='x'?'':'none';
  if(s==='x'){$('kp-cat').innerHTML='<option value="">すべて</option>'+[...new Set(D.x.map(p=>p[12]).filter(Boolean))].sort().map(c=>`<option value="${esc(c)}"${c===cat?' selected':''}>${esc(c)}</option>`).join('');}
@@ -149,8 +177,11 @@ function draw(){const f=F[s];if(!f.sorts.flatMap(g=>g[1]).some(x=>x[1]===so))so=
  $('kp-jump').innerHTML=Array.from({length:pages},(_,i)=>`<option value="${i+1}"${i+1===page?' selected':''}>${i+1}</option>`).join('');
  $('kp-status').textContent=P.length?`${(page-1)*size+1}–${Math.min(page*size,P.length)} / ${P.length}`:'0 / 0';
  try{history.replaceState(null,'','#'+s)}catch(e){}}
-document.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{s=b.dataset.s;page=1;draw()});
-document.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{per=+b.dataset.p;page=1;draw()});
+document.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{s=b.dataset.s;fromDate='';toDate='';$('kp-from').value='';$('kp-to').value='';page=1;draw()});
+document.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{const v=b.dataset.p;per=v==='custom'?'custom':+v;if(per==='custom'){const L=D[s];if(!fromDate)fromDate=L[L.length-1][0];if(!toDate)toDate=L[0][0];$('kp-from').value=fromDate;$('kp-to').value=toDate;}page=1;draw()});
+$('kp-from').onchange=e=>{fromDate=e.target.value;per='custom';page=1;draw()};
+$('kp-to').onchange=e=>{toDate=e.target.value;per='custom';page=1;draw()};
+$('kp-dir').onclick=()=>{dir=dir==='desc'?'asc':'desc';page=1;draw()};
 document.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{view=b.dataset.v;page=1;draw()});
 $('kp-sort').onchange=e=>{so=e.target.value;page=1;draw()};
 $('kp-cat').onchange=e=>{cat=e.target.value;page=1;draw()};
