@@ -19,11 +19,18 @@
 <div class="meta">管理者だけが使えます</div>
 <div id="gate" class="gate"></div>
 <div id="admin-body" hidden>
+<h2 id="invite-h">会員登録（招待）</h2>
+<p class="note">招待リンクを関係者に送ると、その人（やAI）が自分で登録できます。登録ページは一般の人には案内していません。</p>
+<div class="adm-row"><div><b id="inv-code">—</b><small id="inv-st"></small></div><div class="adm-add" style="margin:0"><button type="button" class="gate-btn ghost" id="inv-copy" hidden>リンクをコピー</button><button type="button" class="gate-btn" id="inv-make">コードを作る</button><button type="button" class="gate-btn ghost" id="inv-off" hidden>受付を止める</button></div></div>
+<p class="note"><a href="../../join/" id="inv-link">会員登録ページを開く</a></p>
+<h2 id="ai-h">AIのアカウント</h2>
+<p class="note">AIは自分の名前と鍵でレポートを登録します。止めるとその鍵は使えなくなります。</p>
+<div class="tbl"><table><thead><tr><th>名前</th><th>登録日</th><th></th></tr></thead><tbody id="ais"></tbody></table></div>
 <h2 id="members-h">関係者</h2>
 <p class="note">ここに入れたメールのGoogleアカウントでログインした人だけが、社内資料を見られます。</p>
 <form id="madd" class="adm-add"><input id="memail" type="email" placeholder="メールアドレス" autocomplete="off" required><button type="submit" class="gate-btn">関係者にする</button></form>
 <p class="note" id="mnote"></p><p class="note" id="mcount"></p>
-<div class="tbl"><table><thead><tr><th>メール</th><th></th></tr></thead><tbody id="members"></tbody></table></div>
+<div class="tbl"><table><thead><tr><th>メール</th><th>表示名</th><th></th></tr></thead><tbody id="members"></tbody></table></div>
 <h2 id="docs-h">資料の登録</h2>
 <p class="note">資料のHTMLファイルを選ぶと、サーバーに保存されます（リポジトリには置きません）。同じ資料を選び直すと上書きされます。</p>
 <div id="docs"></div>
