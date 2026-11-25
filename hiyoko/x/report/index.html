@@ -3,65 +3,55 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="HIYOKO X アカウントの分析レポート。実測データに基づいた考察を投稿形式で管理します。">
-<title>X レポート | HIYOKO</title>
+<meta name="description" content="HIYOKO X アカウントの分析レポート掲示板。">
+<title>レポート | HIYOKO X</title>
 <link rel="stylesheet" href="../../style.css?v=f26360e5">
 <style>
-/* ===== ボード UI ===== */
 .rpt-toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:12px 0 18px}
 .btn{font:inherit;cursor:pointer;border-radius:8px;padding:8px 16px;font-size:.88rem;border:1px solid transparent;transition:background .15s,color .15s}
 .btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
 .btn-primary:hover{opacity:.88}
 .btn-ghost{background:none;color:var(--accent);border-color:var(--accent)}
 .btn-ghost:hover{background:var(--accent);color:#fff}
-.btn-sm{padding:4px 10px;font-size:.8rem;border-radius:6px}
+.btn-sm{padding:4px 10px;font-size:.78rem;border-radius:6px}
 .btn-danger{background:none;color:var(--bad);border-color:var(--bad)}
 .btn-danger:hover{background:var(--bad);color:#fff}
 .btn-edit{background:none;color:var(--muted);border-color:var(--line)}
 .btn-edit:hover{color:var(--ink);border-color:var(--ink)}
 
-/* ===== 投稿カード ===== */
-.rpt-list{display:flex;flex-direction:column;gap:14px;margin:0 0 32px}
-.rpt-card{border:1px solid var(--line);border-radius:10px;background:var(--card)}
-.rpt-card summary{list-style:none;padding:14px 16px;cursor:pointer;display:flex;flex-direction:column;gap:5px}
-.rpt-card summary::-webkit-details-marker{display:none}
-.rpt-card summary:hover .rpt-card-title{color:var(--accent)}
-.rpt-card-meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.rpt-card-title{font-size:1rem;font-weight:700;color:var(--ink);line-height:1.4}
-.tag{display:inline-block;font-size:.72rem;padding:2px 8px;border-radius:99px;border:1px solid var(--line);color:var(--muted)}
-.tag-done{border-color:var(--accent);color:var(--accent)}
-.tag-wip{border-color:var(--bad);color:var(--bad)}
-.tag-draft{border-color:var(--muted);color:var(--muted)}
-.rpt-date{font-size:.8rem;color:var(--muted)}
-.rpt-actions{display:flex;gap:6px;margin-left:auto}
-.rpt-body{padding:0 16px 16px;border-top:1px solid var(--line)}
-.rpt-body h4{font-size:.9rem;margin:14px 0 5px;color:var(--ink)}
-.fact-box{background:var(--paper);border-left:3px solid var(--accent);border-radius:0 6px 6px 0;padding:10px 14px;margin:4px 0 12px;font-size:.87rem;white-space:pre-wrap;line-height:1.6}
-.hypo-box{background:var(--paper);border-left:3px solid var(--line);border-radius:0 6px 6px 0;padding:10px 14px;margin:4px 0 12px;font-size:.87rem;white-space:pre-wrap;line-height:1.6;opacity:.85}
-.note-box{background:var(--paper);border-radius:6px;padding:8px 12px;margin:4px 0 10px;font-size:.83rem;color:var(--muted);white-space:pre-wrap;line-height:1.5}
-.rpt-summary-text{font-size:.88rem;color:var(--muted);margin:10px 0 0;line-height:1.6}
-.lbl{display:inline-block;font-size:.72rem;font-weight:700;padding:1px 6px;border-radius:4px;margin-bottom:5px}
-.lbl-fact{background:color-mix(in srgb,var(--accent) 12%,transparent);color:var(--accent)}
-.lbl-hypo{background:color-mix(in srgb,var(--muted) 12%,transparent);color:var(--muted)}
-.lbl-note{background:color-mix(in srgb,var(--muted) 8%,transparent);color:var(--muted)}
+/* ===== 一覧表示（定番1行掲示板スタイル） ===== */
+.rpt-list{border:1px solid var(--line);border-radius:10px;background:var(--card);overflow:hidden;margin:0 0 32px}
+.rpt-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;border:0;border-bottom:1px solid var(--line);background:transparent;cursor:pointer;text-align:left;width:100%;font:inherit;transition:background .12s}
+.rpt-row:last-child{border-bottom:0}
+.rpt-row:hover{background:var(--paper)}
+.rpt-row-title{font-size:.95rem;font-weight:600;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
+.rpt-row:hover .rpt-row-title{color:var(--accent)}
+.rpt-row-meta{font-size:.78rem;color:var(--muted);white-space:nowrap;flex:none;font-variant-numeric:tabular-nums}
+@media(max-width:520px){.rpt-row-meta{display:none}}
+
+/* ===== 単体詳細ビュー ===== */
+.rpt-detail{border:1px solid var(--line);border-radius:12px;background:var(--card);padding:20px 22px;margin:0 0 32px}
+.rpt-detail-top{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;padding-bottom:12px;border-bottom:1px solid var(--line);margin-bottom:14px}
+.rpt-detail-title{font-size:1.22rem;font-weight:700;color:var(--ink);margin:0 0 8px;line-height:1.4}
+.rpt-detail-meta{font-size:.82rem;color:var(--muted);margin-bottom:16px}
+.rpt-detail-body{font-size:.94rem;line-height:1.75;white-space:pre-wrap;color:var(--ink)}
+.rpt-detail-body a{color:var(--accent)}
+.rpt-actions{display:flex;gap:8px}
 .empty-state{text-align:center;padding:40px 20px;color:var(--muted);border:2px dashed var(--line);border-radius:10px;margin:20px 0}
 
 /* ===== モーダル ===== */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;align-items:flex-start;justify-content:center;padding:32px 16px;overflow-y:auto}
 .modal-overlay.open{display:flex}
-.modal{background:var(--card);border-radius:12px;width:100%;max-width:680px;padding:24px;box-shadow:0 8px 32px rgba(0,0,0,.2);margin:auto}
+.modal{background:var(--card);border-radius:12px;width:100%;max-width:640px;padding:24px;box-shadow:0 8px 32px rgba(0,0,0,.2);margin:auto}
 .modal h2{margin:0 0 16px;font-size:1.1rem}
 .form-row{margin-bottom:14px}
 .form-row label{display:block;font-size:.82rem;color:var(--muted);margin-bottom:4px;font-weight:600}
-.form-row input,.form-row select,.form-row textarea{width:100%;font:inherit;font-size:.9rem;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);box-sizing:border-box}
-.form-row textarea{resize:vertical;line-height:1.6}
-.form-row input:focus,.form-row select:focus,.form-row textarea:focus{outline:2px solid var(--accent);border-color:transparent}
-.form-hint{font-size:.76rem;color:var(--muted);margin-top:3px}
+.form-row input,.form-row textarea{width:100%;font:inherit;font-size:.92rem;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);box-sizing:border-box}
+.form-row textarea{resize:vertical;line-height:1.65;min-height:200px}
+.form-row input:focus,.form-row textarea:focus{outline:2px solid var(--accent);border-color:transparent}
+.form-hint{font-size:.78rem;color:var(--muted);margin-top:4px}
 .modal-footer{display:flex;gap:10px;justify-content:flex-end;margin-top:18px;flex-wrap:wrap}
-.form-cols{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-@media(max-width:480px){.form-cols{grid-template-columns:1fr}}
 
-/* ===== 削除確認 ===== */
 .confirm-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1100;align-items:center;justify-content:center}
 .confirm-overlay.open{display:flex}
 .confirm-box{background:var(--card);border-radius:10px;padding:24px;max-width:380px;width:90%;text-align:center}
@@ -70,29 +60,28 @@
 </style>
 </head>
 <body class="ch-x">
-<a class="skip" href="#main">メインへ</a><header class="hy-top"><nav class="hy-path" aria-label="所在地"><a href="/">Towananika</a><span aria-hidden="true">›</span><a href="../../">HIYOKO</a><span class="fan-badge">SNS分析</span></nav><div class="hy-set"></div></header>
-<nav class="hy-tabs" aria-label="セクション"><div><a href="../../">トップ</a><a href="../../about/">HIYOKOとは</a><a href="../../links/">公式リンク</a><a href="../../analysis/" aria-current="true">SNS分析</a><a href="../../news/">ニュース</a><a href="../../internal/strategy/" class="mem-only">🔒 社内資料</a></div></nav>
+<a class="skip" href="#main">メインへ</a><header class="hy-top"><nav class="hy-path" aria-label="所在地"><a href="/">Towananika</a><span aria-hidden="true">›</span><a href="../../">HIYOKO</a><span class="fan-badge">非公式ファンサイト</span></nav><div class="hy-set"></div></header>
+<nav class="hy-tabs" aria-label="コーナー"><div><a href="../../">ホーム</a><a href="../../about/">HIYOKOを知る</a><a href="../../links/">公式リンク</a><a href="../../analysis/" aria-current="true">SNS分析</a><a href="../../news/">ニュース</a><a href="../../internal/strategy/" class="mem-only">🔒 社内資料</a></div></nav>
 <div class="layout">
-<details class="sitenav" open><summary>このコーナーのページ</summary><div><a class="brand" href="../../">HIYOKO</a><span class="ch m">SNS分析</span><ul class=""><li><a class="page" href="../../analysis/">SNS分析トップ</a></li><li><a class="page" href="../../kpi/">KPI一覧</a></li><li><a class="page" href="../../2026-11/">2026年11月 X・IG ABCD</a></li><li><a class="page" href="../../a-ranking/">Aの投稿ランキング（全期間）</a></li></ul><span class="ch x">X</span><ul class=""><li><a class="page" href="../../x/">HIYOKO X 概要</a></li><li><a class="page" href="../../x/monthly/">X 月間分析</a></li><li><a class="page" href="../../x/posts/">HIYOKO X KPI</a></li><li><a class="page" href="../../x/report/" aria-current="page">X レポート</a></li><li><a class="page" href="../../x/content/">X コンテンツ4グループ</a></li><li><a class="page" href="../../x/plan/">X 悩み→解決の企画</a></li></ul><span class="ch ig">Instagram</span><ul class=""><li><a class="page" href="../../ig/">Instagram 詳細</a></li><li><a class="page" href="../../ig/posts/">Instagram 投稿とKPI（事実）</a></li><li><a class="page" href="../../ig/content/">Instagram コンテンツ3グループ</a></li></ul></div></details>
-<details class="pagetoc" open><summary>このページの目次</summary><ul id="toc-list"><li><em style="color:var(--muted);font-size:.85rem">投稿が反映されます</em></li></ul></details>
+<details class="sitenav" open><summary>このコーナーのページ</summary><div><a class="brand" href="../../">HIYOKO</a><span class="ch m">SNS分析</span><ul class=""><li><a class="page" href="../../analysis/">SNS分析トップ</a></li><li><a class="page" href="../../kpi/">KPI一覧</a></li><li><a class="page" href="../../2026-11/">2026年11月 X・IG ABCD</a></li><li><a class="page" href="../../a-ranking/">Aの投稿ランキング（全期間）</a></li></ul><span class="ch x">HIYOKO X</span><ul class=""><li><a class="page" href="../../x/">概要</a></li><li><a class="page" href="../../x/monthly/">月間分析</a></li><li><a class="page" href="../../x/posts/">KPI</a></li><li><a class="page" href="../../x/report/" aria-current="page">レポート</a></li></ul><span class="ch ig">Instagram</span><ul class=""><li><a class="page" href="../../ig/">Instagram 詳細</a></li><li><a class="page" href="../../ig/posts/">Instagram 投稿とKPI（事実）</a></li><li><a class="page" href="../../ig/content/">Instagram コンテンツ3グループ</a></li></ul></div></details>
+<details class="pagetoc" open><summary>このページの目次</summary><ul id="toc-list"><li><em style="color:var(--muted);font-size:.85rem">読み込み中…</em></li></ul></details>
 <main id="main">
-<nav class="crumbs"><a href="/">Towananika</a> ›<a href="../../">HIYOKO</a> ›<a href="../../analysis/">SNS分析</a> ›<a href="../">X</a> › X レポート</nav>
-<div class="chhead"><span class="dot"></span>X</div>
-<h1>X レポート</h1>
-<p class="lead">実測KPIをもとにした分析レポートです。<strong>根拠（実測値）と可能性・仮説を区別</strong>して記載しています。</p>
+<nav class="crumbs"><a href="/">Towananika</a> ／ <a href="../../">HIYOKO</a> ／ <a href="../../analysis/">SNS分析</a> ／ <a href="../">HIYOKO X</a> ／ レポート</nav>
+<div class="chhead"><span class="dot"></span>HIYOKO X</div>
+<h1>レポート</h1>
+<p class="lead">実測KPIをもとにした分析レポートです。タイトルをクリックするとその投稿のみ表示されます。編集・削除は作成者または管理者のみ表示されます。</p>
 
-<div class="rpt-toolbar">
+<div class="rpt-toolbar" id="rpt-toolbar">
   <button class="btn btn-primary" onclick="openCreate()">＋ 新規投稿</button>
-  <button class="btn btn-ghost" onclick="exportData()" title="データをJSONでダウンロード">📤 エクスポート</button>
-  <button class="btn btn-ghost" onclick="document.getElementById('importFile').click()" title="JSONを読み込む">📥 インポート</button>
-  <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
 </div>
 
-<div class="rpt-list" id="rpt-list">
+<div id="rpt-view">
   <div class="empty-state">読み込み中…</div>
 </div>
 
-<!--fmap--><nav class="fmap" aria-label="サイトマップ"><div class=""><a class="fm-h" href="../../about/">HIYOKOを知る</a><ul><li><a href="../../about/">HIYOKOとは</a></li><li><a href="../../world/">目的</a></li><li><a href="../../character/">キャラクター</a></li></ul></div><div class=""><a class="fm-h" href="../../links/">公式リンク</a></div><div class=""><a class="fm-h" href="../../analysis/">SNS分析</a><ul><li><a href="../../analysis/">SNS分析トップ</a></li><li><a href="../../kpi/">KPI一覧</a></li><li><a href="../../2026-11/">2026年11月 X・IG ABCD</a></li><li><a href="../../a-ranking/">Aの投稿ランキング（全期間）</a></li><li><a href="../../x/">HIYOKO X 概要</a></li><li><a href="../../x/report/">X レポート</a></li><li><a href="../../x/posts/">HIYOKO X KPI</a></li></ul></div><div class=""><a class="fm-h" href="../../news/">ニュース</a></div><div class="mem-only"><a class="fm-h" href="../../internal/strategy/">🔒 社内資料</a><ul><li><a href="../../internal/strategy/">企画・目標・方向性</a></li><li><a href="../../internal/review/">振り返り</a></li></ul></div></nav><!--/fmap-->
+<!--fan--><p class="fan-foot"><span>🐣 このサイトはファンが作った非公式サイトです。HIYOKO公式とは関係ありません。</span> <a href="https://hiyokotoken.com/" target="_blank" rel="noopener">正しい情報は公式サイトへ ↗</a></p><!--/fan-->
+<!--fmap--><nav class="fmap" aria-label="サイトマップ"><div class=""><a class="fm-h" href="../../about/">HIYOKOを知る</a><ul><li><a href="../../about/">HIYOKOとは</a></li><li><a href="../../world/">目的</a></li><li><a href="../../character/">キャラクター</a></li></ul></div><div class=""><a class="fm-h" href="../../links/">公式リンク</a></div><div class=""><a class="fm-h" href="../../analysis/">SNS分析</a><ul><li><a href="../../analysis/">SNS分析トップ</a></li><li><a href="../../kpi/">KPI一覧</a></li><li><a href="../../2026-11/">2026年11月 X・IG ABCD</a></li><li><a href="../../a-ranking/">Aの投稿ランキング（全期間）</a></li><li><a href="../../x/">概要</a></li><li><a href="../../x/report/">レポート</a></li><li><a href="../../x/posts/">KPI</a></li></ul></div><div class=""><a class="fm-h" href="../../news/">ニュース</a></div><div class="mem-only"><a class="fm-h" href="../../internal/strategy/">🔒 社内資料</a><ul><li><a href="../../internal/strategy/">企画・目標・方向性</a></li><li><a href="../../internal/review/">振り返り</a></li></ul></div></nav><!--/fmap-->
+<footer>HIYOKO ／ レポート</footer>
 </main>
 </div>
 
@@ -101,41 +90,14 @@
   <div class="modal">
     <h2 id="modal-title">新規投稿</h2>
     <input type="hidden" id="edit-id">
-    <div class="form-cols">
-      <div class="form-row">
-        <label for="f-date">日付</label>
-        <input type="text" id="f-date" placeholder="例: 2026-11-25">
-      </div>
-      <div class="form-row">
-        <label for="f-status">ステータス</label>
-        <select id="f-status">
-          <option value="done">✅ 公開済み</option>
-          <option value="wip">🔖 調査予定</option>
-          <option value="draft">📝 下書き</option>
-        </select>
-      </div>
-    </div>
     <div class="form-row">
       <label for="f-title">タイトル</label>
-      <input type="text" id="f-title" placeholder="例: 7月 インプレッション急減の要因分析">
+      <input type="text" id="f-title" placeholder="レポートのタイトルを入力">
     </div>
     <div class="form-row">
-      <label for="f-summary">概要（サマリー）</label>
-      <textarea id="f-summary" rows="2" placeholder="この投稿の要点を1〜2行で"></textarea>
-    </div>
-    <div class="form-row">
-      <label for="f-fact">🔵 根拠（実測KPI）</label>
-      <textarea id="f-fact" rows="5" placeholder="・実測値を箇条書きで&#10;・例: 2026-07: 中央値 34（6月比 −43%）&#10;・例: rp≥2 の投稿が0件（158件中）"></textarea>
-      <div class="form-hint">実測データのみ記載。推測はここに入れない。</div>
-    </div>
-    <div class="form-row">
-      <label for="f-hypo">⚪ 可能性・仮説</label>
-      <textarea id="f-hypo" rows="5" placeholder="・実測で確認できていない考察&#10;・例: 大量連投による希薄化の可能性（因果未確認）&#10;・例: タグなし投稿増加→新規リーチ減少の可能性"></textarea>
-      <div class="form-hint">「〜の可能性がある」「〜と推測される」など断定しない表現で。</div>
-    </div>
-    <div class="form-row">
-      <label for="f-note">⚠️ データ制約・注意事項（任意）</label>
-      <textarea id="f-note" rows="2" placeholder="例: 4月は4/1〜4/13のデータが欠損"></textarea>
+      <label for="f-body">本文</label>
+      <textarea id="f-body" rows="10" placeholder="根拠（実測値）や考察を入力"></textarea>
+      <div class="form-hint">※ 日時は保存時に自動取得されます。</div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal()">キャンセル</button>
@@ -161,122 +123,225 @@ var STORAGE_KEY = 'hiyoko-x-report-v1';
 /* ===== 初期データ ===== */
 var INITIAL_POSTS = [
   {
-    id: 'r3',
-    date: '2026-11（調査中）',
-    status: 'wip',
-    title: '10〜11月 インプレッション再上昇の要因を探る',
-    summary: '9月（中央値72）→10月（75）→11月（105.5）と段階的に上昇。Season 1 開始やタグ復活との関連を調査中。',
-    fact: '・2026-09: 中央値 72.0（8月29.5から+144%）\n・2026-10: 中央値 75.0、新規FW +181%（前月比）\n・2026-11: 中央値 105.5（2026年6月以降で最高）\n・2026-10: URLクリック -44%（リンク投稿が減少）\n・2026-10: タグ平均 2.0個（7月のタグなし93%から大幅回復）',
-    hypo: '・Season 1 開始によるコンテンツ転換の効果か\n・タグ復活→新規リーチが増加した可能性\n・投稿頻度の適正化（大量連投の抑制）の効果か\n・ゲーム・Happy Chick テーマの比率変化との相関',
-    note: '調査中。近日公開予定。'
+    id: '1',
+    no: 1,
+    date: '2026-11-25 16:30',
+    authorEmail: '',
+    authorName: '初期レポート',
+    title: '【調査予定】10〜11月 インプレッション再上昇の要因を探る',
+    body: '9月（中央値72）→10月（75）→11月（105.5）と段階的に上昇。Season 1 開始やタグ復活との関連を調査中。\n\n【根拠（実測）】\n・2026-09: 中央値 72.0（8月29.5から+144%）\n・2026-10: 中央値 75.0、新規FW +181%（前月比）\n・2026-11: 中央値 105.5（2026年6月以降で最高）\n・2026-10: URLクリック -44%（リンク投稿が減少）\n・2026-10: タグ平均 2.0個（7月のタグなし93%から大幅回復）\n\n【可能性・仮説（調査対象）】\n・Season 1 開始によるコンテンツ転換の効果か\n・タグ復活→新規リーチが増加した可能性\n・投稿頻度の適正化（大量連投の抑制）の効果か\n・ゲーム・Happy Chick テーマの比率変化との相関'
   },
   {
-    id: 'r2',
-    date: '2026-11-25',
-    status: 'done',
+    id: '2',
+    no: 2,
+    date: '2026-11-25 16:30',
+    authorEmail: '',
+    authorName: '初期レポート',
     title: '7月 インプレッション急減（中央値 −43%）の要因分析',
-    summary: '6月（中央値60）→7月（中央値34）に急落。158件投稿したにもかかわらずエンゲージメントがほぼ消滅した月。',
-    fact: '・6月→7月: 中央値 60→34（-43%）\n・7月: rp≥2 の投稿が0件（158件中）\n・6/30〜 1日8本以上の連投が始まった\n・7月: タグなし投稿が全体の93%\n・7月 保存合計: 4件（6月比で大幅減少）',
-    hypo: '・大量連投による希薄化: 1日8本以上投稿すると各投稿のリーチが分散しアルゴリズム的に不利になる可能性がある（因果未確認）\n・タグなし投稿の増加: 新規ユーザーの発見経路が減少した可能性\n・上場特需後の流入消滅: 5〜6月の「上場」関連の外部リプ流入が自然減した可能性（外部要因）\n・コンテンツ制作時間の短縮: 大量投稿に伴い個々の制作時間が減少した可能性',
-    note: '・7月のCSVは97件のみ収録（158件投稿のうち）。残り61件のKPIは不明。\n・「タグなし93%」は収録済み97件ベース。全体では異なる可能性がある。\n・アルゴリズムの内部動作は非公開のため因果関係の断定はできない。'
+    body: '6月（中央値60）→7月（中央値34）に急落。158件投稿したにもかかわらずエンゲージメントがほぼ消滅した月。\n\n【根拠（実測）】\n・6月→7月: 中央値 60→34（-43%）\n・7月: rp≥2 の投稿が0件（158件中）\n・6/30〜 1日8本以上の連投が始まった\n・7月: タグなし投稿が全体の93%\n・7月 保存合計: 4件（6月比で大幅減少）\n\n【可能性・仮説】\n・大量連投による希薄化: 1日8本以上投稿すると各投稿のリーチが分散しアルゴリズム的に不利になる可能性がある（因果未確認）\n・タグなし投稿の増加: 新規ユーザーの発見経路が減少した可能性\n・上場特需後の流入消滅: 5〜6月の「上場」関連の外部リプ流入が自然減した可能性（外部要因）\n・コンテンツ制作時間の短縮: 大量投稿に伴い個々の制作時間が減少した可能性\n\n【データの制約】\n・7月のCSVは97件のみ収録（158件投稿のうち）。残り61件のKPIは不明。'
   },
   {
-    id: 'r1',
-    date: '2026-11-25',
-    status: 'done',
+    id: '3',
+    no: 3,
+    date: '2026-11-25 16:30',
+    authorEmail: '',
+    authorName: '初期レポート',
     title: '4〜5月 インプレッション急増（中央値 94）の要因分析',
-    summary: '低調期（中央値110〜147）から4月・5月へ転換。5月は全期間でインプレッション・保存ともに最高水準を記録。',
-    fact: '・2026-05-23: 743 imp（全期間1位）https://x.com/HiyokoGlobal/status/2058110698778247442\n・2026-04-15: 415 imp（全期間5位）https://x.com/HiyokoGlobal/status/2044325153182756934\n・2026-04-16: 返信12件（全期間最多）→ 議論が起きた投稿\n・2026-05: 中央値94（全期間最高）\n・2026-05: 保存合計124件',
-    hypo: '・手順解説コンテンツの保存効果: Vesting解説・MetaMask手順など「具体的な手順」投稿が保存されやすく後日の再訪問リーチにつながる可能性（保存→imp増の因果は未確認）\n・返信による拡散: 4/16の返信12件は議論を誘発しXのアルゴリズムが優遇した可能性\n・投稿件数増加の影響: 4月61件→5月163件と増加。母数が増えることで高imp投稿が生まれやすくなった可能性\n・季節・外部要因: crypto市場の価格動向や外部イベント（上場等）が流入増に寄与した可能性があるが外部データとの照合は未実施',
-    note: '・4月は4/1〜4/13のKPIデータが欠損。全体の傾向は把握しきれていない。\n・「保存が多い＝インプレッション増の原因」という因果関係はこのデータのみでは証明できない（相関にとどまる）。'
+    body: '低調期から4月（中央値74）・5月（中央値94）へと転換。5月は全期間でインプレッション・保存ともに最高水準を記録。\n\n【根拠（実測）】\n・2026-05-23: 743 imp（全期間1位） https://x.com/HiyokoGlobal/status/2058110698778247442\n・2026-04-15: 415 imp（全期間5位） https://x.com/HiyokoGlobal/status/2044325153182756934\n・2026-04-16: 返信12件（全期間最多）→ 議論が起きた投稿\n・2026-05: 中央値94（全期間最高）、保存合計124件\n\n【可能性・仮説】\n・手順解説コンテンツの保存効果: Vesting解説・MetaMask手順など具体的な手順投稿が保存されやすく後日の再訪問リーチにつながる可能性（因果未確認）\n・返信による拡散: 4/16の返信12件が議論を誘発した可能性\n・投稿件数増加の影響: 4月61件→5月163件と母数が増えた影響\n\n【データの制約】\n・4月は4/1〜4/13のKPIデータが欠損。'
+  },
+  {
+    id: '4',
+    no: 4,
+    date: '2026-11-19 12:00',
+    authorEmail: '',
+    authorName: '初期レポート',
+    title: 'X コンテンツ4グループのボード（A〜D分類）',
+    body: '対象：@HiyokoGlobal の投稿 359件（2026年7月2日〜11月19日）\n全投稿を「見られたか（同じ月の中央値以上か）」×「プロフィールまで来たか（訪問1回以上）」で4つに分類。\n\n【4グループの整理】\n・A（見られて、来る｜70件）：この型をそのまま増やす（悩み→解決シリーズや解説記事など）\n・B（見られるが、素通り｜112件）：本文の最後に「HIYOKO公式で見る」等を1行足す\n・C（見られないが、来る｜30件）：中身は効いているが露出不足。書き直して再投稿\n・D（届かない｜147件）：リンクだけ・一言だけの投稿はやめる\n\n【グループを分ける主な要因】\n・ハッシュタグあり投稿は35〜38%がA、タグなしは11%がA（多くがD）\n・1日2本の日は38%がA、6本以上の日はAが9%まで低下\n・リンクだけの投稿は94%がDまたはB\n\n→ 散布図・詳細ボードページ： ../content/'
+  },
+  {
+    id: '5',
+    no: 5,
+    date: '2026-11-19 12:00',
+    authorEmail: '',
+    authorName: '初期レポート',
+    title: 'X 「悩み→解決」シリーズの企画',
+    body: 'Xでプロフィール訪問とフォローを生んでいるのは、NFT・アイテム所有のテーマを「読み手の悩み」から書いた投稿。\n\n【根拠（実測）】\n・悩みから入った投稿（11/9）：1,000表示あたりプロフィール訪問 40（全体平均は6.8）\n・NFTの機能説明から入った投稿（8/28・9/17）：訪問 0\n・リンクだけのNFT投稿（11/15）：表示 25・訪問 0\n\n【投稿の型（5ステップ）】\n1. 悩み：「you」が主語の1行（例：ゲームがサ終してアイテムが消える）\n2. ひっくり返す：なぜそうなるのかを1行\n3. 答え：HIYOKOの事実を1つだけ（専門用語は言い換える）\n4. 質問：答えたくなる問いで締める\n5. タグ：3つ（#HIYOKO＋テーマ＋流行タグ）\n\n※ 本文は60〜200字。リンクは本文に入れず返信欄か固定ポストに置く。\n\n→ 企画詳細・投稿案ページ： ../plan/'
   }
 ];
 
+/* ===== 権限判定（作成者または管理者のみ編集・削除可） ===== */
+function isOwner() {
+  return document.documentElement.classList.contains('is-owner');
+}
+function currentUser() {
+  return window.TRI_USER || null;
+}
+function canManage(post) {
+  if (isOwner()) return true;
+  var u = currentUser();
+  if (u && u.email && post && post.authorEmail && u.email === post.authorEmail) return true;
+  return false;
+}
+
+/* ===== 日時フォーマット（自動取得） ===== */
+function nowDateTime() {
+  var d = new Date();
+  var p = function(n){ return String(n).padStart(2, '0'); };
+  return d.getFullYear() + '-' + p(d.getMonth()+1) + '-' + p(d.getDate()) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
+}
+
 /* ===== データ管理 ===== */
+function normalizePost(p) {
+  if (p.body !== undefined) return p;
+  var parts = [];
+  if (p.summary) parts.push(p.summary);
+  if (p.fact) parts.push('【根拠（実測）】\n' + p.fact);
+  if (p.hypo) parts.push('【可能性・仮説】\n' + p.hypo);
+  if (p.note) parts.push('【注意事項】\n' + p.note);
+  return {
+    id: p.id,
+    date: p.date || '',
+    authorEmail: p.authorEmail || '',
+    authorName: p.authorName || '',
+    title: p.title || '',
+    body: parts.join('\n\n')
+  };
+}
+
 function loadPosts() {
+  var posts = null;
   try {
     var raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return JSON.parse(raw);
+    if (raw) posts = JSON.parse(raw).map(normalizePost);
   } catch(e) {}
-  // 初回: 初期データを保存してから返す
-  savePosts(INITIAL_POSTS);
-  return INITIAL_POSTS.slice();
+  if (!posts) {
+    posts = INITIAL_POSTS.slice();
+    savePosts(posts);
+    return posts;
+  }
+  var deletedIds = {};
+  try {
+    var dRaw = localStorage.getItem(STORAGE_KEY + '-deleted');
+    if (dRaw) JSON.parse(dRaw).forEach(function(id){ deletedIds[id] = true; });
+  } catch(e) {}
+  var changed = false;
+  var existingIds = {};
+  posts.forEach(function(p){ existingIds[p.id] = true; });
+  INITIAL_POSTS.forEach(function(ip) {
+    if (!existingIds[ip.id] && !deletedIds[ip.id]) {
+      posts.push(ip);
+      changed = true;
+    }
+  });
+  if (changed) savePosts(posts);
+  return posts;
 }
 
 function savePosts(posts) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
 }
 
-function genId() {
-  return 'r' + Date.now();
+function nextPostNo(posts) {
+  var maxNo = 0;
+  posts.forEach(function(p) {
+    var n = parseInt(p.no || p.id, 10);
+    if (!isNaN(n) && n > maxNo) maxNo = n;
+  });
+  return maxNo + 1;
 }
 
-/* ===== 表示 ===== */
-var STATUS_LABEL = { done: '公開済み', wip: '調査予定', draft: '下書き' };
-var STATUS_CLASS = { done: 'tag-done', wip: 'tag-wip', draft: 'tag-draft' };
-
+/* ===== 表示（一覧 ⇔ 単体詳細ビュー） ===== */
 function esc(s) {
   return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-function nl2br(s) {
-  return esc(s).replace(/\n/g,'<br>');
+function linkify(s) {
+  var e = esc(s);
+  e = e.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>');
+  e = e.replace(/(\.\.\/[a-zA-Z0-9_\/-]+)/g, '<a href="$1">$1</a>');
+  return e;
 }
 
-function renderList() {
+function getSelectedId() {
+  return location.hash ? location.hash.slice(1) : '';
+}
+
+function openPost(id) {
+  location.hash = '#' + id;
+}
+
+function backToList() {
+  history.pushState(null, '', location.pathname + location.search);
+  renderView();
+}
+
+function renderView() {
   var posts = loadPosts();
-  var list = document.getElementById('rpt-list');
+  var view = document.getElementById('rpt-view');
+  var toolbar = document.getElementById('rpt-toolbar');
   var toc = document.getElementById('toc-list');
 
+  // 目次は常に全投稿タイトルを表示
   if (!posts.length) {
-    list.innerHTML = '<div class="empty-state">投稿がありません。「＋ 新規投稿」から作成してください。</div>';
     toc.innerHTML = '<li><em style="color:var(--muted);font-size:.85rem">なし</em></li>';
+  } else {
+    toc.innerHTML = posts.map(function(p) {
+      return '<li><a href="#' + esc(p.id) + '">' + esc(p.title) + '</a></li>';
+    }).join('');
+  }
+
+  var selId = getSelectedId();
+  var sel = selId ? posts.find(function(p){ return p.id === selId; }) : null;
+
+  if (sel) {
+    // ===== 単体詳細ビュー（それのみ表示） =====
+    toolbar.style.display = 'none';
+    var actionsHtml = '';
+    if (canManage(sel)) {
+      actionsHtml = '<div class="rpt-actions">'
+        + '<button class="btn btn-sm btn-edit" onclick="openEdit(\'' + esc(sel.id) + '\')">編集</button>'
+        + '<button class="btn btn-sm btn-danger" onclick="confirmDelete(\'' + esc(sel.id) + '\')">削除</button>'
+        + '</div>';
+    }
+    var authorStr = sel.authorName ? ' ｜ ' + esc(sel.authorName) : '';
+    var bodyHtml = sel.body ? linkify(sel.body) : '<span style="color:var(--muted)">（本文なし）</span>';
+
+    view.innerHTML = '<div class="rpt-detail">'
+      + '<div class="rpt-detail-top">'
+      + '<button type="button" class="btn btn-sm btn-ghost" onclick="backToList()">← 一覧に戻る</button>'
+      + actionsHtml
+      + '</div>'
+      + '<h2 class="rpt-detail-title">' + esc(sel.title) + '</h2>'
+      + '<div class="rpt-detail-meta">' + esc(sel.date) + authorStr + '</div>'
+      + '<div class="rpt-detail-body">' + bodyHtml + '</div>'
+      + '</div>';
+    window.scrollTo({ top: 0, behavior: 'instant' });
     return;
   }
 
-  list.innerHTML = posts.map(function(p) {
-    var tagCls = STATUS_CLASS[p.status] || 'tag-draft';
-    var tagLbl = STATUS_LABEL[p.status] || p.status;
-    var bodyParts = '';
-    if (p.summary) bodyParts += '<p class="rpt-summary-text">' + nl2br(p.summary) + '</p>';
-    if (p.fact) bodyParts += '<h4><span class="lbl lbl-fact">根拠（実測）</span></h4><div class="fact-box">' + nl2br(p.fact) + '</div>';
-    if (p.hypo) bodyParts += '<h4><span class="lbl lbl-hypo">可能性・仮説</span></h4><div class="hypo-box">' + nl2br(p.hypo) + '</div>';
-    if (p.note) bodyParts += '<h4><span class="lbl lbl-note">データ制約・注意事項</span></h4><div class="note-box">' + nl2br(p.note) + '</div>';
-    if (!bodyParts) bodyParts = '<p class="rpt-summary-text" style="color:var(--muted)">（内容未記入）</p>';
+  // ===== 一覧表示（タイトルのみクリック可能） =====
+  toolbar.style.display = 'flex';
+  if (!posts.length) {
+    view.innerHTML = '<div class="empty-state">投稿がありません。「＋ 新規投稿」から作成してください。</div>';
+    return;
+  }
 
-    return '<details class="rpt-card" id="' + esc(p.id) + '">'
-      + '<summary>'
-      + '<div class="rpt-card-meta">'
-      + '<span class="rpt-date">' + esc(p.date) + '</span>'
-      + '<span class="tag ' + tagCls + '">' + esc(tagLbl) + '</span>'
-      + '<div class="rpt-actions">'
-      + '<button class="btn btn-sm btn-edit" onclick="openEdit(\'' + esc(p.id) + '\');event.preventDefault();event.stopPropagation()">編集</button>'
-      + '<button class="btn btn-sm btn-danger" onclick="confirmDelete(\'' + esc(p.id) + '\');event.preventDefault();event.stopPropagation()">削除</button>'
-      + '</div>'
-      + '</div>'
-      + '<div class="rpt-card-title">' + esc(p.title) + '</div>'
-      + '</summary>'
-      + '<div class="rpt-body">' + bodyParts + '</div>'
-      + '</details>';
-  }).join('');
-
-  // 目次
-  toc.innerHTML = posts.map(function(p) {
-    return '<li><a href="#' + esc(p.id) + '">' + esc(p.title) + '</a></li>';
-  }).join('');
+  view.innerHTML = '<div class="rpt-list">' + posts.map(function(p) {
+    var meta = esc((p.date || '').slice(0, 10));
+    if (p.authorName) meta += ' ・ ' + esc(p.authorName);
+    return '<button type="button" class="rpt-row" onclick="openPost(\'' + esc(p.id) + '\')">'
+      + '<span class="rpt-row-title">' + esc(p.title) + '</span>'
+      + '<span class="rpt-row-meta">' + meta + '</span>'
+      + '</button>';
+  }).join('') + '</div>';
 }
 
 /* ===== モーダル ===== */
 function openCreate() {
   document.getElementById('modal-title').textContent = '新規投稿';
   document.getElementById('edit-id').value = '';
-  document.getElementById('f-date').value = new Date().toISOString().slice(0,10);
-  document.getElementById('f-status').value = 'done';
   document.getElementById('f-title').value = '';
-  document.getElementById('f-summary').value = '';
-  document.getElementById('f-fact').value = '';
-  document.getElementById('f-hypo').value = '';
-  document.getElementById('f-note').value = '';
+  document.getElementById('f-body').value = '';
   document.getElementById('modal').classList.add('open');
   document.getElementById('f-title').focus();
 }
@@ -284,16 +349,11 @@ function openCreate() {
 function openEdit(id) {
   var posts = loadPosts();
   var p = posts.find(function(x){ return x.id === id; });
-  if (!p) return;
+  if (!p || !canManage(p)) return;
   document.getElementById('modal-title').textContent = '投稿を編集';
   document.getElementById('edit-id').value = p.id;
-  document.getElementById('f-date').value = p.date || '';
-  document.getElementById('f-status').value = p.status || 'done';
   document.getElementById('f-title').value = p.title || '';
-  document.getElementById('f-summary').value = p.summary || '';
-  document.getElementById('f-fact').value = p.fact || '';
-  document.getElementById('f-hypo').value = p.hypo || '';
-  document.getElementById('f-note').value = p.note || '';
+  document.getElementById('f-body').value = p.body || '';
   document.getElementById('modal').classList.add('open');
   document.getElementById('f-title').focus();
 }
@@ -305,29 +365,36 @@ function closeModal() {
 function savePost() {
   var title = document.getElementById('f-title').value.trim();
   if (!title) { alert('タイトルを入力してください'); return; }
+  var body = document.getElementById('f-body').value.trim();
   var id = document.getElementById('edit-id').value;
   var posts = loadPosts();
-  var post = {
-    id: id || genId(),
-    date: document.getElementById('f-date').value.trim(),
-    status: document.getElementById('f-status').value,
-    title: title,
-    summary: document.getElementById('f-summary').value.trim(),
-    fact: document.getElementById('f-fact').value.trim(),
-    hypo: document.getElementById('f-hypo').value.trim(),
-    note: document.getElementById('f-note').value.trim()
-  };
+  var u = currentUser();
+
   if (id) {
     var idx = posts.findIndex(function(p){ return p.id === id; });
-    if (idx >= 0) posts[idx] = post; else posts.unshift(post);
+    if (idx >= 0) {
+      if (!canManage(posts[idx])) return;
+      posts[idx].title = title;
+      posts[idx].body = body;
+    }
   } else {
+    var no = nextPostNo(posts);
+    var post = {
+      id: String(no),
+      no: no,
+      date: nowDateTime(),
+      authorEmail: u && u.email ? u.email : '',
+      authorName: u && (u.name || u.email) ? (u.name || u.email) : 'ゲスト',
+      title: title,
+      body: body
+    };
     posts.unshift(post);
+    id = post.id;
   }
   savePosts(posts);
   closeModal();
-  renderList();
-  // 保存後に該当投稿にスクロール
-  setTimeout(function(){ var el = document.getElementById(post.id); if(el) el.scrollIntoView({behavior:'smooth', block:'nearest'}); }, 100);
+  location.hash = '#' + id;
+  renderView();
 }
 
 /* ===== 削除 ===== */
@@ -336,8 +403,9 @@ var _deleteId = null;
 function confirmDelete(id) {
   var posts = loadPosts();
   var p = posts.find(function(x){ return x.id === id; });
+  if (!p || !canManage(p)) return;
   _deleteId = id;
-  document.getElementById('confirm-msg').textContent = '「' + (p ? p.title : id) + '」を削除しますか？この操作は取り消せません。';
+  document.getElementById('confirm-msg').textContent = '「' + p.title + '」を削除しますか？この操作は取り消せません。';
   document.getElementById('confirm').classList.add('open');
   document.getElementById('confirm-ok').onclick = function() { doDelete(); };
 }
@@ -349,42 +417,22 @@ function closeConfirm() {
 
 function doDelete() {
   if (!_deleteId) return;
-  var posts = loadPosts().filter(function(p){ return p.id !== _deleteId; });
+  var posts = loadPosts();
+  var target = posts.find(function(p){ return p.id === _deleteId; });
+  if (!target || !canManage(target)) { closeConfirm(); return; }
+  try {
+    var dRaw = localStorage.getItem(STORAGE_KEY + '-deleted');
+    var dArr = dRaw ? JSON.parse(dRaw) : [];
+    if (dArr.indexOf(_deleteId) < 0) dArr.push(_deleteId);
+    localStorage.setItem(STORAGE_KEY + '-deleted', JSON.stringify(dArr));
+  } catch(e) {}
+  posts = posts.filter(function(p){ return p.id !== _deleteId; });
   savePosts(posts);
   closeConfirm();
-  renderList();
+  backToList();
 }
 
-/* ===== エクスポート / インポート ===== */
-function exportData() {
-  var posts = loadPosts();
-  var blob = new Blob([JSON.stringify(posts, null, 2)], {type: 'application/json'});
-  var a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'x-report-' + new Date().toISOString().slice(0,10) + '.json';
-  a.click();
-}
-
-function importData(e) {
-  var file = e.target.files[0];
-  if (!file) return;
-  var reader = new FileReader();
-  reader.onload = function(ev) {
-    try {
-      var posts = JSON.parse(ev.target.result);
-      if (!Array.isArray(posts)) throw new Error('配列ではありません');
-      savePosts(posts);
-      renderList();
-      alert(posts.length + '件のレポートを読み込みました。');
-    } catch(err) {
-      alert('読み込みエラー: ' + err.message);
-    }
-    e.target.value = '';
-  };
-  reader.readAsText(file);
-}
-
-/* ===== キーボード・オーバーレイ閉じる ===== */
+/* ===== イベント・権限変化監視 ===== */
 document.getElementById('modal').addEventListener('click', function(e){
   if (e.target === this) closeModal();
 });
@@ -394,18 +442,15 @@ document.getElementById('confirm').addEventListener('click', function(e){
 document.addEventListener('keydown', function(e){
   if (e.key === 'Escape') { closeModal(); closeConfirm(); }
 });
+window.addEventListener('hashchange', renderView);
+document.addEventListener('tri-user', function(){ renderView(); });
+new MutationObserver(function(){ renderView(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
 
 /* ===== 初期表示 ===== */
-renderList();
-// URL ハッシュで指定投稿を開く
-(function() {
-  var hash = location.hash.slice(1);
-  if (!hash) return;
-  setTimeout(function() {
-    var el = document.getElementById(hash);
-    if (el && el.tagName === 'DETAILS') { el.open = true; el.scrollIntoView({behavior:'smooth'}); }
-  }, 150);
-})();
+renderView();
 </script>
+<script src="../../i18n.js?v=5f4eb884" defer></script>
+<script src="../../nav.js?v=d910569b" defer></script>
+<script src="../../account.js?v=488b01e9" defer></script>
 </body>
 </html>
