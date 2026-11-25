@@ -20,6 +20,18 @@
 .kp-sort button{font:inherit;font-size:.86rem;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:99px;padding:0 14px;min-height:40px;cursor:pointer}
 .kp-sort button[aria-pressed="true"]{border-color:var(--ink);background:var(--hy-soft);font-weight:700}
 .kp button:focus-visible{outline:3px solid var(--hy);outline-offset:2px}
+
+/* ホバードロップダウン */
+.kp-dd{position:relative;display:inline-block}
+.kp-dd-btn{font:inherit;font-weight:700;font-size:.88rem;min-height:44px;padding:0 14px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.kp-dd-btn::after{content:'▾';font-size:.75em;opacity:.6}
+.kp-dd-btn[data-active="true"]{border-color:var(--hy);background:var(--hy-soft)}
+.kp-dd:hover .kp-dd-btn,.kp-dd:focus-within .kp-dd-btn{border-color:var(--ink)}
+.kp-dd-menu{position:absolute;top:calc(100% + 4px);left:0;min-width:140px;background:var(--card);border:1px solid var(--line);border-radius:10px;box-shadow:0 4px 16px #0002;padding:4px;z-index:200;display:none;flex-direction:column;gap:1px}
+.kp-dd:hover .kp-dd-menu,.kp-dd:focus-within .kp-dd-menu{display:flex}
+.kp-dd-menu button{font:inherit;font-size:.86rem;background:transparent;border:0;border-radius:7px;padding:8px 12px;text-align:left;cursor:pointer;color:var(--ink);white-space:nowrap}
+.kp-dd-menu button:hover{background:var(--paper)}
+.kp-dd-menu button[aria-pressed="true"]{background:var(--hy-soft);color:var(--ink);font-weight:700}
 .kp-note{margin:0;font-size:.82rem;color:var(--muted)}
 .kp-list{list-style:none;margin:0;padding:0;display:grid;gap:8px}
 .kp-list li{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;min-width:0}
@@ -87,16 +99,42 @@
 <h1>📋 KPI一覧</h1>
 <div class="kp">
  <div class="kp-top">
-  <div class="kp-seg" role="group" aria-label="SNSを選ぶ"><button data-s="x">X</button><button data-s="ig">Instagram</button></div>
-  <div class="kp-seg" role="group" aria-label="期間"><button data-p="30">1ヶ月</button><button data-p="91">3ヶ月</button><button data-p="182">6ヶ月</button><button data-p="0">全期間</button><button data-p="custom">区間指定</button></div>
-  <div class="kp-seg kp-view" role="group" aria-label="見かた"><button data-v="g">🖼 画像で見る</button><button data-v="l">☰ リスト</button></div>
+   <!-- SNS切り替え -->
+   <div class="kp-seg" role="group" aria-label="SNSを選ぶ"><button data-s="x">X</button><button data-s="ig">Instagram</button></div>
+   <!-- 期間ドロップダウン -->
+   <div class="kp-dd" id="kp-dd-per">
+     <button class="kp-dd-btn" id="kp-per-label" type="button">📅 3ヶ月</button>
+     <div class="kp-dd-menu">
+       <button data-p="30">1ヶ月</button>
+       <button data-p="91">3ヶ月</button>
+       <button data-p="182">6ヶ月</button>
+       <button data-p="0">全期間</button>
+       <button data-p="custom">📆 区間指定</button>
+     </div>
+   </div>
+   <!-- 表示形式ドロップダウン -->
+   <div class="kp-dd" id="kp-dd-view">
+     <button class="kp-dd-btn" id="kp-view-label" type="button">🖼 画像</button>
+     <div class="kp-dd-menu">
+       <button data-v="g">🖼 画像</button>
+       <button data-v="l">☰ リスト</button>
+     </div>
+   </div>
+   <!-- 並べ順ドロップダウン -->
+   <div class="kp-dd" id="kp-dd-sort">
+     <button class="kp-dd-btn" id="kp-sort-label" type="button">新しい順</button>
+     <div class="kp-dd-menu" id="kp-sort-menu"></div>
+   </div>
+   <!-- 逆順ボタン -->
+   <button type="button" id="kp-dir" class="kp-dd-btn" aria-pressed="false" title="並べ順を反転">↓ 降順</button>
+   <!-- カテゴリ -->
+   <label class="kp-sel" id="kp-cat-wrap"><span>カテゴリ</span><select id="kp-cat"><option value="">すべて</option></select></label>
  </div>
  <div class="kp-range" id="kp-range">
   <label>開始 <input type="date" id="kp-from"></label>
   <span aria-hidden="true">〜</span>
   <label>終了 <input type="date" id="kp-to"></label>
  </div>
- <div class="kp-ctrls"><label class="kp-sel"><span>並べ順</span><select id="kp-sort"></select></label><button type="button" id="kp-dir" class="kp-dir" aria-pressed="false" title="並べ順を反転">↓ 降順</button><label class="kp-sel" id="kp-cat-wrap"><span>カテゴリ</span><select id="kp-cat"><option value="">すべて</option></select></label></div>
  <ol class="kp-list" id="kp-list" tabindex="-1"></ol>
  <nav class="kp-pages" aria-label="ページ送り"><div class="kp-pager" data-pager></div><label>ページ <select id="kp-jump"></select></label></nav>
  <span id="kp-status" class="kp-status" role="status" aria-live="polite"></span>
@@ -156,6 +194,8 @@ function draw(){const f=F[s];if(!f.sorts.flatMap(g=>g[1]).some(x=>x[1]===so))so=
  document.querySelectorAll('[data-s]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.s===s));
  document.querySelectorAll('[data-p]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.p)===String(per)));
  $('kp-range').classList.toggle('open',per==='custom');
+ // 期間ドロップダウンラベル更新
+ {const pLbls={'30':'1ヶ月','91':'3ヶ月','182':'6ヶ月','0':'全期間','custom':'📆 区間指定'};const pEl=$('kp-per-label');if(pEl)pEl.firstChild.textContent='📅 '+(pLbls[String(per)]||String(per));}
  $('kp-from').min=first;$('kp-from').max=last;
  $('kp-to').min=first;$('kp-to').max=last;
  if(per==='custom'){if(!$('kp-from').value)$('kp-from').value=fromDate||first;if(!$('kp-to').value)$('kp-to').value=toDate||last;}
@@ -166,7 +206,11 @@ function draw(){const f=F[s];if(!f.sorts.flatMap(g=>g[1]).some(x=>x[1]===so))so=
  $('kp-cat-wrap').style.display=s==='x'?'':'none';
  if(s==='x'){$('kp-cat').innerHTML='<option value="">すべて</option>'+[...new Set(D.x.map(p=>p[12]).filter(Boolean))].sort().map(c=>`<option value="${esc(c)}"${c===cat?' selected':''}>${esc(c)}</option>`).join('');}
  $('kp-sort').innerHTML=f.sorts.map(([g,L])=>`<optgroup label="${g}">${L.map(x=>`<option value="${x[1]}"${x[1]===so?' selected':''}>${x[0]}</option>`).join('')}</optgroup>`).join('');
+ // 並べ順ドロップダウンメニュー更新
+ {const aS=f.sorts.flatMap(([,L])=>L);const sm=$('kp-sort-menu');if(sm){sm.innerHTML=aS.map(([lbl,val])=>'<button type="button" data-so="'+val+'"'+(val===so?' aria-pressed="true"':'')+'>'+lbl+'</button>').join('');sm.querySelectorAll('[data-so]').forEach(b=>b.onclick=()=>{so=b.dataset.so;page=1;draw();});}const sl=$('kp-sort-label');if(sl)sl.firstChild.textContent=aS.find(([,v])=>v===so)?.[0]||'並べ順';}
  document.querySelectorAll('[data-v]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===view));
+ // 表示形式ドロップダウンラベル更新
+ {const vEl=$('kp-view-label');if(vEl)vEl.firstChild.textContent=view==='g'?'🖼 画像':'☰ リスト';}
  $('kp-list').className='kp-list'+(view==='g'?' kp-grid':'');
  const pages=Math.max(1,Math.ceil(P.length/size));page=Math.min(page,pages);const visible=P.slice((page-1)*size,page*size);
  if(view==='g'){$('kp-list').innerHTML=visible.map((p,j)=>`<li><div class="pv"><span class="pv-loading">読み込み中…</span><iframe src="${emb(p)}" loading="lazy" title="投稿のプレビュー" scrolling="no" allowtransparency="true" onload="this.previousElementSibling.hidden=true"></iframe></div><div class="h"><span class="d">${md(p[0])}${s==='ig'?' · '+p[10]:(p[12]&&p[12]!=='-'?' <span class="kp-cat">'+esc(p[12])+(p[13]&&p[13]!=='-'?' / '+esc(p[13]):'')+'</span>':'')}</span></div><dl>${BD[s].basic.map(([ic,l,g])=>`<div class="${l===so?'on':''}"><dt${hint(l)}>${ic} ${l}</dt><dd>${g(p)==null?'—':fmt(g(p))}</dd></div>`).join('')}</dl>${bd(p)}</li>`).join('')||'<li class="e">この期間の投稿はありません</li>'}
