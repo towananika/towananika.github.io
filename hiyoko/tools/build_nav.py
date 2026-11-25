@@ -14,25 +14,32 @@ def section_of(p):
     if p in ("links/", "news/"): return p[:-1]
     if p in ("about/", "world/", "character/"): return "know"
     if p.startswith("internal/"): return "in"
+    if p == "join/": return "join"
     return "analysis"
-GROUP_SECTION = {"h": "know", "m": "analysis", "x": "analysis", "ig": "analysis", "in": "in"}
+GROUP_SECTION = {"h": "know", "m": "analysis", "x": "analysis", "ig": "analysis", "old": "analysis", "in": "in"}
 GROUPS = [
   ("HIYOKOを知る", "h", [("HIYOKOとは", "about/", "しくみとロードマップ", False),
                    ("目的", "world/", "公式に書かれているねらい", False),
                    ("キャラクター", "character/", "ひよこのプロフィール", False)]),
-  ("SNS分析", "m", [("SNS分析トップ", "analysis/", "XとInstagramの数字", False),("KPI一覧", "kpi/", "投稿ごとの数字を並べ替え", False),("2026年11月 X・IG ABCD", "2026-11/", "今月の直す候補", False),
-                 ("Aの投稿ランキング（全期間）", "a-ranking/", "届いて反応もあった投稿だけ", False)]),
-  ("X", "x", [("X 詳細", "x/", "悩み→解決で、プロフィールへ", False),
-              ("X 投稿とKPI（事実）", "x/posts/", "全投稿の数字", False),
-              ("X コンテンツ4グループ", "x/content/", "届いたか・訪問されたかで4分け", False),
-              ("X 悩み→解決の企画", "x/plan/", "投稿の型と新しい案", False)]),
-  ("Instagram", "ig", [("Instagram 詳細", "ig/", "短いキャラのリールでシェア→フォロー", False),
-                       ("Instagram 投稿とKPI（事実）", "ig/posts/", "全投稿の数字", False),
-                       ("Instagram コンテンツ3グループ", "ig/content/", "シェア・見られる・届かない", False)]),
+  ("SNS分析", "m", [("SNS分析トップ", "analysis/", "XとInstagramの数字", False),
+                 ("KPI一覧", "kpi/", "投稿ごとの数字を並べ替え", False)]),
+  ("X", "x", [("概要", "x/", "悩み→解決で、プロフィールへ", False),
+              ("月間分析", "x/monthly/", "1年間を月ごとに", False),
+              ("投稿とKPI", "x/posts/", "全投稿の数字", False),
+              ("レポート", "x/report/", "調査と分析のレポート", False)]),
+  ("Instagram", "ig", [("概要", "ig/", "短いキャラのリールでシェア→フォロー", False),
+                       ("投稿とKPI", "ig/posts/", "全投稿の数字", False),
+                       ("コンテンツ3グループ", "ig/content/", "シェア・見られる・届かない", False)]),
+  ("過去の分析", "old", [("2026年11月 X・IG ABCD", "2026-11/", "11月の直す候補", False),
+                    ("Aの投稿ランキング（全期間）", "a-ranking/", "届いて反応もあった投稿だけ", False)]),
   ("社内資料（関係者のみ）", "in", [("企画・目標・方向性", "internal/strategy/", "ログインして開く", True),
                           ("振り返り", "internal/review/", "ログインして開く", True)]),
 ]
-PAGES = ["", "links/", "about/", "character/", "world/", "news/", "analysis/", "kpi/", "2026-11/", "a-ranking/", "x/", "x/posts/", "x/content/", "x/plan/", "ig/", "ig/posts/", "ig/content/", "internal/strategy/", "internal/review/", "internal/admin/"]
+# footer sitemap: short, unambiguous labels (the footer has no X / Instagram sub-headings)
+FOOT = {"analysis": [("SNS分析トップ", "analysis/"), ("KPI一覧", "kpi/"), ("Xの分析", "x/"), ("Xのレポート", "x/report/"), ("Instagramの分析", "ig/")]}
+PAGES = ["", "links/", "about/", "character/", "world/", "news/", "analysis/", "kpi/", "2026-11/", "a-ranking/", "x/", "x/monthly/", "x/posts/", "x/content/", "x/plan/", "ig/", "ig/posts/", "ig/content/", "internal/strategy/", "internal/review/", "internal/admin/"]
+# pages that fill their own "このページの目次" (report.js / join page): only tabs, left nav and footer are rebuilt
+KEEP_TOC = ["x/report/", "x/report/new/", "x/report/view/", "join/"] + [f"x/report/{n}/" for n in range(1, 100) if os.path.exists(os.path.join(ROOT, f"x/report/{n}/index.html"))]
 exists = lambda h: os.path.exists(os.path.join(ROOT, h, "index.html"))
 
 # sub-anchors per page, taken from each page's own nav (current page lists them as #id)
@@ -58,7 +65,7 @@ for p in PAGES:  # pages whose subs we didn't capture: read from home nav
 MEMBER = {"in"}  # sections shown only to logged-in members (html.is-member, set by account.js after the server says yes)
 def mo(k): return ' mem-only' if k in MEMBER else ''
 
-def nav_for(cur):
+def nav_for(cur, toc=True):
     """Left: site map (pages only). Right: this page's sections (only pages with sections)."""
     pre = "../" * cur.count("/")
     sec = section_of(cur)
@@ -73,11 +80,11 @@ def nav_for(cur):
         for label, href, _, locked in items:
             if locked and not exists(href):
                 out.append(f'<li><span class="page off">{label}（準備中）</span></li>'); continue
-            cur_a = ' aria-current="page"' if href == cur else ""
+            cur_a = ' aria-current="page"' if (href == cur or (href == "x/report/" and cur.startswith("x/report/"))) else ""
             out.append(f'<li><a class="page" href="{pre}{href}"{cur_a}>{label}</a></li>')
         out.append('</ul>')
     if groups: out.append('</div></details>')
-    if subs.get(cur):
+    if toc and subs.get(cur):
         out.append('<details class="pagetoc" open><summary>このページの目次</summary><ul>')
         out.append("".join(f'<li><a href="#{i}">{t}</a></li>' for i, t in subs[cur]))
         out.append('</ul></details>')
@@ -93,8 +100,8 @@ def footmap(cur):
     cols = []
     for k, l, h in SECTIONS:
         if k == "home": continue
-        items = [it for g in GROUPS if GROUP_SECTION[g[1]] == k for it in g[2] if not (it[3] and not exists(it[1]))]
-        links = "".join(f'<li><a href="{pre}{it[1]}">{it[0]}</a></li>' for it in items[:6])
+        items = FOOT.get(k) or [(it[0], it[1]) for g in GROUPS if GROUP_SECTION[g[1]] == k for it in g[2] if not (it[3] and not exists(it[1]))]
+        links = "".join(f'<li><a href="{pre}{h2}">{l2}</a></li>' for l2, h2 in items[:6])
         cols.append(f'<div class="{mo(k).strip()}"><a class="fm-h" href="{pre}{h}">{l}</a>' + (f'<ul>{links}</ul>' if links else '') + '</div>')
     return '<!--fmap--><nav class="fmap" aria-label="サイトマップ">' + "".join(cols) + '</nav><!--/fmap-->\n'
 
@@ -112,10 +119,12 @@ def sitemap():
     out.append('</div><!--/smap-->')
     return "".join(out)
 
-for p in PAGES:
+for p in PAGES + KEEP_TOC:
     f = os.path.join(ROOT, p, "index.html")
+    if not os.path.exists(f): continue
+    keep = p in KEEP_TOC
     html = open(f, encoding="utf-8").read()
-    html = re.sub(r'<details class="pagetoc".*?</details>', '', html, flags=re.S)
+    if not keep: html = re.sub(r'<details class="pagetoc".*?</details>', '', html, flags=re.S)
     # top header: Towananika > HIYOKO, with the login / settings slot (filled by account.js and i18n.js)
     pre = "../" * p.count("/")
     html = re.sub(r'<a class="skip" href="#main">[^<]*</a>', '', html)
@@ -134,7 +143,7 @@ for p in PAGES:
     _m = re.search(r'<footer[^>]*>(?:(?!</main>).)*</main>', html, re.S)
     _fan = _fan + (footmap(p) if p else '')  # home already is the map
     html = html[:_m.start()] + _fan + html[_m.start():] if _m else html.replace('</main>', _fan + '</main>', 1)
-    html = NAV_RE.sub(lambda _: nav_for(p), html, count=1)
+    html = NAV_RE.sub(lambda _: nav_for(p, not keep), html, count=1)
     if 'account.js' not in html:
         pre = "../" * p.count("/")
         html = html.replace('</body>', f'<script src="{pre}account.js" defer></script>\n</body>', 1)
