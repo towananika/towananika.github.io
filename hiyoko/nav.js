@@ -18,3 +18,13 @@ spy();
 })();
 /* section tabs: keep the current tab visible on narrow screens */
 (function(){var c=document.querySelector('.hy-tabs a[aria-current]');if(!c)return;var r=c.parentNode;r.scrollLeft=Math.max(0,c.offsetLeft-(r.clientWidth-c.offsetWidth)/2);})();
+/* phones/tablets: "このコーナーのページ" starts closed and behaves like a dropdown (closes on outside tap or after choosing) */
+(function(){
+var mq=window.matchMedia('(max-width:900px)'); if(!mq.matches)return;
+var dd=[].slice.call(document.querySelectorAll('.layout>.sitenav,.layout>.pagetoc'));
+dd.forEach(function(d){d.removeAttribute('open');
+  d.addEventListener('toggle',function(){if(d.open)dd.forEach(function(o){if(o!==d)o.removeAttribute('open');});});
+  d.addEventListener('click',function(e){if(e.target.closest('a'))d.removeAttribute('open');});});
+document.addEventListener('click',function(e){dd.forEach(function(d){if(d.open&&!d.contains(e.target))d.removeAttribute('open');});});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')dd.forEach(function(d){d.removeAttribute('open');});});
+})();
