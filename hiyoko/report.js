@@ -105,7 +105,10 @@
       })(p);
       pager.appendChild(el('span', 'rpt-page-info', '全' + items.length + '件'));
     }
-    draw();
+    // 新しい投稿日時が上、古いものが下（同じ時刻なら番号の大きいほう＝後から足したほうが上）
+    function num(x) { var m = String(x.href).match(/(?:^|id=)(\d+)\/?$/); return m ? +m[1] : 0; }
+    function newest() { items.sort(function (a, b) { return a.day < b.day ? 1 : a.day > b.day ? -1 : (b.t - a.t) || (num(b) - num(a)); }); }
+    newest(); draw();
     var base = items.slice();
     function load(anon) { return call('reports', {}, anon).then(function (o) {
       if (!o.items) { if (!base.length) box.replaceChildren(el('div', 'rpt-empty', '読み込めませんでした。少し待ってから開き直してください。')); return; }
@@ -113,7 +116,7 @@
       var ids = {}; o.items.forEach(function (r) { ids[r.id] = 1; });
       items = base.filter(function (b) { return !b.sid || !ids[b.sid]; });
       o.items.forEach(function (r) { items.push({ id: r.id, mine: r.mine, href: 'view/?id=' + encodeURIComponent(r.id), title: r.title, by: r.by, ai: r.ai, lock: r.lock, day: ymdhm(r.at), t: r.at, i: -1 }); });
-      items.sort(function (a, b) { return a.day < b.day ? 1 : a.day > b.day ? -1 : (b.t - a.t) || (a.i - b.i); });
+      newest();
       draw();
     }); }
     load(true);

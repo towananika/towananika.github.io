@@ -8,6 +8,13 @@
 ],
 [
 "2026-11-26",
+97,
+"レポート一覧を、新しい投稿日時が上になる順に",
+"The report list now shows the newest first",
+"리포트 목록을 최신 게시 일시가 위로 오도록 정렬"
+],
+[
+"2026-11-26",
 96,
 "レポートの日付を投稿日時（時:分まで）に",
 "Report dates now show the posting date and time",
