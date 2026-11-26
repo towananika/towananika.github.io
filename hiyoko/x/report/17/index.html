@@ -45,7 +45,9 @@
 .sm-go:hover{background:var(--card)}
 .sm-card .sm-go>b::after{content:" ›";color:var(--accent)}
 .sm-arrow{display:inline-block;margin-left:6px;font-size:.75rem;color:var(--accent);white-space:nowrap}
-.rpt-detail-body h4:target{background:var(--paper);border-radius:6px}
+@keyframes smFlash{0%,60%{background:color-mix(in srgb,var(--accent) 22%,transparent)}100%{background:transparent}}
+.sm-flash{animation:smFlash 3s ease-out;border-radius:6px;box-shadow:-8px 0 0 0 color-mix(in srgb,var(--accent) 22%,transparent)}
+@media (prefers-reduced-motion:reduce){.sm-flash{animation-duration:3s;animation-timing-function:steps(1,end)}}
 .sm-note{font-size:.8rem;color:var(--muted)}
 .sm-more{border-top:1px solid var(--line);padding:2px 0}
 .sm-more>summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px}
@@ -221,9 +223,9 @@
 <footer>HIYOKO ／ レポート</footer>
 </main>
 </div>
-<script src="../../../i18n.js?v=7d1d5501" defer></script>
+<script src="../../../i18n.js?v=2c0dd658" defer></script>
 <script src="../../../nav.js?v=dd0e8abb" defer></script>
 <script src="../../../account.js?v=5b70728b" defer></script>
-<script>function smOpen(h){h=h||location.hash;var t=h&&document.getElementById(h.slice(1));if(t){var d=t.closest("details");if(d)d.open=true;t.scrollIntoView({block:"start"});}}addEventListener("hashchange",function(){smOpen()});document.addEventListener("click",function(e){var a=e.target.closest("a.sm-go");if(a){e.preventDefault();history.replaceState(null,"",a.getAttribute("href"));smOpen(a.getAttribute("href"));}});smOpen();</script>
+<script>function smFlash(t){var els=[t],n=t.nextElementSibling;while(n&&!/^H[34]$/.test(n.tagName)){els.push(n);n=n.nextElementSibling;}els.forEach(function(e){e.classList.remove("sm-flash");void e.offsetWidth;e.classList.add("sm-flash");});setTimeout(function(){els.forEach(function(e){e.classList.remove("sm-flash");});},3200);}function smOpen(h){h=h||location.hash;var t=h&&document.getElementById(h.slice(1));if(t){var d=t.closest("details");if(d)d.open=true;t.scrollIntoView({block:"start"});if(t.tagName=="H4")smFlash(t);}}addEventListener("hashchange",function(){smOpen()});document.addEventListener("click",function(e){var a=e.target.closest("a.sm-go");if(a){e.preventDefault();history.replaceState(null,"",a.getAttribute("href"));smOpen(a.getAttribute("href"));}});smOpen();</script>
 </body>
 </html>

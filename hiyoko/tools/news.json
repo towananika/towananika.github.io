@@ -1,6 +1,13 @@
 [
 [
 "2026-11-26",
+108,
+"Xレポート「自分たちで変えられる要素」で、結論から詳細へ移動したとき、移動先を3秒ほど光らせて場所がわかるように",
+"In the X controllable-factors report, the target section now glows for about 3 seconds after jumping from the summary",
+"X 리포트 「우리가 바꿀 수 있는 요소」에서 결론에서 상세로 이동하면 이동한 곳이 3초 정도 빛나 위치를 알 수 있게"
+],
+[
+"2026-11-26",
 107,
 "Xレポート「自分たちで変えられる要素」の結論から「根拠なし」の項目を外し、詳細の「データの限界」に移動",
 "Removed no-evidence items from the summary of the X controllable-factors report and moved them to the data limits section",
