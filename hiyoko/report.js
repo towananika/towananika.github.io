@@ -44,12 +44,26 @@
     return t.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
   }
   function render(text) {
-    var out = [], list = false, para = [];
+    var out = [], list = false, para = [], tbl = null;
     function flush() { if (para.length) { out.push('<p>' + para.join('<br>') + '</p>'); para = []; } }
-    function endList() { if (list) { out.push('</ul>'); list = false; } }
+    // 「| a | b |」の行が続くと表（2行目の |---| は区切り。1行目は見出し）
+    function endTable() {
+      if (!tbl) return;
+      var h = '<div class="tbl"><table>';
+      tbl.forEach(function (cells, i) { var tag = i === 0 ? 'th' : 'td'; h += (i === 0 ? '<thead>' : i === 1 ? '<tbody>' : '') + '<tr>' + cells.map(function (c) { return '<' + tag + '>' + inline(c) + '</' + tag + '>'; }).join('') + '</tr>' + (i === 0 ? '</thead>' : ''); });
+      out.push(h + (tbl.length > 1 ? '</tbody>' : '') + '</table></div>'); tbl = null;
+    }
+    function endList() { if (list) { out.push('</ul>'); list = false; } endTable(); }
     String(text || '').split('\n').forEach(function (ln) {
       var t = ln.trim(), m;
       if (!t) { flush(); endList(); return; }
+      if (/^\|.*\|$/.test(t)) {
+        flush(); if (list) { out.push('</ul>'); list = false; }
+        var cells = t.slice(1, -1).split('|').map(function (c) { return c.trim(); });
+        if (cells.every(function (c) { return /^:?-{2,}:?$/.test(c); })) return;
+        (tbl = tbl || []).push(cells); return;
+      }
+      endTable();
       if ((m = t.match(/^(#{1,4})\s+(.*)$/))) { flush(); endList(); out.push(m[1].length >= 3 ? '<h4>' + inline(m[2]) + '</h4>' : '<h3>' + inline(m[2]) + '</h3>'); return; }
       if ((m = t.match(/^(?:[-*]\s+|・\s*)(.*)$/))) { flush(); if (!list) { out.push('<ul>'); list = true; } out.push('<li>' + inline(m[1]) + '</li>'); return; }
       endList(); para.push(inline(t));
