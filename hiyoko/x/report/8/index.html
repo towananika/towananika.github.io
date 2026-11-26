@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="2026年4月とそれ以前のHIYOKO X個別投稿の分析（非公式ファンサイト）">
+<title>2025年4月HIYOKO X KPI分析 | HIYOKO X</title>
+<link rel="stylesheet" href="../../../style.css?v=24eb799f">
+<style>
+.btn{display:inline-block;font:inherit;cursor:pointer;border-radius:8px;padding:8px 16px;font-size:.88rem;border:1px solid transparent;text-decoration:none;transition:background .15s,color .15s}
+.btn-ghost{background:none;color:var(--accent);border-color:var(--accent)}
+.btn-ghost:hover{background:var(--accent);color:#fff}
+.btn-sm{padding:4px 10px;font-size:.78rem;border-radius:6px}
+.rpt-detail{border:1px solid var(--line);border-radius:12px;background:var(--card);padding:20px 22px;margin:0 0 32px}
+.rpt-detail-top{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;padding-bottom:12px;border-bottom:1px solid var(--line);margin-bottom:14px}
+.rpt-detail-title{font-size:1.22rem;font-weight:700;color:var(--ink);margin:0 0 8px;line-height:1.4}
+.rpt-detail-meta{font-size:.82rem;color:var(--muted);margin-bottom:16px}
+.rpt-detail-body{font-size:.94rem;line-height:1.75;color:var(--ink)}
+.rpt-detail-body h3{font-size:1.02rem;margin:18px 0 6px;padding-bottom:4px;border-bottom:1px solid var(--line);color:var(--ink)}
+.rpt-detail-body p{margin:6px 0}
+.rpt-detail-body ul,.rpt-detail-body ol{margin:6px 0 10px;padding-left:1.3em}
+.rpt-detail-body li{margin:4px 0}
+.rpt-detail-body a{color:var(--accent)}
+.kp-ana-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin:12px 0 18px}
+.kp-ana-card{border-left:3px solid var(--accent);padding:10px 12px;background:var(--paper);border-radius:6px;font-size:.88rem;line-height:1.6}
+.kp-ana-card.up{border-left-color:var(--good)}
+.kp-ana-card.down{border-left-color:var(--bad)}
+.kp-ana-card b.hd{display:block;font-size:.95rem;margin-bottom:6px}
+.pv-card{display:block;border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:8px;background:var(--paper);padding:10px 14px;margin:12px 0 4px;text-decoration:none;color:var(--ink);transition:border-color .15s,background .15s}
+.pv-card:hover{border-color:var(--accent);background:var(--card)}
+.pv-head{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:.76rem;color:var(--muted);margin-bottom:4px}
+.pv-badge{font-weight:700;color:var(--accent);border:1px solid var(--accent);border-radius:99px;padding:0 7px;font-size:.7rem}
+.pv-text{font-size:.86rem;line-height:1.5;color:var(--ink)}
+</style>
+</head>
+<body class="ch-x">
+<a class="skip" href="#main">本文へスキップ</a><header class="hy-top"><nav class="hy-path" aria-label="サイト"><a href="/">Towananika</a><span aria-hidden="true">›</span><a href="../../../">HIYOKO</a><span class="fan-badge">非公式ファンサイト</span></nav><div class="hy-set"></div></header>
+<nav class="hy-tabs" aria-label="コーナー"><div><a href="../../../">ホーム</a><a href="../../../about/">HIYOKOを知る</a><a href="../../../links/">公式リンク</a><a href="../../../analysis/" aria-current="true">SNS分析</a><a href="../../../news/">ニュース</a><a href="../../../internal/strategy/" class="mem-only">🔒 社内資料</a></div></nav>
+<div class="layout">
+<details class="sitenav" open><summary>このコーナーのページ</summary><div><a class="brand" href="../../../">HIYOKO</a><span class="ch m">SNS分析</span><ul class=""><li><a class="page" href="../../../analysis/">SNS分析トップ</a></li><li><a class="page" href="../../../kpi/">KPI一覧</a></li></ul><span class="ch x">X</span><ul class=""><li><a class="page" href="../../../x/">概要</a></li><li><a class="page" href="../../../x/monthly/">月間分析</a></li><li><a class="page" href="../../../x/posts/">投稿とKPI</a></li><li><a class="page" href="../../../x/report/" aria-current="page">レポート</a></li></ul><span class="ch ig">Instagram</span><ul class=""><li><a class="page" href="../../../ig/">概要</a></li><li><a class="page" href="../../../ig/posts/">投稿とKPI</a></li><li><a class="page" href="../../../ig/content/">コンテンツ3グループ</a></li></ul><span class="ch old">過去の分析</span><ul class=""><li><a class="page" href="../../../2026-11/">2026年11月 X・IG ABCD</a></li><li><a class="page" href="../../../a-ranking/">Aの投稿ランキング（全期間）</a></li></ul></div></details>
+<details class="pagetoc" open><summary>このページの目次</summary><ul id="toc-list">
+<li><a href="#sec-1">結論</a></li>
+<li><a href="#sec-2">データについて</a></li>
+<li><a href="#sec-3">月ごとの流れ（アカウント全体）</a></li>
+<li><a href="#sec-4">4月：反応を取った投稿</a></li>
+<li><a href="#sec-5">4月：伸びなかった投稿</a></li>
+<li><a href="#sec-6">4月以前（12〜2月）：反応を取った投稿</a></li>
+<li><a href="#sec-7">4月と4月以前のちがい</a></li>
+<li><a href="#sec-8">次に試すこと</a></li>
+<li><a href="#sec-9">週ごと・日ごとの動き（Claudeの分析）</a></li>
+<li><a href="#sec-10">日ごとの動きからわかること</a></li>
+<li><a href="#sec-11">わたしの見方（4/15について）</a></li>
+<li><a href="#sec-12">わたしの見方（4/17以降のエンゲージメント）</a></li>
+<li><a href="#sec-13">特別事項（平均から外したもの）</a></li>
+</ul></details>
+<main id="main">
+<nav class="crumbs"><a href="/">Towananika</a> ／ <a href="../../../">HIYOKO</a> ／ <a href="../../../analysis/">SNS分析</a> ／ <a href="../../">HIYOKO X</a> ／ <a href="../">レポート</a> ／ 詳細</nav>
+<div class="chhead"><span class="dot"></span>HIYOKO X</div>
+
+<div class="rpt-detail">
+<div class="rpt-detail-top">
+<a class="btn btn-sm btn-ghost" href="../">← 一覧に戻る</a>
+</div>
+<h1 class="rpt-detail-title">2025年4月HIYOKO X KPI分析</h1>
+<div class="rpt-detail-meta"><span class="rpt-by">remitech</span> · 2026-11-26</div>
+<div class="rpt-detail-body">
+<p>対象：2026年4月（4/14〜30の投稿別データ）と、それ以前（2025年12月〜2026年2月）。分析はClaude、意見は登録者。</p>
+<h3 id="sec-1">結論</h3>
+<ul>
+<li>4月は「上場の前に、しくみを正直に説明する投稿」がいちばん反応を取った（4/15〜16のベスティング説明）。</li>
+<li>4月後半の「インドネシア・KOL・コミュニティが価格をつくる」系の短い連投は伸びなかった（1投稿あたり20〜60表示）。</li>
+<li>4月以前（12〜2月）は、1本ずつの長めの「なぜ」解説で、1投稿あたりの表示は4月より多かった（中央値 112〜151 ＞ 4月 74）。</li>
+<li>2/4「止まっていた理由と再開」は、プロフィール訪問212・フォロー7で、この期間でいちばん人を連れてきた投稿。</li>
+</ul>
+<h3 id="sec-2">データについて</h3>
+<ul>
+<li>Xの投稿別データ（2026/11/25取得）。12月3本、1月10本、2月7本、4月61本（4/14〜4/30のみ）。</li>
+<li>3月と4/1〜4/13の投稿別データは取れていない（書き出しの行数上限のため）。月の合計はアカウント全体の数字で補った。</li>
+<li>投稿の数字は「今までの累計」。</li>
+</ul>
+<h3 id="sec-3">月ごとの流れ（アカウント全体）</h3>
+<ul>
+<li>12月：表示 1.7K ／ フォロー 9 ／ 投稿 7</li>
+<li>1月：表示 4.7K ／ フォロー 34 ／ 投稿 25</li>
+<li>2月：表示 10.0K ／ フォロー 43 ／ 投稿 52</li>
+<li>3月：表示 9.6K ／ フォロー 67 ／ 投稿 50</li>
+<li>4月：表示 19.2K ／ フォロー 72 ／ 投稿 58（4/15を除くと約16.8K）</li>
+<li>合計は伸びたが、4月の1投稿あたりは週を追うごとに下がった：4/14週 138 → 4/20週 61 → 4/27週 53（表示の中央値）。</li>
+</ul>
+<h3 id="sec-4">4月：反応を取った投稿</h3>
+<ul>
+<li>4/15「Listing is not the end… Indonesia's community will be the first」：表示 415 ／ いいね 13 ／ 返信 4（4月の最多表示）</li>
+<li>4/16「Vesting is not a "restriction," it's a "design."」：表示 241 ／ いいね 20 ／ 返信 12（4月で最多のいいね・返信）</li>
+<li>4/16「The presence of vesting means one thing… Listing is the starting line」：表示 214 ／ いいね 14 ／ 返信 8</li>
+<li>4/17「Here's the full flow: Install MetaMask → … → done」：表示 243（買い方の手順。表示は多いが、いいね 3）</li>
+<li>4/17「Q. Can I join using only my smartphone?」：表示 177 ／ プロフィール訪問 6</li>
+<li>4/24「Heading into the May listing, HIYOKO is ready」：表示 167</li>
+</ul>
+<h3 id="sec-5">4月：伸びなかった投稿</h3>
+<ul>
+<li>4/20〜4/23の「インドネシア・KOL」連投：「When you bring one person in, +1 holder…」表示 23、「More community, higher evaluation…」表示 19 など、20〜35表示が多い。</li>
+<li>4/27〜4/30の価格・プレセールのお知らせ：「HIYOKO participation price roadmap」表示 32、「Tag one person who should see this」表示 48。</li>
+<li>1本の考えを何本にも分けた連投は、2本目以降がほとんど見られていない。</li>
+</ul>
+<h3 id="sec-6">4月以前（12〜2月）：反応を取った投稿</h3>
+<ul>
+<li>2/11「Web3 isn't difficult. The real issue is how people are introduced to it.」：表示 6,599 ／ いいね 295 ／ 返信 32（下の特別事項を参照）</li>
+<li>2/4「Why We Paused — and Why We Are Moving Forward Again」：表示 427 ／ プロフィール訪問 212 ／ フォロー 7（人を連れてきた投稿）</li>
+<li>1/12「Why launch a new business?」：表示 299</li>
+<li>1/7「【New Exchange Listing】」：表示 237</li>
+<li>1/22「What Is the Structural Weakness of Many Crypto Projects?」：表示 188</li>
+<li>共通点：1本で完結する長めの解説。「なぜ」で始まり、HIYOKOの考え方を正直に話している。</li>
+</ul>
+<h3 id="sec-7">4月と4月以前のちがい</h3>
+<ul>
+<li>4月以前：投稿は少なめ、1本ずつ丁寧。1投稿あたりの表示は多い。</li>
+<li>4月：投稿がとても多い（短い連投）。合計は増えたが、1本あたりは少ない。</li>
+<li>4月はほぼ全部の投稿に「ブックマーク1・返信1」がつく。同じ少人数（プレセール参加者など）が毎回反応していたと考えられる（推測）。</li>
+<li>4月も4月以前も、いちばん効いたのは「正直な説明」（2/4 休止の理由、4/16 ベスティングの理由）。</li>
+</ul>
+<h3 id="sec-8">次に試すこと</h3>
+<ul>
+<li>大事な説明は連投に分けず、1本で完結させる。</li>
+<li>「なぜ〇〇なのか」「正直に言うと」の形で、疑問や不安に答える投稿を続ける。</li>
+<li>価格・購入の告知だけの投稿は減らし、理由の説明とセットにする。</li>
+</ul>
+<h3 id="sec-9">週ごと・日ごとの動き（Claudeの分析）</h3>
+<ul>
+<li>12月前半：ほぼ動きなし（週 26〜125表示）。</li>
+<li>12/22週：表示 1,330。12/24「From 2026 onward, HIYOKO Global will enter its next phase」で再始動を告げた週（この日だけで 884表示・返信14）。</li>
+<li>1月：週 0.9〜1.4K。1/7はフォロー10（「【New Exchange Listing】」の日）。</li>
+<li>2/2週から週 3K に上がり、ここから3月末まで週 2.2〜2.6K でほぼ横ばい。きっかけは2/4「Why We Paused — and Why We Are Moving Forward Again」（プロフィール訪問212）。</li>
+<li>2月から、ブックマークが週 40〜80 つくようになった（1月は週 0〜2）。毎回反応する人たちのまとまりができたのはこのころ。</li>
+<li>3/1〜3/5：フォローが1日 7〜10（3/2週で33）。投稿別データがないので理由はわからない。</li>
+<li>4/13週：表示 7,018（それまでの約2.5倍）、フォロー42、プロフィール訪問155。上場の時期・ベスティング・買い方の説明が続いた週。</li>
+<li>4/20週：表示 5,002 は高いが、エンゲージメントは 552 → 231 と半分以下。スローガン型の連投に変わった週。</li>
+<li>4/27週：表示 2,544 にもどり、ブックマークは週 7 まで減った（2〜3月は週 40〜80）。毎回反応していた人たちが離れはじめた。</li>
+<li>4/26（日）：投稿なしで 1,120表示、エンゲージメント 17。過去の投稿が見られただけで、反応はほぼない。</li>
+</ul>
+<h3 id="sec-10">日ごとの動きからわかること</h3>
+<ul>
+<li>表示が大きく上がったのは「新しい事実を伝えた日」：12/24 再始動、2/4 休止の理由、4/15 上場時期、4/17 買い方。</li>
+<li>上がったあとに同じテーマのスローガンを重ねると、表示は残っても反応が先に落ちる（4/20週）。</li>
+<li>2〜3月の「ブックマークが毎週つく人たち」が、4月末に減りはじめた。7月に反応が止まる流れの始まりと考えられる（推測）。</li>
+</ul>
+<h3 id="sec-11">わたしの見方（4/15について）</h3>
+<ul>
+<li>意見：「4月15日の投稿は上場をはじめて言及したかも。HIYOKOの購入者や関係者がはじめてHIYOKOアカウントに気づいて、415ビューになったと思う」</li>
+<li>データで確かめられたこと：</li>
+<li>4/15の投稿に「HYK: Listing planned mid-to-late May」と、上場の時期がはっきり書かれている。手元のデータで、それより前に上場にふれたのは1/7「【New Exchange Listing】」だけで、HYKの上場時期は書かれていない（3月〜4/13は投稿別データがないので、「はじめて」かどうかは完全には確かめられない）。</li>
+<li>4/15のアカウント全体：プロフィール訪問 49（前の週は1日4〜10）、フォロー 27（前の週は1日1〜6）、返信 46（前の週は1日5〜8）。</li>
+<li>4/16〜17もプロフィール訪問 26・33と高く、4/18以降は1日6〜16にもどった。</li>
+<li>まとめ：プロフィール訪問とフォローが一気に増えているので、「上場の話をきっかけに、購入者や関係者がアカウントを見つけた」という見方とデータは合っている。</li>
+</ul>
+<h3 id="sec-12">わたしの見方（4/17以降のエンゲージメント）</h3>
+<ul>
+<li>意見：「4月17日までエンゲージメント10くらいを維持し、以後3まで下がる。4月21日にまた8くらいに上がった」</li>
+<li>データで確かめられたこと（1投稿あたりのエンゲージメント平均）：</li>
+<li>4/15：13 ／ 4/16：22 ／ 4/17：7 → 4/20：3 ／ 4/21：5（いちばん高い投稿は8）／ 4/22：3</li>
+<li>4/15〜17の投稿：上場の時期・ベスティング・買い方の手順。購入者がすぐ知りたい、具体的な話。</li>
+<li>4/20の投稿：「+1 holder」「Community creates price」など、短い言葉だけの連投。具体的な情報がない。</li>
+<li>4/21に上がった投稿：「The presale for a project with 54M reach is live in Indonesia right now」（8）、「"What makes up the 54M?" Happy Chick, Vitalis, and partners combined」（7）。5,400万人という具体的な数字が入っている。</li>
+<li>まとめ：「購入者に役立つ具体的な情報」や「具体的な数字」があると反応が上がり、スローガンだけの投稿では下がる。わたしの見た流れとデータは合っている。</li>
+</ul>
+<h3 id="sec-13">特別事項（平均から外したもの）</h3>
+<ul>
+<li>4/15：アカウント全体で1日 表示 2,405 ／ フォロー 27（4月のフォローの約4割）。上場・ベスティングの説明が始まった日。投稿別では1本が最大415表示なので、どの投稿が伸びを作ったかは、このデータでは特定できない。</li>
+<li>2/11「Web3 isn't difficult…」：累計 6,599表示はほかの投稿の数十倍。この投稿は固定投稿（プロフィールの一番上）なので、後から長く見られ続けた。投稿日の全体表示は513。</li>
+</ul>
+</div>
+</div>
+
+<!--fan--><p class="fan-foot"><span>🐣 このサイトはファンが作った非公式サイトです。HIYOKO公式とは関係ありません。</span> <a href="https://hiyokotoken.com/" target="_blank" rel="noopener">正しい情報は公式サイトへ ↗</a></p><!--/fan-->
+<!--fmap--><nav class="fmap" aria-label="サイトマップ"><div class=""><a class="fm-h" href="../../../about/">HIYOKOを知る</a><ul><li><a href="../../../about/">HIYOKOとは</a></li><li><a href="../../../world/">目的</a></li><li><a href="../../../character/">キャラクター</a></li></ul></div><div class=""><a class="fm-h" href="../../../links/">公式リンク</a></div><div class=""><a class="fm-h" href="../../../analysis/">SNS分析</a><ul><li><a href="../../../analysis/">SNS分析トップ</a></li><li><a href="../../../kpi/">KPI一覧</a></li><li><a href="../../../x/">Xの分析</a></li><li><a href="../../../x/report/">Xのレポート</a></li><li><a href="../../../ig/">Instagramの分析</a></li></ul></div><div class=""><a class="fm-h" href="../../../news/">ニュース</a></div><div class="mem-only"><a class="fm-h" href="../../../internal/strategy/">🔒 社内資料</a><ul><li><a href="../../../internal/strategy/">企画・目標・方向性</a></li><li><a href="../../../internal/review/">振り返り</a></li></ul></div></nav><!--/fmap-->
+<footer>HIYOKO ／ レポート</footer>
+</main>
+</div>
+<script src="../../../i18n.js?v=ed81efc6" defer></script>
+<script src="../../../nav.js?v=dd0e8abb" defer></script>
+<script src="../../../account.js?v=5b70728b" defer></script>
+</body>
+</html>
