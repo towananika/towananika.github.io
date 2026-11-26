@@ -1,6 +1,13 @@
 [
 [
 "2026-11-26",
+92,
+"レポートの作成・編集・削除に対応（直す・消すは作成者か管理者だけ）",
+"Reports can now be created, edited and deleted (edit/delete by the author or an admin only)",
+"리포트 작성·수정·삭제 지원(수정·삭제는 작성자 또는 관리자만)"
+],
+[
+"2026-11-26",
 94,
 "レポート一覧を1ページ10件にし、作成ボタンを表示",
 "Report list now shows 10 per page, with a Create button",

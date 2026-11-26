@@ -35,9 +35,13 @@
   }
 
   // 本文の書き方：「## 見出し」「- 箇条書き」「**太字**」、空行で段落。URL はリンクに。HTML はそのまま文字として出す
+  // [文字](https://…) はリンク。むき出しの URL もリンクに（http/https だけ）
   function inline(s) {
-    return esc(s).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>')
-      .replace(/https?:\/\/[^\s<>"']+/g, function (u) { return '<a href="' + u + '" target="_blank" rel="noopener nofollow">' + u + '</a>'; });
+    var links = [];
+    var t = String(s).replace(/\[([^\]\n]+)\]\((https?:\/\/[^\s)]+)\)/g, function (_, txt, u) { links.push([txt, u]); return '\u0000' + (links.length - 1) + '\u0000'; });
+    t = esc(t).replace(/https?:\/\/[^\s<>"'\u0000]+/g, function (u) { return '<a href="' + u + '" target="_blank" rel="noopener nofollow">' + u + '</a>'; });
+    t = t.replace(/\u0000(\d+)\u0000/g, function (_, i) { var l = links[+i]; return '<a href="' + esc(l[1]) + '" target="_blank" rel="noopener nofollow">' + esc(l[0]) + '</a>'; });
+    return t.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
   }
   function render(text) {
     var out = [], list = false, para = [];
@@ -46,8 +50,8 @@
     String(text || '').split('\n').forEach(function (ln) {
       var t = ln.trim(), m;
       if (!t) { flush(); endList(); return; }
-      if ((m = t.match(/^#{1,4}\s+(.*)$/))) { flush(); endList(); out.push('<h3>' + inline(m[1]) + '</h3>'); return; }
-      if ((m = t.match(/^(?:[-*・])\s*(.*)$/))) { flush(); if (!list) { out.push('<ul>'); list = true; } out.push('<li>' + inline(m[1]) + '</li>'); return; }
+      if ((m = t.match(/^(#{1,4})\s+(.*)$/))) { flush(); endList(); out.push(m[1].length >= 3 ? '<h4>' + inline(m[2]) + '</h4>' : '<h3>' + inline(m[2]) + '</h3>'); return; }
+      if ((m = t.match(/^(?:[-*]\s+|・\s*)(.*)$/))) { flush(); if (!list) { out.push('<ul>'); list = true; } out.push('<li>' + inline(m[1]) + '</li>'); return; }
       endList(); para.push(inline(t));
     });
     flush(); endList();
@@ -64,7 +68,7 @@
     var PER = 10, box = $('#rpt-list'), pager = $('#rpt-pager'), cur = 0;
     // はじめからページにあるレポート（静的）
     var items = [].slice.call(box.querySelectorAll('.rpt-row')).map(function (a, i) {
-      return { href: a.getAttribute('href'), title: a.querySelector('.rpt-row-title').textContent, by: a.getAttribute('data-by') || '', ai: a.hasAttribute('data-ai'), day: a.getAttribute('data-day'), t: 0, i: i };
+      return { sid: (a.getAttribute('href').match(/^(\d+)\/$/) || [])[1] || '', href: a.getAttribute('href'), title: a.querySelector('.rpt-row-title').textContent, by: a.getAttribute('data-by') || '', ai: a.hasAttribute('data-ai'), day: a.getAttribute('data-day'), t: 0, i: i };
     });
     function draw() {
       var pages = Math.max(1, Math.ceil(items.length / PER)); if (cur >= pages) cur = pages - 1;
@@ -76,7 +80,21 @@
         var meta = el('span', 'rpt-row-meta');
         if (it.lock) meta.appendChild(el('span', 'rpt-lock', '🔒'));
         meta.appendChild(who(it.by, it.ai)); meta.appendChild(el('span', 'rpt-day', it.day));
-        a.appendChild(meta); box.appendChild(a);
+        a.appendChild(meta);
+        if (it.mine) {
+          // 作成者か管理者には、その行で「直す」「消す」を出す（判定はサーバー）
+          var tl = el('span', 'rpt-row-tools'), ed = el('a', 'btn btn-sm btn-ghost', '直す'), dl = el('button', 'btn btn-sm btn-danger', '消す');
+          ed.href = 'new/?id=' + encodeURIComponent(it.id); dl.type = 'button';
+          ed.onclick = function (e) { e.stopPropagation(); };
+          dl.onclick = function (e) {
+            e.preventDefault(); e.stopPropagation();
+            if (!window.confirm('「' + it.title + '」を消しますか？（元にもどせません）')) return;
+            dl.disabled = true;
+            call('rdel', { id: it.id }).then(function (x) { if (x.ok) { items = items.filter(function (y) { return y !== it; }); base = base.filter(function (y) { return y !== it; }); draw(); } else { dl.disabled = false; window.alert(err(x.error)); } });
+          };
+          tl.appendChild(ed); tl.appendChild(dl);
+          var wrap = el('div', 'rpt-row-wrap'); wrap.appendChild(a); wrap.appendChild(tl); box.appendChild(wrap);
+        } else box.appendChild(a);
       });
       pager.replaceChildren();
       if (pages > 1) for (var p = 0; p < pages; p++) (function (p) {
@@ -90,9 +108,11 @@
     draw();
     var base = items.slice();
     function load(anon) { return call('reports', {}, anon).then(function (o) {
-      if (!o.items) return;
-      items = base.slice();
-      o.items.forEach(function (r) { items.push({ href: 'view/?id=' + encodeURIComponent(r.id), title: r.title, by: r.by, ai: r.ai, lock: r.lock, day: ymd(r.at), t: r.at, i: -1 }); });
+      if (!o.items) { if (!base.length) box.replaceChildren(el('div', 'rpt-empty', '読み込めませんでした。少し待ってから開き直してください。')); return; }
+      // サーバーにある番号の静的レポートは、サーバーのほうを出す（編集・削除はサーバーのもの）
+      var ids = {}; o.items.forEach(function (r) { ids[r.id] = 1; });
+      items = base.filter(function (b) { return !b.sid || !ids[b.sid]; });
+      o.items.forEach(function (r) { items.push({ id: r.id, mine: r.mine, href: 'view/?id=' + encodeURIComponent(r.id), title: r.title, by: r.by, ai: r.ai, lock: r.lock, day: ymd(r.at), t: r.at, i: -1 }); });
       items.sort(function (a, b) { return a.day < b.day ? 1 : a.day > b.day ? -1 : (b.t - a.t) || (a.i - b.i); });
       draw();
     }); }
