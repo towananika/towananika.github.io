@@ -41,6 +41,11 @@
 .sm-card li span{display:block;font-size:.82rem;color:var(--muted);line-height:1.5}
 .sm-card li span b{color:var(--ink)}
 .sm-card p{margin:0;font-size:.86rem;color:var(--muted)}
+.sm-go{display:block;text-decoration:none!important;color:inherit!important;border-radius:6px;margin:0 -6px;padding:4px 6px;position:relative}
+.sm-go:hover{background:var(--card)}
+.sm-card .sm-go>b::after{content:" ›";color:var(--accent)}
+.sm-arrow{display:inline-block;margin-left:6px;font-size:.75rem;color:var(--accent);white-space:nowrap}
+.rpt-detail-body h4:target{background:var(--paper);border-radius:6px}
 .sm-note{font-size:.8rem;color:var(--muted)}
 .sm-more{border-top:1px solid var(--line);padding:2px 0}
 .sm-more>summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px}
@@ -85,46 +90,49 @@
 <h3 id="sec-1">結論（ひと目で）</h3>
 <div class="sm-grid">
 <div class="sm-card good"><div class="sm-h">✅ 確か</div><ul>
-<li><b>土日はフォローが少ない</b><span>平日より <b>−0.9人/日</b>。大事な投稿は平日に</span></li>
-<li><b>取引所への短い案内</b><span>条件をそろえても <b>+0.7人</b>（イベントの時期だけ）</span></li></ul></div>
+<li><a class="sm-go" href="#r-weekend"><b>土日はフォローが少ない</b><span>平日より <b>−0.9人/日</b>。大事な投稿は平日に</span></a></li>
+<li><a class="sm-go" href="#r-cex"><b>取引所への短い案内</b><span>条件をそろえても <b>+0.7人</b>（イベントの時期だけ）</span></a></li></ul></div>
 <div class="sm-card mid"><div class="sm-h">🟡 弱い（続けてOK）</div><ul>
-<li><b>毎日・1日2本以上</b><span>差の多くは土日の影響</span></li>
-<li><b>1本140字以内</b><span>141字以上が少し少ない傾向</span></li>
-<li><b>ハッシュタグ2〜3個／信頼・仕組み／新しい事実</b><span>+0.3〜0.4人、偶然と区別できない</span></li></ul></div>
+<li><a class="sm-go" href="#r1"><b>毎日出す</b><span>差の多くは土日の影響</span></a></li>
+<li><a class="sm-go" href="#r2"><b>1日2本以上</b><span>0〜1本は −0.5人だが偶然の可能性</span></a></li>
+<li><a class="sm-go" href="#r3"><b>1本140字以内</b><span>141字以上が少し少ない傾向</span></a></li>
+<li><a class="sm-go" href="#r4"><b>ハッシュタグ2〜3個</b><span>+0.29人、時期の影響と区別できない</span></a></li>
+<li><a class="sm-go" href="#r5"><b>信頼・仕組み</b><span>+0.35人、日数が少ない</span></a></li>
+<li><a class="sm-go" href="#r6"><b>新しい事実</b><span>取引所の案内と重なると差が消える</span></a></li></ul></div>
 <div class="sm-card none"><div class="sm-h">⚪ 根拠なし</div><ul>
-<li><b>1日3本</b><span>2本と同じ</span></li>
-<li><b>80字以下</b><span>81〜140字と同じ（土日が多かっただけ）</span></li></ul></div>
+<li><a class="sm-go" href="#r2"><b>1日3本</b><span>2本と同じ</span></a></li>
+<li><a class="sm-go" href="#r3"><b>80字以下</b><span>81〜140字と同じ（土日が多かっただけ）</span></a></li></ul></div>
 <div class="sm-card hot"><div class="sm-h">🔥 一発性（イベント）</div><ul>
-<li><b>発表の日</b><span>1日 <b>10〜27人</b>（ふだんの10倍以上）</span></li></ul></div>
+<li><a class="sm-go" href="#r-event"><b>発表の日</b><span>1日 <b>10〜27人</b>（ふだんの10倍以上）</span></a></li></ul></div>
 </div>
 <p class="sm-note">数字は「ある日」と「ない日」の1日のフォロー差（同じ週の中で比較）。相関で、因果ではない。</p>
 <details class="sm-more" open><summary><h3 id="sec-2">明日からやること</h3></summary><ul>
-<li><b>① 毎日出す</b> ★☆☆ 弱い（投稿0の日の少なさは、ほとんど土日のせいだった）</li>
-<li><b>② 1日2本以上</b> ★☆☆ 弱い（土日を除いても1本の日は少なめだが、偶然の可能性が残る）。<b>3本が2本より良いという根拠はない</b></li>
-<li><b>大事な発表・取引所の案内は平日に出す</b> ★★★（土日は1日のフォローが約0.9人少ない）</li>
-<li><b>③ 1本は140字以内</b> ★☆☆ 弱い（80字以下と81〜140字に差はない。141字以上が少し少ない傾向）</li>
-<li><b>④ ハッシュタグ2〜3個</b>（#HIYOKO＋#HYK や #Web3） ★☆☆ 弱い</li>
-<li><b>⑤ 週1〜2回「なぜ信頼できるか・仕組み」</b> ★☆☆ 弱い（数字の向きは良い）</li>
-<li><b>⑥ 毎週、新しい事実を出す</b>（公式の数字・日付・新機能） ★☆☆ 弱い（取引所の案内と同じ日が多く、それを分けると差が消える）</li>
-<li><b>イベントの時期だけ</b>：キャラ口調の短い取引所への案内を週2回 ★★★（ただしイベントがない時期は効果なし）</li>
+<li><a class="sm-go" href="#r1"><b>① 毎日出す</b> ★☆☆ 弱い（投稿0の日の少なさは、ほとんど土日のせいだった）<span class="sm-arrow">詳しく ›</span></a></li>
+<li><a class="sm-go" href="#r2"><b>② 1日2本以上</b> ★☆☆ 弱い（土日を除いても1本の日は少なめだが、偶然の可能性が残る）。<b>3本が2本より良いという根拠はない</b><span class="sm-arrow">詳しく ›</span></a></li>
+<li><a class="sm-go" href="#r-weekend"><b>大事な発表・取引所の案内は平日に出す</b> ★★★（土日は1日のフォローが約0.9人少ない）<span class="sm-arrow">詳しく ›</span></a></li>
+<li><a class="sm-go" href="#r3"><b>③ 1本は140字以内</b> ★☆☆ 弱い（80字以下と81〜140字に差はない。141字以上が少し少ない傾向）<span class="sm-arrow">詳しく ›</span></a></li>
+<li><a class="sm-go" href="#r4"><b>④ ハッシュタグ2〜3個</b>（#HIYOKO＋#HYK や #Web3） ★☆☆ 弱い<span class="sm-arrow">詳しく ›</span></a></li>
+<li><a class="sm-go" href="#r5"><b>⑤ 週1〜2回「なぜ信頼できるか・仕組み」</b> ★☆☆ 弱い（数字の向きは良い）<span class="sm-arrow">詳しく ›</span></a></li>
+<li><a class="sm-go" href="#r6"><b>⑥ 毎週、新しい事実を出す</b>（公式の数字・日付・新機能） ★☆☆ 弱い（取引所の案内と同じ日が多く、それを分けると差が消える）<span class="sm-arrow">詳しく ›</span></a></li>
+<li><a class="sm-go" href="#r-cex"><b>イベントの時期だけ</b>：キャラ口調の短い取引所への案内を週2回 ★★★（ただしイベントがない時期は効果なし）<span class="sm-arrow">詳しく ›</span></a></li>
 <li>★★★＝偶然とは考えにくく、時期をまたいで同じ向き。★★☆＝向きはそろうが偶然の可能性も残る。★☆☆＝差が小さい、または時期でぶれる。</li>
 </ul></details>
 <details class="sm-more"><summary><h3 id="sec-3">ルール別の根拠</h3></summary><ul>
 <li>比べ方：「その要素がある日」と「ない日」の1日のフォロー数を、<b>同じ週の中で</b>比べた差（人/日）。時期の差を消すため。p値は「同じ週の中で日をシャッフルして5,000回」で計算（0.05未満なら偶然とは考えにくい）。</li>
 <li>すべて相関で、因果ではない。外れ値の日（4/15、6/15〜17）は除いた。</li>
 </ul>
-<h4>曜日の影響（土日） ★★★</h4>
+<h4 id="r-weekend">曜日の影響（土日） ★★★</h4>
 <ul>
 <li>曜日ごとの1日の平均フォロー（4/14〜11/23）：月 1.29／火 1.52／水 1.33／木 1.59／金 1.62／<b>土 0.47／日 0.50</b>。</li>
 <li>週と曜日と投稿数を同時に考えた計算（回帰）で、<b>土日は平日より −0.92人</b>（誤差 ±0.26。偶然とは考えにくい）。</li>
 <li>投稿0の日20日のうち16日が土日。「出さない日は少ない」の大部分は土日の影響だった。</li>
 </ul>
-<h4>① 毎日出す ★☆☆</h4>
+<h4 id="r1">① 毎日出す ★☆☆</h4>
 <ul>
 <li>投稿0の日：20日・平均0.35人。ただし <b>16日が土日</b>。平日の0本の日は4日だけ（平均0.50人）で、比べるには少なすぎる。</li>
 <li>土日だけで比べると：0本 16日・0.31人 ／ 2本以上 41日・0.63人。出した方が少し多いが、差は小さい。</li>
 </ul>
-<h4>② 1日の投稿数 ★☆☆</h4>
+<h4 id="r2">② 1日の投稿数 ★☆☆</h4>
 <div class="sm-tw"><table class="sm-t"><tr><th>1日の投稿数</th><th>日数</th><th>平均</th><th>差（全期間）</th><th>4〜7月</th><th>8〜9月</th><th>10〜11月</th></tr>
 <tr><td>0本</td><td>20</td><td>0.35</td><td><b>−0.55</b></td><td>−0.98</td><td>−0.12</td><td>（なし）</td></tr>
 <tr><td>1本</td><td>24</td><td>0.46</td><td><b>−0.36</b></td><td>−0.65</td><td>+0.14</td><td>−1.19</td></tr>
@@ -141,7 +149,7 @@
 <li>実例：10/31（土）・11/1（日）・11/3（火）は Instagram 動画1本だけの日で、どれもフォロー0。前の版で「1本だからダメ」の例にしたが、3日のうち2日は土日だった。</li>
 <li>投稿数は書き出しに出ている数（5〜7月の連投の続きもふくむ）。</li>
 </ul>
-<h4>③ 文字数 ★☆☆（80字以下と81〜140字は差なし）</h4>
+<h4 id="r3">③ 文字数 ★☆☆（80字以下と81〜140字は差なし）</h4>
 <div class="sm-tw"><table class="sm-t"><tr><th>その日の文字数</th><th>日数</th><th>平均</th><th>差（全期間）</th><th>4〜7月</th><th>8〜9月</th><th>10〜11月</th></tr>
 <tr><td>〜80字</td><td>34</td><td>0.97</td><td>−0.07</td><td>−0.42</td><td>±0.00</td><td>+0.13</td></tr>
 <tr><td><b>81〜140字</b></td><td>50</td><td>1.92</td><td><b>+0.32</b></td><td><b>+0.79</b></td><td><b>+0.36</b></td><td>−0.03</td></tr>
@@ -156,31 +164,31 @@
 <li>実例（80字以下の日でも伸びた日）：11/10「view HYK on coinstore 👉 …」「HYK is live on coinstore. 🪙…」→ 9人、11/17「get HYK now 👉 …」→ 7人。</li>
 <li>実例（81〜140字）：11/18「130M users on a game app. 68K waiting for an AI health platform…」→ 8人、10/30「who decides where HIYOKO goes? 🐣 the community does…」→ 6人。</li>
 </ul>
-<h4>④ ハッシュタグ2〜3個 ★☆☆</h4>
+<h4 id="r4">④ ハッシュタグ2〜3個 ★☆☆</h4>
 <ul>
 <li>全期間：ある日 65日・2.02人 ／ ない日 153日・0.95人。同じ週の中の差 <b>+0.29人</b>（p＝0.03）。</li>
 <li>ただし4〜7月はタグをほぼ使っておらず比べられない。8〜9月 +0.03、10〜11月 +0.44（p＝0.33）。タグを使い始めた時期と全体が伸びた時期が重なっているだけかもしれない。</li>
 <li>4個以上：差 −0.07人（効果なし）。</li>
 </ul>
-<h4>⑤ なぜ信頼できるか・仕組み ★☆☆</h4>
+<h4 id="r5">⑤ なぜ信頼できるか・仕組み ★☆☆</h4>
 <ul>
 <li>全期間：ある日 23日・1.87人 ／ 195日・1.20人。差 <b>+0.35人</b>（p＝0.31）。4〜7月 +0.40、8〜9月 −0.14、10〜11月 +0.81。</li>
 <li>実例：10/20「Burn. Buyback. Treasury. 🐣 the three pillars of HIYOKO tokenomics…」→ 6人。11/12「why trust hiyoko? 🔐 built on HAMMER blockchain…」→ 6人。</li>
 </ul>
-<h4>⑥ 新しい事実を出す ★☆☆</h4>
+<h4 id="r6">⑥ 新しい事実を出す ★☆☆</h4>
 <ul>
 <li>surpassed／launched／is live／new exchange などの投稿がある日：39日・1.54人 ／ 1.21人。差 <b>+0.39人</b>（p＝0.11）。</li>
 <li>3つの時期すべてでプラス（+0.09／+0.54／+0.76）。</li>
 <li>ただし取引所の案内と同じ日が多く、<b>取引所の案内・土日を同時に考えると +0.06人（±0.31）で差が消える</b>。新しい事実そのものより「取引所への案内」が効いている可能性が高い。</li>
 </ul></details>
-<details class="sm-more"><summary><h3 id="sec-4">時期しだい・一発性</h3></summary><h4>取引所への短い案内（イベントの時期だけ）</h4>
+<details class="sm-more"><summary><h3 id="sec-4">時期しだい・一発性</h3></summary><h4 id="r-cex">取引所への短い案内（イベントの時期だけ）</h4>
 <ul>
 <li>全期間：Coinstore の案内がある日 40日・1.48人 ／ 1.22人。差 <b>+0.61人</b>（p＜0.001）。</li>
 <li>土日・文字数・新しい事実・投稿数を同時に考えても <b>+0.69人（±0.30）</b>。自分たちで変えられる要素の中で、いちばん確かなもの。</li>
 <li>時期ごと：4〜7月 <b>+0.54</b>、8〜9月 <b>−0.08（効果なし）</b>、10〜11月 <b>+1.90</b>。効いたのは上場や Season 1 のイベントの時期だけ。</li>
 <li>効くのは短い・キャラ口調の案内。例：11/17「wanna get hiyoko? 🐣 go to coinstore. search HYK/USDT.」→ 7人。価格つきの長い告知（10/13、159字）の日は0人。</li>
 </ul>
-<h4>発表の日（一発性）</h4>
+<h4 id="r-event">発表の日（一発性）</h4>
 <ul>
 <li>1/7 新しい取引所への上場 → 10人、4/15「Vitalis has surpassed 37,000 testers」→ <b>27人</b>、6/15「Why HIYOKO can be global from day one」→ 14人、11/10「HYK is live on coinstore」→ 9人。ふだんの10倍以上。</li>
 <li>10/19 Season 1 開始の週から、週のフォローが 0〜6人 → 18〜30人に。</li>
@@ -215,9 +223,9 @@
 <footer>HIYOKO ／ レポート</footer>
 </main>
 </div>
-<script src="../../../i18n.js?v=d652bbad" defer></script>
+<script src="../../../i18n.js?v=89ef2df2" defer></script>
 <script src="../../../nav.js?v=dd0e8abb" defer></script>
 <script src="../../../account.js?v=5b70728b" defer></script>
-<script>function smOpen(){var h=location.hash&&document.querySelector(location.hash);if(h){var d=h.closest("details");if(d){d.open=true;h.scrollIntoView();}}}addEventListener("hashchange",smOpen);smOpen();</script>
+<script>function smOpen(h){h=h||location.hash;var t=h&&document.getElementById(h.slice(1));if(t){var d=t.closest("details");if(d)d.open=true;t.scrollIntoView({block:"start"});}}addEventListener("hashchange",function(){smOpen()});document.addEventListener("click",function(e){var a=e.target.closest("a.sm-go");if(a){e.preventDefault();history.replaceState(null,"",a.getAttribute("href"));smOpen(a.getAttribute("href"));}});smOpen();</script>
 </body>
 </html>
