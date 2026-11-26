@@ -1,6 +1,13 @@
 [
 [
 "2026-11-26",
+104,
+"Xレポート「自分たちで変えられる要素」に曜日（土日）の影響を追加し、投稿数のルールの根拠を修正",
+"Added the weekend effect to the X controllable-factors report and corrected the evidence for the posts-per-day rule",
+"X 리포트 「우리가 바꿀 수 있는 요소」에 요일(주말) 영향을 추가하고 하루 게시 수 규칙의 근거를 수정"
+],
+[
+"2026-11-26",
 103,
 "Xレポート「自分たちで変えられる要素」を読みやすく組み直し、投稿数・文字数ごとの表と根拠の強さ（★）を追加",
 "Reorganized the X controllable-factors report and added tables by posts per day and text length, with evidence-strength stars",
