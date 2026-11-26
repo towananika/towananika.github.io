@@ -1,6 +1,13 @@
 [
 [
 "2026-11-26",
+105,
+"Xレポート「自分たちで変えられる要素」の文字数の根拠を、曜日・中身の偏りを除いて検証し直し",
+"Re-checked the text-length evidence in the X controllable-factors report after removing weekday and content bias",
+"X 리포트 「우리가 바꿀 수 있는 요소」의 글자 수 근거를 요일·내용 편향을 제거해 다시 검증"
+],
+[
+"2026-11-26",
 104,
 "Xレポート「自分たちで変えられる要素」に曜日（土日）の影響を追加し、投稿数のルールの根拠を修正",
 "Added the weekend effect to the X controllable-factors report and corrected the evidence for the posts-per-day rule",
