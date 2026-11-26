@@ -112,7 +112,7 @@
       // サーバーにある番号の静的レポートは、サーバーのほうを出す（編集・削除はサーバーのもの）
       var ids = {}; o.items.forEach(function (r) { ids[r.id] = 1; });
       items = base.filter(function (b) { return !b.sid || !ids[b.sid]; });
-      o.items.forEach(function (r) { items.push({ id: r.id, mine: r.mine, href: 'view/?id=' + encodeURIComponent(r.id), title: r.title, by: r.by, ai: r.ai, lock: r.lock, day: ymd(r.at), t: r.at, i: -1 }); });
+      o.items.forEach(function (r) { items.push({ id: r.id, mine: r.mine, href: 'view/?id=' + encodeURIComponent(r.id), title: r.title, by: r.by, ai: r.ai, lock: r.lock, day: ymdhm(r.at), t: r.at, i: -1 }); });
       items.sort(function (a, b) { return a.day < b.day ? 1 : a.day > b.day ? -1 : (b.t - a.t) || (a.i - b.i); });
       draw();
     }); }

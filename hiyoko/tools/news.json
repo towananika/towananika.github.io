@@ -8,6 +8,13 @@
 ],
 [
 "2026-11-26",
+96,
+"レポートの日付を投稿日時（時:分まで）に",
+"Report dates now show the posting date and time",
+"리포트 날짜를 게시 일시(시:분)로 표시"
+],
+[
+"2026-11-26",
 94,
 "レポート一覧を1ページ10件にし、作成ボタンを表示",
 "Report list now shows 10 per page, with a Create button",
