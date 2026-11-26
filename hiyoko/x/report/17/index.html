@@ -48,6 +48,10 @@
 @keyframes smFlash{0%,60%{background:color-mix(in srgb,var(--accent) 22%,transparent)}100%{background:transparent}}
 .sm-flash{animation:smFlash 3s ease-out;border-radius:6px;box-shadow:-8px 0 0 0 color-mix(in srgb,var(--accent) 22%,transparent)}
 @media (prefers-reduced-motion:reduce){.sm-flash{animation-duration:3s;animation-timing-function:steps(1,end)}}
+.sm-t tr.sm-hl td{background:color-mix(in srgb,#f5c400 26%,var(--card));font-weight:700}
+.sm-t tr.sm-hl td:first-child{box-shadow:inset 4px 0 0 #e0a800}
+.sm-key{list-style:none;margin-left:-1.3em!important;padding:8px 10px;border-radius:8px;background:color-mix(in srgb,#f5c400 18%,var(--card));border-left:4px solid #e0a800}
+.sm-key::before{content:"👉 "}
 .sm-note{font-size:.8rem;color:var(--muted)}
 .sm-more{border-top:1px solid var(--line);padding:2px 0}
 .sm-more>summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px}
@@ -123,7 +127,7 @@
 <h4 id="r-weekend">曜日の影響（土日） ★★★</h4>
 <ul>
 <li>曜日ごとの1日の平均フォロー（4/14〜11/23）：月 1.29／火 1.52／水 1.33／木 1.59／金 1.62／<b>土 0.47／日 0.50</b>。</li>
-<li>週と曜日と投稿数を同時に考えた計算（回帰）で、<b>土日は平日より −0.92人</b>（誤差 ±0.26。偶然とは考えにくい）。</li>
+<li class="sm-key">週と曜日と投稿数を同時に考えた計算（回帰）で、<b>土日は平日より −0.92人</b>（誤差 ±0.26。偶然とは考えにくい）。</li>
 <li>投稿0の日20日のうち16日が土日。「出さない日は少ない」の大部分は土日の影響だった。</li>
 </ul>
 <h4 id="r1">① 毎日出す ★☆☆</h4>
@@ -136,30 +140,32 @@
 <tr><td>0本</td><td>20</td><td>0.35</td><td><b>−0.55</b></td><td>−0.98</td><td>−0.12</td><td>（なし）</td></tr>
 <tr><td>1本</td><td>24</td><td>0.46</td><td><b>−0.36</b></td><td>−0.65</td><td>+0.14</td><td>−1.19</td></tr>
 <tr><td>2本</td><td>49</td><td>1.39</td><td>−0.22</td><td>−0.79</td><td>+0.06</td><td>−0.19</td></tr>
-<tr><td>3本</td><td>28</td><td>1.82</td><td><b>+0.35</b></td><td>（少ない）</td><td>−0.09</td><td><b>+0.79</b></td></tr>
+<tr class="sm-hl"><td><b>3本</b></td><td>28</td><td>1.82</td><td><b>+0.35</b></td><td>（少ない）</td><td>−0.09</td><td><b>+0.79</b></td></tr>
 <tr><td>4〜5本</td><td>46</td><td>1.30</td><td>+0.25</td><td>+0.27</td><td>−0.06</td><td>+0.32</td></tr>
 <tr><td>6本以上</td><td>53</td><td>1.21</td><td>+0.17</td><td>+0.19</td><td>+0.05</td><td>（少ない）</td></tr>
 </table></div>
 <ul>
+<li>🟨 <b>色つきの行＝生の数字でいちばん良い（3本）</b>。ただし土日などの条件をそろえると、2本との差はほぼなくなる（下を参照）。</li>
 <li>この表だけ見ると「0〜1本はマイナス、3本以上はプラス」に見えるが、<b>土日の影響が混ざっている</b>。</li>
 <li>平日だけ：0本 4日・0.50人／1本 17日・0.65人／<b>2本 21日・2.52人</b>／3本以上 114日・1.44人。</li>
 <li>土日だけ：0本 16日・0.31人／1本 7日・0.00人／2本 28日・0.54人／3本以上 13日・0.85人。</li>
-<li>週・土日・投稿数を同時に計算すると：<b>0〜1本の日 −0.46人（誤差 ±0.37）、3本以上 ±0.00人</b>。0〜1本は少なめだが偶然の可能性が残り、<b>3本以上にしても2本より増えない</b>。</li>
+<li class="sm-key">週・土日・投稿数を同時に計算すると：<b>0〜1本の日 −0.46人（誤差 ±0.37）、3本以上 ±0.00人</b>。0〜1本は少なめだが偶然の可能性が残り、<b>3本以上にしても2本より増えない</b>。</li>
 <li>実例：10/31（土）・11/1（日）・11/3（火）は Instagram 動画1本だけの日で、どれもフォロー0。前の版で「1本だからダメ」の例にしたが、3日のうち2日は土日だった。</li>
 <li>投稿数は書き出しに出ている数（5〜7月の連投の続きもふくむ）。</li>
 </ul>
 <h4 id="r3">③ 文字数 ★☆☆（80字以下と81〜140字は差なし）</h4>
 <div class="sm-tw"><table class="sm-t"><tr><th>その日の文字数</th><th>日数</th><th>平均</th><th>差（全期間）</th><th>4〜7月</th><th>8〜9月</th><th>10〜11月</th></tr>
 <tr><td>〜80字</td><td>34</td><td>0.97</td><td>−0.07</td><td>−0.42</td><td>±0.00</td><td>+0.13</td></tr>
-<tr><td><b>81〜140字</b></td><td>50</td><td>1.92</td><td><b>+0.32</b></td><td><b>+0.79</b></td><td><b>+0.36</b></td><td>−0.03</td></tr>
+<tr class="sm-hl"><td><b>81〜140字</b></td><td>50</td><td>1.92</td><td><b>+0.32</b></td><td><b>+0.79</b></td><td><b>+0.36</b></td><td>−0.03</td></tr>
 <tr><td>141〜200字</td><td>69</td><td>0.93</td><td>−0.10</td><td>−0.03</td><td>−0.09</td><td>−0.34</td></tr>
 <tr><td>201字〜</td><td>46</td><td>1.20</td><td>+0.01</td><td>+0.06</td><td>−0.24</td><td>+0.19</td></tr>
 </table></div>
 <ul>
+<li>🟨 <b>色つきの行＝生の数字でいちばん良い（81〜140字）</b>。ただし条件をそろえると、80字以下との差はなくなる（下を参照）。</li>
 <li>その日の投稿の文字数の中央値で分けた。表だけ見ると81〜140字が良く見えるが、<b>日の中身に偏りがある</b>：</li>
 <li>〜80字の日：34日、<b>土日が35%</b>、8月が多い（12日）。81〜140字の日：51日、<b>土日は12%</b>、9〜11月が多い。</li>
 <li>週・土日・取引所の案内・新しい事実・投稿数を同時に考えた計算（回帰、81〜140字を基準）：<b>〜80字 −0.04人（誤差 ±0.40）＝差なし</b>、141〜200字 −0.59人（±0.32）、201字〜 −0.42人（±0.38）。</li>
-<li>→ 「80字以下はマイナス」は<b>土日が多かっただけ</b>。80字以下と81〜140字は同じ。<b>141字以上は少し少ない傾向</b>だが、偶然の可能性も残る。</li>
+<li class="sm-key">→ 「80字以下はマイナス」は<b>土日が多かっただけ</b>。80字以下と81〜140字は同じ。<b>141字以上は少し少ない傾向</b>だが、偶然の可能性も残る。</li>
 <li>実例（80字以下の日でも伸びた日）：11/10「view HYK on coinstore 👉 …」「HYK is live on coinstore. 🪙…」→ 9人、11/17「get HYK now 👉 …」→ 7人。</li>
 <li>実例（81〜140字）：11/18「130M users on a game app. 68K waiting for an AI health platform…」→ 8人、10/30「who decides where HIYOKO goes? 🐣 the community does…」→ 6人。</li>
 </ul>
@@ -183,13 +189,13 @@
 <details class="sm-more"><summary><h3 id="sec-4">時期しだい・一発性</h3></summary><h4 id="r-cex">取引所への短い案内（イベントの時期だけ）</h4>
 <ul>
 <li>全期間：Coinstore の案内がある日 40日・1.48人 ／ 1.22人。差 <b>+0.61人</b>（p＜0.001）。</li>
-<li>土日・文字数・新しい事実・投稿数を同時に考えても <b>+0.69人（±0.30）</b>。自分たちで変えられる要素の中で、いちばん確かなもの。</li>
+<li class="sm-key">土日・文字数・新しい事実・投稿数を同時に考えても <b>+0.69人（±0.30）</b>。自分たちで変えられる要素の中で、いちばん確かなもの。</li>
 <li>時期ごと：4〜7月 <b>+0.54</b>、8〜9月 <b>−0.08（効果なし）</b>、10〜11月 <b>+1.90</b>。効いたのは上場や Season 1 のイベントの時期だけ。</li>
 <li>効くのは短い・キャラ口調の案内。例：11/17「wanna get hiyoko? 🐣 go to coinstore. search HYK/USDT.」→ 7人。価格つきの長い告知（10/13、159字）の日は0人。</li>
 </ul>
 <h4 id="r-event">発表の日（一発性）</h4>
 <ul>
-<li>1/7 新しい取引所への上場 → 10人、4/15「Vitalis has surpassed 37,000 testers」→ <b>27人</b>、6/15「Why HIYOKO can be global from day one」→ 14人、11/10「HYK is live on coinstore」→ 9人。ふだんの10倍以上。</li>
+<li class="sm-key">1/7 新しい取引所への上場 → 10人、4/15「Vitalis has surpassed 37,000 testers」→ <b>27人</b>、6/15「Why HIYOKO can be global from day one」→ 14人、11/10「HYK is live on coinstore」→ 9人。ふだんの10倍以上。</li>
 <li>10/19 Season 1 開始の週から、週のフォローが 0〜6人 → 18〜30人に。</li>
 <li>一方で 7/10 の取引所リンク、9/26（インドネシアのイベント）は0人。伸びるのは「数字や日付がはっきりした新しい事実」の日。</li>
 <li>8〜9月（イベントなし）は、どのルールを守ってもほぼ伸びなかった（1日0.43人）。</li>
@@ -223,7 +229,7 @@
 <footer>HIYOKO ／ レポート</footer>
 </main>
 </div>
-<script src="../../../i18n.js?v=2c0dd658" defer></script>
+<script src="../../../i18n.js?v=c0960db5" defer></script>
 <script src="../../../nav.js?v=dd0e8abb" defer></script>
 <script src="../../../account.js?v=5b70728b" defer></script>
 <script>function smFlash(t){var els=[t],n=t.nextElementSibling;while(n&&!/^H[34]$/.test(n.tagName)){els.push(n);n=n.nextElementSibling;}els.forEach(function(e){e.classList.remove("sm-flash");void e.offsetWidth;e.classList.add("sm-flash");});setTimeout(function(){els.forEach(function(e){e.classList.remove("sm-flash");});},3200);}function smOpen(h){h=h||location.hash;var t=h&&document.getElementById(h.slice(1));if(t){var d=t.closest("details");if(d)d.open=true;t.scrollIntoView({block:"start"});if(t.tagName=="H4")smFlash(t);}}addEventListener("hashchange",function(){smOpen()});document.addEventListener("click",function(e){var a=e.target.closest("a.sm-go");if(a){e.preventDefault();history.replaceState(null,"",a.getAttribute("href"));smOpen(a.getAttribute("href"));}});smOpen();</script>
