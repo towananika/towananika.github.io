@@ -42,6 +42,18 @@
 .rpt-row-wrap:last-child{border-bottom:0}
 .rpt-row-wrap .rpt-row{flex:1;min-width:0;border-bottom:0}
 .rpt-row-tools{display:inline-flex;gap:6px;padding:0 12px 0 0;flex:none}
+.rpt-detail-body .tbl{overflow-x:auto;margin:8px 0 12px}
+.rpt-detail-body th,.rpt-detail-body td{white-space:nowrap;font-variant-numeric:tabular-nums}
+.rpt-fold{border-top:1px solid var(--line);margin:10px 0}
+.rpt-fold>summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px}
+.rpt-fold>summary::-webkit-details-marker{display:none}
+.rpt-fold>summary::after{content:"＋";margin-left:auto;color:var(--muted);font-weight:700}
+.rpt-fold[open]>summary::after{content:"－"}
+.rpt-fold>summary h3{border:0!important;margin:12px 0!important;padding:0!important}
+.rpt-detail-body a.rpt-jump{font-weight:inherit}
+.rpt-detail-body a.rpt-jump::after{content:" ›"}
+.rpt-hit{background:var(--paper);border-radius:6px;transition:background .3s}
+.rpt-detail-body h4[id],.rpt-detail-body h3[id]{scroll-margin-top:80px}
 .rpt-detail-body p{margin:6px 0}
 .rpt-detail-body ul{margin:6px 0 10px;padding-left:1.3em}
 .rpt-detail-body li{margin:4px 0}
@@ -76,7 +88,7 @@
 <form class="rpt-form" id="rpt-form" hidden>
 <div class="rpt-hint">登録者：<b id="rpt-as"></b>（一覧で日付の左に出ます）</div>
 <label>タイトル<input type="text" name="title" maxlength="120" required></label>
-<label>本文<span class="rpt-hint">「## 見出し」「- 箇条書き」「**太字**」「[文字](URL)」が使えます。空行で段落。URLは自動でリンク。</span><textarea name="body" required></textarea></label>
+<label>本文<span class="rpt-hint">「## 見出し」「- 箇条書き」「**太字**」「[文字](URL)」「| 表 |」が使えます。空行で段落。URLは自動でリンク。</span><textarea name="body" required></textarea></label>
 <label class="chk"><input type="checkbox" name="lock"> 🔒 関係者だけに見せる</label>
 <div><button type="submit" class="gate-btn">登録する</button> <a class="btn btn-ghost" href="../">やめる</a></div>
 <p class="note" id="rpt-note"></p>
@@ -87,9 +99,9 @@
 <footer>HIYOKO ／ レポート</footer>
 </main>
 </div>
-<script src="../../../i18n.js?v=d5131e5d" defer></script>
+<script src="../../../i18n.js?v=576f48e8" defer></script>
 <script src="../../../nav.js?v=dd0e8abb" defer></script>
 <script src="../../../account.js?v=5b70728b" defer></script>
-<script src="../../../report.js?v=7f3ac968" defer></script>
+<script src="../../../report.js?v=6ea61024" defer></script>
 </body>
 </html>

@@ -38,13 +38,14 @@
   // [文字](https://…) はリンク。むき出しの URL もリンクに（http/https だけ）
   function inline(s) {
     var links = [];
-    var t = String(s).replace(/\[([^\]\n]+)\]\((https?:\/\/[^\s)]+)\)/g, function (_, txt, u) { links.push([txt, u]); return '\u0000' + (links.length - 1) + '\u0000'; });
+    var t = String(s).replace(/\[([^\]\n]+)\]\((#[A-Za-z0-9_-]{1,40}|https?:\/\/[^\s)]+)\)/g, function (_, txt, u) { links.push([txt, u]); return '\u0000' + (links.length - 1) + '\u0000'; });
     t = esc(t).replace(/https?:\/\/[^\s<>"'\u0000]+/g, function (u) { return '<a href="' + u + '" target="_blank" rel="noopener nofollow">' + u + '</a>'; });
-    t = t.replace(/\u0000(\d+)\u0000/g, function (_, i) { var l = links[+i]; return '<a href="' + esc(l[1]) + '" target="_blank" rel="noopener nofollow">' + esc(l[0]) + '</a>'; });
+    t = t.replace(/\u0000(\d+)\u0000/g, function (_, i) { var l = links[+i]; if (l[1].charAt(0) === '#') return '<a class="rpt-jump" href="#rp-' + l[1].slice(1) + '">' + esc(l[0]) + '</a>'; return '<a href="' + esc(l[1]) + '" target="_blank" rel="noopener nofollow">' + esc(l[0]) + '</a>'; });
     return t.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
   }
   function render(text) {
-    var out = [], list = false, para = [], tbl = null;
+    var out = [], list = false, para = [], tbl = null, infold = false;
+    function endFold() { if (infold) { out.push('</details>'); infold = false; } }
     function flush() { if (para.length) { out.push('<p>' + para.join('<br>') + '</p>'); para = []; } }
     // 「| a | b |」の行が続くと表（2行目の |---| は区切り。1行目は見出し）
     function endTable() {
@@ -64,11 +65,20 @@
         (tbl = tbl || []).push(cells); return;
       }
       endTable();
-      if ((m = t.match(/^(#{1,4})\s+(.*)$/))) { flush(); endList(); out.push(m[1].length >= 3 ? '<h4>' + inline(m[2]) + '</h4>' : '<h3>' + inline(m[2]) + '</h3>'); return; }
+      if ((m = t.match(/^(#{1,4})\s+(.*)$/))) {
+        flush(); endList();
+        // 「{#名前}」で見出しに名前（リンク先）をつける。「## 見出し {+}」はその節を折りたたむ
+        var txt = m[2], idm = txt.match(/\s*\{#([A-Za-z0-9_-]{1,40})\}\s*/), fold = /\s*\{\+\}\s*$/.test(txt);
+        txt = txt.replace(/\s*\{#[A-Za-z0-9_-]{1,40}\}\s*/, ' ').replace(/\s*\{\+\}\s*$/, '').trim();
+        var idA = idm ? ' id="rp-' + idm[1] + '"' : '';
+        if (m[1].length <= 2) { endFold(); }
+        if (m[1].length <= 2 && fold) { out.push('<details class="rpt-fold"' + idA + '><summary><h3>' + inline(txt) + '</h3></summary>'); infold = true; return; }
+        out.push(m[1].length >= 3 ? '<h4' + idA + '>' + inline(txt) + '</h4>' : '<h3' + idA + '>' + inline(txt) + '</h3>'); return;
+      }
       if ((m = t.match(/^(?:[-*]\s+|・\s*)(.*)$/))) { flush(); if (!list) { out.push('<ul>'); list = true; } out.push('<li>' + inline(m[1]) + '</li>'); return; }
       endList(); para.push(inline(t));
     });
-    flush(); endList();
+    flush(); endList(); endFold();
     return out.join('');
   }
   function who(by, ai) {
@@ -153,6 +163,15 @@
       $('#rpt-title').textContent = (r.lock ? '🔒 ' : '') + r.title;
       var meta = $('#rpt-meta'); meta.replaceChildren(who(r.by, r.ai), el('span', 'rpt-day', ymdhm(r.at) + (r.up && r.up !== r.at ? '（更新 ' + ymdhm(r.up) + '）' : '')));
       $('#rpt-body').innerHTML = render(r.body);
+      // ページ内のリンク：折りたたみを開いて、その見出しへ移動
+      $('#rpt-body').onclick = function (e) {
+        var a = e.target.closest && e.target.closest('a.rpt-jump'); if (!a) return;
+        var tg = document.getElementById(a.getAttribute('href').slice(1)); if (!tg) return;
+        e.preventDefault();
+        for (var d = tg; d; d = d.parentElement) if (d.tagName === 'DETAILS') d.open = true;
+        tg.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        tg.classList.add('rpt-hit'); setTimeout(function () { tg.classList.remove('rpt-hit'); }, 1600);
+      };
       if (r.mine) {
         var tools = $('#rpt-tools'); tools.hidden = false;
         $('#rpt-edit').href = '../new/?id=' + encodeURIComponent(r.id);
