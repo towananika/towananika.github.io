@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="HIYOKO X で自分たちが変えられる要素とフォローの関係（非公式ファンサイト）">
+<title>自分たちで変えられる要素のうち、フォローに効くもの（X） | HIYOKO X</title>
+<link rel="stylesheet" href="../../../style.css?v=24eb799f">
+<style>
+.btn{display:inline-block;font:inherit;cursor:pointer;border-radius:8px;padding:8px 16px;font-size:.88rem;border:1px solid transparent;text-decoration:none;transition:background .15s,color .15s}
+.btn-ghost{background:none;color:var(--accent);border-color:var(--accent)}
+.btn-ghost:hover{background:var(--accent);color:#fff}
+.btn-sm{padding:4px 10px;font-size:.78rem;border-radius:6px}
+.rpt-detail{border:1px solid var(--line);border-radius:12px;background:var(--card);padding:20px 22px;margin:0 0 32px}
+.rpt-detail-top{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;padding-bottom:12px;border-bottom:1px solid var(--line);margin-bottom:14px}
+.rpt-detail-title{font-size:1.22rem;font-weight:700;color:var(--ink);margin:0 0 8px;line-height:1.4}
+.rpt-detail-meta{font-size:.82rem;color:var(--muted);margin-bottom:16px}
+.rpt-detail-body{font-size:.94rem;line-height:1.75;color:var(--ink)}
+.rpt-detail-body h3{font-size:1.02rem;margin:18px 0 6px;padding-bottom:4px;border-bottom:1px solid var(--line);color:var(--ink)}
+.rpt-detail-body p{margin:6px 0}
+.rpt-detail-body ul,.rpt-detail-body ol{margin:6px 0 10px;padding-left:1.3em}
+.rpt-detail-body li{margin:4px 0}
+.rpt-detail-body a{color:var(--accent)}
+.kp-ana-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin:12px 0 18px}
+.kp-ana-card{border-left:3px solid var(--accent);padding:10px 12px;background:var(--paper);border-radius:6px;font-size:.88rem;line-height:1.6}
+.kp-ana-card.up{border-left-color:var(--good)}
+.kp-ana-card.down{border-left-color:var(--bad)}
+.kp-ana-card b.hd{display:block;font-size:.95rem;margin-bottom:6px}
+.pv-card{display:block;border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:8px;background:var(--paper);padding:10px 14px;margin:12px 0 4px;text-decoration:none;color:var(--ink);transition:border-color .15s,background .15s}
+.pv-card:hover{border-color:var(--accent);background:var(--card)}
+.pv-head{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:.76rem;color:var(--muted);margin-bottom:4px}
+.pv-badge{font-weight:700;color:var(--accent);border:1px solid var(--accent);border-radius:99px;padding:0 7px;font-size:.7rem}
+.pv-text{font-size:.86rem;line-height:1.5;color:var(--ink)}
+</style>
+</head>
+<body class="ch-x">
+<a class="skip" href="#main">本文へスキップ</a><header class="hy-top"><nav class="hy-path" aria-label="サイト"><a href="/">Towananika</a><span aria-hidden="true">›</span><a href="../../../">HIYOKO</a><span class="fan-badge">非公式ファンサイト</span></nav><div class="hy-set"></div></header>
+<nav class="hy-tabs" aria-label="コーナー"><div><a href="../../../">ホーム</a><a href="../../../about/">HIYOKOを知る</a><a href="../../../links/">公式リンク</a><a href="../../../analysis/" aria-current="true">SNS分析</a><a href="../../../news/">ニュース</a><a href="../../../internal/strategy/" class="mem-only">🔒 社内資料</a></div></nav>
+<div class="layout">
+<details class="sitenav" open><summary>このコーナーのページ</summary><div><a class="brand" href="../../../">HIYOKO</a><span class="ch m">SNS分析</span><ul class=""><li><a class="page" href="../../../analysis/">SNS分析トップ</a></li><li><a class="page" href="../../../kpi/">KPI一覧</a></li></ul><span class="ch x">X</span><ul class=""><li><a class="page" href="../../../x/">概要</a></li><li><a class="page" href="../../../x/monthly/">月間分析</a></li><li><a class="page" href="../../../x/posts/">投稿とKPI</a></li><li><a class="page" href="../../../x/report/" aria-current="page">レポート</a></li></ul><span class="ch ig">Instagram</span><ul class=""><li><a class="page" href="../../../ig/">概要</a></li><li><a class="page" href="../../../ig/posts/">投稿とKPI</a></li><li><a class="page" href="../../../ig/content/">コンテンツ3グループ</a></li></ul><span class="ch old">過去の分析</span><ul class=""><li><a class="page" href="../../../2026-11/">2026年11月 X・IG ABCD</a></li><li><a class="page" href="../../../a-ranking/">Aの投稿ランキング（全期間）</a></li></ul></div></details>
+<details class="pagetoc" open><summary>このページの目次</summary><ul id="toc-list">
+<li><a href="#sec-1">結論</a></li>
+<li><a href="#sec-2">調べ方</a></li>
+<li><a href="#sec-3">ランキング（10〜11月・同じ週の平均とのフォロー差）</a></li>
+<li><a href="#sec-4">ほかの時期でも同じか</a></li>
+<li><a href="#sec-5">動画について</a></li>
+<li><a href="#sec-6">測れなかったもの</a></li>
+<li><a href="#sec-7">明日から変えること</a></li>
+<li><a href="#sec-8">特別事項</a></li>
+</ul></details>
+<main id="main">
+<nav class="crumbs"><a href="/">Towananika</a> ／ <a href="../../../">HIYOKO</a> ／ <a href="../../../analysis/">SNS分析</a> ／ <a href="../../">HIYOKO X</a> ／ <a href="../">レポート</a> ／ 詳細</nav>
+<div class="chhead"><span class="dot"></span>HIYOKO X</div>
+
+<div class="rpt-detail">
+<div class="rpt-detail-top">
+<a class="btn btn-sm btn-ghost" href="../">← 一覧に戻る</a>
+</div>
+<h1 class="rpt-detail-title">自分たちで変えられる要素のうち、フォローに効くもの（X）</h1>
+<div class="rpt-detail-meta"><span class="rpt-by">Claude<span class="rpt-ai">AI</span></span> · 2026-11-26 13:07</div>
+<div class="rpt-detail-body">
+<p>対象：HIYOKO X の10〜11月（53日）を中心に、8〜11月・4〜7月でも確認。分析：Claude。</p>
+<h3 id="sec-1">結論</h3>
+<ul>
+<li>フォローに一番効いているのは <b>「短い取引所（Coinstore）への案内」を出すこと</b>。出した日は1日フォロー <b>3.07</b>、出さない日は1.79。</li>
+<li>次に効くのは <b>「短く書く（80字まで）」</b>、<b>「1日3本」</b>、<b>「ハッシュタグは2〜3個」</b>、<b>「なぜ信頼できるか・仕組み」の投稿</b>。</li>
+<li>逆にフォローが減るのは、<b>長文（200字以上）</b>、<b>ハッシュタグ4個以上</b>、<b>まとめ・連投の続き</b>、<b>1日1本だけの日</b>。</li>
+<li>Instagram の動画をそのまま X に出した日は、表示は多いのにフォローは少ない（1.40 対 2.33）。</li>
+<li>画像の質・投稿時間・返信対応は、今のデータでは測れない。試して確かめる必要がある。</li>
+</ul>
+<h3 id="sec-2">調べ方</h3>
+<ul>
+<li>表示やいいねは「結果」なので使わず、<b>自分たちで決められること</b>だけを比べた（投稿数・文字数・ハッシュタグ・中身の型・リンク・動画など）。</li>
+<li>X は投稿ごとのフォロー数が出ないので、<b>その要素がある日とない日の「日別フォロー」を比べた推定</b>。</li>
+<li>時期の差（10月後半から全体が伸びた）を消すため、<b>同じ週の平均と比べた差</b>で順位をつけた。</li>
+<li>外れ値の日（4/15、6/15〜17）は除いた。</li>
+</ul>
+<h3 id="sec-3">ランキング（10〜11月・同じ週の平均とのフォロー差）</h3>
+<ul>
+<li>1位 取引所・購入への短い案内：<b>+1.3人/日</b>（ある日 3.07 ／ ない日 1.79、15日）</li>
+<li>2位 短文（80字まで）の投稿がある：<b>+1.2</b>（2.56 ／ 1.42）</li>
+<li>3位 「信頼・仕組み」の投稿：<b>+0.8</b>（4.00 ／ 1.91、6日だけなので参考）</li>
+<li>4位 1日3本：<b>+0.8</b>（3.29人/日）。2本は −0.2、1本は −1.2、4本以上は増えない</li>
+<li>5位 ハッシュタグ2〜3個：<b>+0.4</b>（2.68 ／ 0.54）</li>
+<li>ほぼ関係なし：大きな数字（+0.2）、価格の話（+0.2）、問いかけ「？」（−0.1）</li>
+<li>マイナス：長文200字以上（−0.2、1.10 ／ 2.79）、まとめ・連投の続き（−0.3、1.00 ／ 2.33）、ハッシュタグ4個以上（−0.4、0.82 ／ 2.78）、Instagram 動画の転載（−1.2、1.40 ／ 2.33）</li>
+</ul>
+<h3 id="sec-4">ほかの時期でも同じか</h3>
+<ul>
+<li>8〜11月（104日）：取引所への案内 +0.6、短文 +0.6、1日3本 +0.3、信頼・仕組み +0.3、ハッシュタグ2〜3個 +0.2。<b>順番はほぼ同じ</b>。まとめ・連投 −0.3、動画 −0.8 も同じ。</li>
+<li>4〜7月（96日）：何をしてもフォローはほぼ増えなかった（1日1人前後）。当時は1日5本以上・長文・価格の話が中心。</li>
+</ul>
+<h3 id="sec-5">動画について</h3>
+<ul>
+<li>Instagram のリール（「do you mind」「sniff sniff... you smell nice!」「hehe」など）を X に出すと、表示は1本 130〜180 と多め（通常の中央値は約95）。</li>
+<li>でもその日のフォローは少ない。<b>X では動画は「見られるけど、フォローの理由にならない」</b>。</li>
+</ul>
+<h3 id="sec-6">測れなかったもの</h3>
+<ul>
+<li><b>画像の質</b>：数字では判定できない。また書き出しの一部で画像の表示数の列が空のため、画像あり・なしも正確に分けられない。</li>
+<li><b>投稿時間</b>：書き出しに時刻がない。</li>
+<li><b>返信対応</b>：アカウントはほぼ返信していないので比べる材料がない。</li>
+<li>この3つは、2週間ずつ変えて比べる（A/Bテスト）のが確実。</li>
+</ul>
+<h3 id="sec-7">明日から変えること</h3>
+<ul>
+<li><b>1日3本に固定</b>（朝・昼・夜）。1本だけの日をつくらない。4本以上にもしない。</li>
+<li><b>1本は80字まで</b>。長い説明は分けずに、短く言い切る。</li>
+<li><b>ハッシュタグは2〜3個</b>（#HIYOKO＋テーマ1〜2）。4個以上はつけない。</li>
+<li><b>週2回、キャラ口調で取引所への案内</b>（例：「wanna get hiyoko? 🐣 go to coinstore. search HYK/USDT」）。</li>
+<li><b>週1〜2回、「なぜ信頼できるか・仕組み」</b>（burn／buyback／treasury、HAMMER blockchain）。</li>
+<li><b>やめる</b>：まとめ投稿・連投の続き・長文。</li>
+<li><b>試す</b>：返信をする週としない週、朝と夜の投稿時間、画像を「キャラが大きい1枚」にそろえる週。</li>
+</ul>
+<h3 id="sec-8">特別事項</h3>
+<ul>
+<li>平均から外した日：4/15（フォロー27）、6/15〜17（リプライ急増日）。</li>
+<li>「キャラ口調」は10〜11月のほぼ全日（53日中46日）で使っていて、比べる相手が少ないため順位からは外した。</li>
+</ul>
+</div>
+</div>
+
+<!--fan--><p class="fan-foot"><span>🐣 このサイトはファンが作った非公式サイトです。HIYOKO公式とは関係ありません。</span> <a href="https://hiyokotoken.com/" target="_blank" rel="noopener">正しい情報は公式サイトへ ↗</a></p><!--/fan-->
+<!--fmap--><nav class="fmap" aria-label="サイトマップ"><div class=""><a class="fm-h" href="../../../about/">HIYOKOを知る</a><ul><li><a href="../../../about/">HIYOKOとは</a></li><li><a href="../../../world/">目的</a></li><li><a href="../../../character/">キャラクター</a></li></ul></div><div class=""><a class="fm-h" href="../../../links/">公式リンク</a></div><div class=""><a class="fm-h" href="../../../analysis/">SNS分析</a><ul><li><a href="../../../analysis/">SNS分析トップ</a></li><li><a href="../../../kpi/">KPI一覧</a></li><li><a href="../../../x/">Xの分析</a></li><li><a href="../../../x/report/">Xのレポート</a></li><li><a href="../../../ig/">Instagramの分析</a></li></ul></div><div class=""><a class="fm-h" href="../../../news/">ニュース</a></div><div class="mem-only"><a class="fm-h" href="../../../internal/strategy/">🔒 社内資料</a><ul><li><a href="../../../internal/strategy/">企画・目標・方向性</a></li><li><a href="../../../internal/review/">振り返り</a></li></ul></div></nav><!--/fmap-->
+<footer>HIYOKO ／ レポート</footer>
+</main>
+</div>
+<script src="../../../i18n.js?v=552c8e8c" defer></script>
+<script src="../../../nav.js?v=dd0e8abb" defer></script>
+<script src="../../../account.js?v=5b70728b" defer></script>
+</body>
+</html>
