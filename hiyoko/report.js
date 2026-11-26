@@ -170,7 +170,11 @@
         e.preventDefault();
         for (var d = tg; d; d = d.parentElement) if (d.tagName === 'DETAILS') d.open = true;
         tg.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        tg.classList.add('rpt-hit'); setTimeout(function () { tg.classList.remove('rpt-hit'); }, 1600);
+        // 移動先の見出しと、次の見出しまでの中身を約3秒光らせる
+        var lv = /^H(\d)$/.test(tg.tagName) ? +tg.tagName.charAt(1) : 9, els = [tg];
+        for (var n = tg.nextElementSibling; n; n = n.nextElementSibling) { var mh = n.tagName.match(/^H(\d)$/); if (mh && +mh[1] <= lv) break; els.push(n); }
+        els.forEach(function (x) { x.classList.remove('rpt-hit'); void x.offsetWidth; x.classList.add('rpt-hit'); });
+        setTimeout(function () { els.forEach(function (x) { x.classList.remove('rpt-hit'); }); }, 3100);
       };
       if (r.mine) {
         var tools = $('#rpt-tools'); tools.hidden = false;
