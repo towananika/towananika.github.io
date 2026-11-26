@@ -61,7 +61,7 @@
 
   /* ---------- 一覧 ---------- */
   function list() {
-    var PER = 5, box = $('#rpt-list'), pager = $('#rpt-pager'), cur = 0;
+    var PER = 10, box = $('#rpt-list'), pager = $('#rpt-pager'), cur = 0;
     // はじめからページにあるレポート（静的）
     var items = [].slice.call(box.querySelectorAll('.rpt-row')).map(function (a, i) {
       return { href: a.getAttribute('href'), title: a.querySelector('.rpt-row-title').textContent, by: a.getAttribute('data-by') || '', ai: a.hasAttribute('data-ai'), day: a.getAttribute('data-day'), t: 0, i: i };
@@ -100,6 +100,8 @@
     // ログインしている関係者には、🔒のレポートと「書く」ボタンも出す
     userP.then(function (u) {
       if (!u) return;
+      // ログインしている人には「作成」ボタンを出す（書けるかどうかは作成ページとサーバーが確かめる）
+      var w0 = $('#rpt-write'); if (w0) w0.hidden = false;
       call('me').then(function (o) { if (o.member) { var w = $('#rpt-write'); if (w) w.hidden = false; load(false); } });
     });
   }
