@@ -87,14 +87,16 @@
       })(p);
       pager.appendChild(el('span', 'rpt-page-info', '全' + items.length + '件'));
     }
-    draw();
+    // 新しい投稿日時が上、古いものが下（同じ時刻なら番号の大きいほう＝後から足したほうが上）
+    function num(x) { var m = String(x.href).match(/(?:^|id=)(\d+)\/?$/); return m ? +m[1] : 0; }
+    function newest() { items.sort(function (a, b) { return a.day < b.day ? 1 : a.day > b.day ? -1 : (b.t - a.t) || (num(b) - num(a)); }); }
+    newest(); draw();
     var base = items.slice();
     function load(anon) { return call('reports', {}, anon).then(function (o) {
       if (!o.items) return;
       items = base.slice();
       o.items.forEach(function (r) { items.push({ href: 'view/?id=' + encodeURIComponent(r.id), title: r.title, by: r.by, ai: r.ai, lock: r.lock, day: ymdhm(r.at), t: r.at, i: -1 }); });
-      items.sort(function (a, b) { return a.day < b.day ? 1 : a.day > b.day ? -1 : (b.t - a.t) || (a.i - b.i); });
-      draw();
+      newest(); draw();
     }); }
     load(true);
     // ログインしている関係者には、🔒のレポートと「書く」ボタンも出す
