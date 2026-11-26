@@ -92,7 +92,7 @@
     function load(anon) { return call('reports', {}, anon).then(function (o) {
       if (!o.items) return;
       items = base.slice();
-      o.items.forEach(function (r) { items.push({ href: 'view/?id=' + encodeURIComponent(r.id), title: r.title, by: r.by, ai: r.ai, lock: r.lock, day: ymd(r.at), t: r.at, i: -1 }); });
+      o.items.forEach(function (r) { items.push({ href: 'view/?id=' + encodeURIComponent(r.id), title: r.title, by: r.by, ai: r.ai, lock: r.lock, day: ymdhm(r.at), t: r.at, i: -1 }); });
       items.sort(function (a, b) { return a.day < b.day ? 1 : a.day > b.day ? -1 : (b.t - a.t) || (a.i - b.i); });
       draw();
     }); }
