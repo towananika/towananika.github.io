@@ -1,21 +1,26 @@
 <main id="main">
 <nav class="crumbs"><a href="/">Towananika</a> ／ <a href="../">HIYOKO</a> ／ SNS分析</nav>
 <h1>📊 SNS分析</h1>
-<div class="meta">更新：2026年11月23日（X：2025年11月24日〜2026年11月22日、Instagram：2026年11月15日までの週）</div>
 <div class="wa" id="wa-root">
  <div class="wa-top">
-  <div class="wa-seg" role="group" aria-label="SNSを選ぶ"><button id="wa-bx" aria-pressed="true">X</button><button id="wa-bi" aria-pressed="false">Instagram</button></div>
-  <div class="wa-tabs" role="tablist" aria-label="見る内容"><button role="tab" id="wa-tov" data-t="ov">概要</button><button role="tab" id="wa-tct" data-t="ct">コンテンツ</button></div>
-  <div class="wa-seg wa-per" role="group" aria-label="期間"><button data-p="4">1ヶ月</button><button data-p="13">3ヶ月</button><button data-p="26">6ヶ月</button><button data-p="0">全期間</button></div>
+  <div class="wa-sns" role="group" aria-label="SNSを選ぶ"><button id="wa-bx" aria-pressed="true" title="X"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/></svg><span>X</span></button><button id="wa-bi" aria-pressed="false" title="Instagram"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077"/></svg><span>Instagram</span></button></div>
+  <label class="wa-dd"><span aria-hidden="true">📅</span><select id="wa-per" aria-label="期間"><option value="4">1ヶ月</option><option value="13">3ヶ月</option><option value="26">6ヶ月</option><option value="0">全期間</option></select></label>
+  <label class="wa-dd"><span aria-hidden="true">📊</span><select id="wa-tab" aria-label="見る内容"><option value="ov">概要</option><option value="ct">コンテンツ</option></select></label>
  </div>
  <p class="wa-head ov" id="wa-head"></p>
+ <section class="wa-p ov" aria-labelledby="wa-h2">
+  <div class="wa-bar"><h2 id="wa-h2" style="margin:0">週ごとに見る</h2><div class="wa-period"><button id="wa-prev" aria-label="前の週">◀</button><strong id="wa-wk"></strong><button id="wa-next" aria-label="次の週">▶</button></div></div>
+  <div class="wa-kpis" id="wa-kpis"></div>
+  <div class="wa-note" id="wa-note"></div>
+  <div class="wa-posts"><div><h3>よかった投稿</h3><ul id="wa-good"></ul></div><div><h3>弱かった投稿</h3><ul id="wa-weak"></ul></div></div>
+ </section>
  <section class="wa-p ov" aria-labelledby="wa-h1">
   <h2 id="wa-h1">これまでの流れ</h2>
   <p class="wa-sub" id="wa-psub"></p>
   <div class="wa-chips" id="wa-chips"></div>
   <div class="wa-chart" id="wa-chart"></div>
   <div class="wa-leg"><span><i style="background:var(--line)"></i>週の数</span><span><i style="background:var(--hy)"></i>選んでいる週</span><span><i style="background:var(--ink);height:3px"></i>4週の平均</span><span id="wa-legsp"></span></div>
-  <ol class="wa-tl" id="wa-tl"></ol>
+  <details class="wa-more"><summary>4つの時期のくわしい説明</summary><ol class="wa-tl" id="wa-tl"></ol></details>
  </section>
  <section class="wa-p" id="wa-sp" aria-labelledby="wa-hs">
   <h2 id="wa-hs"></h2>
@@ -23,15 +28,9 @@
   <p class="wa-spn" id="wa-spn"></p>
   <div class="wa-spl" id="wa-spl"></div>
  </section>
- <section class="wa-p ov" aria-labelledby="wa-h2">
-  <div class="wa-bar"><h2 id="wa-h2" style="margin:0">週ごとに見る</h2><div class="wa-period"><button id="wa-prev" aria-label="前の週">◀</button><strong id="wa-wk"></strong><button id="wa-next" aria-label="次の週">▶</button></div></div>
-  <div class="wa-kpis" id="wa-kpis"></div>
-  <div class="wa-note" id="wa-note"></div>
-  <div class="wa-posts"><div><h3>よかった投稿</h3><ul id="wa-good"></ul></div><div><h3>弱かった投稿</h3><ul id="wa-weak"></ul></div></div>
- </section>
- <section class="wa-p ov" aria-labelledby="wa-h3">
-  <h2 id="wa-h3">週ごとの記録（新しい順）</h2>
-  <div class="wa-scroll"><table class="wa-log"><thead><tr><th>週</th><th id="wa-lh"></th><th>気づき</th><th class="hs">次に試すこと</th></tr></thead><tbody id="wa-log"></tbody></table></div>
+ <section class="wa-p ov wa-logsec" id="wa-logs" aria-labelledby="wa-h3">
+  <details class="wa-more"><summary id="wa-h3">週ごとの記録（新しい順）</summary>
+  <div class="wa-scroll"><table class="wa-log"><thead><tr><th>週</th><th id="wa-lh"></th><th>気づき</th><th class="hs">次に試すこと</th></tr></thead><tbody id="wa-log"></tbody></table></div></details>
  </section>
  <p class="wa-head ct" id="wa-chead"></p>
  <section class="wa-p ct" aria-labelledby="wa-h4">
@@ -47,7 +46,6 @@
   <ol class="wa-rk" id="wa-rk"></ol>
  </section>
 </div>
-<!--smap--><!--/smap-->
 <script>
 (function(){
 const DATA=__DATA__;
@@ -119,8 +117,9 @@ function week(){const L=DATA[sns],w=L[i],p=L[i-1],D=DEF[sns],n=(NOTES[sns]||{})[
  $('wa-good').innerHTML=w.top.length?w.top.map(it).join(''):`<li class="wa-empty">${sns==='x'&&w.week<'2026-06-29'?'投稿ごとのデータは7月からです':'この週は投稿がありません'}</li>`;
  $('wa-weak').innerHTML=w.low.length?w.low.map(it).join(''):`<li class="wa-empty">${sns==='x'&&w.week<'2026-06-29'?'―':'投稿が少なく、くらべられません'}</li>`;
  $('wa-lh').textContent=D[0].l;
- $('wa-log').innerHTML=L.map((x,j)=>({x,j})).filter(o=>o.j>=win()).reverse().map(({x,j})=>{const nn=(NOTES[sns]||{})[x.week];
-  return `<tr class="${j===i?'cur':''}"><td><button data-j="${j}">${wl(x.week)}</button></td><td>${sgn(D[0],D[0].f(x))}</td><td>${nn?nn.sum:'<span class="flat">記録はこれから</span>'}</td><td class="hs">${nn&&nn.next?nn.next:'<span class="flat">―</span>'}</td></tr>`}).join('');
+ const LR=L.map((x,j)=>({x,j})).filter(o=>o.j>=win()&&(NOTES[sns]||{})[o.x.week]).reverse();$('wa-logs').hidden=tab!=='ov'||!LR.length;
+ $('wa-log').innerHTML=LR.map(({x,j})=>{const nn=(NOTES[sns]||{})[x.week];
+  return `<tr class="${j===i?'cur':''}"><td><button data-j="${j}">${wl(x.week)}</button></td><td>${sgn(D[0],D[0].f(x))}</td><td>${nn.sum}</td><td class="hs">${nn&&nn.next?nn.next:'<span class="flat">―</span>'}</td></tr>`}).join('');
  document.querySelectorAll('#wa-log button').forEach(b=>b.onclick=()=>{i=+b.dataset.j;draw();$('wa-h2').scrollIntoView({behavior:'smooth',block:'start'})})}
 const CM={x:[{l:'1本あたりの表示',u:'回',agg:g=>g.reduce((s,p)=>s+p[3],0)/g.length,one:p=>p[3]},
   {l:'1,000表示あたりのプロフィール訪問',u:'回',agg:g=>{const im=g.reduce((s,p)=>s+p[3],0);return im?g.reduce((s,p)=>s+p[5],0)/im*1000:0},one:p=>p[5],rl:'プロフィール訪問'},
@@ -147,7 +146,7 @@ function content(){const P=(sns==='x'?DATA.xp:DATA.igp),st=per?DATA[sns][win()].
 function draw(){$('wa-bx').setAttribute('aria-pressed',sns==='x');$('wa-bi').setAttribute('aria-pressed',sns==='ig');
  $('wa-head').innerHTML=`${HEAD[sns][0]}<small>${HEAD[sns][1]}</small>`;
  $('wa-tl').innerHTML=PH[sns].slice().reverse().map(p=>`<li class="${p.sp?'sp':''}"><span class="d">${p.a===p.b?wl(p.a)+' の週':md(p.a)+'の週〜'+(p.b===DATA[sns][DATA[sns].length-1].week?'いま':md(p.b)+'の週')}</span><div><b>${p.t}</b><span class="x">${p.x}</span></div></li>`).join('');
- document.querySelectorAll('.wa-per button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.p===per));
+ $('wa-per').value=String(per);
  $('wa-psub').textContent=per?`直近${PN[per]}の週平均を、その前の${PN[per]}とくらべています。ボタンでグラフが切り替わります。`:'はじめからの週平均です。ボタンでグラフが切り替わります。';
  $('wa-legsp').textContent=sns==='ig'?'バズ投稿5本は外しています':'★ 特別な週（平均から外しています）';
  $('wa-hs').textContent=sns==='ig'?'特別なコンテンツ（バズ投稿）':'特別な日（急に伸びた日）';
@@ -156,15 +155,15 @@ function draw(){$('wa-bx').setAttribute('aria-pressed',sns==='x');$('wa-bi').set
  if(sns==='x')$('wa-spl').innerHTML=DATA.xsp.map(q=>`<div class="wa-spc"><span class="m">${md(q.date)}</span><span class="n"><b>+${fmt(q.follows)}</b> フォロー</span><span class="k">表示 ${fmt(q.imp)} · いいね ${fmt(q.likes)} · プロフィール ${fmt(q.pv)}</span></div>`).join('');
  if(i<win())i=DATA[sns].length-1;
  if(sns==='ig'){const mv=515;$('wa-spl').innerHTML=DATA.sp.slice().sort((a,b)=>b.views-a.views).map(q=>`<a class="wa-spc" href="${q.u}" target="_blank" rel="noopener"><span class="m">${md(q.date)} · ${q.type}</span><span class="t">${esc(q.t)}</span><span class="n"><b>${fmt(q.views)}</b> 表示 <em>ふつうの約${fmt(q.views/mv)}倍</em></span><span class="k">フォロー ${fmt(q.follows)} · シェア ${fmt(q.shares)} · いいね ${fmt(q.likes)}</span></a>`).join('')}
- document.querySelectorAll('.wa-tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.t===tab));
+ $('wa-tab').value=tab;
  $('wa-root').classList.toggle('is-ct',tab==='ct');document.querySelectorAll('.wa .ov').forEach(e=>e.hidden=tab!=='ov');document.querySelectorAll('.wa .ct').forEach(e=>e.hidden=tab!=='ct');
  $('wa-sp').hidden=!((tab==='ov'&&sns==='x')||(tab==='ct'&&sns==='ig'));
  try{history.replaceState(null,'','#'+sns+'-'+(tab==='ct'?'content':'overview'))}catch(e){}
  chips();chart();week();content()}
 $('wa-prev').onclick=()=>{if(i>0){i--;draw()}};$('wa-next').onclick=()=>{if(i<DATA[sns].length-1){i++;draw()}};
 $('wa-bx').onclick=()=>{sns='x';m=0;cm=0;i=DATA.x.length-1;draw()};$('wa-bi').onclick=()=>{sns='ig';m=0;cm=0;i=DATA.ig.length-1;draw()};
-document.querySelectorAll('.wa-per button').forEach(b=>b.onclick=()=>{per=+b.dataset.p;draw()});
-document.querySelectorAll('.wa-tabs button').forEach(b=>b.onclick=()=>{tab=b.dataset.t;draw()});
+$('wa-per').onchange=e=>{per=+e.target.value;draw()};
+$('wa-tab').onchange=e=>{tab=e.target.value;draw()};
 document.querySelectorAll('.wa-ax button').forEach(b=>b.onclick=()=>{ax=+b.dataset.a;content()});
 {const h=(location.hash||'').slice(1).split('-');if(h[0]==='ig'){sns='ig';i=DATA.ig.length-1}if(h[1]==='content')tab='ct';}
 let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(chart,150)});

@@ -86,3 +86,26 @@
 .wa-rk .t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.86rem}
 .wa-rk .m{font-size:.74rem;color:var(--muted);font-variant-numeric:tabular-nums}
 @media (max-width:640px){.wa-g{grid-template-columns:1fr 4.2em 3.6em;grid-template-areas:"k v c" "b b b";row-gap:3px}.wa-g .k{grid-area:k}.wa-g .bar{grid-area:b}.wa-g .v{grid-area:v}.wa-g .c{grid-area:c}.wa-mchips{grid-template-columns:1fr}.wa-tabs button{padding:0 10px}.wa-per button{padding:0 10px}.wa-chips,.wa-kpis{grid-template-columns:1fr 1fr}.wa-posts{grid-template-columns:1fr}.wa-kpi .v{font-size:1.35rem}.wa-log .hs{display:none}.wa-log{table-layout:fixed}.wa-log th:first-child{width:7.6em}.wa-log th:nth-child(2){width:4.4em}.wa-log button{font-size:.78rem}.wa-tl li{grid-template-columns:1fr;gap:0}}
+/* 2026-11-27 redesign step 1: one control row like the NACHA KPI list (SNS icons + dropdowns), sticky; folds */
+.wa-top{position:sticky;top:0;z-index:30;background:var(--paper);padding:8px 0;margin:-8px 0 0;gap:8px}
+@media (min-width:901px){.wa-top{top:61px}}
+.wa-sns{display:inline-flex;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card)}
+.wa-sns button{font:700 .92rem var(--f-head);display:inline-flex;align-items:center;gap:5px;border:0;background:transparent;color:var(--muted);padding:0 12px;min-height:44px;cursor:pointer}
+.wa-sns button span{display:none}
+.wa-sns button[aria-pressed="true"]{background:var(--hy-yellow);color:#3A2A12}
+.wa-sns button[aria-pressed="true"] span{display:inline}
+.wa-dd{position:relative;display:inline-flex;align-items:center;gap:4px;border:1px solid var(--line);border-radius:12px;background:var(--card);padding:0 24px 0 9px;min-height:44px;cursor:pointer}
+.wa-dd::after{content:"▾";position:absolute;right:9px;top:50%;transform:translateY(-50%);font-size:.7rem;color:var(--muted);pointer-events:none}
+.wa-dd select{appearance:none;-webkit-appearance:none;border:0;background:transparent;color:var(--ink);font:700 .92rem var(--f-head);padding:0;min-height:42px;cursor:pointer}
+.wa-dd:focus-within{outline:3px solid var(--hy);outline-offset:2px}
+.wa-dd select:focus{outline:none}
+.wa-more{margin-top:8px}
+.wa-more>summary{cursor:pointer;font:700 .9rem var(--f-head);color:var(--muted);list-style:none;display:flex;justify-content:space-between;align-items:center;min-height:44px;padding:0 4px}
+.wa-more>summary::-webkit-details-marker{display:none}
+.wa-more>summary::after{content:"▾";font-size:.8rem}
+.wa-more[open]>summary::after{content:"▴"}
+.wa-logsec .wa-more{margin-top:0}
+.wa-logsec .wa-more>summary{color:var(--ink);font-size:1.02rem}
+.wa-top{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}.wa-top::-webkit-scrollbar{display:none}.wa-top>*{flex:none}
+@media (max-width:640px){.wa-spl{grid-template-columns:1fr 1fr;gap:8px}.wa-spc{padding:8px 10px}}
+@media (max-width:480px){.wa-sns button[aria-pressed="true"] span{display:none}.wa-sns button{padding:0 14px}}

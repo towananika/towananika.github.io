@@ -1,6 +1,13 @@
 [
 [
 "2026-11-27",
+115,
+"SNS分析トップを見やすくしました。操作をアイコンとメニューの1段にまとめ（スクロールしても上に残ります）、今週の大きな数字を先に出し、くわしい説明はたためるようにしました",
+"Made the SNS analysis top easier to read. Controls are now one row of icons and menus (it stays at the top as you scroll), this week's key numbers come first, and detailed notes can be folded",
+"SNS 분석 홈을 보기 쉽게 바꿨습니다. 조작을 아이콘과 메뉴 한 줄로 모으고(스크롤해도 위에 남아요), 이번 주 큰 숫자를 먼저 보여 주며, 자세한 설명은 접을 수 있게 했습니다"
+],
+[
+"2026-11-27",
 114,
 "ホームを公式の壁紙で作り直し（背景がゆっくり動きます）。全ページにファビコンと「トップへ戻る」ボタンを付け、言語えらびを「🌐 日本語 ▾」のメニューに",
 "Rebuilt the home page with official wallpapers (the backgrounds move slowly). Added a favicon and a back-to-top button to every page, and made the language picker a \"🌐 English ▾\" menu",
