@@ -941,3 +941,57 @@ html .hy-path>a.hy-logo+span.fan-badge{display:inline-flex!important}
 .wa-rk .t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.86rem}
 .wa-rk .m{font-size:.74rem;color:var(--muted);font-variant-numeric:tabular-nums}
 @media (max-width:640px){.wa-g{grid-template-columns:1fr 4.2em 3.6em;grid-template-areas:"k v c" "b b b";row-gap:3px}.wa-g .k{grid-area:k}.wa-g .bar{grid-area:b}.wa-g .v{grid-area:v}.wa-g .c{grid-area:c}.wa-mchips{grid-template-columns:1fr}.wa-tabs button{padding:0 10px}.wa-per button{padding:0 10px}.wa-chips,.wa-kpis{grid-template-columns:1fr 1fr}.wa-posts{grid-template-columns:1fr}.wa-kpi .v{font-size:1.35rem}.wa-log .hs{display:none}.wa-log{table-layout:fixed}.wa-log th:first-child{width:7.6em}.wa-log th:nth-child(2){width:4.4em}.wa-log button{font-size:.78rem}.wa-tl li{grid-template-columns:1fr;gap:0}}
+/* ===== 2026-11-27: header icon, language pill, back-to-top, wallpaper home ===== */
+.hy-logo .hy-ic{width:28px;height:28px;border-radius:50%;flex:none;display:block}
+@media (max-width:900px){.hy-set>details.hy-lang>summary>span.hy-lang-n{display:inline}.hy-set>details.hy-lang>summary{padding:4px 10px 4px 8px}}
+@media (max-width:380px){.hy-set>details.hy-lang>summary>span.hy-lang-v{display:none}}
+.totop{position:fixed;right:calc(16px + env(safe-area-inset-right,0px));bottom:calc(24px + env(safe-area-inset-bottom,0px));z-index:55;width:48px;height:48px;border-radius:50%;border:0;background:var(--hy-beak);color:#fff;font:800 20px/1 var(--f-head);box-shadow:0 4px 0 rgba(154,91,0,.35),0 8px 18px rgba(0,0,0,.15);cursor:pointer;opacity:0;transform:translateY(10px);pointer-events:none;transition:opacity .2s,transform .2s}
+.totop.show{opacity:1;transform:none;pointer-events:auto}
+.totop:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+@media (max-width:720px){.totop{bottom:calc(80px + env(safe-area-inset-bottom,0px))}}
+@media (prefers-reduced-motion:reduce){.totop{transition:none}}
+body.home{overflow-x:clip}
+body.home .layout,body.home .layout:has(>.sitenav[hidden]){display:block!important;max-width:none;padding:0;margin:0}
+body.home .layout>main{max-width:none;margin:0;padding:0 0 32px}
+body.home main>footer,body.home main>.fmap,body.home .hm-credit{max-width:940px;margin-left:auto;margin-right:auto;padding-left:16px;padding-right:16px;box-sizing:border-box}
+body.home main h1,body.home main h2{border:0;padding:0;margin:0;text-wrap:balance}
+body.home main h1::before,body.home main h1::after,body.home main h2::before,body.home main h2::after{display:none}
+.hm-hero{position:relative;height:min(82vh,620px);overflow:hidden;display:flex;align-items:flex-start;justify-content:center;text-align:center}
+.hm-bg{position:absolute;inset:-4%;background:#bfe6ff url(img/wp-meadow-phone.webp) center 60%/cover no-repeat}
+.hm-hero::after{content:"";position:absolute;inset:0 0 auto 0;height:40%;background:linear-gradient(rgba(20,60,120,.35),transparent);pointer-events:none}
+.hm-ht{position:relative;z-index:1;padding:44px 16px 0}
+body.home .hm-hero h1{color:#fff;font:800 clamp(1.9rem,6.5vw,3.2rem)/1.2 var(--f-head);text-shadow:0 1px 0 #FEE377,0 2px 0 #f2b53a,0 3px 0 #F09000,0 10px 24px rgba(0,0,0,.45)}
+@media (min-width:700px){.hm-bg{background-image:url(img/wp-meadow-pc.webp)}.hm-hero{height:min(50vw,600px)}}
+.hm-s2,.hm-s3{text-align:center;padding:44px 16px}
+.hm-s2{position:relative;margin-top:-24px;border-radius:32px 32px 0 0;background:var(--paper)}
+.hm-eye{margin:0 auto;max-width:none!important;font:800 .78rem var(--f-head);letter-spacing:.2em;color:var(--hy-ink)}
+body.home .hm-s2 h2,body.home .hm-s3 h2{font:800 1.6rem/1.3 var(--f-head);margin-top:4px}
+.hm-lead{margin:10px auto 0;max-width:30em;color:var(--muted);font-size:.92rem;line-height:1.7}
+.hm-chips{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:6px;margin-top:18px;font:800 .95rem var(--f-head)}
+.hm-chips span{background:var(--card);border:1px solid var(--line);border-radius:99px;padding:8px 14px;box-shadow:0 4px 0 var(--line)}
+.hm-chips b{color:var(--hy-beak)}
+.hm-win{margin:24px auto 0;max-width:340px;aspect-ratio:3/4;border-radius:28px;overflow:hidden;box-shadow:0 20px 34px -14px rgba(154,91,0,.35),0 8px 0 var(--line)}
+.hm-bg2{width:100%;height:100%;background:url(img/wp-egg.webp) center 55%/cover no-repeat}
+.hm-btn{display:inline-block;margin-top:24px;background:linear-gradient(180deg,#ffb53d,#F09000);color:#fff!important;font:800 1rem var(--f-head);border-radius:99px;padding:12px 28px;text-decoration:none;box-shadow:inset 0 2px 0 rgba(255,255,255,.5),0 5px 0 #b86d00,0 10px 18px rgba(154,91,0,.3);transition:transform .12s,box-shadow .12s}
+.hm-btn:active{transform:translateY(4px);box-shadow:inset 0 2px 0 rgba(255,255,255,.5),0 1px 0 #b86d00}
+.hm-btn:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+.hm-s3{position:relative;overflow:hidden;padding:72px 16px 64px;border-radius:32px 32px 0 0;color:#fff}
+.hm-bg3{position:absolute;inset:-4%;background:#2a2012 url(img/wp-cave-phone.webp) center 85%/cover no-repeat}
+@media (min-width:700px){.hm-bg3{background-image:url(img/wp-cave-pc.webp)}}
+.hm-s3::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(rgba(20,14,6,.55),rgba(20,14,6,.25) 60%,rgba(20,14,6,.6))}
+.hm-in{position:relative;z-index:2}
+.hm-s3 .hm-eye{color:#FEE377}
+body.home .hm-s3 h2{color:#fff}
+.hm-logos{display:flex;justify-content:center;flex-wrap:wrap;gap:12px;margin-top:20px}
+.hm-logos a{display:flex;align-items:center;justify-content:center;width:44px;height:44px;color:#fff;transition:transform .15s}
+.hm-logos svg{width:28px;height:28px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.45))}
+.hm-logos a:hover{transform:translateY(-3px)}
+.hm-logos a:focus-visible{outline:2px solid #FEE377;outline-offset:2px;border-radius:8px}
+.hm-credit{margin:18px auto 0;font-size:.75rem;color:var(--muted);text-align:center}
+.hm-credit a{color:inherit}
+.hm-in-l{margin-left:12px}
+/* slow idle "camera"; the cursor/tilt/scroll offset goes through `translate` (nav.js) */
+.hm-bg,.hm-bg2,.hm-bg3{animation:hm-cam 12s ease-in-out infinite alternate;will-change:transform,translate}
+.hm-bg3{animation-duration:15s}.hm-bg2{animation-duration:10s}
+@keyframes hm-cam{0%{transform:scale(1.06) translate(-2.6%,1.2%) rotate(-.8deg)}50%{transform:scale(1.13) translate(1.6%,-1.6%) rotate(.4deg)}100%{transform:scale(1.08) translate(2.8%,.8%) rotate(1deg)}}
+@media (prefers-reduced-motion:reduce){.hm-bg,.hm-bg2,.hm-bg3{animation:none}}

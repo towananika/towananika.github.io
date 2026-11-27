@@ -28,3 +28,27 @@ dd.forEach(function(d){d.removeAttribute('open');
 document.addEventListener('click',function(e){dd.forEach(function(d){if(d.open&&!d.contains(e.target))d.removeAttribute('open');});});
 document.addEventListener('keydown',function(e){if(e.key==='Escape')dd.forEach(function(d){d.removeAttribute('open');});});
 })();
+/* 2026-11-27: "back to top" button on every page (round, orange, bottom-right; shows after scrolling) */
+(function(){
+  var b=document.createElement('button'); b.type='button'; b.className='totop'; b.setAttribute('aria-label','ページのいちばん上へ'); b.textContent='↑';
+  document.body.appendChild(b);
+  var rm=matchMedia('(prefers-reduced-motion: reduce)');
+  function u(){ b.classList.toggle('show', scrollY>500); }
+  addEventListener('scroll',u,{passive:true}); u();
+  b.addEventListener('click',function(){ scrollTo({top:0,behavior:rm.matches?'auto':'smooth'}); var m=document.getElementById('main'); if(m){m.setAttribute('tabindex','-1'); m.focus({preventScroll:true});} });
+})();
+/* 2026-11-27 home: wallpapers follow the cursor / phone tilt / scroll (the slow idle drift is CSS) */
+(function(){
+  var h=document.getElementById('hm-bg'); if(!h||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  var c=document.getElementById('hm-bg3'), w=document.querySelector('.hm-bg2');
+  var px=0,py=0,tx=0,ty=0,sy=0,raf=0;
+  function tick(){ raf=0; tx+=(px-tx)*.08; ty+=(py-ty)*.08;
+    h.style.translate=(tx*-16)+'px '+(ty*-12+sy*.3)+'px';
+    if(c)c.style.translate=(tx*-12)+'px '+(ty*-8)+'px';
+    if(w)w.style.translate=(tx*-8)+'px '+(ty*-6)+'px';
+    if(Math.abs(px-tx)>.002||Math.abs(py-ty)>.002)raf=requestAnimationFrame(tick); }
+  function kick(){ if(!raf)raf=requestAnimationFrame(tick); }
+  addEventListener('pointermove',function(e){ px=e.clientX/innerWidth-.5; py=e.clientY/innerHeight-.5; kick(); },{passive:true});
+  addEventListener('deviceorientation',function(e){ if(e.gamma==null)return; px=Math.max(-1,Math.min(1,e.gamma/30))/2; py=Math.max(-1,Math.min(1,(e.beta-45)/30))/2; kick(); },{passive:true});
+  addEventListener('scroll',function(){ sy=Math.min(scrollY,800); kick(); },{passive:true});
+})();

@@ -117,25 +117,6 @@ def crumbs(pre, label):
     return f'<nav class="crumbs"><a href="/">Towananika</a> ／ <a href="{pre}">HIYOKO</a> ／ {label}</nav>'
 
 # ---------- home ----------
-row = "".join(ext(u, brand(c), f"sns {c}").replace('<a ', f'<a aria-label="{n}" title="{n}" ', 1)
-              for c, ic, n, _, _, u in SNS[:2] + SNS[3:] + COMMUNITY)
-# home tiles follow the sitemap: "know HIYOKO" and "browse"
-TILE_GROUPS = [
-    (t("よく使う", "Most used", "자주 쓰는 곳"), [
-        ("analysis/", "📊", "SNS分析", "XとInstagramの数字"),
-        ("x/report/", "📝", "レポート", "最新の調査と分析"),
-        ("kpi/", "🔎", "投稿一覧", "全投稿の数字を並べ替え")]),
-    (t("HIYOKOを知る", "Get to know HIYOKO", "HIYOKO 알아보기"), [
-        ("about/", "🐣", "HIYOKOを知る", "しくみ・目的・キャラクター"),
-        ("links/", "🔗", "公式リンク集", "公式SNS・公式サイトを1か所に"),
-        ("news/", "📰", "開発ニュース", "サイトの更新内容")]),
-]
-IN_LINK = t("🔒 社内資料（関係者のみ）", "🔒 Internal (members only)", "🔒 내부 자료 (관계자 전용)")
-tiles = "".join(
-    f'<h2 class="tg-h">{g}</h2><div class="tiles">'
-    + "".join(f'<a class="tile" href="{h}"><span class="ti" aria-hidden="true">{i}</span><strong>{tt}</strong><em>{d}</em></a>' for h, i, tt, d in items)
-    + "</div>" for g, items in TILE_GROUPS) + f'<p class="in-link mem-only"><a href="internal/strategy/">{IN_LINK}</a></p>'
-
 # ---------- news (site update log; append to news.json on every change) ----------
 HERE = os.path.dirname(os.path.abspath(__file__))
 NEWS = sorted(json.load(open(os.path.join(HERE, "news.json"), encoding="utf-8")), key=lambda r: (r[0], r[1]), reverse=True)
@@ -152,26 +133,28 @@ _block = "/*news*/Object.assign(D," + json.dumps({r[2]: [r[3], r[4]] for r in NE
 _src = re.sub(r"/\*news\*/.*?/\*/news\*/\n", "", _src, flags=re.S)
 _k = _src.index("var L=["); open(_i18n, "w", encoding="utf-8").write(_src[:_k] + _block + _src[_k:])
 
-QUICK = [("analysis/", "📊", "SNS分析", "XとInstagramの数字"),
-         ("x/report/", "📝", "最新のレポート", "調査と分析のまとめ"),
-         ("about/", "🐣", "HIYOKOを知る", "しくみ・目的・キャラクター"),
-         ("links/", "🔗", "公式リンク集", "公式SNS・公式サイトを1か所に")]
-quick = '<nav class="qnav" aria-label="おもな入口">' + "".join(
-    f'<a class="qn" href="{h}"><span class="ti" aria-hidden="true">{i}</span><span><strong>{tt}</strong><em>{d}</em></span></a>' for h, i, tt, d in QUICK) + "</nav>"
-last = NEWS[0]
-home = f"""<section class="hh">
-<div class="hh-text">
-<h1>HIYOKO</h1>
-<p class="hh-copy">{t("小さなひよこ、大きなエネルギー。", "One little chick, big energy.", "작은 병아리, 큰 에너지.")}</p>
-<p class="hh-sub">{t("HIYOKOをもっと楽しむための、ファンのまとめページです。", "A fan-made guide to enjoying HIYOKO more.", "HIYOKO를 더 즐기기 위한 팬 정리 페이지입니다.")}</p>
-<nav class="sns-row" aria-label="公式SNS">{row}</nav>
-</div>
-<figure class="hh-fig"><div class="hh-art"><img src="img/hiyoko-wave.webp" width="480" height="480" alt="{t("手をふるHIYOKO", "HIYOKO waving", "손을 흔드는 HIYOKO")}"></div>
-<figcaption class="hh-src">{t("絵：", "Art: ", "그림: ")}<a href="https://www.instagram.com/p/DfT-mQrjZ0A/" target="_blank" rel="noopener">{t("公式Instagram @hiyoko_global より", "from official Instagram @hiyoko_global", "공식 Instagram @hiyoko_global에서")}</a>（© HIYOKO）</figcaption></figure>
+# 2026-11-27 home: official wallpapers only (HIYOKO Wallpapers, linked from the official Linktree), slow "camera" drift; JS in nav.js
+logos = "".join(ext(u, brand(c), "").replace('<a class="" ', f'<a aria-label="{n}" title="{n}" ', 1)
+                for c, ic, n, _, _, u in SNS[:2] + SNS[3:] + COMMUNITY)
+WP_URL = "https://fate-eclipse-336.notion.site/For-you-368fd665c10480669a43f3ce3f30efc1"
+home = f"""<section class="hm-hero"><div class="hm-bg" id="hm-bg"></div>
+<div class="hm-ht"><h1>One little chick,<br>big energy</h1></div></section>
+<section class="hm-s2">
+<p class="hm-eye">{t("HIYOKOってなに？", "What is HIYOKO?", "HIYOKO란?")}</p>
+<h2>{t("遊んで、ためて、HYKへ", "Play, collect, then HYK", "놀고, 모으고, HYK로")}</h2>
+<p class="hm-lead">{t("ゲームで遊んでポイントをため、あとからHYKへ。", "Play games, collect points, and turn them into HYK later.", "게임을 하며 포인트를 모으고, 나중에 HYK로.")}<br>{t("ウォレットがなくても始められます。", "You can start without a wallet.", "지갑이 없어도 시작할 수 있어요.")}</p>
+<div class="hm-chips"><span>🎮 {t("遊ぶ", "Play", "놀기")}</span><b aria-hidden="true">›</b><span>🪙 {t("ためる", "Collect", "모으기")}</span><b aria-hidden="true">›</b><span>💎 HYK</span></div>
+<div class="hm-win"><div class="hm-bg2"></div></div>
+<a class="hm-btn" href="about/">{t("HIYOKOを知る ›", "Get to know HIYOKO ›", "HIYOKO 알아보기 ›")}</a>
 </section>
-{quick}
-<div class="hh-foot"><a class="hh-news" href="news/"><span class="hh-tag">{t("最新", "Latest", "최신")}</span><span class="hh-nt">{last[2]}</span><span aria-hidden="true">→</span></a><a class="hh-in mem-only" href="internal/strategy/">🔒 社内資料</a></div>"""
-shell("", "HIYOKO 非公式ファンサイト", "HIYOKOの非公式ファンサイト。公式リンク集、プロジェクト、キャラクター、目的、SNS分析をまとめています。", home)
+<section class="hm-s3"><div class="hm-bg3" id="hm-bg3"></div><div class="hm-in">
+<p class="hm-eye">{t("また会おうね", "See you again", "또 만나요")}</p>
+<h2>{t("公式で会いにいく", "Meet HIYOKO on official channels", "공식 채널에서 만나요")}</h2>
+<nav class="hm-logos" aria-label="公式SNS">{logos}</nav>
+<a class="hm-btn" href="https://hiyokotoken.com/" target="_blank" rel="noopener">{t("公式サイトへ ↗", "Official site ↗", "공식 사이트로 ↗")}</a>
+</div></section>
+<p class="hm-credit">{t("背景：", "Backgrounds: ", "배경: ")}<a href="{WP_URL}" target="_blank" rel="noopener">{t("HIYOKO公式の壁紙「HIYOKO Wallpapers」", "official HIYOKO Wallpapers", "HIYOKO 공식 배경화면 「HIYOKO Wallpapers」")}</a>（© HIYOKO）<a class="hm-in-l mem-only" href="internal/strategy/">🔒 社内資料</a></p>"""
+shell("", "HIYOKO 非公式ファンサイト", "HIYOKOの非公式ファンサイト。公式リンク集、HIYOKOのしくみ、SNS分析をまとめています。", home, bodycls="pt home")
 
 # ---------- links ----------
 links = f"""{crumbs("../", "公式リンク集")}
