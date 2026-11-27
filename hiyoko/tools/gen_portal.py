@@ -121,13 +121,13 @@ row = "".join(ext(u, brand(c), f"sns {c}").replace('<a ', f'<a aria-label="{n}" 
               for c, ic, n, _, _, u in SNS[:2] + SNS[3:] + COMMUNITY)
 # home tiles follow the sitemap: "know HIYOKO" and "browse"
 TILE_GROUPS = [
-    (t("HIYOKOを知る", "Get to know HIYOKO", "HIYOKO 알아보기"), [
-        ("about/", "🐣", "HIYOKOとは", "しくみとロードマップ"),
-        ("world/", "🎯", t("目的", "Purpose", "목적"), t("公式に書かれているねらい", "What the project officially aims for", "공식적으로 적힌 목표")),
-        ("character/", "🐤", "キャラクター", "ひよこのプロフィール")]),
-    (t("見る・調べる", "Browse and look up", "보기·찾아보기"), [
-        ("links/", "🔗", "公式リンク集", "公式SNS・公式サイトを1か所に"),
+    (t("よく使う", "Most used", "자주 쓰는 곳"), [
         ("analysis/", "📊", "SNS分析", "XとInstagramの数字"),
+        ("x/report/", "📝", "レポート", "最新の調査と分析"),
+        ("kpi/", "🔎", "投稿一覧", "全投稿の数字を並べ替え")]),
+    (t("HIYOKOを知る", "Get to know HIYOKO", "HIYOKO 알아보기"), [
+        ("about/", "🐣", "HIYOKOを知る", "しくみ・目的・キャラクター"),
+        ("links/", "🔗", "公式リンク集", "公式SNS・公式サイトを1か所に"),
         ("news/", "📰", "開発ニュース", "サイトの更新内容")]),
 ]
 IN_LINK = t("🔒 社内資料（関係者のみ）", "🔒 Internal (members only)", "🔒 내부 자료 (관계자 전용)")
@@ -152,12 +152,10 @@ _block = "/*news*/Object.assign(D," + json.dumps({r[2]: [r[3], r[4]] for r in NE
 _src = re.sub(r"/\*news\*/.*?/\*/news\*/\n", "", _src, flags=re.S)
 _k = _src.index("var L=["); open(_i18n, "w", encoding="utf-8").write(_src[:_k] + _block + _src[_k:])
 
-QUICK = [("about/", "🐣", "HIYOKOとは", "しくみとロードマップ"),
-         ("world/", "🎯", t("目的", "Purpose", "목적"), t("公式に書かれているねらい", "What the project officially aims for", "공식적으로 적힌 목표")),
-         ("character/", "🐤", "キャラクター", "ひよこのプロフィール"),
-         ("links/", "🔗", "公式リンク集", "公式SNS・公式サイトを1か所に"),
-         ("analysis/", "📊", "SNS分析", "XとInstagramの数字"),
-         ("news/", "📰", "開発ニュース", "サイトの更新内容")]
+QUICK = [("analysis/", "📊", "SNS分析", "XとInstagramの数字"),
+         ("x/report/", "📝", "最新のレポート", "調査と分析のまとめ"),
+         ("about/", "🐣", "HIYOKOを知る", "しくみ・目的・キャラクター"),
+         ("links/", "🔗", "公式リンク集", "公式SNS・公式サイトを1か所に")]
 quick = '<nav class="qnav" aria-label="おもな入口">' + "".join(
     f'<a class="qn" href="{h}"><span class="ti" aria-hidden="true">{i}</span><span><strong>{tt}</strong><em>{d}</em></span></a>' for h, i, tt, d in QUICK) + "</nav>"
 last = NEWS[0]
@@ -225,7 +223,7 @@ road = '<ol class="road">' + "".join(
     f'<li class="{c}"><span class="rd-when">{w}</span><span class="rd-st">{s}</span><ul>' + "".join(f"<li>{x}</li>" for x in xs) + "</ul></li>"
     for c, w, s, xs in ROAD) + "</ol>"
 about = f"""{crumbs("../", "HIYOKOとは")}
-<h1>🐣 HIYOKOとは</h1>
+<h1>🐣 HIYOKOを知る</h1>
 <p class="fan-note">公式サイト（hiyokotoken.com）の内容を、ファンがやさしくまとめたものです。</p>
 <p class="big">ゲームと健康の活動を、ポイントからトークン（HYK）へつなぐ、Web3のしくみです。</p>
 <h2 id="idea">考え方</h2>
@@ -238,8 +236,7 @@ about = f"""{crumbs("../", "HIYOKOとは")}
 {road}
 <p class="more">{ext("https://hiyokotoken.com/ecosystem/", "公式サイトでくわしく見る ↗", "btn")} {ext("https://hiyokotoken.com/whitepaper/", "ホワイトペーパー ↗", "btn ghost")}</p>
 <details class="fold"><summary>このページについて</summary><p class="note">投資のすすめではありません。予定は変わることがあります。くわしくは公式サイトで確かめてください。</p></details>"""
-shell("about/", "HIYOKOとは | HIYOKO 非公式ファンサイト", "HIYOKOのしくみ（Happy Chick・CheePoint・HYK・Vitalis・コミュニティ）とロードマップ。", about,
-      toc=[("idea", "考え方"), ("parts", "プロジェクト"), ("roadmap", "ロードマップ")])
+# about/ is written at the end, together with 目的 and キャラクター (one page since 2026-11-27)
 
 # ---------- character ----------
 PROF = [  # official site "Meet Hiyoko" only
@@ -266,8 +263,7 @@ chara = f"""{crumbs("../", "キャラクター")}
 <div class="igs">{poses}</div>
 {CREDIT}
 <details class="fold"><summary>このページについて</summary><p class="note">{t("絵は公式Instagramの投稿の画像です（© HIYOKO）。性格や物語などは公式文書に書かれていないため、のせていません。", "Art is from official Instagram posts (© HIYOKO). Personality and story are not in the official documents, so they are not shown.", "그림은 공식 Instagram 게시물의 이미지입니다(© HIYOKO). 성격이나 이야기는 공식 문서에 없어 싣지 않았습니다.")}</p></details>"""
-shell("character/", "キャラクター | HIYOKO 非公式ファンサイト", "HIYOKOのキャラクターのプロフィール（公式サイトより）。", chara,
-      toc=[("profile", "プロフィール"), ("poses", "いろいろなHIYOKO")])
+
 
 # ---------- vision ----------
 VAL = [
@@ -288,12 +284,6 @@ vision = f"""{crumbs("../", "目指すこと")}
 {vals}
 <h2 id="goals">目標</h2>
 <a class="tile lock mem-only" href="../internal/strategy/"><span class="ti" aria-hidden="true">🔒</span><strong>数字の目標は社内資料に</strong><em>ログインして開く</em></a>"""
-# vision/ was merged into world/ (2026-11-20): keep the old URL working
-os.makedirs(os.path.join(ROOT, "vision"), exist_ok=True)
-open(os.path.join(ROOT, "vision", "index.html"), "w", encoding="utf-8").write(
-    '<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="robots" content="noindex">'
-    '<meta http-equiv="refresh" content="0; url=../world/#purpose"><link rel="canonical" href="../world/">'
-    '<title>HIYOKO</title></head><body><p><a href="../world/#purpose">目的へ</a></p></body></html>\n')
 print("ok")
 
 # ---------- news page ----------
@@ -333,8 +323,30 @@ world = f"""{crumbs("../", W_T)}
 <h2 id="purpose">{t("公式に書かれている目的", "The purpose, as officially stated", "공식적으로 적힌 목적")}</h2>
 <div class="wcards">{"".join(wcard(*r) for r in PURPOSE)}</div>
 <p class="note">{t("内容や予定は変わることがあります（公式の注意書きより）。投資のすすめではありません。", "Features and timelines may change (per the official notice). This is not investment advice.", "내용과 일정은 바뀔 수 있습니다(공식 안내). 투자 권유가 아닙니다.")}</p>"""
-shell("world/", t("目的 | HIYOKO 非公式ファンサイト", "Purpose | HIYOKO unofficial fan site", "목적 | HIYOKO 비공식 팬사이트"),
-      "HIYOKOの目的を、公式サイトとホワイトペーパーから出典つきでまとめたページ。", world)
+
+# ---------- HIYOKOを知る = one page: しくみ + 目的 + キャラクター (2026-11-27) ----------
+def _body(h):  # drop crumbs + h1 + first fan-note of a sub page, keep the rest
+    h = re.sub(r'^.*?</h1>\n', '', h, count=1, flags=re.S)
+    return re.sub(r'^<p class="fan-note">.*?</p>\n', '', h, count=1, flags=re.S)
+_w = _body(world).replace('<h2 id="purpose">', '<h2 id="purpose-h">', 1)
+_c = _body(chara).replace('<h2 id="profile">プロフィール</h2>', '<h3 id="profile">プロフィール</h3>').replace('<h2 id="poses">いろいろなHIYOKO</h2>', '<h3 id="poses">いろいろなHIYOKO</h3>')
+_c = _c.replace('src="../img/', 'src="../img/')
+know = (about.replace('<details class="fold"><summary>このページについて</summary>', '<!--aboutfold--><details class="fold"><summary>このページについて</summary>', 1).split('<!--aboutfold-->')[0]
+        + f'<h2 id="purpose">{W_T}</h2>\n' + _w.split('</h2>', 1)[1]
+        + f'<h2 id="character">キャラクター</h2>\n' + _c
+        + '<details class="fold"><summary>このページについて</summary><p class="note">投資のすすめではありません。予定は変わることがあります。くわしくは公式サイトで確かめてください。</p></details>')
+shell("about/", "HIYOKOを知る | HIYOKO 非公式ファンサイト", "HIYOKOのしくみ・ロードマップ・目的・キャラクターを、公式サイトとホワイトペーパーからまとめたページ。", know,
+      toc=[("idea", "考え方"), ("parts", "プロジェクト"), ("roadmap", "ロードマップ"), ("purpose", W_T), ("character", "キャラクター")])
+# old URLs keep working
+def _redir(path, to, label):
+    os.makedirs(os.path.join(ROOT, path), exist_ok=True)
+    open(os.path.join(ROOT, path, "index.html"), "w", encoding="utf-8").write(
+        f'<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="robots" content="noindex">'
+        f'<meta http-equiv="refresh" content="0; url={to}"><link rel="canonical" href="../about/">'
+        f'<title>HIYOKO</title></head><body><p><a href="{to}">{label}へ</a></p></body></html>\n')
+_redir("world", "../about/#purpose", "目的")
+_redir("character", "../about/#character", "キャラクター")
+_redir("vision", "../about/#purpose", "目的")
 
 # flush generated translations into i18n.js (between /*gen*/ markers)
 _src = open(_i18n, encoding="utf-8").read()
