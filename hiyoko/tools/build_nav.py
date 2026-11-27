@@ -7,20 +7,20 @@ import os, re, sys
 ROOT = sys.argv[1]
 # (heading, css class, [(label, href rel. to hiyoko/, desc, locked)])
 # Top tabs = sections (global nav). Left nav = pages of the current section only.
-SECTIONS = [("home", "ホーム", ""), ("know", "HIYOKOを知る", "about/"), ("links", "公式リンク", "links/"),
-            ("analysis", "SNS分析", "analysis/"), ("news", "ニュース", "news/"), ("in", "🔒 社内資料", "internal/strategy/")]
+# 2026-11-27: 4 public tabs (SNS分析 2nd = most used) + members-only tab; ニュース lives in the footer + home
+SECTIONS = [("home", "ホーム", ""), ("analysis", "SNS分析", "analysis/"), ("know", "HIYOKOを知る", "about/"),
+            ("links", "公式リンク", "links/"), ("in", "🔒 社内資料", "internal/strategy/")]
 def section_of(p):
     if p == "": return "home"
-    if p in ("links/", "news/"): return p[:-1]
+    if p == "links/": return "links"
+    if p == "news/": return "home"
     if p in ("about/", "world/", "character/"): return "know"
     if p.startswith("internal/"): return "in"
     if p == "join/": return "join"
     return "analysis"
 GROUP_SECTION = {"h": "know", "m": "analysis", "x": "analysis", "ig": "analysis", "old": "analysis", "in": "in"}
 GROUPS = [
-  ("HIYOKOを知る", "h", [("HIYOKOとは", "about/", "しくみとロードマップ", False),
-                   ("目的", "world/", "公式に書かれているねらい", False),
-                   ("キャラクター", "character/", "ひよこのプロフィール", False)]),
+  ("HIYOKOを知る", "h", [("HIYOKOを知る", "about/", "しくみ・目的・キャラクター", False)]),
   ("SNS分析", "m", [("SNS分析トップ", "analysis/", "XとInstagramの数字", False),
                  ("KPI一覧", "kpi/", "投稿ごとの数字を並べ替え", False)]),
   ("X", "x", [("概要", "x/", "悩み→解決で、プロフィールへ", False),
@@ -36,8 +36,8 @@ GROUPS = [
                           ("振り返り", "internal/review/", "ログインして開く", True)]),
 ]
 # footer sitemap: short, unambiguous labels (the footer has no X / Instagram sub-headings)
-FOOT = {"analysis": [("SNS分析トップ", "analysis/"), ("KPI一覧", "kpi/"), ("Xの分析", "x/"), ("Xのレポート", "x/report/"), ("Instagramの分析", "ig/")]}
-PAGES = ["", "links/", "about/", "character/", "world/", "news/", "analysis/", "kpi/", "2026-11/", "a-ranking/", "x/", "x/monthly/", "x/posts/", "x/content/", "x/plan/", "ig/", "ig/posts/", "ig/content/", "internal/strategy/", "internal/review/", "internal/admin/"]
+FOOT = {"links": [("公式リンク集", "links/"), ("開発ニュース", "news/")], "analysis": [("SNS分析トップ", "analysis/"), ("KPI一覧", "kpi/"), ("Xの分析", "x/"), ("Xのレポート", "x/report/"), ("Instagramの分析", "ig/")]}
+PAGES = ["", "links/", "about/", "news/", "analysis/", "kpi/", "2026-11/", "a-ranking/", "x/", "x/monthly/", "x/posts/", "x/content/", "x/plan/", "ig/", "ig/posts/", "ig/content/", "internal/strategy/", "internal/review/", "internal/admin/"]
 # pages that fill their own "このページの目次" (report.js / join page): only tabs, left nav and footer are rebuilt
 KEEP_TOC = ["x/report/", "x/report/new/", "x/report/view/", "join/"] + [f"x/report/{n}/" for n in range(1, 100) if os.path.exists(os.path.join(ROOT, f"x/report/{n}/index.html"))]
 exists = lambda h: os.path.exists(os.path.join(ROOT, h, "index.html"))
@@ -70,7 +70,7 @@ def nav_for(cur, toc=True):
     pre = "../" * cur.count("/")
     sec = section_of(cur)
     groups = [g for g in GROUPS if GROUP_SECTION[g[1]] == sec]
-    if not groups:  # one-page section: keep an empty, hidden nav so the layout knows there is none
+    if not groups or sum(len(g[2]) for g in groups) <= 1:  # one-page section: keep an empty, hidden nav so the layout knows there is none
         out = ['<details class="sitenav" hidden><summary>ページ一覧</summary><div></div></details>']
     else:
         out = ['<details class="sitenav" open><summary>このコーナーのページ</summary><div>',
