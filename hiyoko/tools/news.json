@@ -1,6 +1,13 @@
 [
 [
 "2026-11-27",
+118,
+"ホームの見出しの下にあった英語の小さな一行をなくし、各言語の見出しだけに",
+"Removed the small English line under the home headline; each language shows only its own headline",
+"홈 제목 아래의 작은 영어 문구를 없애고, 각 언어의 제목만 보이게 했습니다"
+],
+[
+"2026-11-27",
 117,
 "ホームのキャッチコピーを言語ごとに：日本語「ちっちゃなひよこ、でっかい元気。」、韓国語「작은 병아리, 넘치는 에너지!」。下に公式の英語「One little chick, big energy」",
 "Home tagline now fits each language; in English it is the official \"One little chick, big energy\"",
