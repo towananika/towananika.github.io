@@ -153,7 +153,6 @@ home = f"""<section class="hm-hero"><div class="hm-bg" id="hm-bg"></div>
 <nav class="hm-logos" aria-label="公式SNS">{logos}</nav>
 <a class="hm-btn" href="https://hiyokotoken.com/" target="_blank" rel="noopener">{t("公式サイトへ ↗", "Official site ↗", "공식 사이트로 ↗")}</a>
 </div></section>
-<p class="hm-credit">{t("背景：", "Backgrounds: ", "배경: ")}<a href="{WP_URL}" target="_blank" rel="noopener">{t("HIYOKO公式の壁紙「HIYOKO Wallpapers」", "official HIYOKO Wallpapers", "HIYOKO 공식 배경화면 「HIYOKO Wallpapers」")}</a>（© HIYOKO）<a class="hm-in-l mem-only" href="internal/strategy/">🔒 社内資料</a></p>"""
 shell("", "HIYOKO 非公式ファンサイト", "HIYOKOの非公式ファンサイト。公式リンク集、HIYOKOのしくみ、SNS分析をまとめています。", home, bodycls="pt home")
 
 # ---------- links ----------
