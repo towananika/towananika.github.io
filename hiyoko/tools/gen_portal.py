@@ -176,7 +176,6 @@ shell("", "HIYOKO 非公式ファンサイト", "HIYOKOの非公式ファンサ�
 # ---------- links ----------
 links = f"""{crumbs("../", "公式リンク集")}
 <h1>🔗 公式リンク集</h1>
-<p class="fan-note">このページは非公式ファンサイトです。HIYOKOの公式サイト・公式Linktree・公式Instagramに載っているリンクを、ファンが集めました（{CHECKED}に確認）。</p>
 <h2 id="sns">公式SNS</h2>
 {cards(SNS)}
 <h2 id="community">コミュニティ</h2>
