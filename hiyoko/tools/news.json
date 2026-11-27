@@ -439,5 +439,12 @@
 "メニューを4つ（ホーム・SNS分析・HIYOKOを知る・公式リンク）に整理し、「HIYOKOを知る」を1ページにまとめました。ひよこの色と丸い文字で、サイト全体の見た目をそろえました。",
 "Simplified the menu to 4 items (Home, SNS analysis, Get to know HIYOKO, Official links) and merged “Get to know HIYOKO” into one page. The whole site now uses HIYOKO's colors and a rounded font.",
 "메뉴를 4개(홈·SNS 분석·HIYOKO 알아보기·공식 링크)로 정리하고 'HIYOKO 알아보기'를 한 페이지로 합쳤습니다. 병아리 색과 둥근 글꼴로 사이트 전체 디자인을 맞췄습니다."
+],
+[
+"2026-11-27",
+111,
+"SNS分析を4つのタブ（分析トップ・月ごと・投稿一覧・レポート）にまとめました。前のページのURLは、まとめた先に自動で移ります。",
+"Grouped SNS analysis into 4 tabs (Overview, By month, All posts, Reports). Old page URLs now forward to where their content moved.",
+"SNS 분석을 4개 탭(분석 홈·월별·게시물 목록·리포트)으로 정리했습니다. 이전 페이지 URL은 옮겨진 곳으로 자동 이동합니다."
 ]
 ]
