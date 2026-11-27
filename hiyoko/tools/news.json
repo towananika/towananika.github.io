@@ -1,6 +1,13 @@
 [
 [
 "2026-11-27",
+114,
+"ホームを公式の壁紙で作り直し（背景がゆっくり動きます）。全ページにファビコンと「トップへ戻る」ボタンを付け、言語えらびを「🌐 日本語 ▾」のメニューに",
+"Rebuilt the home page with official wallpapers (the backgrounds move slowly). Added a favicon and a back-to-top button to every page, and made the language picker a \"🌐 English ▾\" menu",
+"홈을 공식 배경화면으로 새로 만들었습니다(배경이 천천히 움직여요). 모든 페이지에 파비콘과 「맨 위로」 버튼을 달고, 언어 선택을 「🌐 한국어 ▾」 메뉴로 바꿨습니다"
+],
+[
+"2026-11-27",
 113,
 "ヘッダーを「🐣 HIYOKO」ロゴだけに（押すとホームへ）。ホームタブをなくし、ロゴ横に小さな「非公式」表示。社内資料のページ下のファンサイト表示と、公式リンクページの説明文をなくしました",
 "Header is now just the 🐣 HIYOKO logo (tap for home) with a small \"unofficial\" badge; removed the Home tab, the fan-site footer on internal pages and the note on the links page",
