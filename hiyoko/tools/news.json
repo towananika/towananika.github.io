@@ -1,5 +1,12 @@
 [
 [
+"2026-11-27",
+113,
+"ヘッダーを「🐣 HIYOKO」ロゴだけに（押すとホームへ）。ホームタブをなくし、ロゴ横に小さな「非公式」表示。社内資料のページ下のファンサイト表示と、公式リンクページの説明文をなくしました",
+"Header is now just the 🐣 HIYOKO logo (tap for home) with a small \"unofficial\" badge; removed the Home tab, the fan-site footer on internal pages and the note on the links page",
+"헤더를 「🐣 HIYOKO」 로고만으로(누르면 홈). 홈 탭을 없애고 로고 옆에 작은 「비공식」 표시. 사내 자료 하단의 팬사이트 표시와 공식 링크 페이지 설명문 삭제"
+],
+[
 "2026-11-26",
 92,
 "レポートの作成・編集・削除に対応（直す・消すは作成者か管理者だけ）",
