@@ -170,6 +170,8 @@ home = f"""<section class="hh">
 <figcaption class="hh-src">{t("絵：", "Art: ", "그림: ")}<a href="https://www.instagram.com/p/DfT-mQrjZ0A/" target="_blank" rel="noopener">{t("公式Instagram @hiyoko_global より", "from official Instagram @hiyoko_global", "공식 Instagram @hiyoko_global에서")}</a>（© HIYOKO）</figcaption></figure>
 </section>
 {quick}
+<section class="feed-box home-feed" data-hide-empty hidden aria-label="お知らせ"><div class="feed-head"><h2>📣 お知らせ</h2><a href="news/#oshirase">すべて見る →</a></div><div class="feed" data-feed="news" data-limit="3" data-base="x/report/" data-hide-empty></div></section>
+<script src="report.js" defer></script>
 <div class="hh-foot"><a class="hh-news" href="news/"><span class="hh-tag">{t("最新", "Latest", "최신")}</span><span class="hh-nt">{last[2]}</span><span aria-hidden="true">→</span></a><a class="hh-in mem-only" href="internal/strategy/">🔒 社内資料</a></div>"""
 shell("", "HIYOKO 非公式ファンサイト", "HIYOKOの非公式ファンサイト。公式リンク集、プロジェクト、キャラクター、目的、SNS分析をまとめています。", home)
 
@@ -290,12 +292,16 @@ print("ok")
 dates = []
 for r in NEWS:
     if r[0] not in dates: dates.append(r[0])
-news = f"""{crumbs("../", "開発ニュース")}
-<h1>📰 開発ニュース</h1>
+news = f"""{crumbs("../", "ニュース")}
+<h1>📰 ニュース</h1>
+<section class="feed-box" aria-labelledby="nw-feed-h"><div class="feed-head"><h2 id="oshirase">📣 お知らせ</h2><a class="btn btn-sm" data-write hidden href="../x/report/new/?kind=news">＋ 書く</a></div>
+<div class="feed" data-feed="news" data-base="../x/report/"><div class="rpt-empty">読み込んでいます…</div></div></section>
+<h2 id="dev">🛠 サイトの更新記録</h2>
 <div class="meta">このファンサイトの更新内容です。新しい順。</div>
-""" + "".join(f'<h2 id="d{d.replace("-", "")}">{jdate(d)}</h2><ul class="nw">{news_items([r for r in NEWS if r[0] == d], "../")}</ul>' for d in dates)
-shell("news/", "開発ニュース | HIYOKO 非公式ファンサイト", "HIYOKO非公式ファンサイトの更新内容（開発ニュース）。", news,
-      toc=[(f'd{d.replace("-", "")}', jdate(d)) for d in dates])
+<script src="../report.js" defer></script>
+""" + "".join(f'<h3 id="d{d.replace("-", "")}">{jdate(d)}</h3><ul class="nw">{news_items([r for r in NEWS if r[0] == d], "../")}</ul>' for d in dates)
+shell("news/", "ニュース | HIYOKO 非公式ファンサイト", "HIYOKO非公式ファンサイトのお知らせと、サイトの更新記録。", news,
+      toc=[("oshirase", "お知らせ"), ("dev", "サイトの更新記録")])
 print("news", len(NEWS))
 
 # ---------- purpose (ONLY what the official site / whitepaper say; user rule 2026-11-20) ----------
