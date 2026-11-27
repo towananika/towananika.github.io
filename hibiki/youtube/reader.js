@@ -272,5 +272,28 @@
       .then(function () { $("g-go").disabled = false; });
   };
 
+  // ── 使いやすさ（2026-11-26）：貼り付けボタン・リンクの自動判定・モードの記憶・?url=・もう1本
+  var MODE = "hb-reader-mode", NAME = { yt: "YouTube", x: "X", ig: "Instagram（リンクからは読めません。画像・動画を入れてください）", bad: "このリンクは読めません" };
+  function kindUI() {
+    var k = kind($("g-url").value);
+    $("g-kind").textContent = k ? (k.type === "bad" ? "⚠ " : "✓ ") + NAME[k.type] : "";
+  }
+  $("g-url").addEventListener("input", kindUI);
+  $("g-paste").onclick = function () {
+    if (!navigator.clipboard || !navigator.clipboard.readText) { $("g-url").focus(); say("この端末では貼り付けボタンが使えません。入力欄に直接貼ってください。"); return; }
+    navigator.clipboard.readText().then(function (t) { $("g-url").value = (t || "").trim(); kindUI(); }, function () { $("g-url").focus(); say("貼り付けを許可するか、入力欄に直接貼ってください。"); });
+  };
+  Array.prototype.forEach.call(document.querySelectorAll("input[name=g-mode]"), function (r) { r.onchange = function () { ls(MODE, r.value); }; });
+  var saved = ls(MODE);
+  if (saved) { var m = document.querySelector("input[name=g-mode][value=" + saved + "]"); if (m) m.checked = true; }
+  $("g-again").onclick = function () {
+    $("g-url").value = ""; $("g-memo").value = ""; files = []; drawFiles(); kindUI(); $("g-result").hidden = true; say("");
+    $("g-url").scrollIntoView({ behavior: "smooth", block: "center" }); $("g-url").focus();
+  };
+  var q = new URLSearchParams(location.search).get("url");
+  if (q) { $("g-url").value = q; kindUI(); }
+  // キーがまだ無いときは、準備を一番上に出す
+  if (!ls(KEY)) $("anywhere").insertBefore($("g-setup"), $("g-form"));
+
   keyUI(); list(); drawFiles();
 })();
