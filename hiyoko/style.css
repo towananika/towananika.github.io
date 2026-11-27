@@ -1018,6 +1018,3 @@ body.home .hm-s3 h2{color:#fff}
 .hm-bg3{animation-duration:15s}.hm-bg2{animation-duration:10s}
 @keyframes hm-cam{0%{transform:scale(1.06) translate(-2.6%,1.2%) rotate(-.8deg)}50%{transform:scale(1.13) translate(1.6%,-1.6%) rotate(.4deg)}100%{transform:scale(1.08) translate(2.8%,.8%) rotate(1deg)}}
 @media (prefers-reduced-motion:reduce){.hm-bg,.hm-bg2,.hm-bg3{animation:none}}
-/* 2026-11-27: hero catchphrase in each language; official English tagline below (hidden in English) */
-.hm-tag{margin:10px auto 0;max-width:none!important;color:#fff;font:800 .85rem var(--f-head);letter-spacing:.08em;text-shadow:0 2px 8px rgba(0,0,0,.5)}
-html[lang="en"] .hm-tag{display:none}
