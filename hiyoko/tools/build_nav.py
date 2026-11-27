@@ -7,39 +7,43 @@ import os, re, sys
 ROOT = sys.argv[1]
 # (heading, css class, [(label, href rel. to hiyoko/, desc, locked)])
 # Top tabs = sections (global nav). Left nav = pages of the current section only.
-SECTIONS = [("home", "ホーム", ""), ("know", "HIYOKOを知る", "about/"), ("links", "公式リンク", "links/"),
-            ("analysis", "SNS分析", "analysis/"), ("news", "ニュース", "news/"), ("in", "🔒 社内資料", "internal/strategy/")]
+# 2026-11-27: 4 public tabs (SNS分析 2nd = most used) + members-only tab; ニュース lives in the footer + home
+SECTIONS = [("home", "ホーム", ""), ("analysis", "SNS分析", "analysis/"), ("know", "HIYOKOを知る", "about/"),
+            ("links", "公式リンク", "links/"), ("in", "🔒 社内資料", "internal/strategy/")]
 def section_of(p):
     if p == "": return "home"
-    if p in ("links/", "news/"): return p[:-1]
+    if p == "links/": return "links"
+    if p == "news/": return "home"
     if p in ("about/", "world/", "character/"): return "know"
     if p.startswith("internal/"): return "in"
     if p == "join/": return "join"
     return "analysis"
 GROUP_SECTION = {"h": "know", "m": "analysis", "x": "analysis", "ig": "analysis", "old": "analysis", "in": "in"}
 GROUPS = [
-  ("HIYOKOを知る", "h", [("HIYOKOとは", "about/", "しくみとロードマップ", False),
-                   ("目的", "world/", "公式に書かれているねらい", False),
-                   ("キャラクター", "character/", "ひよこのプロフィール", False)]),
-  ("SNS分析", "m", [("SNS分析トップ", "analysis/", "XとInstagramの数字", False),
-                 ("KPI一覧", "kpi/", "投稿ごとの数字を並べ替え", False)]),
-  ("X", "x", [("概要", "x/", "悩み→解決で、プロフィールへ", False),
-              ("月間分析", "x/monthly/", "1年間を月ごとに", False),
-              ("投稿とKPI", "x/posts/", "全投稿の数字", False),
-              ("レポート", "x/report/", "調査と分析のレポート", False)]),
-  ("Instagram", "ig", [("概要", "ig/", "短いキャラのリールでシェア→フォロー", False),
-                       ("投稿とKPI", "ig/posts/", "全投稿の数字", False),
-                       ("コンテンツ3グループ", "ig/content/", "シェア・見られる・届かない", False)]),
-  ("過去の分析", "old", [("2026年11月 X・IG ABCD", "2026-11/", "11月の直す候補", False),
-                    ("Aの投稿ランキング（全期間）", "a-ranking/", "届いて反応もあった投稿だけ", False)]),
+  ("HIYOKOを知る", "h", [("HIYOKOを知る", "about/", "しくみ・目的・キャラクター", False)]),
+  # 2026-11-27: SNS分析 = 4 tabs (shown as a tab row at the top of every SNS分析 page; no left nav)
+  ("SNS分析", "m", [("分析トップ", "analysis/", "XとInstagramの流れと、強い投稿", False),
+                 ("月ごと", "x/monthly/", "1年の流れと、月ごとの理由", False),
+                 ("投稿一覧", "kpi/", "全投稿の数字を並べ替え", False),
+                 ("レポート", "x/report/", "調査と分析のレポート", False)]),
   ("社内資料（関係者のみ）", "in", [("企画・目標・方向性", "internal/strategy/", "ログインして開く", True),
                           ("振り返り", "internal/review/", "ログインして開く", True)]),
 ]
 # footer sitemap: short, unambiguous labels (the footer has no X / Instagram sub-headings)
-FOOT = {"analysis": [("SNS分析トップ", "analysis/"), ("KPI一覧", "kpi/"), ("Xの分析", "x/"), ("Xのレポート", "x/report/"), ("Instagramの分析", "ig/")]}
-PAGES = ["", "links/", "about/", "character/", "world/", "news/", "analysis/", "kpi/", "2026-11/", "a-ranking/", "x/", "x/monthly/", "x/posts/", "x/content/", "x/plan/", "ig/", "ig/posts/", "ig/content/", "internal/strategy/", "internal/review/", "internal/admin/"]
+FOOT = {"links": [("公式リンク集", "links/"), ("開発ニュース", "news/")]}
+PAGES = ["", "links/", "about/", "news/", "analysis/", "kpi/", "x/monthly/", "x/plan/", "internal/strategy/", "internal/review/", "internal/admin/"]
 # pages that fill their own "このページの目次" (report.js / join page): only tabs, left nav and footer are rebuilt
 KEEP_TOC = ["x/report/", "x/report/new/", "x/report/view/", "join/"] + [f"x/report/{n}/" for n in range(1, 100) if os.path.exists(os.path.join(ROOT, f"x/report/{n}/index.html"))]
+REDIRECTS = {"x/": "analysis/#x-overview", "ig/": "analysis/#ig-overview", "x/content/": "analysis/#x-content",
+             "ig/content/": "analysis/#ig-content", "2026-11/": "analysis/#x-content", "a-ranking/": "analysis/#x-content",
+             "x/posts/": "kpi/", "ig/posts/": "kpi/#ig"}
+for _p, _to in REDIRECTS.items():
+    _pre = "../" * _p.count("/")
+    os.makedirs(os.path.join(ROOT, _p), exist_ok=True)
+    open(os.path.join(ROOT, _p, "index.html"), "w", encoding="utf-8").write(
+        f'<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="robots" content="noindex">'
+        f'<meta http-equiv="refresh" content="0; url={_pre}{_to}"><title>HIYOKO SNS分析</title></head>'
+        f'<body><p><a href="{_pre}{_to}">SNS分析へ</a></p></body></html>\n')
 exists = lambda h: os.path.exists(os.path.join(ROOT, h, "index.html"))
 
 # sub-anchors per page, taken from each page's own nav (current page lists them as #id)
@@ -70,7 +74,8 @@ def nav_for(cur, toc=True):
     pre = "../" * cur.count("/")
     sec = section_of(cur)
     groups = [g for g in GROUPS if GROUP_SECTION[g[1]] == sec]
-    if not groups:  # one-page section: keep an empty, hidden nav so the layout knows there is none
+    if not groups or sec == "analysis" or sum(len(g[2]) for g in groups) <= 1:  # one-page section / tabbed section: keep an empty, hidden nav so the layout knows there is none
+        groups = []
         out = ['<details class="sitenav" hidden><summary>ページ一覧</summary><div></div></details>']
     else:
         out = ['<details class="sitenav" open><summary>このコーナーのページ</summary><div>',
@@ -90,7 +95,17 @@ def nav_for(cur, toc=True):
         out.append('</ul></details>')
     return "".join(out)
 
+def subtabs(cur, pre):
+    items = next(g[2] for g in GROUPS if g[1] == "m")
+    def on(h): return h == cur or (h == "x/report/" and cur.startswith("x/report/"))
+    return ('<nav class="hy-sub" aria-label="SNS分析"><div>' + "".join(
+        f'<a href="{pre}{h}"' + (' aria-current="page"' if on(h) else '') + f'>{l}</a>' for l, h, _, _ in items) + '</div></nav>\n')
+
 def tabs(cur):
+    pre = "../" * cur.count("/"); sec = section_of(cur)
+    return tabs0(cur) + (subtabs(cur, pre) if sec == "analysis" else "")
+
+def tabs0(cur):
     pre = "../" * cur.count("/"); sec = section_of(cur)
     return ('<nav class="hy-tabs" aria-label="コーナー"><div>' + "".join(
         f'<a href="{pre}{h}"' + (f' class="{mo(k).strip()}"' if mo(k) else "") + (' aria-current="true"' if k == sec else "") + f'>{l}</a>' for k, l, h in SECTIONS) + '</div></nav>\n')
@@ -130,6 +145,7 @@ for p in PAGES + KEEP_TOC:
     html = re.sub(r'<a class="skip" href="#main">[^<]*</a>', '', html)
     html = re.sub(r'<header class="hy-top">.*?</header>\n?', '', html, flags=re.S)
     html = re.sub(r'<nav class="hy-tabs".*?</nav>\n?', '', html, flags=re.S)
+    html = re.sub(r'<nav class="hy-sub".*?</nav>\n?', '', html, flags=re.S)
     html = re.sub(r'<!--fmap-->.*?<!--/fmap-->\n?', '', html, flags=re.S)
     html = re.sub(r'(<body[^>]*>\n?)', lambda m: m.group(1) + f'<a class="skip" href="#main">本文へスキップ</a><header class="hy-top"><nav class="hy-path" aria-label="サイト"><a href="/">Towananika</a><span aria-hidden="true">›</span><a href="{pre or "./"}">HIYOKO</a><span class="fan-badge">非公式ファンサイト</span></nav><div class="hy-set"></div></header>\n' + tabs(p), html, count=1)
     html = re.sub(r'<main(?![^>]*id=)', '<main id="main"', html, count=1)

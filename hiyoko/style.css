@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@700;800&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Sans+KR:wght@400;700&display=swap");
 :root{
   color-scheme:light;
   --ink:#2b2a24;
@@ -800,6 +801,51 @@ html:not(.is-owner) .hy-path>a,html:not(.is-owner) .hy-path>span[aria-hidden]{di
   .fmap li a{min-height:36px}
 }
 
+/* ===== BRAND (2026-11-27) — HIYOKO fan-site brand guideline. Colors sampled from the official HIYOKO art.
+   Rule: use these tokens only; no new raw colors. See tools/BRAND.md ===== */
+:root{
+  --hy-yellow:#FEE377;   /* signature: ひよこイエロー (body of the official chick) */
+  --hy-beak:#F09000;     /* sub: くちばしオレンジ */
+  --hy-cheek:#E8505B;    /* point only: ほっぺピンク (tiny accents, never large areas) */
+  --paper:#FFFCF2;       /* background: たまごのから */
+  --card:#FFFFFF;
+  --ink:#3A2A12;         /* text: こげ茶 (warmer than black) */
+  --muted:#7A6B55;
+  --line:#EFE5CC;
+  --hy:#FEE377; --hy-soft:#FFF5CC; --hy-ink:#9A5B00;   /* hy-ink = yellow/orange that is readable as text */
+  --accent:#3A2A12; --dot:#F09000;
+  --r-card:16px; --r-pill:999px;
+  --f-head:"M PLUS Rounded 1c","Noto Sans KR","Hiragino Maru Gothic ProN",system-ui,sans-serif;
+  --f-body:"Noto Sans JP","Noto Sans KR","Hiragino Sans","Yu Gothic",system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --hy-yellow:#FEE377; --hy-beak:#FFAA3B; --hy-cheek:#FF8088;
+  --paper:#1E1A12; --card:#29231A; --ink:#F6EEDC; --muted:#BBAE95; --line:#40382A;
+  --hy:#FEE377; --hy-soft:#3A3115; --hy-ink:#FEE377; --accent:#F6EEDC; --dot:#FFAA3B}}
+:root[data-theme="dark"]{
+  --hy-yellow:#FEE377; --hy-beak:#FFAA3B; --hy-cheek:#FF8088;
+  --paper:#1E1A12; --card:#29231A; --ink:#F6EEDC; --muted:#BBAE95; --line:#40382A;
+  --hy:#FEE377; --hy-soft:#3A3115; --hy-ink:#FEE377; --accent:#F6EEDC; --dot:#FFAA3B}
+body{font-family:var(--f-body)}
+h1,h2,h3,.hero h1,.hh h1,.hy-tabs a,.tile strong,.qn strong,.kpi b,.chara-name,.btn,summary{font-family:var(--f-head)}
+h1,h2,h3{letter-spacing:.02em;text-wrap:balance}
+h2{border-bottom:3px solid var(--hy-yellow)}
+a{color:var(--hy-ink)}
+.tile,.qn,.kpi,figure,.part,.wcard,.chpanel{border-radius:var(--r-card)}
+.tile:hover,.qn:hover{border-color:var(--hy-beak)}
+.btn{border-radius:var(--r-pill)}
+.hy-tabs a[aria-current="true"]{border-bottom-color:var(--hy-yellow)}
+.fan-badge{background:var(--hy-soft);color:var(--hy-ink);border-radius:var(--r-pill)}
+::selection{background:var(--hy-yellow);color:#3A2A12}
+body:not(.ch-x):not(.ch-ig) main h2{border-left-color:var(--hy-beak)}
+/* SNS分析 sub-tabs (2026-11-27): 分析トップ / 月ごと / 投稿一覧 / レポート */
+.hy-sub{background:var(--paper);border-bottom:1px solid var(--line)}
+.hy-sub>div{display:flex;gap:8px;max-width:1380px;margin:0 auto;padding:10px max(16px,calc((100vw - 1380px)/2 + 16px));overflow-x:auto;scrollbar-width:none}
+.hy-sub>div::-webkit-scrollbar{display:none}
+.hy-sub a{flex:none;display:inline-flex;align-items:center;min-height:40px;padding:0 16px;border-radius:var(--r-pill);border:2px solid var(--line);background:var(--card);color:var(--ink);text-decoration:none;font:700 .95rem var(--f-head);white-space:nowrap}
+.hy-sub a:hover{border-color:var(--hy-beak)}
+.hy-sub a[aria-current="page"]{background:var(--hy-yellow);border-color:var(--hy-yellow);color:#3A2A12}
+@media (max-width:720px){.hy-sub>div{padding:8px 16px}.hy-sub a{min-height:44px;padding:0 14px;font-size:.92rem}}
 /* weekly analysis + trend (analysis/, 2026-11-23) */
 .wa{display:grid;gap:14px;margin:6px 0 22px}
 .wa-p{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;min-width:0}
