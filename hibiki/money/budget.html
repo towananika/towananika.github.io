@@ -171,6 +171,19 @@
   }
   function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
   var S = load(), editing = null, memoOpen = null; // editing: {type:'income'|'expense', id|null}; memoOpen: 開いているメモの項目id
+
+  // 2026年10月の管理費明細を一度だけ家計に追加
+  var managementId = "housing-management-2026-10";
+  if (!S.expense.some(function (x) { return x.id === managementId; })) {
+    S.expense.push({
+      id: managementId,
+      name: "住居管理費（10月）",
+      amt: 92080,
+      kind: "fixed",
+      memo: "10月納付額：92,080ウォン。内訳：警備費 50,660、清掃費 23,810、一般管理費 15,920、世帯電気料 15,660、共用電気料 6,240、代行費 5,440、世帯水道料 4,500、修繕積立金 3,770、修繕維持費 3,630、TV受信料 2,500、火災保険料 520、加算金 -40,570ウォン。"
+    });
+    save();
+  }
   var PLAN_KEY = "hibiki-budget-plan-v1", planned = null;
   try {
     var plan = JSON.parse(localStorage.getItem(PLAN_KEY));
