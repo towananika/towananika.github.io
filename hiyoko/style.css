@@ -846,6 +846,13 @@ body:not(.ch-x):not(.ch-ig) main h2{border-left-color:var(--hy-beak)}
 .hy-sub a:hover{border-color:var(--hy-beak)}
 .hy-sub a[aria-current="page"]{background:var(--hy-yellow);border-color:var(--hy-yellow);color:#3A2A12}
 @media (max-width:720px){.hy-sub>div{padding:8px 16px}.hy-sub a{min-height:44px;padding:0 14px;font-size:.92rem}}
+/* header logo (2026-11-27): 🐣 HIYOKO = home link, small 非公式 badge; no Towananika */
+html .hy-path>a.hy-logo{display:inline-flex!important;align-items:center;gap:6px;color:var(--ink);text-decoration:none;font:800 1.2rem/1 var(--f-head);letter-spacing:.04em}
+html .hy-path>a.hy-logo:hover{color:var(--hy-ink)}
+.hy-path .fan-badge{font-size:.72rem;padding:2px 8px;border:1px solid var(--line);font-weight:700}
+.fan-badge .fb-short{display:none}
+@media (max-width:720px){.fan-badge .fb-long{display:none}.fan-badge .fb-short{display:inline}}
+html .hy-path>a.hy-logo+span.fan-badge{display:inline-flex!important}
 /* weekly analysis + trend (analysis/, 2026-11-23) */
 .wa{display:grid;gap:14px;margin:6px 0 22px}
 .wa-p{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;min-width:0}

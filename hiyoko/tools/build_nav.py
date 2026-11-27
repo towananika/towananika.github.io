@@ -8,7 +8,8 @@ ROOT = sys.argv[1]
 # (heading, css class, [(label, href rel. to hiyoko/, desc, locked)])
 # Top tabs = sections (global nav). Left nav = pages of the current section only.
 # 2026-11-27: 4 public tabs (SNS分析 2nd = most used) + members-only tab; ニュース lives in the footer + home
-SECTIONS = [("home", "ホーム", ""), ("analysis", "SNS分析", "analysis/"), ("know", "HIYOKOを知る", "about/"),
+# 2026-11-27: no ホーム tab; the HIYOKO logo in the header goes home (user's request)
+SECTIONS = [("analysis", "SNS分析", "analysis/"), ("know", "HIYOKOを知る", "about/"),
             ("links", "公式リンク", "links/"), ("in", "🔒 社内資料", "internal/strategy/")]
 def section_of(p):
     if p == "": return "home"
@@ -147,7 +148,7 @@ for p in PAGES + KEEP_TOC:
     html = re.sub(r'<nav class="hy-tabs".*?</nav>\n?', '', html, flags=re.S)
     html = re.sub(r'<nav class="hy-sub".*?</nav>\n?', '', html, flags=re.S)
     html = re.sub(r'<!--fmap-->.*?<!--/fmap-->\n?', '', html, flags=re.S)
-    html = re.sub(r'(<body[^>]*>\n?)', lambda m: m.group(1) + f'<a class="skip" href="#main">本文へスキップ</a><header class="hy-top"><nav class="hy-path" aria-label="サイト"><a href="/">Towananika</a><span aria-hidden="true">›</span><a href="{pre or "./"}">HIYOKO</a><span class="fan-badge">非公式ファンサイト</span></nav><div class="hy-set"></div></header>\n' + tabs(p), html, count=1)
+    html = re.sub(r'(<body[^>]*>\n?)', lambda m: m.group(1) + f'<a class="skip" href="#main">本文へスキップ</a><header class="hy-top"><nav class="hy-path" aria-label="サイト"><a class="hy-logo" href="{pre or "./"}" aria-label="HIYOKO ファンサイトのホーム"><span aria-hidden="true">🐣</span>HIYOKO</a><span class="fan-badge" title="ファンが作った非公式サイトです。HIYOKO公式とは関係ありません。"><span class="fb-long">非公式ファンサイト</span><span class="fb-short" aria-hidden="true">非公式</span></span></nav><div class="hy-set"></div></header>\n' + tabs(p), html, count=1)
     html = re.sub(r'<main(?![^>]*id=)', '<main id="main"', html, count=1)
     if p.startswith("internal/") and 'name="robots"' not in html:
         html = html.replace('<meta charset="utf-8">', '<meta charset="utf-8"><meta name="robots" content="noindex,nofollow">', 1)
@@ -157,6 +158,7 @@ for p in PAGES + KEEP_TOC:
     html = re.sub(r'<!--fan-->.*?<!--/fan-->\n?', '', html, flags=re.S)
     _fan = '<!--fan--><p class="fan-foot"><span>🐣 このサイトはファンが作った非公式サイトです。HIYOKO公式とは関係ありません。</span> <a href="https://hiyokotoken.com/" target="_blank" rel="noopener">正しい情報は公式サイトへ ↗</a></p><!--/fan-->\n'
     _m = re.search(r'<footer[^>]*>(?:(?!</main>).)*</main>', html, re.S)
+    if p.startswith("internal/"): _fan = ''  # members-only pages: no fan-site footer (user, 2026-11-27)
     _fan = _fan + (footmap(p) if p else '')  # home already is the map
     html = html[:_m.start()] + _fan + html[_m.start():] if _m else html.replace('</main>', _fan + '</main>', 1)
     html = NAV_RE.sub(lambda _: nav_for(p, not keep), html, count=1)
