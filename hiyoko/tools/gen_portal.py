@@ -138,7 +138,7 @@ logos = "".join(ext(u, brand(c), "").replace('<a class="" ', f'<a aria-label="{n
                 for c, ic, n, _, _, u in SNS[:2] + SNS[3:] + COMMUNITY)
 WP_URL = "https://fate-eclipse-336.notion.site/For-you-368fd665c10480669a43f3ce3f30efc1"
 home = f"""<section class="hm-hero"><div class="hm-bg" id="hm-bg"></div>
-<div class="hm-ht"><h1>One little chick,<br>big energy</h1></div></section>
+<div class="hm-ht"><h1>{t("ちっちゃなひよこ、", "One little chick,", "작은 병아리,")}<br>{t("でっかい元気。", "big energy", "넘치는 에너지!")}</h1><p class="hm-tag" lang="en">One little chick, big energy</p></div></section>
 <section class="hm-s2">
 <p class="hm-eye">{t("HIYOKOってなに？", "What is HIYOKO?", "HIYOKO란?")}</p>
 <h2>{t("遊んで、ためて、HYKへ", "Play, collect, then HYK", "놀고, 모으고, HYK로")}</h2>
