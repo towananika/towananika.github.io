@@ -32,12 +32,13 @@ GROUPS = [
 ]
 # footer sitemap: short, unambiguous labels (the footer has no X / Instagram sub-headings)
 FOOT = {"links": [("公式リンク集", "links/"), ("開発ニュース", "news/")]}
-PAGES = ["", "links/", "about/", "news/", "analysis/", "kpi/", "x/monthly/", "x/plan/", "internal/strategy/", "internal/review/", "internal/admin/"]
+PAGES = ["", "links/", "about/", "news/", "analysis/", "kpi/", "x/monthly/", "internal/strategy/", "internal/review/", "internal/admin/"]
 # pages that fill their own "このページの目次" (report.js / join page): only tabs, left nav and footer are rebuilt
-KEEP_TOC = ["x/report/", "x/report/new/", "x/report/view/", "join/"] + [f"x/report/{n}/" for n in range(1, 100) if os.path.exists(os.path.join(ROOT, f"x/report/{n}/index.html"))]
+KEEP_TOC = ["x/report/", "x/report/new/", "x/report/view/", "x/report/mine/", "join/"] + [f"x/report/{n}/" for n in range(1, 100) if os.path.exists(os.path.join(ROOT, f"x/report/{n}/index.html"))]
 REDIRECTS = {"x/": "analysis/#x-overview", "ig/": "analysis/#ig-overview", "x/content/": "analysis/#x-content",
              "ig/content/": "analysis/#ig-content", "2026-11/": "analysis/#x-content", "a-ranking/": "analysis/#x-content",
-             "x/posts/": "kpi/", "ig/posts/": "kpi/#ig"}
+             "x/posts/": "kpi/", "ig/posts/": "kpi/#ig",
+             "x/plan/": "x/report/view/?id=18"}  # x/plan became report 18 (2026-11-27)
 for _p, _to in REDIRECTS.items():
     _pre = "../" * _p.count("/")
     os.makedirs(os.path.join(ROOT, _p), exist_ok=True)
@@ -181,9 +182,9 @@ print("ok", {k: len(v) for k, v in subs.items()})
 
 # cache-bust shared assets: ?v=<content hash> so browsers never mix new HTML with old CSS/JS
 import hashlib, glob as _g
-_ver = {n: hashlib.sha1(open(os.path.join(ROOT, n), "rb").read()).hexdigest()[:8] for n in ("style.css", "i18n.js", "nav.js", "account.js")}
+_ver = {n: hashlib.sha1(open(os.path.join(ROOT, n), "rb").read()).hexdigest()[:8] for n in ("style.css", "i18n.js", "nav.js", "account.js", "report.js")}
 for f in _g.glob(os.path.join(ROOT, "**", "index.html"), recursive=True):
     h = open(f, encoding="utf-8").read()
-    h2 = re.sub(r'((?:href|src)="(?:\.\./)*(style\.css|i18n\.js|nav\.js|account\.js))(?:\?v=\w+)?"', lambda m: f'{m.group(1)}?v={_ver[m.group(2)]}"', h)
+    h2 = re.sub(r'((?:href|src)="(?:\.\./)*(style\.css|i18n\.js|nav\.js|account\.js|report\.js))(?:\?v=\w+)?"', lambda m: f'{m.group(1)}?v={_ver[m.group(2)]}"', h)
     if h2 != h: open(f, "w", encoding="utf-8").write(h2)
 print("assets", _ver)

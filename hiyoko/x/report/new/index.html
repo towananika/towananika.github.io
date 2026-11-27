@@ -5,8 +5,8 @@
 <meta name="robots" content="noindex,nofollow">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="レポートを書く | HIYOKO X">
-<title>レポートを書く | HIYOKO X</title>
-<link rel="stylesheet" href="../../../style.css?v=a856d620">
+<title>書く | HIYOKO</title>
+<link rel="stylesheet" href="../../../style.css?v=4c84c5bc">
 <style>
 .rpt-list{border:1px solid var(--line);border-radius:10px;background:var(--card);overflow:hidden;margin:0 0 16px}
 .rpt-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);text-decoration:none;color:inherit;transition:background .12s}
@@ -37,6 +37,24 @@
 .rpt-detail-meta{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:.82rem;color:var(--muted);margin-bottom:16px}
 .rpt-detail-body{font-size:.94rem;line-height:1.75;color:var(--ink);overflow-wrap:anywhere}
 .rpt-detail-body h3{font-size:1.02rem;margin:18px 0 6px;padding-bottom:4px;border-bottom:1px solid var(--line)}
+.rpt-detail-body h4{font-size:.95rem;margin:14px 0 4px}
+.rpt-row-wrap{display:flex;align-items:center;border-bottom:1px solid var(--line)}
+.rpt-row-wrap:last-child{border-bottom:0}
+.rpt-row-wrap .rpt-row{flex:1;min-width:0;border-bottom:0}
+.rpt-row-tools{display:inline-flex;gap:6px;padding:0 12px 0 0;flex:none}
+.rpt-detail-body .tbl{overflow-x:auto;margin:8px 0 12px}
+.rpt-detail-body th,.rpt-detail-body td{white-space:nowrap;font-variant-numeric:tabular-nums}
+.rpt-fold{border-top:1px solid var(--line);margin:10px 0}
+.rpt-fold>summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px}
+.rpt-fold>summary::-webkit-details-marker{display:none}
+.rpt-fold>summary::after{content:"＋";margin-left:auto;color:var(--muted);font-weight:700}
+.rpt-fold[open]>summary::after{content:"－"}
+.rpt-fold>summary h3{border:0!important;margin:12px 0!important;padding:0!important}
+.rpt-detail-body a.rpt-jump{font-weight:inherit}
+.rpt-detail-body a.rpt-jump::after{content:" ›"}
+@keyframes rptHit{0%,60%{background:color-mix(in srgb,var(--accent) 22%,transparent)}100%{background:transparent}}
+.rpt-hit{animation:rptHit 3s ease-out;border-radius:6px;box-shadow:-8px 0 0 0 color-mix(in srgb,var(--accent) 22%,transparent)}
+.rpt-detail-body h4[id],.rpt-detail-body h3[id]{scroll-margin-top:80px}
 .rpt-detail-body p{margin:6px 0}
 .rpt-detail-body ul{margin:6px 0 10px;padding-left:1.3em}
 .rpt-detail-body li{margin:4px 0}
@@ -61,31 +79,54 @@
 <nav class="hy-sub" aria-label="SNS分析"><div><a href="../../../analysis/">分析トップ</a><a href="../../../x/monthly/">月ごと</a><a href="../../../kpi/">投稿一覧</a><a href="../../../x/report/" aria-current="page">レポート</a></div></nav>
 <div class="layout">
 <details class="sitenav" hidden><summary>ページ一覧</summary><div></div></details>
-<details class="pagetoc" open><summary>このページの目次</summary><ul id="toc-list">
-<li><a href="#sec-fact">根拠（実測）</a></li>
-<li><a href="#sec-hypo">可能性・仮説（調査対象）</a></li>
-</ul></details>
+
 <main id="main" data-rpt="edit">
-<div class="chhead"><span class="dot"></span>HIYOKO X</div>
-<h1 id="rpt-h">レポートを書く</h1>
+<div class="pe-top"><h1 id="rpt-h">書く</h1><a class="btn btn-sm btn-ghost" href="../mine/">自分の投稿</a></div>
 <p class="gate-msg" id="gate"></p>
-<form class="rpt-form" id="rpt-form" hidden>
-<div class="rpt-hint">登録者：<b id="rpt-as"></b>（一覧で日付の左に出ます）</div>
-<label>タイトル<input type="text" name="title" maxlength="120" required></label>
-<label>本文<span class="rpt-hint">「## 見出し」「- 箇条書き」「**太字**」が使えます。空行で段落。URLは自動でリンク。</span><textarea name="body" required></textarea></label>
-<label class="chk"><input type="checkbox" name="lock"> 🔒 関係者だけに見せる</label>
-<div><button type="submit" class="gate-btn">登録する</button> <a class="btn btn-ghost" href="../">やめる</a></div>
-<p class="note" id="rpt-note"></p>
-<div><div class="rpt-hint">プレビュー</div><div class="rpt-prev rpt-detail-body" id="rpt-prev"></div></div>
+<section class="pe-pick" id="pe-pick" hidden aria-labelledby="pe-pick-h">
+<h2 id="pe-pick-h" class="pe-q">なにを書きますか？</h2>
+<div class="pe-cards">
+<button type="button" class="pe-card" data-k="report"><span class="pe-ic" aria-hidden="true">📝</span><strong>レポート</strong><em>SNS分析や調査のまとめ。だれでも読めます</em><small>例：「10月のXが伸びた理由」</small></button>
+<button type="button" class="pe-card" data-k="news"><span class="pe-ic" aria-hidden="true">📣</span><strong>ニュース</strong><em>お知らせ。ホームにも出ます。だれでも読めます</em><small>例：「新しいキャンペーンが始まりました」</small></button>
+<button type="button" class="pe-card" data-k="internal"><span class="pe-ic" aria-hidden="true">🔒</span><strong>社内資料</strong><em>会員だけが読めます。一般の人には出ません</em><small>例：「12月の投稿の方針」</small></button>
+</div>
+</section>
+<form class="rpt-form pe-form" id="rpt-form" hidden novalidate>
+<div class="pe-bar">
+<span class="pe-kindbox"><b id="pe-kind"></b> <button type="button" class="pe-link" id="pe-kind-change">種類を変える</button></span>
+<span class="pe-state" id="pe-state" role="status" aria-live="polite"></span>
+</div>
+<p class="pe-note"><span id="pe-kind-note"></span> ／ 書く人：<b id="rpt-as"></b></p>
+<p class="pe-banner" id="pe-live" hidden>公開中の投稿です。直している間は自動で「下書き」に保存され、「公開中の内容を更新する」を押すまで、みんなには前の内容が見えます。</p>
+<p class="pe-banner" id="pe-restore" hidden>この端末に、保存できなかった書きかけが残っています。 <button type="button" class="btn btn-sm">書きかけを戻す</button></p>
+<div class="pe-tabs" role="tablist"><button type="button" role="tab" data-pe-tab="write" aria-selected="true">書く</button><button type="button" role="tab" data-pe-tab="look" aria-selected="false">見た目</button><button type="button" role="tab" data-pe-tab="phone" aria-selected="false">スマホで見た目</button></div>
+<div id="pe-write">
+<label for="pe-title">タイトル<span class="pe-help">一覧に出る名前です。何の話か、ひと目でわかるように</span></label>
+<input type="text" id="pe-title" name="title" autocomplete="off">
+<p class="pe-err" id="pe-err-title" hidden></p>
+<label for="pe-sum">ひとことまとめ<span class="pe-help">一覧でタイトルの下に出ます。結論を1文で（なくてもよい）</span></label>
+<input type="text" id="pe-sum" name="sum" autocomplete="off"><span class="pe-count" id="pe-sum-n">0 / 80</span>
+<p class="pe-err" id="pe-err-sum" hidden></p>
+<label for="pe-body">本文<span class="pe-help">ひな形の空いている所をうめてください。画像は貼りつけ・ドラッグでも入ります</span></label>
+<div class="pe-tools"><label class="btn btn-sm btn-ghost pe-imgbtn">🖼 画像を入れる<input type="file" id="pe-img" accept="image/*" multiple hidden></label></div>
+<textarea id="pe-body" name="body"></textarea>
+<p class="pe-err" id="pe-err-body" hidden></p>
+<details class="pe-more"><summary>くわしい設定</summary>
+<p class="pe-row" id="pe-lockrow"><label class="chk"><input type="checkbox" name="lock"> 🔒 このレポートを会員だけに見せる</label></p>
+<p class="pe-help">書き方：「## 見出し」「- 箇条書き」「**太字**」「[文字](URL)」「| 表 |」「![説明](画像のURL)」。空行で段落。</p>
+</details>
+</div>
+<div id="pe-look" hidden><div class="rpt-prev rpt-detail-body" id="rpt-prev"></div></div>
+<div class="pe-actions"><button type="submit" class="gate-btn" id="pe-publish">公開する</button><a class="btn btn-ghost" href="../mine/">あとで続ける</a></div>
 </form>
 <!--fan--><p class="fan-foot"><span>🐣 このサイトはファンが作った非公式サイトです。HIYOKO公式とは関係ありません。</span> <a href="https://hiyokotoken.com/" target="_blank" rel="noopener">正しい情報は公式サイトへ ↗</a></p><!--/fan-->
 <!--fmap--><nav class="fmap" aria-label="サイトマップ"><div class=""><a class="fm-h" href="../../../analysis/">SNS分析</a><ul><li><a href="../../../analysis/">分析トップ</a></li><li><a href="../../../x/monthly/">月ごと</a></li><li><a href="../../../kpi/">投稿一覧</a></li><li><a href="../../../x/report/">レポート</a></li></ul></div><div class=""><a class="fm-h" href="../../../about/">HIYOKOを知る</a><ul><li><a href="../../../about/">HIYOKOを知る</a></li></ul></div><div class=""><a class="fm-h" href="../../../links/">公式リンク</a><ul><li><a href="../../../links/">公式リンク集</a></li><li><a href="../../../news/">開発ニュース</a></li></ul></div><div class="mem-only"><a class="fm-h" href="../../../internal/strategy/">🔒 社内資料</a><ul><li><a href="../../../internal/strategy/">企画・目標・方向性</a></li><li><a href="../../../internal/review/">振り返り</a></li></ul></div></nav><!--/fmap-->
 <footer>HIYOKO ／ レポート</footer>
 </main>
 </div>
-<script src="../../../i18n.js?v=2ebfd439" defer></script>
+<script src="../../../i18n.js?v=178081c5" defer></script>
 <script src="../../../nav.js?v=dd0e8abb" defer></script>
 <script src="../../../account.js?v=5b70728b" defer></script>
-<script src="../../../report.js?v=9d80a9cc" defer></script>
+<script src="../../../report.js?v=0ad36486" defer></script>
 </body>
 </html>

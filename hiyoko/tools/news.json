@@ -8,6 +8,13 @@
 ],
 [
 "2026-11-26",
+92,
+"レポートの作成・編集・削除に対応（直す・消すは作成者か管理者だけ）",
+"Reports can now be created, edited and deleted (edit/delete by the author or an admin only)",
+"리포트 작성·수정·삭제 지원(수정·삭제는 작성자 또는 관리자만)"
+],
+[
+"2026-11-26",
 109,
 "Xレポート「自分たちで変えられる要素」の注目してほしい行と要点に、色のハイライトを追加",
 "Added colour highlights to the key rows and points in the X controllable-factors report",
@@ -453,5 +460,12 @@
 "SNS分析を4つのタブ（分析トップ・月ごと・投稿一覧・レポート）にまとめました。前のページのURLは、まとめた先に自動で移ります。",
 "Grouped SNS analysis into 4 tabs (Overview, By month, All posts, Reports). Old page URLs now forward to where their content moved.",
 "SNS 분석을 4개 탭(분석 홈·월별·게시물 목록·리포트)으로 정리했습니다. 이전 페이지 URL은 옮겨진 곳으로 자동 이동합니다."
+],
+[
+"2026-11-27",
+112,
+"レポート・ニュース・社内資料を、同じ「書く」画面から投稿できるように。自動保存・下書き・公開前の見た目確認・画像の貼りつけ・「自分の投稿」に対応。「X 悩み→解決の企画」はレポートに移しました。",
+"Reports, news and internal posts can now all be written from one \"Write\" screen, with autosave, drafts, preview before publishing, image paste and a \"My posts\" page. The X pain→solution plan moved into Reports.",
+"리포트·뉴스·내부 자료를 같은 「쓰기」 화면에서 올릴 수 있게 했습니다. 자동 저장·초안·공개 전 미리보기·이미지 붙여넣기·「내 게시물」 지원. 「X 고민→해결 기획」은 리포트로 옮겼습니다."
 ]
 ]

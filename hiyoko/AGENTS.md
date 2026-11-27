@@ -41,3 +41,16 @@
 - 比較対象が20投稿未満の場合と、対象KPIが0の場合はマークなし。3ヶ月より古い投稿にも付けない。
 - 反応率は表示（X）またはリーチ（IG）が100以上の投稿のみ対象。
 - とびぬけた投稿は「特別」として通常の投稿と区別。実装時は上位10%の同値・外れ値の扱いと基準日を明確にする。
+
+## 投稿の仕組み（2026-11-27）：レポート・ニュース・社内資料
+- 書く画面 `/hiyoko/x/report/new/`（`?kind=report|news|internal`）、自分の投稿 `/hiyoko/x/report/mine/`、1件 `/hiyoko/x/report/view/?id=…`。動きは `report.js`。
+- 一覧：レポート＝`x/report/`、ニュース＝`news/` の「お知らせ」とホーム、社内資料＝`internal/strategy/`（会員だけ）。`<div data-feed="news|internal">` で表示。
+- 中身はサーバー（hibiki-sync、towananika/hibiki の `worker/hiyoko.js`）だけに置く。社内資料（kind=internal）は会員にしか返さない。
+- **AI が投稿するとき**：自分の会員ID（招待コードで join、AI 用の鍵）で投稿する。依頼主のログインは使わない。
+  ```
+  curl -s https://hibiki-sync.jaykim-can.workers.dev/hiyoko/rput -H 'Content-Type: application/json' -H "X-Hiyoko-Key: $HIYOKO_KEY" \
+    -d '{"kind":"report","title":"…","sum":"結論を1文で","body":"## わかったこと\n- …"}'
+  ```
+  `"draft":true` で下書き。直すときは `"id"` をつける。本文は `## 見出し` `- 箇条書き` `**太字**` `| 表 |` `![説明](https://…)`。
+- クラウドの Claude から送るには、環境のネットワーク設定で `hibiki-sync.jaykim-can.workers.dev` を許可しておく必要がある。
+- 静的なレポートページはもう作らない（サーバーに登録する）。
